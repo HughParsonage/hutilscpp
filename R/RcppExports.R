@@ -55,23 +55,23 @@ pmax3 <- function(x, y, z) {
 #' @note This function will always be faster than \code{pmax(x, a)} when \code{a} is
 #'  a single value, but can be slower than \code{pmax.int(x, a)} when \code{x} is short.
 #'  Use this function when comparing a numeric vector with a single value.
-#' @export pmaxC
+#' @export do_pmaxC do_pmax0 do_pmaxIPint0 do_pmaxIPnum0
 NULL
 
-pmaxC <- function(x, a) {
-    .Call(`_hutilscpp_pmaxC`, x, a)
+do_pmaxC <- function(x, a) {
+    .Call(`_hutilscpp_do_pmaxC`, x, a)
 }
 
-pmax0 <- function(x) {
-    .Call(`_hutilscpp_pmax0`, x)
+do_pmax0 <- function(x) {
+    .Call(`_hutilscpp_do_pmax0`, x)
 }
 
-pmaxIPnum0 <- function(x) {
-    .Call(`_hutilscpp_pmaxIPnum0`, x)
+do_pmaxIPnum0 <- function(x) {
+    .Call(`_hutilscpp_do_pmaxIPnum0`, x)
 }
 
-pmaxIPint0 <- function(x) {
-    .Call(`_hutilscpp_pmaxIPint0`, x)
+do_pmaxIPint0 <- function(x) {
+    .Call(`_hutilscpp_do_pmaxIPint0`, x)
 }
 
 #' @title Parallel maximum

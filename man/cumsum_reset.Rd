@@ -9,7 +9,11 @@ cumsum_reset(x, y = x)
 \arguments{
 \item{x}{A logical vector indicating when the sum should \emph{continue}}
 
-\item{y}{Optional: the vector to cumulatively sum.}
+\item{y}{Optional: a numeric vector the same length as \code{x} to cumulatively sum.}
+}
+\value{
+If \code{y} is a double vector, a double vector of cumulative sums,
+resetting whenever \code{x} is \code{FALSE}; otherwise an integer vector.
 }
 \description{
 Cumulative sum unless reset
