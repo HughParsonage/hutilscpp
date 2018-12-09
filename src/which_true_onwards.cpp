@@ -12,7 +12,7 @@ int do_which_true_onwards(LogicalVector x) {
   while (x[out] && out >= 0) {
     --out;
   }
-  return out + 2; // at FALSE + 1 for TRUE + 1 for 0-index
+  return out + 2; // out now at FALSE (or -1), + 1 for TRUE, + 1 for 0-index
 }
 
 

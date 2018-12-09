@@ -15,6 +15,20 @@ AnyWhich <- function(x, a, gt, lt, eq) {
     .Call(`_hutilscpp_AnyWhich`, x, a, gt, lt, eq)
 }
 
+ModeInt <- function(x) {
+    .Call(`_hutilscpp_ModeInt`, x)
+}
+
+#' @title Mode II
+#' @param x Integer vector
+#' @export ModeInt2
+#' @name ModeInt2
+NULL
+
+ModeInt2 <- function(x, xmax = -1L, xmin = 1L) {
+    .Call(`_hutilscpp_ModeInt2`, x, xmax, xmin)
+}
+
 anyOutside <- function(x, a, b) {
     .Call(`_hutilscpp_anyOutside`, x, a, b)
 }
@@ -31,6 +45,18 @@ do_cumsum_reset_double <- function(x, y) {
     .Call(`_hutilscpp_do_cumsum_reset_double`, x, y)
 }
 
+do_which_first <- function(x) {
+    .Call(`_hutilscpp_do_which_first`, x)
+}
+
+do_which_last <- function(x) {
+    .Call(`_hutilscpp_do_which_last`, x)
+}
+
+do_which_first_false <- function(x) {
+    .Call(`_hutilscpp_do_which_first_false`, x)
+}
+
 #' @title Threeway parallel maximum
 #' @description Returns the parallel maximum of three 
 #' 
@@ -44,17 +70,10 @@ pmax3 <- function(x, y, z) {
     .Call(`_hutilscpp_pmax3`, x, y, z)
 }
 
-#' @title Parallel maximum
-#' @description A faster \code{pmax()}.
-#'
-#' @name pmaxC
-#' @param x A numeric vector.
-#' @param a A single numeric value.
-#' @return The parallel maximum of the input values. \code{pmax0(x)} is
-#'  shorthand for \code{pmaxC(x, 0)}, i.e. convert negative values in \code{x} to 0.
-#' @note This function will always be faster than \code{pmax(x, a)} when \code{a} is
-#'  a single value, but can be slower than \code{pmax.int(x, a)} when \code{x} is short.
-#'  Use this function when comparing a numeric vector with a single value.
+#' @name pmaxC-internal
+#' @title Internal pmaxC helpers
+#' @description Internal functions used when the overheads of assertions
+#' would be too expensive.
 #' @export do_pmaxC do_pmax0 do_pmaxIPint0 do_pmaxIPnum0
 NULL
 
@@ -74,18 +93,22 @@ do_pmaxIPint0 <- function(x) {
     .Call(`_hutilscpp_do_pmaxIPint0`, x)
 }
 
-#' @title Parallel maximum
+#' @title Parallel maximum in C++
 #' @description A faster \code{pmax()}.
 #'
 #' @name pmaxV
 #' @param x A numeric vector.
 #' @param y A numeric vector, the same length as x.
 #' @return The parallel maximum of the input values.
-#' @export pmaxV
+#' @export do_pmaxNumNum do_pmaxIntInt
 NULL
 
-pmaxV <- function(x, y) {
-    .Call(`_hutilscpp_pmaxV`, x, y)
+do_pmaxNumNum <- function(x, y) {
+    .Call(`_hutilscpp_do_pmaxNumNum`, x, y)
+}
+
+do_pmaxIntInt <- function(x, y) {
+    .Call(`_hutilscpp_do_pmaxIntInt`, x, y)
 }
 
 #' @title Parallel maximum
@@ -96,15 +119,15 @@ pmaxV <- function(x, y) {
 #' @param a A single numeric value.
 #' @return The parallel minimum of the input values. The \code{0} versions are shortcuts for \code{a = 0}.
 #' @note This function will always be faster than \code{pmin(x, a)} when \code{a} is a single value, but can be slower than \code{pmin.int(x, a)} when \code{x} is short. Use this function when comparing a numeric vector with a single value.
-#' @export pminC
+#' @export do_pminC
 NULL
 
-pminC <- function(x, a) {
-    .Call(`_hutilscpp_pminC`, x, a)
+do_pminC <- function(x, a) {
+    .Call(`_hutilscpp_do_pminC`, x, a)
 }
 
-pmin0 <- function(x) {
-    .Call(`_hutilscpp_pmin0`, x)
+do_pmin0 <- function(x) {
+    .Call(`_hutilscpp_do_pmin0`, x)
 }
 
 #' @title Parallel maximum
@@ -127,6 +150,10 @@ squishn <- function(x, a, b) {
 
 squishi <- function(x, a, b) {
     .Call(`_hutilscpp_squishi`, x, a, b)
+}
+
+texParse <- function(open, close, maxTeXGroup = 20L) {
+    .Call(`_hutilscpp_texParse`, open, close, maxTeXGroup)
 }
 
 do_which_true_onwards <- function(x) {

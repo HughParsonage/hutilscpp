@@ -21,9 +21,9 @@ test_that("grattan functions and pmax pmin give identical results", {
 
 test_that("pmaxIPint0", {
   skip_if_not_installed("hutils")
-  expect_equal(pmaxC(-2:2),
+  expect_equal(pmax0(-2:2),
                hutils::if_else(-2:2 > 0, -2:2, 0L))
-  expect_equal(pmaxC(1:5),
+  expect_equal(pmax0(1:5),
                1:5)
 })
 

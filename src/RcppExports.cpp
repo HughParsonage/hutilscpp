@@ -20,6 +20,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ModeInt
+int ModeInt(IntegerVector x);
+RcppExport SEXP _hutilscpp_ModeInt(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(ModeInt(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ModeInt2
+int ModeInt2(IntegerVector x, int xmax, int xmin);
+RcppExport SEXP _hutilscpp_ModeInt2(SEXP xSEXP, SEXP xmaxSEXP, SEXP xminSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type xmax(xmaxSEXP);
+    Rcpp::traits::input_parameter< int >::type xmin(xminSEXP);
+    rcpp_result_gen = Rcpp::wrap(ModeInt2(x, xmax, xmin));
+    return rcpp_result_gen;
+END_RCPP
+}
 // anyOutside
 int anyOutside(IntegerVector x, int a, int b);
 RcppExport SEXP _hutilscpp_anyOutside(SEXP xSEXP, SEXP aSEXP, SEXP bSEXP) {
@@ -65,6 +89,39 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
     rcpp_result_gen = Rcpp::wrap(do_cumsum_reset_double(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_first
+int do_which_first(LogicalVector x);
+RcppExport SEXP _hutilscpp_do_which_first(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_first(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_last
+int do_which_last(LogicalVector x);
+RcppExport SEXP _hutilscpp_do_which_last(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_last(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_first_false
+int do_which_first_false(LogicalVector x);
+RcppExport SEXP _hutilscpp_do_which_first_false(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_first_false(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -126,38 +183,50 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// pmaxV
-NumericVector pmaxV(NumericVector x, NumericVector y);
-RcppExport SEXP _hutilscpp_pmaxV(SEXP xSEXP, SEXP ySEXP) {
+// do_pmaxNumNum
+NumericVector do_pmaxNumNum(NumericVector x, NumericVector y);
+RcppExport SEXP _hutilscpp_do_pmaxNumNum(SEXP xSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(pmaxV(x, y));
+    rcpp_result_gen = Rcpp::wrap(do_pmaxNumNum(x, y));
     return rcpp_result_gen;
 END_RCPP
 }
-// pminC
-NumericVector pminC(NumericVector x, double a);
-RcppExport SEXP _hutilscpp_pminC(SEXP xSEXP, SEXP aSEXP) {
+// do_pmaxIntInt
+IntegerVector do_pmaxIntInt(IntegerVector x, IntegerVector y);
+RcppExport SEXP _hutilscpp_do_pmaxIntInt(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmaxIntInt(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_pminC
+NumericVector do_pminC(NumericVector x, double a);
+RcppExport SEXP _hutilscpp_do_pminC(SEXP xSEXP, SEXP aSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< double >::type a(aSEXP);
-    rcpp_result_gen = Rcpp::wrap(pminC(x, a));
+    rcpp_result_gen = Rcpp::wrap(do_pminC(x, a));
     return rcpp_result_gen;
 END_RCPP
 }
-// pmin0
-NumericVector pmin0(NumericVector x);
-RcppExport SEXP _hutilscpp_pmin0(SEXP xSEXP) {
+// do_pmin0
+NumericVector do_pmin0(NumericVector x);
+RcppExport SEXP _hutilscpp_do_pmin0(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(pmin0(x));
+    rcpp_result_gen = Rcpp::wrap(do_pmin0(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -199,6 +268,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// texParse
+Rcpp::IntegerMatrix texParse(LogicalVector open, LogicalVector close, int maxTeXGroup);
+RcppExport SEXP _hutilscpp_texParse(SEXP openSEXP, SEXP closeSEXP, SEXP maxTeXGroupSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type open(openSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type close(closeSEXP);
+    Rcpp::traits::input_parameter< int >::type maxTeXGroup(maxTeXGroupSEXP);
+    rcpp_result_gen = Rcpp::wrap(texParse(open, close, maxTeXGroup));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_which_true_onwards
 int do_which_true_onwards(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_true_onwards(SEXP xSEXP) {
@@ -211,24 +293,34 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP do_c_pmax(SEXP, SEXP);
+
 static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_AnyWhich", (DL_FUNC) &_hutilscpp_AnyWhich, 5},
+    {"_hutilscpp_ModeInt", (DL_FUNC) &_hutilscpp_ModeInt, 1},
+    {"_hutilscpp_ModeInt2", (DL_FUNC) &_hutilscpp_ModeInt2, 3},
     {"_hutilscpp_anyOutside", (DL_FUNC) &_hutilscpp_anyOutside, 3},
     {"_hutilscpp_do_cumsum_reset_logical", (DL_FUNC) &_hutilscpp_do_cumsum_reset_logical, 1},
     {"_hutilscpp_do_cumsum_reset_integer", (DL_FUNC) &_hutilscpp_do_cumsum_reset_integer, 2},
     {"_hutilscpp_do_cumsum_reset_double", (DL_FUNC) &_hutilscpp_do_cumsum_reset_double, 2},
+    {"_hutilscpp_do_which_first", (DL_FUNC) &_hutilscpp_do_which_first, 1},
+    {"_hutilscpp_do_which_last", (DL_FUNC) &_hutilscpp_do_which_last, 1},
+    {"_hutilscpp_do_which_first_false", (DL_FUNC) &_hutilscpp_do_which_first_false, 1},
     {"_hutilscpp_pmax3", (DL_FUNC) &_hutilscpp_pmax3, 3},
     {"_hutilscpp_do_pmaxC", (DL_FUNC) &_hutilscpp_do_pmaxC, 2},
     {"_hutilscpp_do_pmax0", (DL_FUNC) &_hutilscpp_do_pmax0, 1},
     {"_hutilscpp_do_pmaxIPnum0", (DL_FUNC) &_hutilscpp_do_pmaxIPnum0, 1},
     {"_hutilscpp_do_pmaxIPint0", (DL_FUNC) &_hutilscpp_do_pmaxIPint0, 1},
-    {"_hutilscpp_pmaxV", (DL_FUNC) &_hutilscpp_pmaxV, 2},
-    {"_hutilscpp_pminC", (DL_FUNC) &_hutilscpp_pminC, 2},
-    {"_hutilscpp_pmin0", (DL_FUNC) &_hutilscpp_pmin0, 1},
+    {"_hutilscpp_do_pmaxNumNum", (DL_FUNC) &_hutilscpp_do_pmaxNumNum, 2},
+    {"_hutilscpp_do_pmaxIntInt", (DL_FUNC) &_hutilscpp_do_pmaxIntInt, 2},
+    {"_hutilscpp_do_pminC", (DL_FUNC) &_hutilscpp_do_pminC, 2},
+    {"_hutilscpp_do_pmin0", (DL_FUNC) &_hutilscpp_do_pmin0, 1},
     {"_hutilscpp_pminV", (DL_FUNC) &_hutilscpp_pminV, 2},
     {"_hutilscpp_squishn", (DL_FUNC) &_hutilscpp_squishn, 3},
     {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 3},
+    {"_hutilscpp_texParse", (DL_FUNC) &_hutilscpp_texParse, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
+    {"do_c_pmax", (DL_FUNC) &do_c_pmax, 2},
     {NULL, NULL, 0}
 };
 

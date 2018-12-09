@@ -1,14 +1,7 @@
-//' @title Parallel maximum
-//' @description A faster \code{pmax()}.
-//'
-//' @name pmaxC
-//' @param x A numeric vector.
-//' @param a A single numeric value.
-//' @return The parallel maximum of the input values. \code{pmax0(x)} is
-//'  shorthand for \code{pmaxC(x, 0)}, i.e. convert negative values in \code{x} to 0.
-//' @note This function will always be faster than \code{pmax(x, a)} when \code{a} is
-//'  a single value, but can be slower than \code{pmax.int(x, a)} when \code{x} is short.
-//'  Use this function when comparing a numeric vector with a single value.
+//' @name pmaxC-internal
+//' @title Internal pmaxC helpers
+//' @description Internal functions used when the overheads of assertions
+//' would be too expensive.
 //' @export do_pmaxC do_pmax0 do_pmaxIPint0 do_pmaxIPnum0
 
 #include <Rcpp.h>

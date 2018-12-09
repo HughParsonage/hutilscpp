@@ -7,7 +7,11 @@
 which_true_onwards(x)
 }
 \arguments{
-\item{x}{A logical vector}
+\item{x}{A logical vector. \code{NA} values are not permitted.}
+}
+\value{
+The position of the first \code{TRUE} value in \code{x} at which all
+the following values are \code{TRUE}.
 }
 \description{
 At which point are all values true onwards
