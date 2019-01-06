@@ -6,13 +6,13 @@
 using namespace Rcpp;
 
 // AnyWhich
-int AnyWhich(IntegerVector x, int a, bool gt, bool lt, bool eq);
+int AnyWhich(NumericVector x, double a, bool gt, bool lt, bool eq);
 RcppExport SEXP _hutilscpp_AnyWhich(SEXP xSEXP, SEXP aSEXP, SEXP gtSEXP, SEXP ltSEXP, SEXP eqSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type a(aSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type a(aSEXP);
     Rcpp::traits::input_parameter< bool >::type gt(gtSEXP);
     Rcpp::traits::input_parameter< bool >::type lt(ltSEXP);
     Rcpp::traits::input_parameter< bool >::type eq(eqSEXP);
@@ -293,7 +293,7 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP do_c_pmax(SEXP, SEXP);
+RcppExport SEXP do_c_pmax(SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_AnyWhich", (DL_FUNC) &_hutilscpp_AnyWhich, 5},
@@ -320,7 +320,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 3},
     {"_hutilscpp_texParse", (DL_FUNC) &_hutilscpp_texParse, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
-    {"do_c_pmax", (DL_FUNC) &do_c_pmax, 2},
+    {"do_c_pmax",                          (DL_FUNC) &do_c_pmax,                          3},
     {NULL, NULL, 0}
 };
 

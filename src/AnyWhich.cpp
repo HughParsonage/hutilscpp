@@ -8,12 +8,14 @@ using namespace Rcpp;
 //' @param x An integer vector.
 //' @param a A (single) integer. That which is to be compared.
 //' @param gt,lt,eq Booleans, whether or not the comparison is greater than, less than, or equal to.
-//' Only \code{gt} and \code{lt} are mutually exclusive.
+//' Only \code{gt} and \code{lt} are mutually exclusive. If all \code{FALSE}, find the first instance
+//' where none are equal (i.e. does \code{x} have more than one distinct value).
+//'
 
 // [[Rcpp::export]]
-int AnyWhich(IntegerVector x, int a, bool gt, bool lt, bool eq) {
+int AnyWhich(NumericVector x, double a, bool gt, bool lt, bool eq) {
   int N = x.size();
-  
+
   if (gt) {
     if (lt) {
       stop("gt and lt were both TRUE.");
@@ -62,7 +64,7 @@ int AnyWhich(IntegerVector x, int a, bool gt, bool lt, bool eq) {
       }
     }
   }
-  
+
   return 0;
 }
 

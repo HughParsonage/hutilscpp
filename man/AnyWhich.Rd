@@ -9,7 +9,8 @@
 \item{a}{A (single) integer. That which is to be compared.}
 
 \item{gt, lt, eq}{Booleans, whether or not the comparison is greater than, less than, or equal to.
-Only \code{gt} and \code{lt} are mutually exclusive.}
+Only \code{gt} and \code{lt} are mutually exclusive. If all \code{FALSE}, find the first instance
+where none are equal (i.e. does \code{x} have more than one distinct value).}
 }
 \description{
 Used when a single instance is likely to occur and be important to detect quickly
