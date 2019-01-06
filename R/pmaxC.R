@@ -35,6 +35,7 @@ pmaxC <- function(x, a) {
   do_pmaxC(x, a)
 }
 
+#' @rdname pmaxC
 pmax0 <- function(x) {
   if (!is.numeric(x)) {
     stop("`x` was a ", class(x), ", but must be numeric.")

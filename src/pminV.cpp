@@ -1,7 +1,7 @@
 //' @title Parallel maximum
 //' @description A faster \code{pmin()}.
 //'
-//' @name pminV
+//' @name do_pminV
 //' @param x A numeric vector.
 //' @param y A numeric vector, the same length as x.
 //' @return The parallel maximum of the input values.
@@ -18,9 +18,9 @@ NumericVector pminV(NumericVector x, NumericVector y) {
     stop("x and y must be same length.");
   }
   NumericVector out(n);
-  
-  
-  
+
+
+
   for (int i = 0; i < n; ++i) {
     double xi = x[i];
     double yi = y[i];
@@ -30,6 +30,6 @@ NumericVector pminV(NumericVector x, NumericVector y) {
       out[i] = xi;
     }
   }
-  
+
   return out;
 }

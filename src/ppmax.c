@@ -13,23 +13,23 @@ SEXP do_c_pmax(SEXP x, SEXP a, SEXP b) {
   const double *xp = REAL(x);
   const double aaa = ap[0];
   const double bbb = bp[0];
-  if (R_finite(aaa) && R_finite(bbb)) {
+  if (aaa != R_PosInf && bbb != R_NegInf) {
     for (int i = 0; i < nx; i++) {
       double eleme = xp[i];
       ansp[i] = eleme > aaa ? eleme : aaa;
       ansp[i] = eleme < bbb ? eleme : bbb;
     }
   } else {
-    if (R_finite(aaa)) {
+    if (aaa != R_PosInf) {
       for (int i = 0; i < nx; i++) {
         double eleme = xp[i];
-        if (eleme == R_NaReal) {
-          ansp[i] = R_NaReal;
-        } else if (eleme == R_NaN) {
-          ansp[i] = R_NaN;
+        /* if (isnan(eleme)) {
+          ansp[i] = eleme;
         } else {
           ansp[i] = eleme > aaa ? eleme : aaa;
         }
+         */
+        ansp[i] = eleme > aaa ? eleme : aaa;
       }
     } else {
       for (int i = 0; i < nx; i++) {

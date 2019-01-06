@@ -73,24 +73,29 @@ pmax3 <- function(x, y, z) {
 }
 
 #' @name pmaxC-internal
+#' @name do_pmaxC
 #' @title Internal pmaxC helpers
 #' @description Internal functions used when the overheads of assertions
 #' would be too expensive.
 #' @export do_pmaxC do_pmax0 do_pmaxIPint0 do_pmaxIPnum0
 NULL
 
+#' @rdname do_pmaxC
 do_pmaxC <- function(x, a) {
     .Call(`_hutilscpp_do_pmaxC`, x, a)
 }
 
+#' @rdname do_pmaxC
 do_pmax0 <- function(x) {
     .Call(`_hutilscpp_do_pmax0`, x)
 }
 
+#' @rdname do_pmaxC
 do_pmaxIPnum0 <- function(x) {
     .Call(`_hutilscpp_do_pmaxIPnum0`, x)
 }
 
+#' @rdname do_pmaxC
 do_pmaxIPint0 <- function(x) {
     .Call(`_hutilscpp_do_pmaxIPint0`, x)
 }
@@ -98,17 +103,19 @@ do_pmaxIPint0 <- function(x) {
 #' @title Parallel maximum in C++
 #' @description A faster \code{pmax()}.
 #'
-#' @name pmaxV
+#' @name do_pmaxV
 #' @param x A numeric vector.
 #' @param y A numeric vector, the same length as x.
 #' @return The parallel maximum of the input values.
 #' @export do_pmaxNumNum do_pmaxIntInt
 NULL
 
+#' @rdname do_pmaxV
 do_pmaxNumNum <- function(x, y) {
     .Call(`_hutilscpp_do_pmaxNumNum`, x, y)
 }
 
+#' @rdname do_pmaxV
 do_pmaxIntInt <- function(x, y) {
     .Call(`_hutilscpp_do_pmaxIntInt`, x, y)
 }
@@ -116,7 +123,7 @@ do_pmaxIntInt <- function(x, y) {
 #' @title Parallel maximum
 #' @description A faster \code{pmin()}.
 #'
-#' @name pminC
+#' @name do_pminC
 #' @param x A numeric vector.
 #' @param a A single numeric value.
 #' @return The parallel minimum of the input values. The \code{0} versions are shortcuts for \code{a = 0}.
@@ -135,7 +142,7 @@ do_pmin0 <- function(x) {
 #' @title Parallel maximum
 #' @description A faster \code{pmin()}.
 #'
-#' @name pminV
+#' @name do_pminV
 #' @param x A numeric vector.
 #' @param y A numeric vector, the same length as x.
 #' @return The parallel maximum of the input values.

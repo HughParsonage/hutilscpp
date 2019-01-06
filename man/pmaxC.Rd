@@ -2,10 +2,13 @@
 % Please edit documentation in R/pmaxC.R
 \name{pmaxC}
 \alias{pmaxC}
+\alias{pmax0}
 \alias{pminC}
 \title{Parallel maximum/minimum}
 \usage{
 pmaxC(x, a)
+
+pmax0(x)
 
 pminC(x, a = 0)
 }

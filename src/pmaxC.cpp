@@ -1,4 +1,5 @@
 //' @name pmaxC-internal
+//' @name do_pmaxC
 //' @title Internal pmaxC helpers
 //' @description Internal functions used when the overheads of assertions
 //' would be too expensive.
@@ -54,6 +55,7 @@ using namespace Rcpp;
 //   return res;
 // }
 
+//' @rdname do_pmaxC
 // [[Rcpp::export]]
 NumericVector do_pmaxC(NumericVector x, double a) {
   int n = x.length();
@@ -71,6 +73,7 @@ NumericVector do_pmaxC(NumericVector x, double a) {
   return out;
 }
 
+//' @rdname do_pmaxC
 // [[Rcpp::export]]
 NumericVector do_pmax0(NumericVector x) {
   int n = x.length();
@@ -85,6 +88,7 @@ NumericVector do_pmax0(NumericVector x) {
   return out;
 }
 
+//' @rdname do_pmaxC
 // [[Rcpp::export]]
 NumericVector do_pmaxIPnum0(NumericVector x) {
   int n = x.length();
@@ -97,6 +101,7 @@ NumericVector do_pmaxIPnum0(NumericVector x) {
   return x;
 }
 
+//' @rdname do_pmaxC
 // [[Rcpp::export]]
 IntegerVector do_pmaxIPint0(IntegerVector x) {
   int n = x.length();

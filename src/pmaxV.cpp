@@ -1,7 +1,7 @@
 //' @title Parallel maximum in C++
 //' @description A faster \code{pmax()}.
 //'
-//' @name pmaxV
+//' @name do_pmaxV
 //' @param x A numeric vector.
 //' @param y A numeric vector, the same length as x.
 //' @return The parallel maximum of the input values.
@@ -11,6 +11,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+//' @rdname do_pmaxV
 // [[Rcpp::export]]
 NumericVector do_pmaxNumNum(NumericVector x, NumericVector y) {
   int n = x.length();
@@ -33,6 +34,7 @@ NumericVector do_pmaxNumNum(NumericVector x, NumericVector y) {
   return out;
 }
 
+//' @rdname do_pmaxV
 // [[Rcpp::export]]
 IntegerVector do_pmaxIntInt(IntegerVector x, IntegerVector y) {
   int n = x.length();

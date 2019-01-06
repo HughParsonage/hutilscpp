@@ -1,7 +1,7 @@
 //' @title Parallel maximum
 //' @description A faster \code{pmin()}.
 //'
-//' @name pminC
+//' @name do_pminC
 //' @param x A numeric vector.
 //' @param a A single numeric value.
 //' @return The parallel minimum of the input values. The \code{0} versions are shortcuts for \code{a = 0}.
