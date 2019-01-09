@@ -27,3 +27,17 @@ test_that("pmaxIPint0", {
                1:5)
 })
 
+test_that("Error handling", {
+  expect_error(pmaxC("", ""),
+               regexp = "was a character, but must be numeric",
+               fixed = TRUE)
+  expect_error(pmaxC(0:6, ""),
+               regexp = "was a character, but must be numeric",
+               fixed = TRUE)
+  expect_error(pmaxC(1:5, 1:2),
+               "`a` had length 2, but must be length-one",
+               fixed = TRUE)
+  expect_message(pmaxC(1:5, 0.5),
+                 )
+})
+

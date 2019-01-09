@@ -2,12 +2,16 @@
 % Please edit documentation in R/RcppExports.R
 \name{do_pmaxC}
 \alias{do_pmaxC}
+\alias{do_pmaxC_dbl}
+\alias{do_pmaxC_int}
 \alias{do_pmax0}
 \alias{do_pmaxIPnum0}
 \alias{do_pmaxIPint0}
 \title{Internal pmaxC helpers}
 \usage{
-do_pmaxC(x, a)
+do_pmaxC_dbl(x, a)
+
+do_pmaxC_int(x, a)
 
 do_pmax0(x)
 
@@ -16,9 +20,9 @@ do_pmaxIPnum0(x)
 do_pmaxIPint0(x)
 }
 \arguments{
-\item{x}{A numeric vector.}
+\item{x}{A numeric/integer vector.}
 
-\item{a}{A single numeric.}
+\item{a}{A single numeric/integer.}
 }
 \description{
 Internal functions used when the overheads of assertions

@@ -76,14 +76,19 @@ pmax3 <- function(x, y, z) {
 #' @title Internal pmaxC helpers
 #' @description Internal functions used when the overheads of assertions
 #' would be too expensive.
-#' @param x A numeric vector.
-#' @param a A single numeric.
-#' @export do_pmaxC do_pmax0 do_pmaxIPint0 do_pmaxIPnum0
+#' @param x A numeric/integer vector.
+#' @param a A single numeric/integer.
+#' @export do_pmaxC_dbl do_pmaxC_int do_pmax0 do_pmaxIPint0 do_pmaxIPnum0
 NULL
 
 #' @rdname do_pmaxC
-do_pmaxC <- function(x, a) {
-    .Call(`_hutilscpp_do_pmaxC`, x, a)
+do_pmaxC_dbl <- function(x, a) {
+    .Call(`_hutilscpp_do_pmaxC_dbl`, x, a)
+}
+
+#' @rdname do_pmaxC
+do_pmaxC_int <- function(x, a) {
+    .Call(`_hutilscpp_do_pmaxC_int`, x, a)
 }
 
 #' @rdname do_pmaxC

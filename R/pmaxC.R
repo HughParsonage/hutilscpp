@@ -18,6 +18,19 @@
 #'
 
 pmaxC <- function(x, a) {
+  # The whole point of this function is speed,
+  # so give results immediately if the user
+  # provides results that are expected and safe.
+  if (length(x) && length(a) == 1L) {
+    if (is.integer(x) && is.integer(a)) {
+      return(do_pmaxC_int(x, a))
+    }
+    if (is.double(x) && is.double(a)) {
+      return(do_pmaxC_dbl(x, a))
+    }
+  }
+
+
   if (!is.numeric(x)) {
     stop("`x` was a ", class(x), ", but must be numeric.")
   }
@@ -32,7 +45,25 @@ pmaxC <- function(x, a) {
          "If you require the parallel maximum of two equal-length vectors, ",
          "use pmaxV(x, y).")
   }
-  do_pmaxC(x, a)
+
+  # e.g.
+  # pmaxC(<int>, 0) => 0L
+  # but we need to be careful
+  # pmaxC(<int>, 0.5) !=> 0
+  if (is.integer(x)) {
+    # a must be double by now
+    if (!is.double(a)) stop("Internal error pmaxC:55")
+    ai <- as.integer(a)
+    OR <- `||`
+    if (OR(ai == a,
+           abs(ai - a) < sqrt(.Machine$double.eps))) {
+      return(do_pmaxC_int(x, ai))
+    } else {
+      message("Output is double.")
+      return(do_pmaxC_dbl(as.double(x), a))
+    }
+  }
+  stop("Internal error pmaxC:65") # nocov
 }
 
 #' @rdname pmaxC

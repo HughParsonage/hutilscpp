@@ -2,9 +2,9 @@
 //' @title Internal pmaxC helpers
 //' @description Internal functions used when the overheads of assertions
 //' would be too expensive.
-//' @param x A numeric vector.
-//' @param a A single numeric.
-//' @export do_pmaxC do_pmax0 do_pmaxIPint0 do_pmaxIPnum0
+//' @param x A numeric/integer vector.
+//' @param a A single numeric/integer.
+//' @export do_pmaxC_dbl do_pmaxC_int do_pmax0 do_pmaxIPint0 do_pmaxIPnum0
 
 #include <Rcpp.h>
 using namespace Rcpp;
@@ -58,9 +58,24 @@ using namespace Rcpp;
 
 //' @rdname do_pmaxC
 // [[Rcpp::export]]
-NumericVector do_pmaxC(NumericVector x, double a) {
+NumericVector do_pmaxC_dbl(NumericVector x, double a) {
   int n = x.length();
-  NumericVector out(n);
+  NumericVector out(x);
+
+  for (int i = 0; i < n; ++i) {
+    if (x[i] < a) {
+      out[i] = a;
+    }
+  }
+
+  return out;
+}
+
+//' @rdname do_pmaxC
+// [[Rcpp::export]]
+IntegerVector do_pmaxC_int(IntegerVector x, int a) {
+  int n = x.length();
+  IntegerVector out(n);
 
   for (int i = 0; i < n; ++i) {
     double xi = x[i];

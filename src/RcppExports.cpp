@@ -138,15 +138,27 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_pmaxC
-NumericVector do_pmaxC(NumericVector x, double a);
-RcppExport SEXP _hutilscpp_do_pmaxC(SEXP xSEXP, SEXP aSEXP) {
+// do_pmaxC_dbl
+NumericVector do_pmaxC_dbl(NumericVector x, double a);
+RcppExport SEXP _hutilscpp_do_pmaxC_dbl(SEXP xSEXP, SEXP aSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< double >::type a(aSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_pmaxC(x, a));
+    rcpp_result_gen = Rcpp::wrap(do_pmaxC_dbl(x, a));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_pmaxC_int
+IntegerVector do_pmaxC_int(IntegerVector x, int a);
+RcppExport SEXP _hutilscpp_do_pmaxC_int(SEXP xSEXP, SEXP aSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type a(aSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmaxC_int(x, a));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -307,7 +319,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which_last", (DL_FUNC) &_hutilscpp_do_which_last, 1},
     {"_hutilscpp_do_which_first_false", (DL_FUNC) &_hutilscpp_do_which_first_false, 1},
     {"_hutilscpp_pmax3", (DL_FUNC) &_hutilscpp_pmax3, 3},
-    {"_hutilscpp_do_pmaxC", (DL_FUNC) &_hutilscpp_do_pmaxC, 2},
+    {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 2},
+    {"_hutilscpp_do_pmaxC_int", (DL_FUNC) &_hutilscpp_do_pmaxC_int, 2},
     {"_hutilscpp_do_pmax0", (DL_FUNC) &_hutilscpp_do_pmax0, 1},
     {"_hutilscpp_do_pmaxIPnum0", (DL_FUNC) &_hutilscpp_do_pmaxIPnum0, 1},
     {"_hutilscpp_do_pmaxIPint0", (DL_FUNC) &_hutilscpp_do_pmaxIPint0, 1},
