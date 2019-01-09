@@ -4,8 +4,15 @@
 #' @export
 #'
 
-bench_system_time <- function(...) {
+bench_system_time <- function(expr) {
+  # bench::system_time only evaluates expr in the
+  # parent environment (reasonably). So we copy
+  # the names of everything in expr so that
+  # bench::system_time can run.
+  for (`***` in all.names(substitute(expr))) {
+    assign(`***`, value = eval.parent(x))
+  }
   if (requireNamespace("bench", quietly = TRUE)) {
-    bench::system_time(...)
+    bench::system_time(expr)
   }
 }

@@ -4,7 +4,7 @@
 \alias{bench_system_time}
 \title{Evaluate time of computation}
 \usage{
-bench_system_time(...)
+bench_system_time(expr)
 }
 \arguments{
 \item{...}{Passed to \code{\link[bench]{system_time}}.}

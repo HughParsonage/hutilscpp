@@ -22,7 +22,7 @@ The performance benefit of using this function is when the RHS of
 expression is lengthy and expensive.
 }
 \examples{
-x <- rnorm(1e6)
+x <- rep_len(runif(1e4, 0, 6), 5e8)
 bench_system_time(x > 5)
 bench_system_time(which(x > 5))
 bench_system_time(which.max(x > 5))

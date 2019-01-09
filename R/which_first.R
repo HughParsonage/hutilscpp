@@ -9,7 +9,7 @@
 #' expression is lengthy and expensive.
 #'
 #' @examples
-#' x <- rnorm(1e6)
+#' x <- rep_len(runif(1e4, 0, 6), 5e8)
 #' bench_system_time(x > 5)
 #' bench_system_time(which(x > 5))
 #' bench_system_time(which.max(x > 5))
@@ -26,10 +26,11 @@
 
 which_first <- function(expr) {
   rhs <- NULL
-  if (is.call(expr)) {
-    operator <- as.character(substitute(expr)[[1L]])
-    lhs <- substitute(expr)[[2L]]
-    rhs <- substitute(expr)[[3L]]
+  sexpr <- substitute(expr)
+  if (is.call(sexpr)) {
+    operator <- as.character(sexpr[[1L]])
+    lhs <- sexpr[[2L]]
+    rhs <- sexpr[[3L]]
   }
   if (length(rhs) != 1L || !is.numeric(rhs)) {
     o <- which.max(expr)
@@ -38,24 +39,25 @@ which_first <- function(expr) {
     }
     return(o)
   }
+  lhs_eval <- eval.parent(lhs)
   switch(operator,
          "==" = {
-           AnyWhich(eval.parent(lhs), as.double(rhs), gt = FALSE, lt = FALSE, eq = TRUE)
+           AnyWhich(lhs_eval, as.double(rhs), gt = FALSE, lt = FALSE, eq = TRUE)
          },
          "!=" = {
-           AnyWhich(eval.parent(lhs), as.double(rhs), gt = FALSE, lt = FALSE, eq = FALSE)
+           AnyWhich(lhs_eval, as.double(rhs), gt = FALSE, lt = FALSE, eq = FALSE)
          },
          "<=" = {
-           AnyWhich(eval.parent(lhs), as.double(rhs), gt = FALSE, lt = TRUE, eq = TRUE)
+           AnyWhich(lhs_eval, as.double(rhs), gt = FALSE, lt = TRUE, eq = TRUE)
          },
          "<" = {
-           AnyWhich(eval.parent(lhs), as.double(rhs), gt = FALSE, lt = TRUE, eq = FALSE)
+           AnyWhich(lhs_eval, as.double(rhs), gt = FALSE, lt = TRUE, eq = FALSE)
          },
          ">=" = {
-           AnyWhich(eval.parent(lhs), as.double(rhs), gt = TRUE, lt = FALSE, eq = TRUE)
+           AnyWhich(lhs_eval, as.double(rhs), gt = TRUE, lt = FALSE, eq = TRUE)
          },
          ">" = {
-           AnyWhich(eval.parent(lhs), as.double(rhs), gt = TRUE, lt = FALSE, eq = FALSE)
+           AnyWhich(lhs_eval, as.double(rhs), gt = TRUE, lt = FALSE, eq = FALSE)
          },
 
          # Still proceed using base R
