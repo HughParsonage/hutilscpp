@@ -52,7 +52,7 @@ pmaxC <- function(x, a) {
   # pmaxC(<int>, 0.5) !=> 0
   if (is.integer(x)) {
     # a must be double by now
-    if (!is.double(a)) stop("Internal error pmaxC:55")
+    if (!is.double(a)) stop("Internal error pmaxC:55")  # nocov
     ai <- as.integer(a)
     OR <- `||`
     if (OR(ai == a,

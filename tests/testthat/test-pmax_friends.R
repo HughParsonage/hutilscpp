@@ -50,3 +50,9 @@ test_that("pmaxC corners", {
   expect_identical(pmaxC(integer(0), 0), integer(0))
   expect_identical(pmaxC(double(0), 0), double(0))
 })
+
+test_that("pmax0", {
+  expect_identical(pmax0(integer(0)), integer(0))
+  expect_equal(pmax0(c(-1, 0.5, 0)), c(0, 0.5, 0))
+  expect_error(pmax0(""), regexp = "numeric")
+})
