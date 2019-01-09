@@ -47,6 +47,19 @@ which_first <- function(expr) {
     return(o)
   }
   lhs_eval <- eval.parent(lhs)
+  if (is.character(lhs_eval)) {
+    o <-
+      switch(operator,
+             "==" = AnyCharMatch(lhs_eval, as.character(rhs)),
+             {
+               o <- which.max(expr)
+               if (o == 1L && !expr[1L]) {
+                 o <- 0L
+               }
+             })
+    return(o)
+  }
+
   switch(operator,
          "==" = {
            AnyWhich(lhs_eval, as.double(rhs), gt = FALSE, lt = FALSE, eq = TRUE)

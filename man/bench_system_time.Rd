@@ -7,7 +7,7 @@
 bench_system_time(expr)
 }
 \arguments{
-\item{...}{Passed to \code{\link[bench]{system_time}}.}
+\item{expr}{Passed to \code{\link[bench]{system_time}}.}
 }
 \description{
 (Used for examples and tests)

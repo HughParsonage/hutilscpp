@@ -5,6 +5,18 @@
 
 using namespace Rcpp;
 
+// AnyCharMatch
+int AnyCharMatch(CharacterVector x, CharacterVector a);
+RcppExport SEXP _hutilscpp_AnyCharMatch(SEXP xSEXP, SEXP aSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type a(aSEXP);
+    rcpp_result_gen = Rcpp::wrap(AnyCharMatch(x, a));
+    return rcpp_result_gen;
+END_RCPP
+}
 // AnyWhich
 int AnyWhich(NumericVector x, double a, bool gt, bool lt, bool eq);
 RcppExport SEXP _hutilscpp_AnyWhich(SEXP xSEXP, SEXP aSEXP, SEXP gtSEXP, SEXP ltSEXP, SEXP eqSEXP) {
@@ -308,6 +320,7 @@ END_RCPP
 RcppExport SEXP do_c_pmax(SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_hutilscpp_AnyCharMatch", (DL_FUNC) &_hutilscpp_AnyCharMatch, 2},
     {"_hutilscpp_AnyWhich", (DL_FUNC) &_hutilscpp_AnyWhich, 5},
     {"_hutilscpp_ModeInt", (DL_FUNC) &_hutilscpp_ModeInt, 1},
     {"_hutilscpp_ModeInt2", (DL_FUNC) &_hutilscpp_ModeInt2, 3},
