@@ -38,6 +38,15 @@ test_that("Error handling", {
                "`a` had length 2, but must be length-one",
                fixed = TRUE)
   expect_message(pmaxC(1:5, 0.5),
-                 )
+                 "Output is double.")
 })
 
+test_that("pmaxC integer", {
+  expect_identical(pmaxC(-5:5, 0L), pmax.int(-5:5, 0L))
+  expect_identical(pmaxC(-5:5, 0), pmax.int(-5:5, 0L))
+})
+
+test_that("pmaxC corners", {
+  expect_identical(pmaxC(integer(0), 0), integer(0))
+  expect_identical(pmaxC(double(0), 0), double(0))
+})

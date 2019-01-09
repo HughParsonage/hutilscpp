@@ -9,13 +9,20 @@
 #' expression is lengthy and expensive.
 #'
 #' @examples
-#' x <- rep_len(runif(1e4, 0, 6), 5e8)
+#'
+#' N <- 1e6
+#' mem_lim <- memory.limit()
+#' if (is.finite(mem_lim) && mem_lim > 32e3) {
+#'   N <- 1e8
+#' }
+#'
+#' x <- rep_len(runif(1e4, 0, 6), N)
 #' bench_system_time(x > 5)
 #' bench_system_time(which(x > 5))
 #' bench_system_time(which.max(x > 5))
 #' bench_system_time(which_first(x > 5))
 #'
-#' x <- double(1e8)
+#' x <- double(N)
 #' bench_system_time(x > 0)
 #' bench_system_time(which(x > 0))
 #' bench_system_time(which.max(x > 0))
