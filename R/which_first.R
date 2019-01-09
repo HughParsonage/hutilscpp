@@ -34,7 +34,7 @@
 which_first <- function(expr) {
   rhs <- NULL
   sexpr <- substitute(expr)
-  if (is.call(sexpr)) {
+  if (is.call(sexpr) && length(sexpr) == 3L) {
     operator <- as.character(sexpr[[1L]])
     lhs <- sexpr[[2L]]
     rhs <- sexpr[[3L]]
