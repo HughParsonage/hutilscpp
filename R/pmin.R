@@ -17,3 +17,16 @@ pmin0 <- function(x) {
   }
 }
 
+pminV <- function(x, y) {
+  if (is.double(x) && is.double(y) && length(x) == length(y)) {
+    do_pminV(x, y)
+  } else {
+    if (length(x) != length(y)) {
+      stop("`length(x) = ", length(x), "`, yet ",
+           "`length(y) = ", length(y), "`. ",
+           "`x` and `y` must be the same length.")
+    }
+    pmin.int(x, y)
+  }
+}
+

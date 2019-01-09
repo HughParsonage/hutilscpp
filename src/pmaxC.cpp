@@ -1,8 +1,9 @@
-//' @name pmaxC-internal
 //' @name do_pmaxC
 //' @title Internal pmaxC helpers
 //' @description Internal functions used when the overheads of assertions
 //' would be too expensive.
+//' @param x A numeric vector.
+//' @param a A single numeric.
 //' @export do_pmaxC do_pmax0 do_pmaxIPint0 do_pmaxIPnum0
 
 #include <Rcpp.h>

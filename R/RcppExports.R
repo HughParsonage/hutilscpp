@@ -72,11 +72,12 @@ pmax3 <- function(x, y, z) {
     .Call(`_hutilscpp_pmax3`, x, y, z)
 }
 
-#' @name pmaxC-internal
 #' @name do_pmaxC
 #' @title Internal pmaxC helpers
 #' @description Internal functions used when the overheads of assertions
 #' would be too expensive.
+#' @param x A numeric vector.
+#' @param a A single numeric.
 #' @export do_pmaxC do_pmax0 do_pmaxIPint0 do_pmaxIPnum0
 NULL
 
@@ -146,11 +147,11 @@ do_pmin0 <- function(x) {
 #' @param x A numeric vector.
 #' @param y A numeric vector, the same length as x.
 #' @return The parallel maximum of the input values.
-#' @export pminV
+#' @export do_pminV
 NULL
 
-pminV <- function(x, y) {
-    .Call(`_hutilscpp_pminV`, x, y)
+do_pminV <- function(x, y) {
+    .Call(`_hutilscpp_do_pminV`, x, y)
 }
 
 squishn <- function(x, a, b) {

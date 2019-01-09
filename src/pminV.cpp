@@ -5,13 +5,13 @@
 //' @param x A numeric vector.
 //' @param y A numeric vector, the same length as x.
 //' @return The parallel maximum of the input values.
-//' @export pminV
+//' @export do_pminV
 
 #include <Rcpp.h>
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-NumericVector pminV(NumericVector x, NumericVector y) {
+NumericVector do_pminV(NumericVector x, NumericVector y) {
   int n = x.length();
   int m = y.length();
   if (n != m){

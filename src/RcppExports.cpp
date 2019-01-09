@@ -230,15 +230,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// pminV
-NumericVector pminV(NumericVector x, NumericVector y);
-RcppExport SEXP _hutilscpp_pminV(SEXP xSEXP, SEXP ySEXP) {
+// do_pminV
+NumericVector do_pminV(NumericVector x, NumericVector y);
+RcppExport SEXP _hutilscpp_do_pminV(SEXP xSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(pminV(x, y));
+    rcpp_result_gen = Rcpp::wrap(do_pminV(x, y));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -315,7 +315,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_pmaxIntInt", (DL_FUNC) &_hutilscpp_do_pmaxIntInt, 2},
     {"_hutilscpp_do_pminC", (DL_FUNC) &_hutilscpp_do_pminC, 2},
     {"_hutilscpp_do_pmin0", (DL_FUNC) &_hutilscpp_do_pmin0, 1},
-    {"_hutilscpp_pminV", (DL_FUNC) &_hutilscpp_pminV, 2},
+    {"_hutilscpp_do_pminV", (DL_FUNC) &_hutilscpp_do_pminV, 2},
     {"_hutilscpp_squishn", (DL_FUNC) &_hutilscpp_squishn, 3},
     {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 3},
     {"_hutilscpp_texParse", (DL_FUNC) &_hutilscpp_texParse, 3},

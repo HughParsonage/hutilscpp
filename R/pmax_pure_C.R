@@ -1,7 +1,7 @@
 pmax_pure_c <- function(x, a) {
-  if (is.double(x) && is.double(a) && length(a) == 1) {
+  if (is.double(x) && is.double(a) && length(a) == 1L) {
     .Call("do_c_pmax", x, a, -Inf)
   } else {
-    stop("Unable.")
+    pmax.int(x, a)
   }
 }
