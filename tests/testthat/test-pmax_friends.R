@@ -105,6 +105,11 @@ test_that("pminC in-place", {
   expect_equal(o, c(-1, 0, 0))
   expect_equal(pmin0(letters), pmin(letters, 0))
 
+  oi <- -1:5
+  expect_equal(min(pmax0(oi)), 0L)
+  expect_equal(min(oi), -1L)
+  expect_identical(min(pmax0(oi, TRUE)), 0L)
+  expect_equal(min(oi), 0L)
 })
 
 test_that("pmaxV", {
