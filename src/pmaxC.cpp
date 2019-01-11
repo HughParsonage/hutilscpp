@@ -60,7 +60,7 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 NumericVector do_pmaxC_dbl(NumericVector x, double a) {
   int n = x.length();
-  NumericVector out(x);
+  NumericVector out(clone(x));
 
   for (int i = 0; i < n; ++i) {
     if (x[i] < a) {
@@ -75,14 +75,11 @@ NumericVector do_pmaxC_dbl(NumericVector x, double a) {
 // [[Rcpp::export]]
 IntegerVector do_pmaxC_int(IntegerVector x, int a) {
   int n = x.length();
-  IntegerVector out(n);
+  IntegerVector out(x);
 
   for (int i = 0; i < n; ++i) {
-    double xi = x[i];
-    if (xi < a) {
+    if (x[i] < a) {
       out[i] = a;
-    } else {
-      out[i] = xi;
     }
   }
 
@@ -93,15 +90,37 @@ IntegerVector do_pmaxC_int(IntegerVector x, int a) {
 // [[Rcpp::export]]
 NumericVector do_pmax0(NumericVector x) {
   int n = x.length();
-  NumericVector out(n);
+  NumericVector out(clone(x));
+  int i = 0;
 
-  for (int i = 0; i < n; ++i) {
-    double xi = x[i];
-    if (xi > 0) {
-      out[i] = xi;
+  for (i = 0; i < n; ++i) {
+    if (x[i] < 0) {
+      out[i] = 0;
     }
   }
   return out;
+}
+
+// [[Rcpp::export]]
+IntegerVector do_pmaxIP_int(IntegerVector x, int a) {
+  int n = x.length();
+  for (int i = 0; i < n; ++i) {
+    if (x[i] < a) {
+      x[i] = a;
+    }
+  }
+  return x;
+}
+
+// [[Rcpp::export]]
+DoubleVector do_pmaxIP_dbl(DoubleVector x, double a) {
+  int n = x.length();
+  for (int i = 0; i < n; ++i) {
+    if (x[i] < a) {
+      x[i] = a;
+    }
+  }
+  return x;
 }
 
 //' @rdname do_pmaxC

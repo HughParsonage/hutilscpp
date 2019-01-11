@@ -185,6 +185,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_pmaxIP_int
+IntegerVector do_pmaxIP_int(IntegerVector x, int a);
+RcppExport SEXP _hutilscpp_do_pmaxIP_int(SEXP xSEXP, SEXP aSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type a(aSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmaxIP_int(x, a));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_pmaxIP_dbl
+DoubleVector do_pmaxIP_dbl(DoubleVector x, double a);
+RcppExport SEXP _hutilscpp_do_pmaxIP_dbl(SEXP xSEXP, SEXP aSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type a(aSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmaxIP_dbl(x, a));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_pmaxIPnum0
 NumericVector do_pmaxIPnum0(NumericVector x);
 RcppExport SEXP _hutilscpp_do_pmaxIPnum0(SEXP xSEXP) {
@@ -267,28 +291,30 @@ BEGIN_RCPP
 END_RCPP
 }
 // squishn
-NumericVector squishn(NumericVector x, double a, double b);
-RcppExport SEXP _hutilscpp_squishn(SEXP xSEXP, SEXP aSEXP, SEXP bSEXP) {
+NumericVector squishn(NumericVector x, double a, double b, bool in_place);
+RcppExport SEXP _hutilscpp_squishn(SEXP xSEXP, SEXP aSEXP, SEXP bSEXP, SEXP in_placeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< double >::type a(aSEXP);
     Rcpp::traits::input_parameter< double >::type b(bSEXP);
-    rcpp_result_gen = Rcpp::wrap(squishn(x, a, b));
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(squishn(x, a, b, in_place));
     return rcpp_result_gen;
 END_RCPP
 }
 // squishi
-IntegerVector squishi(IntegerVector x, int a, int b);
-RcppExport SEXP _hutilscpp_squishi(SEXP xSEXP, SEXP aSEXP, SEXP bSEXP) {
+IntegerVector squishi(IntegerVector x, int a, int b, bool in_place);
+RcppExport SEXP _hutilscpp_squishi(SEXP xSEXP, SEXP aSEXP, SEXP bSEXP, SEXP in_placeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type a(aSEXP);
     Rcpp::traits::input_parameter< int >::type b(bSEXP);
-    rcpp_result_gen = Rcpp::wrap(squishi(x, a, b));
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(squishi(x, a, b, in_place));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -335,6 +361,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 2},
     {"_hutilscpp_do_pmaxC_int", (DL_FUNC) &_hutilscpp_do_pmaxC_int, 2},
     {"_hutilscpp_do_pmax0", (DL_FUNC) &_hutilscpp_do_pmax0, 1},
+    {"_hutilscpp_do_pmaxIP_int", (DL_FUNC) &_hutilscpp_do_pmaxIP_int, 2},
+    {"_hutilscpp_do_pmaxIP_dbl", (DL_FUNC) &_hutilscpp_do_pmaxIP_dbl, 2},
     {"_hutilscpp_do_pmaxIPnum0", (DL_FUNC) &_hutilscpp_do_pmaxIPnum0, 1},
     {"_hutilscpp_do_pmaxIPint0", (DL_FUNC) &_hutilscpp_do_pmaxIPint0, 1},
     {"_hutilscpp_do_pmaxNumNum", (DL_FUNC) &_hutilscpp_do_pmaxNumNum, 2},
@@ -342,8 +370,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_pminC", (DL_FUNC) &_hutilscpp_do_pminC, 2},
     {"_hutilscpp_do_pmin0", (DL_FUNC) &_hutilscpp_do_pmin0, 1},
     {"_hutilscpp_do_pminV", (DL_FUNC) &_hutilscpp_do_pminV, 2},
-    {"_hutilscpp_squishn", (DL_FUNC) &_hutilscpp_squishn, 3},
-    {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 3},
+    {"_hutilscpp_squishn", (DL_FUNC) &_hutilscpp_squishn, 4},
+    {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 4},
     {"_hutilscpp_texParse", (DL_FUNC) &_hutilscpp_texParse, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
     {"do_c_pmax",                          (DL_FUNC) &do_c_pmax,                          3},

@@ -4,12 +4,21 @@
 \alias{squish}
 \title{Squish into a range}
 \usage{
-squish(x, a, b)
+squish(x, a, b, in_place = FALSE)
 }
 \arguments{
-\item{x}{A numeric vector}
+\item{x}{A numeric vector.}
 
 \item{a, b}{Upper and lower bounds}
+
+\item{in_place}{(logical, default: \code{FALSE}) Should the function operate on \code{x} in place?}
+}
+\value{
+A numeric/integer vector with the values of \code{x} "squished" between \code{a}
+and \code{b}; values above \code{b}
+replaced with \code{b} and values below \code{a} replaced with \code{a}.
+
+A
 }
 \description{
 Squish into a range

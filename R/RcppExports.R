@@ -100,6 +100,14 @@ do_pmax0 <- function(x) {
     .Call(`_hutilscpp_do_pmax0`, x)
 }
 
+do_pmaxIP_int <- function(x, a) {
+    .Call(`_hutilscpp_do_pmaxIP_int`, x, a)
+}
+
+do_pmaxIP_dbl <- function(x, a) {
+    .Call(`_hutilscpp_do_pmaxIP_dbl`, x, a)
+}
+
 #' @rdname do_pmaxC
 do_pmaxIPnum0 <- function(x) {
     .Call(`_hutilscpp_do_pmaxIPnum0`, x)
@@ -163,12 +171,12 @@ do_pminV <- function(x, y) {
     .Call(`_hutilscpp_do_pminV`, x, y)
 }
 
-squishn <- function(x, a, b) {
-    .Call(`_hutilscpp_squishn`, x, a, b)
+squishn <- function(x, a, b, in_place = FALSE) {
+    .Call(`_hutilscpp_squishn`, x, a, b, in_place)
 }
 
-squishi <- function(x, a, b) {
-    .Call(`_hutilscpp_squishi`, x, a, b)
+squishi <- function(x, a, b, in_place = FALSE) {
+    .Call(`_hutilscpp_squishi`, x, a, b, in_place)
 }
 
 texParse <- function(open, close, maxTeXGroup = 20L) {

@@ -56,3 +56,16 @@ test_that("pmax0", {
   expect_equal(pmax0(c(-1, 0.5, 0)), c(0, 0.5, 0))
   expect_error(pmax0(""), regexp = "numeric")
 })
+
+test_that("benchmark", {
+  skip_on_cran()
+  skip_if_not(identical(Sys.getenv("LOGONSERVER"), "\\\\DESKTOP-D6TKKU5"))
+  skip_if_not_installed("bench")
+  y <- rnorm(5000, 1)
+  y <- rep_len(y, 1e9)
+  xip <- y + 0
+  bench_time_pmaxC_y_0 <- bench::system_time(pmaxC(y, 0))
+  expect_lt(as.double(bench_time_pmaxC_y_0[2]), 10) # seconds
+  bench_time_pmaxC_y2_0 <- bench::system_time(pmaxC(y, 0, in_place = TRUE))
+  expect_lt(as.double(bench_time_pmaxC_y2_0[2]), 4) # seconds
+})

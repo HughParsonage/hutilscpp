@@ -6,16 +6,19 @@
 \alias{pminC}
 \title{Parallel maximum/minimum}
 \usage{
-pmaxC(x, a)
+pmaxC(x, a, in_place = FALSE)
 
-pmax0(x)
+pmax0(x, in_place = FALSE)
 
-pminC(x, a = 0)
+pminC(x, a = 0, in_place = FALSE)
 }
 \arguments{
 \item{x}{A numeric vector.}
 
 \item{a}{A single numeric value.}
+
+\item{in_place}{(logical, default: \code{FALSE}) Should \code{x}
+be modified in-place.}
 }
 \value{
 The parallel maximum/minimum of the input values. \code{pmax0(x)} is
@@ -28,6 +31,8 @@ Faster \code{pmax()} and \code{pmin()}.
 This function will always be faster than \code{pmax(x, a)} when \code{a} is
 a single value, but can be slower than \code{pmax.int(x, a)} when \code{x} is short.
 Use this function when comparing a numeric vector with a single value.
+
+Use \code{in_place = TRUE} within functions when you are sure it is safe.
 }
 \examples{
 pmaxC(-5:5, 2)
