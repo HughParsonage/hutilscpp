@@ -53,11 +53,15 @@ test_that("pmaxC corners", {
 
 test_that("pmaxC in-place", {
   o <- c(-1, 0, 1)
+  pmaxC(o, 0.5)
+  expect_equal(min(o), -1)
   pmaxC(o, 0.5, in_place = TRUE)
   expect_equal(min(o), 0.5)
 
   i <- 1:5 + 2L
   pmaxC(i, 5L)
+  expect_identical(min(i), 3L)
+  pmaxC(i, 5L, in_place = TRUE)
   expect_identical(min(i), 5L)
 })
 

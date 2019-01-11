@@ -75,7 +75,7 @@ NumericVector do_pmaxC_dbl(NumericVector x, double a) {
 // [[Rcpp::export]]
 IntegerVector do_pmaxC_int(IntegerVector x, int a) {
   int n = x.length();
-  IntegerVector out(x);
+  IntegerVector out(clone(x));
 
   for (int i = 0; i < n; ++i) {
     if (x[i] < a) {
