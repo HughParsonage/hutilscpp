@@ -7,6 +7,7 @@ test_that("Error handling", {
   expect_error(cumsum_reset(1:5 > 0, 1:6),
                "same lengths")
   expect_error(cumsum_reset(1:5, "a"))
+  expect_error(cumsum_reset(1:26 > 0, letters))
 })
 
 test_that("cumsum_reset works", {

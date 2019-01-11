@@ -9,7 +9,7 @@
 #'
 #' @export
 
-pmin0 <- function(x, in_place = TRUE) {
+pmin0 <- function(x, in_place = FALSE) {
   check_TF(in_place)
   if (is.integer(x)) {
     do_pmin0_int(x, in_place = in_place)

@@ -97,6 +97,7 @@ test_that("pminC error handling", {
 test_that("pminC in-place", {
   o <- c(-1, 0, 1)
   expect_equal(pminC(o, 0.5), c(-1, 0, 0.5))
+  expect_equal(o, c(-1, 0, 1))
   pminC(o, 0.5, in_place = TRUE)
   expect_equal(o, c(-1, 0, 0.5))
   expect_equal(pmin0(o), c(-1, 0, 0))
