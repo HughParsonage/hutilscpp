@@ -8,6 +8,7 @@
 #' helper(x6 + 1)
 #'
 
+# nocov start
 helper <- function(expr) {
   sexpr <- substitute(expr)
   if (is.call(sexpr)) {
@@ -17,6 +18,7 @@ helper <- function(expr) {
   cat(as.character(lhs), "\n")
   eval.parent(lhs)
 }
+# nocov end
 
 
 

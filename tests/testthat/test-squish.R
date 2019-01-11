@@ -22,6 +22,8 @@ test_that("Error handling", {
   expect_error(squish(1:5, 1L, 2L, in_place = "foo"),
                regexp = "`in_place` was type character but must be logical.",
                fixed = TRUE)
+  expect_error(squish(1:5, 1, 2), regexp = "type integer")
+  expect_error(squish("a", "a", "b"), "`x` was type character", fixed = TRUE)
 })
 
 test_that("Corner cases", {
