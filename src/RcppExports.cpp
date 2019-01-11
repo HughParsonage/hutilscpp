@@ -389,7 +389,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 4},
     {"_hutilscpp_texParse", (DL_FUNC) &_hutilscpp_texParse, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
-    {"do_c_pmax",                          (DL_FUNC) &do_c_pmax,                          3},
+    {"do_c_pmax", (DL_FUNC) &do_c_pmax, 3},
     {NULL, NULL, 0}
 };
 
