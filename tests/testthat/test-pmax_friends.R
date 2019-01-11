@@ -105,6 +105,15 @@ test_that("pminC in-place", {
 
 })
 
+test_that("pmaxV", {
+  expect_identical(pmaxV(1:5, 11:15), 11:15)
+  expect_identical(pmaxV(1:5, 5:1), c(5L, 4L, 3L, 4L, 5L))
+})
+
+test_that("pmaxV error", {
+  expect_error(pmaxV(1:5, 1:5 + 0.5), regexp = "type double")
+})
+
 test_that("benchmark", {
   skip_on_cran()
   skip_if_not(identical(Sys.getenv("LOGONSERVER"), "\\\\DESKTOP-D6TKKU5"))
