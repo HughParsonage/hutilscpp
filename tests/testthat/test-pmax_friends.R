@@ -103,6 +103,7 @@ test_that("pminC in-place", {
   expect_equal(pmin0(o), c(-1, 0, 0))
   pmin0(o, in_place = TRUE)
   expect_equal(o, c(-1, 0, 0))
+  expect_equal(pmin0(letters), pmin(letters, 0))
 
 })
 
