@@ -3,6 +3,10 @@ context("test-cumsum_reset")
 test_that("Error handling", {
   expect_error(cumsum_reset(1),
                regexp = "logical")
+  expect_error(cumsum_reset(c(NA, TRUE), "missing value"))
+  expect_error(cumsum_reset(1:5 > 0, 1:6),
+               "same lengths")
+  expect_error(cumsum_reset(1:5, "a"))
 })
 
 test_that("cumsum_reset works", {
@@ -11,5 +15,8 @@ test_that("cumsum_reset works", {
   expect_identical(cumsum_reset(x = c(TRUE, TRUE, FALSE, TRUE, TRUE),
                                 y = 1:5),
                    c(1L, 3L, 0L, 4L, 9L))
+  expect_identical(cumsum_reset(x = c(TRUE, TRUE, FALSE, TRUE, TRUE),
+                                y = as.double(1:5)),
+                   c(1, 3, 0, 4, 9))
 
 })
