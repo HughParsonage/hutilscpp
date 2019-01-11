@@ -1,5 +1,7 @@
 #' Negative component
 #' @param x A vector.
+#' @param in_place (logical, default: \code{FALSE}) Should \code{x}
+#' be modified in-place.
 #' @return Same as \code{pmin(x, 0)}.
 #'
 #' @examples

@@ -8,6 +8,9 @@ pmin0(x, in_place = TRUE)
 }
 \arguments{
 \item{x}{A vector.}
+
+\item{in_place}{(logical, default: \code{FALSE}) Should \code{x}
+be modified in-place.}
 }
 \value{
 Same as \code{pmin(x, 0)}.
