@@ -71,6 +71,22 @@ test_that("pmax0", {
   expect_error(pmax0(""), regexp = "numeric")
 })
 
+test_that("pmax0 in-place", {
+  o <- c(-1, 0, 1)
+  o0 <- pmax0(o)
+  expect_equal(o0[1], 0)
+  expect_equal(min(o), -1)
+  pmax0(o, in_place = TRUE)
+  expect_equal(min(o), 0)
+
+  i <- 1:5 - 2L
+  o0 <- pmax0(i)
+  expect_equal(o0[1], 0L)
+  expect_identical(min(i), -1L)
+  pmax0(i, in_place = TRUE)
+  expect_identical(min(i), 0L)
+})
+
 test_that("benchmark", {
   skip_on_cran()
   skip_if_not(identical(Sys.getenv("LOGONSERVER"), "\\\\DESKTOP-D6TKKU5"))
