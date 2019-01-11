@@ -256,25 +256,39 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_pminC
-NumericVector do_pminC(NumericVector x, double a);
-RcppExport SEXP _hutilscpp_do_pminC(SEXP xSEXP, SEXP aSEXP) {
+NumericVector do_pminC(NumericVector x, double a, bool in_place);
+RcppExport SEXP _hutilscpp_do_pminC(SEXP xSEXP, SEXP aSEXP, SEXP in_placeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< double >::type a(aSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_pminC(x, a));
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pminC(x, a, in_place));
     return rcpp_result_gen;
 END_RCPP
 }
-// do_pmin0
-NumericVector do_pmin0(NumericVector x);
-RcppExport SEXP _hutilscpp_do_pmin0(SEXP xSEXP) {
+// do_pmin0_dbl
+NumericVector do_pmin0_dbl(NumericVector x, bool in_place);
+RcppExport SEXP _hutilscpp_do_pmin0_dbl(SEXP xSEXP, SEXP in_placeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_pmin0(x));
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmin0_dbl(x, in_place));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_pmin0_int
+IntegerVector do_pmin0_int(IntegerVector x, bool in_place);
+RcppExport SEXP _hutilscpp_do_pmin0_int(SEXP xSEXP, SEXP in_placeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmin0_int(x, in_place));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -367,8 +381,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_pmaxIPint0", (DL_FUNC) &_hutilscpp_do_pmaxIPint0, 1},
     {"_hutilscpp_do_pmaxNumNum", (DL_FUNC) &_hutilscpp_do_pmaxNumNum, 2},
     {"_hutilscpp_do_pmaxIntInt", (DL_FUNC) &_hutilscpp_do_pmaxIntInt, 2},
-    {"_hutilscpp_do_pminC", (DL_FUNC) &_hutilscpp_do_pminC, 2},
-    {"_hutilscpp_do_pmin0", (DL_FUNC) &_hutilscpp_do_pmin0, 1},
+    {"_hutilscpp_do_pminC", (DL_FUNC) &_hutilscpp_do_pminC, 3},
+    {"_hutilscpp_do_pmin0_dbl", (DL_FUNC) &_hutilscpp_do_pmin0_dbl, 2},
+    {"_hutilscpp_do_pmin0_int", (DL_FUNC) &_hutilscpp_do_pmin0_int, 2},
     {"_hutilscpp_do_pminV", (DL_FUNC) &_hutilscpp_do_pminV, 2},
     {"_hutilscpp_squishn", (DL_FUNC) &_hutilscpp_squishn, 4},
     {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 4},

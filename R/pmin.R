@@ -7,11 +7,12 @@
 #'
 #' @export
 
-pmin0 <- function(x) {
+pmin0 <- function(x, in_place = TRUE) {
+  check_TF(in_place)
   if (is.integer(x)) {
-    pmin.int(x, 0L)
+    do_pmin0_int(x, in_place = in_place)
   } else if (is.double(x)) {
-    do_pmin0(x)
+    do_pmin0_dbl(x, in_place = in_place)
   } else {
     pmin(x, 0)
   }

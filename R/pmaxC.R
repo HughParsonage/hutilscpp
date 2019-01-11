@@ -119,11 +119,8 @@ pminC <- function(x, a = 0, in_place = FALSE) {
          "If you require the parallel maximum of two equal-length vectors, ",
          "use pmaxV(x, y).")
   }
-  if (in_place) {
-    do_pmaxIP_dbl(x, a)
-  } else {
-    do_pminC(x, a)
-  }
+  check_TF(in_place)
+  do_pminC(x, a, in_place = in_place)
 }
 
 

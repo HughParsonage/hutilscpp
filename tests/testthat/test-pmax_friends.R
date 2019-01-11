@@ -87,6 +87,24 @@ test_that("pmax0 in-place", {
   expect_identical(min(i), 0L)
 })
 
+test_that("pminC error handling", {
+  expect_error(pminC("", ""), "character")
+  expect_error(pminC(0, ""), "character")
+  expect_error(pminC(0, 0:5), "`a` had length")
+  expect_identical(pminC(double(0)), double(0))
+})
+
+test_that("pminC in-place", {
+  o <- c(-1, 0, 1)
+  expect_equal(pminC(o, 0.5), c(-1, 0, 0.5))
+  pminC(o, 0.5, in_place = TRUE)
+  expect_equal(o, c(-1, 0, 0.5))
+  expect_equal(pmin0(o), c(-1, 0, 0))
+  pmin0(o, in_place = TRUE)
+  expect_equal(o, c(-1, 0, 0))
+
+})
+
 test_that("benchmark", {
   skip_on_cran()
   skip_if_not(identical(Sys.getenv("LOGONSERVER"), "\\\\DESKTOP-D6TKKU5"))

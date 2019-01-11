@@ -4,7 +4,7 @@
 \alias{pmin0}
 \title{Negative component}
 \usage{
-pmin0(x)
+pmin0(x, in_place = TRUE)
 }
 \arguments{
 \item{x}{A vector.}

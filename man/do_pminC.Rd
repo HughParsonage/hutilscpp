@@ -7,6 +7,8 @@
 \item{x}{A numeric vector.}
 
 \item{a}{A single numeric value.}
+
+\item{in_place}{(bool, default: \code{false}) Should the function operate on \code{x} in-place?}
 }
 \value{
 The parallel minimum of the input values. The \code{0} versions are shortcuts for \code{a = 0}.

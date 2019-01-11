@@ -144,17 +144,22 @@ do_pmaxIntInt <- function(x, y) {
 #' @name do_pminC
 #' @param x A numeric vector.
 #' @param a A single numeric value.
+#' @param in_place (bool, default: \code{false}) Should the function operate on \code{x} in-place?
 #' @return The parallel minimum of the input values. The \code{0} versions are shortcuts for \code{a = 0}.
 #' @note This function will always be faster than \code{pmin(x, a)} when \code{a} is a single value, but can be slower than \code{pmin.int(x, a)} when \code{x} is short. Use this function when comparing a numeric vector with a single value.
 #' @export do_pminC
 NULL
 
-do_pminC <- function(x, a) {
-    .Call(`_hutilscpp_do_pminC`, x, a)
+do_pminC <- function(x, a, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pminC`, x, a, in_place)
 }
 
-do_pmin0 <- function(x) {
-    .Call(`_hutilscpp_do_pmin0`, x)
+do_pmin0_dbl <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmin0_dbl`, x, in_place)
+}
+
+do_pmin0_int <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmin0_int`, x, in_place)
 }
 
 #' @title Parallel maximum
