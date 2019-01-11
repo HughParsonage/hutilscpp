@@ -34,21 +34,29 @@
 which_first <- function(expr) {
   rhs <- NULL
   sexpr <- substitute(expr)
-  if (is.call(sexpr) && length(sexpr) == 3L) {
-    operator <- as.character(sexpr[[1L]])
-    lhs <- sexpr[[2L]]
-    rhs <- sexpr[[3L]]
-  }
-  if (length(rhs) != 1L || !is.numeric(rhs)) {
+  if (!is.call(sexpr) ||
+      length(sexpr) != 3L ||
+      anyNA(match(operator <- as.character(sexpr[[1L]]),
+                  c("==", "<=", ">=", ">", "<", "!="))) ||
+      !is.name(lhs <- sexpr[[2L]]) ||
+      !is.numeric(rhs <- sexpr[[3L]])) {
     o <- which.max(expr)
+
+    # o == 1L is wrong if all expr are FALSE
     if (o == 1L && !expr[1L]) {
       o <- 0L
     }
     return(o)
   }
+
   lhs_eval <- eval.parent(lhs)
+  if (is.integer(lhs_eval) && operator == "==" && {is.integer(rhs) || rhs == as.integer(rhs)}) {
+    return(match(as.integer(rhs), lhs_eval, nomatch = 0L))
+  }
+
+
   if (is.character(lhs_eval)) {
-    o <-
+    oc <-
       switch(operator,
              "==" = AnyCharMatch(lhs_eval, as.character(rhs)),
              {
@@ -56,8 +64,9 @@ which_first <- function(expr) {
                if (o == 1L && !expr[1L]) {
                  o <- 0L
                }
+               o
              })
-    return(o)
+    return(oc)
   }
 
   switch(operator,
@@ -80,14 +89,20 @@ which_first <- function(expr) {
            AnyWhich(lhs_eval, as.double(rhs), gt = TRUE, lt = FALSE, eq = FALSE)
          },
 
+         # nocov start
          # Still proceed using base R
          {
+           warning("Internal error: which_first:95")
            o <- which.max(expr)
+
            if (o == 1L && !expr[1L]) {
              o <- 0L
            }
            o
-         })
+         }
+         # nocov end
+         )
+
 }
 
 

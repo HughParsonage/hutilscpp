@@ -26,3 +26,14 @@ test_that("Fall through", {
   x <- c(letters, 1)
   expect_identical(which_first(x == 1), 27L)
 })
+
+test_that("match", {
+  int_m <- 1:100
+  expect_identical(which_first(int_m == 2L), 2L)
+})
+
+
+
+
+
+
