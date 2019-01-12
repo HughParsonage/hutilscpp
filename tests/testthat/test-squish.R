@@ -6,10 +6,12 @@ test_that("squish works", {
   expect_equal(max(squish(x, 0, 3)), max(x))
   expect_equal(min(squish(x, 0, 3)), 0)
   expect_equal(min(squish(x, -1, 3)), 0)
+  expect_equal(min(squish(x, 1.5, 3)), 1.5)
   xi <- sample(1:10)
   expect_identical(squish(xi, 1L, 10L), xi)
   expect_identical(squish(xi, 1L, 1L), rep_len(1L, 10L))
   expect_identical(squish(xi, 1L, 1L), rep_len(1L, 10L))
+  expect_identical(squish(xi, 5L, 6L)[1L], 5L)
 })
 
 test_that("Error handling", {

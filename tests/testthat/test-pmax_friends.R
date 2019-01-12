@@ -120,6 +120,7 @@ test_that("pmaxV", {
 
 test_that("pmaxV error", {
   expect_error(pmaxV(1:5, 1:5 + 0.5), regexp = "type double")
+  expect_error(do_pminV(1:5, 1:6), "same length")
 })
 
 test_that("benchmark", {

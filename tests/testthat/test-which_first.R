@@ -25,6 +25,7 @@ test_that("Fall through", {
 
   x <- c(letters, 1)
   expect_identical(which_first(x == 1), 27L)
+  expect_identical(which_first(x == 155), 0L)
   expect_identical(which_first(x < 1), 0L)
 })
 
