@@ -37,13 +37,13 @@ int anyOutside_dbl(DoubleVector x, double a, double b, bool nas_present = false,
   if (nas_present) {
     if (na_is_outside) {
       for (int i = 0; i < N; ++i) {
-        if (x[i] == R_NaReal || x[i] < a || x[i] > b) {
+        if (R_IsNA(x[i]) || x[i] < a || x[i] > b) {
           return ++i;
         }
       }
     } else {
       for (int i = 0; i < N; ++i) {
-        if (x[i] == R_NaReal) {
+        if (R_IsNA(x[i])) {
           continue;
         }
         if (x[i] < a || x[i] > b) {
