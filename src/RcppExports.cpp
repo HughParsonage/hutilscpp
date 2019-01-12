@@ -32,30 +32,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// ModeInt
-int ModeInt(IntegerVector x);
-RcppExport SEXP _hutilscpp_ModeInt(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(ModeInt(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// ModeInt2
-int ModeInt2(IntegerVector x, int xmax, int xmin);
-RcppExport SEXP _hutilscpp_ModeInt2(SEXP xSEXP, SEXP xmaxSEXP, SEXP xminSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type xmax(xmaxSEXP);
-    Rcpp::traits::input_parameter< int >::type xmin(xminSEXP);
-    rcpp_result_gen = Rcpp::wrap(ModeInt2(x, xmax, xmin));
-    return rcpp_result_gen;
-END_RCPP
-}
 // anyOutside
 int anyOutside(IntegerVector x, int a, int b);
 RcppExport SEXP _hutilscpp_anyOutside(SEXP xSEXP, SEXP aSEXP, SEXP bSEXP) {
@@ -362,8 +338,6 @@ RcppExport SEXP do_c_pmax(SEXP, SEXP, SEXP);
 static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_AnyCharMatch", (DL_FUNC) &_hutilscpp_AnyCharMatch, 2},
     {"_hutilscpp_AnyWhich", (DL_FUNC) &_hutilscpp_AnyWhich, 5},
-    {"_hutilscpp_ModeInt", (DL_FUNC) &_hutilscpp_ModeInt, 1},
-    {"_hutilscpp_ModeInt2", (DL_FUNC) &_hutilscpp_ModeInt2, 3},
     {"_hutilscpp_anyOutside", (DL_FUNC) &_hutilscpp_anyOutside, 3},
     {"_hutilscpp_do_cumsum_reset_logical", (DL_FUNC) &_hutilscpp_do_cumsum_reset_logical, 1},
     {"_hutilscpp_do_cumsum_reset_integer", (DL_FUNC) &_hutilscpp_do_cumsum_reset_integer, 2},
@@ -389,7 +363,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 4},
     {"_hutilscpp_texParse", (DL_FUNC) &_hutilscpp_texParse, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
-    {"do_c_pmax", (DL_FUNC) &do_c_pmax, 3},
+    {"do_c_pmax",                          (DL_FUNC) &do_c_pmax,                          3},
     {NULL, NULL, 0}
 };
 

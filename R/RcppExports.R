@@ -21,20 +21,6 @@ AnyWhich <- function(x, a, gt, lt, eq) {
     .Call(`_hutilscpp_AnyWhich`, x, a, gt, lt, eq)
 }
 
-ModeInt <- function(x) {
-    .Call(`_hutilscpp_ModeInt`, x)
-}
-
-#' @title Mode II
-#' @param x Integer vector
-#' @export ModeInt2
-#' @name ModeInt2
-NULL
-
-ModeInt2 <- function(x, xmax = -1L, xmin = 1L) {
-    .Call(`_hutilscpp_ModeInt2`, x, xmax, xmin)
-}
-
 anyOutside <- function(x, a, b) {
     .Call(`_hutilscpp_anyOutside`, x, a, b)
 }
