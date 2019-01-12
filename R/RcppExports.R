@@ -21,8 +21,12 @@ AnyWhich <- function(x, a, gt, lt, eq) {
     .Call(`_hutilscpp_AnyWhich`, x, a, gt, lt, eq)
 }
 
-anyOutside <- function(x, a, b) {
-    .Call(`_hutilscpp_anyOutside`, x, a, b)
+anyOutside_int <- function(x, a, b, nas_present = FALSE, na_is_outside = TRUE) {
+    .Call(`_hutilscpp_anyOutside_int`, x, a, b, nas_present, na_is_outside)
+}
+
+anyOutside_dbl <- function(x, a, b, nas_present = FALSE, na_is_outside = TRUE) {
+    .Call(`_hutilscpp_anyOutside_dbl`, x, a, b, nas_present, na_is_outside)
 }
 
 do_cumsum_reset_logical <- function(x) {

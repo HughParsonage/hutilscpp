@@ -7,3 +7,12 @@ test_that("checkTF works", {
   expect_error(check_TF(1:2 > 0), "length")
   expect_error(check_TF(1L), "integer")
 })
+
+test_that("isnt_number", {
+  expect_false(isnt_number(1))
+  expect_false(isnt_number(NA_integer_, na.bad = FALSE))
+  expect_true(isnt_number(NA_integer_))
+  expect_false(isnt_number(Inf, infinite.bad = FALSE))
+  expect_true(isnt_number(Inf))
+})
+

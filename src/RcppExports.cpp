@@ -32,16 +32,33 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// anyOutside
-int anyOutside(IntegerVector x, int a, int b);
-RcppExport SEXP _hutilscpp_anyOutside(SEXP xSEXP, SEXP aSEXP, SEXP bSEXP) {
+// anyOutside_int
+int anyOutside_int(IntegerVector x, int a, int b, bool nas_present, bool na_is_outside);
+RcppExport SEXP _hutilscpp_anyOutside_int(SEXP xSEXP, SEXP aSEXP, SEXP bSEXP, SEXP nas_presentSEXP, SEXP na_is_outsideSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type a(aSEXP);
     Rcpp::traits::input_parameter< int >::type b(bSEXP);
-    rcpp_result_gen = Rcpp::wrap(anyOutside(x, a, b));
+    Rcpp::traits::input_parameter< bool >::type nas_present(nas_presentSEXP);
+    Rcpp::traits::input_parameter< bool >::type na_is_outside(na_is_outsideSEXP);
+    rcpp_result_gen = Rcpp::wrap(anyOutside_int(x, a, b, nas_present, na_is_outside));
+    return rcpp_result_gen;
+END_RCPP
+}
+// anyOutside_dbl
+int anyOutside_dbl(DoubleVector x, double a, double b, bool nas_present, bool na_is_outside);
+RcppExport SEXP _hutilscpp_anyOutside_dbl(SEXP xSEXP, SEXP aSEXP, SEXP bSEXP, SEXP nas_presentSEXP, SEXP na_is_outsideSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type a(aSEXP);
+    Rcpp::traits::input_parameter< double >::type b(bSEXP);
+    Rcpp::traits::input_parameter< bool >::type nas_present(nas_presentSEXP);
+    Rcpp::traits::input_parameter< bool >::type na_is_outside(na_is_outsideSEXP);
+    rcpp_result_gen = Rcpp::wrap(anyOutside_dbl(x, a, b, nas_present, na_is_outside));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -338,7 +355,8 @@ RcppExport SEXP do_c_pmax(SEXP, SEXP, SEXP);
 static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_AnyCharMatch", (DL_FUNC) &_hutilscpp_AnyCharMatch, 2},
     {"_hutilscpp_AnyWhich", (DL_FUNC) &_hutilscpp_AnyWhich, 5},
-    {"_hutilscpp_anyOutside", (DL_FUNC) &_hutilscpp_anyOutside, 3},
+    {"_hutilscpp_anyOutside_int", (DL_FUNC) &_hutilscpp_anyOutside_int, 5},
+    {"_hutilscpp_anyOutside_dbl", (DL_FUNC) &_hutilscpp_anyOutside_dbl, 5},
     {"_hutilscpp_do_cumsum_reset_logical", (DL_FUNC) &_hutilscpp_do_cumsum_reset_logical, 1},
     {"_hutilscpp_do_cumsum_reset_integer", (DL_FUNC) &_hutilscpp_do_cumsum_reset_integer, 2},
     {"_hutilscpp_do_cumsum_reset_double", (DL_FUNC) &_hutilscpp_do_cumsum_reset_double, 2},
