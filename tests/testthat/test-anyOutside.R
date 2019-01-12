@@ -5,6 +5,9 @@ test_that("Error handling", {
   expect_error(anyOutside(1:10, 3L, "c"), "character")
   expect_error(anyOutside(1:10, 1L, 10L, nas_absent = ""), "logical")
   expect_error(anyOutside(1:10, 1L, 10L, nas_absent = c(TRUE, FALSE)), "length")
+  expect_error(anyOutside(1:10, 1, 10),
+               regexp = "`x`, `a`, and `b` must be numeric vectors of the same type.",
+               fixed = TRUE)
 })
 
 test_that("anyOutside works", {
