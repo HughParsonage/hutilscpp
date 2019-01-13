@@ -130,6 +130,78 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// haversine_distance
+double haversine_distance(double olat1, double olon1, double olat2, double olon2, double delta_lat, double delta_lon);
+RcppExport SEXP _hutilscpp_haversine_distance(SEXP olat1SEXP, SEXP olon1SEXP, SEXP olat2SEXP, SEXP olon2SEXP, SEXP delta_latSEXP, SEXP delta_lonSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type olat1(olat1SEXP);
+    Rcpp::traits::input_parameter< double >::type olon1(olon1SEXP);
+    Rcpp::traits::input_parameter< double >::type olat2(olat2SEXP);
+    Rcpp::traits::input_parameter< double >::type olon2(olon2SEXP);
+    Rcpp::traits::input_parameter< double >::type delta_lat(delta_latSEXP);
+    Rcpp::traits::input_parameter< double >::type delta_lon(delta_lonSEXP);
+    rcpp_result_gen = Rcpp::wrap(haversine_distance(olat1, olon1, olat2, olon2, delta_lat, delta_lon));
+    return rcpp_result_gen;
+END_RCPP
+}
+// haversineDistance
+NumericVector haversineDistance(NumericVector lat1, NumericVector lon1, NumericVector lat2, NumericVector lon2);
+RcppExport SEXP _hutilscpp_haversineDistance(SEXP lat1SEXP, SEXP lon1SEXP, SEXP lat2SEXP, SEXP lon2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type lat1(lat1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lon1(lon1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lat2(lat2SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lon2(lon2SEXP);
+    rcpp_result_gen = Rcpp::wrap(haversineDistance(lat1, lon1, lat2, lon2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// which_min_HaversineDistance
+int which_min_HaversineDistance(NumericVector lat1, NumericVector lon1, double lat2, double lon2, double upperBound);
+RcppExport SEXP _hutilscpp_which_min_HaversineDistance(SEXP lat1SEXP, SEXP lon1SEXP, SEXP lat2SEXP, SEXP lon2SEXP, SEXP upperBoundSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type lat1(lat1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lon1(lon1SEXP);
+    Rcpp::traits::input_parameter< double >::type lat2(lat2SEXP);
+    Rcpp::traits::input_parameter< double >::type lon2(lon2SEXP);
+    Rcpp::traits::input_parameter< double >::type upperBound(upperBoundSEXP);
+    rcpp_result_gen = Rcpp::wrap(which_min_HaversineDistance(lat1, lon1, lat2, lon2, upperBound));
+    return rcpp_result_gen;
+END_RCPP
+}
+// match_min_Haversine
+IntegerVector match_min_Haversine(NumericVector lat1, NumericVector lon1, NumericVector lat2, NumericVector lon2, IntegerVector tabl, double r);
+RcppExport SEXP _hutilscpp_match_min_Haversine(SEXP lat1SEXP, SEXP lon1SEXP, SEXP lat2SEXP, SEXP lon2SEXP, SEXP tablSEXP, SEXP rSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type lat1(lat1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lon1(lon1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lat2(lat2SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type lon2(lon2SEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type tabl(tablSEXP);
+    Rcpp::traits::input_parameter< double >::type r(rSEXP);
+    rcpp_result_gen = Rcpp::wrap(match_min_Haversine(lat1, lon1, lat2, lon2, tabl, r));
+    return rcpp_result_gen;
+END_RCPP
+}
+// lexicalCast
+std::vector<std::string> lexicalCast(std::vector<int> v);
+RcppExport SEXP _hutilscpp_lexicalCast(SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::vector<int> >::type v(vSEXP);
+    rcpp_result_gen = Rcpp::wrap(lexicalCast(v));
+    return rcpp_result_gen;
+END_RCPP
+}
 // pmax3
 NumericVector pmax3(NumericVector x, NumericVector y, NumericVector z);
 RcppExport SEXP _hutilscpp_pmax3(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
@@ -338,6 +410,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// extractMandatory
+CharacterVector extractMandatory(CharacterVector x, CharacterVector command);
+RcppExport SEXP _hutilscpp_extractMandatory(SEXP xSEXP, SEXP commandSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type command(commandSEXP);
+    rcpp_result_gen = Rcpp::wrap(extractMandatory(x, command));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_which_true_onwards
 int do_which_true_onwards(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_true_onwards(SEXP xSEXP) {
@@ -363,6 +447,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which_first", (DL_FUNC) &_hutilscpp_do_which_first, 1},
     {"_hutilscpp_do_which_last", (DL_FUNC) &_hutilscpp_do_which_last, 1},
     {"_hutilscpp_do_which_first_false", (DL_FUNC) &_hutilscpp_do_which_first_false, 1},
+    {"_hutilscpp_haversine_distance", (DL_FUNC) &_hutilscpp_haversine_distance, 6},
+    {"_hutilscpp_haversineDistance", (DL_FUNC) &_hutilscpp_haversineDistance, 4},
+    {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
+    {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 6},
+    {"_hutilscpp_lexicalCast", (DL_FUNC) &_hutilscpp_lexicalCast, 1},
     {"_hutilscpp_pmax3", (DL_FUNC) &_hutilscpp_pmax3, 3},
     {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 2},
     {"_hutilscpp_do_pmaxC_int", (DL_FUNC) &_hutilscpp_do_pmaxC_int, 2},
@@ -380,8 +469,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_squishn", (DL_FUNC) &_hutilscpp_squishn, 4},
     {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 4},
     {"_hutilscpp_texParse", (DL_FUNC) &_hutilscpp_texParse, 3},
+    {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 2},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
-    {"do_c_pmax",                          (DL_FUNC) &do_c_pmax,                          3},
+    {"do_c_pmax",                              (DL_FUNC) &do_c_pmax,                              3},
     {NULL, NULL, 0}
 };
 
