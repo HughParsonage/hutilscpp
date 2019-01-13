@@ -81,12 +81,12 @@ do_which_first_false <- function(x) {
 #' @export match_min_Haversine
 NULL
 
-haversine_distance <- function(olat1, olon1, olat2, olon2, delta_lat = -1, delta_lon = -1) {
-    .Call(`_hutilscpp_haversine_distance`, olat1, olon1, olat2, olon2, delta_lat, delta_lon)
+haversine_distance <- function(olat1, olon1, olat2, olon2, delta_lat = -1, delta_lon = -1, unitless = FALSE) {
+    .Call(`_hutilscpp_haversine_distance`, olat1, olon1, olat2, olon2, delta_lat, delta_lon, unitless)
 }
 
-haversineDistance <- function(lat1, lon1, lat2, lon2) {
-    .Call(`_hutilscpp_haversineDistance`, lat1, lon1, lat2, lon2)
+haversineDistance <- function(lat1, lon1, lat2, lon2, unitless = FALSE) {
+    .Call(`_hutilscpp_haversineDistance`, lat1, lon1, lat2, lon2, unitless)
 }
 
 which_min_HaversineDistance <- function(lat1, lon1, lat2, lon2, upperBound = 10) {

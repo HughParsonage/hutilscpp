@@ -131,8 +131,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // haversine_distance
-double haversine_distance(double olat1, double olon1, double olat2, double olon2, double delta_lat, double delta_lon);
-RcppExport SEXP _hutilscpp_haversine_distance(SEXP olat1SEXP, SEXP olon1SEXP, SEXP olat2SEXP, SEXP olon2SEXP, SEXP delta_latSEXP, SEXP delta_lonSEXP) {
+double haversine_distance(double olat1, double olon1, double olat2, double olon2, double delta_lat, double delta_lon, bool unitless);
+RcppExport SEXP _hutilscpp_haversine_distance(SEXP olat1SEXP, SEXP olon1SEXP, SEXP olat2SEXP, SEXP olon2SEXP, SEXP delta_latSEXP, SEXP delta_lonSEXP, SEXP unitlessSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -142,13 +142,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type olon2(olon2SEXP);
     Rcpp::traits::input_parameter< double >::type delta_lat(delta_latSEXP);
     Rcpp::traits::input_parameter< double >::type delta_lon(delta_lonSEXP);
-    rcpp_result_gen = Rcpp::wrap(haversine_distance(olat1, olon1, olat2, olon2, delta_lat, delta_lon));
+    Rcpp::traits::input_parameter< bool >::type unitless(unitlessSEXP);
+    rcpp_result_gen = Rcpp::wrap(haversine_distance(olat1, olon1, olat2, olon2, delta_lat, delta_lon, unitless));
     return rcpp_result_gen;
 END_RCPP
 }
 // haversineDistance
-NumericVector haversineDistance(NumericVector lat1, NumericVector lon1, NumericVector lat2, NumericVector lon2);
-RcppExport SEXP _hutilscpp_haversineDistance(SEXP lat1SEXP, SEXP lon1SEXP, SEXP lat2SEXP, SEXP lon2SEXP) {
+NumericVector haversineDistance(NumericVector lat1, NumericVector lon1, NumericVector lat2, NumericVector lon2, bool unitless);
+RcppExport SEXP _hutilscpp_haversineDistance(SEXP lat1SEXP, SEXP lon1SEXP, SEXP lat2SEXP, SEXP lon2SEXP, SEXP unitlessSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -156,7 +157,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type lon1(lon1SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type lat2(lat2SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type lon2(lon2SEXP);
-    rcpp_result_gen = Rcpp::wrap(haversineDistance(lat1, lon1, lat2, lon2));
+    Rcpp::traits::input_parameter< bool >::type unitless(unitlessSEXP);
+    rcpp_result_gen = Rcpp::wrap(haversineDistance(lat1, lon1, lat2, lon2, unitless));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -447,8 +449,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which_first", (DL_FUNC) &_hutilscpp_do_which_first, 1},
     {"_hutilscpp_do_which_last", (DL_FUNC) &_hutilscpp_do_which_last, 1},
     {"_hutilscpp_do_which_first_false", (DL_FUNC) &_hutilscpp_do_which_first_false, 1},
-    {"_hutilscpp_haversine_distance", (DL_FUNC) &_hutilscpp_haversine_distance, 6},
-    {"_hutilscpp_haversineDistance", (DL_FUNC) &_hutilscpp_haversineDistance, 4},
+    {"_hutilscpp_haversine_distance", (DL_FUNC) &_hutilscpp_haversine_distance, 7},
+    {"_hutilscpp_haversineDistance", (DL_FUNC) &_hutilscpp_haversineDistance, 5},
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
     {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 6},
     {"_hutilscpp_lexicalCast", (DL_FUNC) &_hutilscpp_lexicalCast, 1},

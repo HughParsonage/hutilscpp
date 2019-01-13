@@ -4,7 +4,7 @@ using namespace Rcpp;
 
 
 // [[Rcpp::export]]
-double haversine_distance (double olat1, double olon1, double olat2, double olon2, double delta_lat = -1, double delta_lon = -1) {
+double haversine_distance (double olat1, double olon1, double olat2, double olon2, double delta_lat = -1, double delta_lon = -1, bool unitless = false) {
   double pi = 3.1415926535897;
   double lat1 = olat1 * pi / 180 ;
   double lat2 = olat2 * pi / 180 ;
@@ -20,21 +20,34 @@ double haversine_distance (double olat1, double olon1, double olat2, double olon
 
   double num = std::pow(sin(delta_lat / 2), 2);
   double den = (cos(lat1) * cos(lat2)) * std::pow(sin(delta_lon / 2), 2);
-  double out = asin(sqrt(num + den));
+  double out = num + den;
+  if (unitless) {
+    return out;
+  }
+  out = sqrt(out);
+  out = asin(out);
   out *= 6371;
   out *= 2;
   return out;
 }
 
+// unitless =>
+
 // [[Rcpp::export]]
-NumericVector haversineDistance(NumericVector lat1, NumericVector lon1, NumericVector lat2, NumericVector lon2) {
+NumericVector haversineDistance(NumericVector lat1, NumericVector lon1, NumericVector lat2, NumericVector lon2, bool unitless = false) {
   int N = lat1.length();
   if (N != lon1.length() || N != lat2.length() || N != lon2.length()) {
     stop("Lengths of input vectors differ.");
   }
   NumericVector out(N);
-  for (int i = 0; i < N; ++i) {
-    out[i] = haversine_distance(lat1[i], lon1[i], lat2[i], lon2[i]);
+  if (unitless) {
+    for (int i = 0; i < N; ++i) {
+      out[i] = haversine_distance(lat1[i], lon1[i], lat2[i], lon2[i], -1, -1, true);
+    }
+  } else {
+    for (int i = 0; i < N; ++i) {
+      out[i] = haversine_distance(lat1[i], lon1[i], lat2[i], lon2[i]);
+    }
   }
   return out;
 }
@@ -146,21 +159,23 @@ IntegerVector match_min_Haversine (NumericVector lat1, NumericVector lon1, Numer
 
   double pi = 3.1415926535897;
   IntegerVector out(N1);
+  double to_rad = pi / 180;
 
   bool skip = false;
   for (int i = 0; i < N1; ++i) {
-    lati = lat1[i] * pi / 180;
-    loni = lon1[i] * pi / 180;
+    lati = lat1[i];
+    loni = lon1[i];
     double min_dist = 50000;
     double cur_dist = 0;
     int k = 0;
     for (int j = 0; j < N2; ++j) {
-      latj = lat2[j] * pi / 180;
-      lonj = lon2[j] * pi / 180;
+      latj = lat2[j];
+      lonj = lon2[j];
       delta_lat = lati - latj;
       if (delta_lat < 0) {
         delta_lat = lati - latj;
       }
+      delta_lat *= to_rad;
       skip = delta_lat > r;
       if (skip) {
         continue;
@@ -169,6 +184,7 @@ IntegerVector match_min_Haversine (NumericVector lat1, NumericVector lon1, Numer
       if (delta_lon < 0) {
         delta_lon = lonj - loni ;
       }
+      delta_lon *= to_rad;
       skip = delta_lon > r;
       if (skip) {
         continue;
