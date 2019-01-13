@@ -11,7 +11,7 @@ test_that("squish works", {
   expect_identical(squish(xi, 1L, 10L), xi)
   expect_identical(squish(xi, 1L, 1L), rep_len(1L, 10L))
   expect_identical(squish(xi, 1L, 1L), rep_len(1L, 10L))
-  expect_identical(squish(xi, 5L, 6L)[1L], 5L)
+  expect_identical(min(squish(xi, 5L, 6L)), 5L)
 })
 
 test_that("Error handling", {
