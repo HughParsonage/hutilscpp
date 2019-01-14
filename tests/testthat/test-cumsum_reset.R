@@ -19,6 +19,9 @@ test_that("cumsum_reset works", {
   expect_identical(cumsum_reset(x = c(TRUE, TRUE, FALSE, TRUE, TRUE),
                                 y = as.double(1:5)),
                    c(1, 3, 0, 4, 9))
+  expect_identical(cumsum_reset(FALSE), 0L)
+  expect_identical(cumsum_reset(FALSE, 1L), 0L)
+  expect_identical(cumsum_reset(FALSE, 2), 0)
 })
 
 test_that("Corner cases", {

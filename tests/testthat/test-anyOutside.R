@@ -41,4 +41,11 @@ test_that("NAs", {
   expect_identical(anyOutside(c(NA, 1L, 9L), 1L, 10L, na_is_outside = FALSE), 0L)
   expect_identical(anyOutside(c(1:10, NA), 1L, 7L), 8L)
 
+  dbl_1na5 <- as.double(c(1:5, NA, 5))
+  expect_identical(anyOutside(dbl_1na5, 1, 5, na_is_outside = FALSE), 0L)
+  expect_identical(anyOutside(dbl_1na5, 1, 5), NA_integer_)
+  expect_identical(anyOutside(dbl_1na5, 1, 4), 5L)
+  expect_identical(anyOutside(dbl_1na5, 1, 4, nas_absent = FALSE, na_is_outside = FALSE), 5L)
+  expect_identical(anyOutside(dbl_1na5, 1, 5, nas_absent = FALSE, na_is_outside = FALSE), 0L)
+
 })
