@@ -52,6 +52,17 @@ test_that("match_nrst_haversine works", {
 
 })
 
+test_that("match_nrst_haversine Table", {
+  lat2 <- seq(from = -38, to = -37.8, length.out = 6)
+  lon2 <- rep(145, 6)
+
+  lat1 <- c(-37.855, -37.99)
+  lon1 <- c(145.001, 144.98)
+
+  res <- match_nrst_haversine(lat1, lon1, lat2, lon2, Table = letters[1:6])
+  expect_true(is.character(res[[1]]))
+})
+
 test_that("Suffixes", {
   res10 <- match_nrst_haversine(c(-37, -38), c(150, 149),
                                 seq(-39, -36, length.out = 100),
