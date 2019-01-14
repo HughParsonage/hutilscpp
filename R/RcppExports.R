@@ -53,34 +53,6 @@ do_which_first_false <- function(x) {
     .Call(`_hutilscpp_do_which_first_false`, x)
 }
 
-#' @title Match coordinates to nearest coordinates
-#' @name match_min_Haversine
-#' @description When geocoding coordinates to known addresses, an efficient way to
-#' match the given coordinates with the known is necessary.
-#' @param lat1,lat2 Coordinates to be geocoded. Numeric vectors of equal length.
-#' @param lat2,lon2 Coordinates of known locations. Numeric vectors of equal length
-#' (likely to be a different length than the length of \code{lat1}).
-#' @param tabl Either \code{0L} or an integer vector the same length as \code{lat1}. If \code{0L},
-#' then the positions in \code{lat2,lon2} are returned; if a vector, the corresponding values.
-#' @param r A "radius" of distances outside which distances will not be considered.
-#' Used for efficiency. The default of \code{r = 0.01} corresponds to about 15 km.
-#'
-#' @return For each row in \code{lat1, lon1} the position (or corresponding value in \code{tbl})
-#' in \code{lat2, lon2} which is nearest to \code{lat1, lon1}.
-#'
-#' @examples
-#' lat2 <- runif(5, -38, -37.8)
-#' lon2 <- rep(145, 5)
-#'
-#' lat1 <- c(-37.875, -37.91)
-#' lon1 <- c(144.96, 144.978)
-#'
-#' match_min_Haversine(lat1, lon1, lat2, lon2, 0L)
-#'
-#'
-#' @export match_min_Haversine
-NULL
-
 haversine_distance <- function(olat1, olon1, olat2, olon2, delta_lat = -1, delta_lon = -1, unitless = FALSE) {
     .Call(`_hutilscpp_haversine_distance`, olat1, olon1, olat2, olon2, delta_lat, delta_lon, unitless)
 }
@@ -93,8 +65,12 @@ which_min_HaversineDistance <- function(lat1, lon1, lat2, lon2, upperBound = 10)
     .Call(`_hutilscpp_which_min_HaversineDistance`, lat1, lon1, lat2, lon2, upperBound)
 }
 
-match_min_Haversine <- function(lat1, lon1, lat2, lon2, tabl, r = 0.002) {
-    .Call(`_hutilscpp_match_min_Haversine`, lat1, lon1, lat2, lon2, tabl, r)
+showValue <- function(what, x) {
+    invisible(.Call(`_hutilscpp_showValue`, what, x))
+}
+
+match_min_Haversine <- function(lat1, lon1, lat2, lon2, tabl, r = 0.002, dist0 = 10, excl_self = FALSE) {
+    .Call(`_hutilscpp_match_min_Haversine`, lat1, lon1, lat2, lon2, tabl, r, dist0, excl_self)
 }
 
 lexicalCast <- function(v) {

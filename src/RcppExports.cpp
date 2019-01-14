@@ -177,9 +177,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// showValue
+void showValue(const char* what, double x);
+RcppExport SEXP _hutilscpp_showValue(SEXP whatSEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const char* >::type what(whatSEXP);
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    showValue(what, x);
+    return R_NilValue;
+END_RCPP
+}
 // match_min_Haversine
-IntegerVector match_min_Haversine(NumericVector lat1, NumericVector lon1, NumericVector lat2, NumericVector lon2, IntegerVector tabl, double r);
-RcppExport SEXP _hutilscpp_match_min_Haversine(SEXP lat1SEXP, SEXP lon1SEXP, SEXP lat2SEXP, SEXP lon2SEXP, SEXP tablSEXP, SEXP rSEXP) {
+List match_min_Haversine(NumericVector lat1, NumericVector lon1, NumericVector lat2, NumericVector lon2, IntegerVector tabl, double r, double dist0, bool excl_self);
+RcppExport SEXP _hutilscpp_match_min_Haversine(SEXP lat1SEXP, SEXP lon1SEXP, SEXP lat2SEXP, SEXP lon2SEXP, SEXP tablSEXP, SEXP rSEXP, SEXP dist0SEXP, SEXP excl_selfSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -189,7 +200,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type lon2(lon2SEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type tabl(tablSEXP);
     Rcpp::traits::input_parameter< double >::type r(rSEXP);
-    rcpp_result_gen = Rcpp::wrap(match_min_Haversine(lat1, lon1, lat2, lon2, tabl, r));
+    Rcpp::traits::input_parameter< double >::type dist0(dist0SEXP);
+    Rcpp::traits::input_parameter< bool >::type excl_self(excl_selfSEXP);
+    rcpp_result_gen = Rcpp::wrap(match_min_Haversine(lat1, lon1, lat2, lon2, tabl, r, dist0, excl_self));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -452,7 +465,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_haversine_distance", (DL_FUNC) &_hutilscpp_haversine_distance, 7},
     {"_hutilscpp_haversineDistance", (DL_FUNC) &_hutilscpp_haversineDistance, 5},
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
-    {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 6},
+    {"_hutilscpp_showValue", (DL_FUNC) &_hutilscpp_showValue, 2},
+    {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 8},
     {"_hutilscpp_lexicalCast", (DL_FUNC) &_hutilscpp_lexicalCast, 1},
     {"_hutilscpp_pmax3", (DL_FUNC) &_hutilscpp_pmax3, 3},
     {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 2},

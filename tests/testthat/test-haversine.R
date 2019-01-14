@@ -1,5 +1,9 @@
 context("test-haversine")
 
+test_that("Error handling", {
+  expect_error(haversineDistance(1, 1:2, 1:3, 1:4), regexp = "ength")
+  expect_error(haversineDistance(1:2, 1:2, 1:3, 1:4), regexp = "ength")
+})
 
 # Same as hutils
 # bankstown to sydney airports approximately 17628m
@@ -30,9 +34,21 @@ test_that("match_min_Haversine", {
   lat1 <- c(-37.875, -37.88)
   lon1 <- c(144.96, 144.978)
 
-  expect_identical(match_min_Haversine(lat1, lon1, lat2, lon2, 0L), c(5L, 5L))
-  expect_identical(match_min_Haversine(lat1, lon1, lat2, lon2, 101:105), c(5L, 5L) + 100L)
+  expect_identical(match_min_Haversine(lat1, lon1, lat2, lon2, 0L)[[1L]], c(5L, 5L))
+  expect_identical(match_min_Haversine(lat1, lon1, lat2, lon2, 101:105)[[1L]], c(5L, 5L) + 100L)
 })
 
+test_that("unitless", {
+  lat2 <- c(-37.929, -37.962, -37.983, -37.928, -37.85)
+  lon2 <- rep(145, 5)
 
+  lat2 <- rep_len(lat2, 10)
+  lon2 <- rep_len(lon2, 10)
+
+  lat1 <- rep_len(c(-37.875, -37.88), 10)
+  lon1 <- rep_len(c(144.96, 144.978), 10)
+
+  expect_identical(order(haversineDistance(lat1, lon1, lat2, lon2)),
+                   order(haversineDistance(lat1, lon1, lat2, lon2, unitless = TRUE)))
+})
 
