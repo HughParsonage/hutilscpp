@@ -5,7 +5,7 @@
 \title{Match coordinates to nearest coordinates}
 \usage{
 match_nrst_haversine(lat, lon, addresses_lat, addresses_lon, Table = 0L,
-  R = 0.01, close_enough = 10, excl_self = FALSE,
+  R = NULL, close_enough = 10, excl_self = FALSE,
   as.data.table = TRUE)
 }
 \arguments{

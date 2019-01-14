@@ -54,10 +54,14 @@ match_nrst_haversine <- function(lat,
                                  addresses_lat,
                                  addresses_lon,
                                  Table = 0L,
-                                 R = 0.01,
+                                 R = NULL,
                                  close_enough = 10,
                                  excl_self = FALSE,
                                  as.data.table = TRUE) {
+  if (is.null(R)) {
+    R <- -1
+  }
+
   stopifnot(is.numeric(lat),
             is.numeric(lon),
             length(lat) == length(lon),
@@ -68,22 +72,29 @@ match_nrst_haversine <- function(lat,
             length(addresses_lat) > 1L)
   check_TF(excl_self)
   check_TF(as.data.table)
-  if (R_err_msg <- isnt_number(R)) {
+  if (R_err_msg <- isnt_number(R, infinite.bad = FALSE)) {
     stop(attr(R_err_msg, "ErrorMessage"))
   }
   dist0 <- close_enough
   if (ce_err_msg <- isnt_number(close_enough)) {
-    if (length(close_enough) != 1L || !grepl("^[0-9]+\\sk?m$", close_enough)) {
+    if (length(close_enough) != 1L || !grepl("^[0-9]+(\\.[0-9]+)?\\s*k?m$", close_enough)) {
       stop(attr(ce_err_msg, "ErrorMessage"), "\n",
            "`close_enough` may be a string of numbers ending in 'km' or 'm' to designate units.")
     }
 
     # put km before m!
     if (endsWith(close_enough, "km")) {
-      dist0 <- sub("\\s+km$", "", close_enough)
+      dist0 <- sub("\\s*km$", "", close_enough)
+      # use as.double here and as.numeric later to separate warning msgs
+      dist0 <- as.double(dist0) * 1000
     } else if (endsWith(close_enough, "m")) {
-      dist0 <- sub("\\s+m$", "", close_enough)
+      dist0 <- sub("\\s*m$", "", close_enough)
+      dist0 <- as.numeric(dist0)
     }
+    stopifnot(!anyNA(dist0), is.numeric(dist0))
+  }
+  if (is.infinite(dist0)) {
+    dist0 <- -1
   }
 
   # Must be an integer (Rcpp handles the lengths)

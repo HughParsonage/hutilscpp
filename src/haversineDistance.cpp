@@ -53,7 +53,11 @@ NumericVector haversineDistance(NumericVector lat1, NumericVector lon1, NumericV
 }
 
 // [[Rcpp::export]]
-int which_min_HaversineDistance (NumericVector lat1, NumericVector lon1, double lat2, double lon2, double upperBound = 10) {
+int which_min_HaversineDistance (NumericVector lat1,
+                                 NumericVector lon1,
+                                 double lat2,
+                                 double lon2,
+                                 double upperBound = 10) {
   int N = lat1.length();
   if (N != lon1.length()) {
     stop("length(lat1) != length(lat2).");
@@ -116,13 +120,13 @@ void showValue(const char* what, double x) {
 
 // [[Rcpp::export]]
 List match_min_Haversine (NumericVector lat1,
-                                   NumericVector lon1,
-                                   NumericVector lat2,
-                                   NumericVector lon2,
-                                   IntegerVector tabl,
-                                   double r = 0.002,
-                                   double dist0 = 10,
-                                   bool excl_self = false) {
+                          NumericVector lon1,
+                          NumericVector lat2,
+                          NumericVector lon2,
+                          IntegerVector tabl,
+                          double r = 0.002,
+                          double dist0 = 10,
+                          bool excl_self = false) {
   int N1 = lat1.length();
   if (N1 != lon1.length()) {
     stop("length(lat1) != length(lon1).");
@@ -182,18 +186,22 @@ List match_min_Haversine (NumericVector lat1,
         delta_lat = lati - latj;
       }
       delta_lat *= to_rad;
-      skip = delta_lat > r;
-      if (skip) {
-        continue;
+      if (r > 0) {
+        skip = delta_lat > r;
+        if (skip) {
+          continue;
+        }
       }
       delta_lon = loni - lonj;
       if (delta_lon < 0) {
         delta_lon = lonj - loni ;
       }
       delta_lon *= to_rad;
-      skip = delta_lon > r;
-      if (skip) {
-        continue;
+      if (r > 0) {
+        skip = delta_lon > r;
+        if (skip) {
+          continue;
+        }
       }
       cur_dist = haversine_distance(lati, loni, latj, lonj, delta_lat, delta_lon);
       if (cur_dist < min_dist) {
