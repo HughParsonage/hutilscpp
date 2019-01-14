@@ -13,7 +13,7 @@ LazyData: true
 LinkingTo: 
     Rcpp, BH
 Imports: 
-    Rcpp, BH
+    Rcpp, data.table
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
 Suggests: 

@@ -154,6 +154,7 @@ List match_min_Haversine (NumericVector lat1,
   bool skip = false;
   int k = 0;
   for (int i = 0; i < N1; ++i) {
+    Rcpp::checkUserInterrupt();
     lati = lat1[i];
     loni = lon1[i];
     double min_dist = 50000;
