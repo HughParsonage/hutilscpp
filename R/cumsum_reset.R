@@ -6,6 +6,11 @@
 #'
 #' If \code{length(x) == 0}, \code{y} is returned (i.e. \code{integer(0)} or \code{double(0)}.
 #'
+#' @examples
+#' cumsum_reset(c(TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, FALSE))
+#' cumsum_reset(c(TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, FALSE),
+#'              c(1000, 1000, 10000,   10,   20,   33,     0))
+#'
 #' @export
 
 cumsum_reset <- function(x, y = as.integer(x)) {

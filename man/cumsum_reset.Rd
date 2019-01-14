@@ -20,3 +20,9 @@ If \code{length(x) == 0}, \code{y} is returned (i.e. \code{integer(0)} or \code{
 \description{
 Cumulative sum unless reset
 }
+\examples{
+cumsum_reset(c(TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, FALSE))
+cumsum_reset(c(TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, FALSE),
+             c(1000, 1000, 10000,   10,   20,   33,     0))
+
+}
