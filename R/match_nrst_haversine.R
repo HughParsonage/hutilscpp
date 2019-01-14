@@ -19,8 +19,8 @@
 #' Only \code{km} and \code{m} are permitted.
 #'
 #' @param excl_self (bool, default: \code{FALSE}) For each \eqn{x_i} of the first coordinates,
-#' exclude the \code{y_i} point when determining closest match. Useful to determine the
-#' nearest neighbour within a set of coordinates, \code{viz.}
+#' exclude the \eqn{y_i}-th point when determining closest match. Useful to determine the
+#' nearest neighbour within a set of coordinates, \emph{viz.}
 #' \code{match_nrst_haversine(x, y, x, y, excl_self = TRUE)}.
 #'
 #' @param as.data.table Return result as a \code{data.table}?
@@ -88,13 +88,15 @@ match_nrst_haversine <- function(lat,
 
   # Must be an integer (Rcpp handles the lengths)
   .Table <- Table
-  recast_Table <- (!is.integer(Table) || length(Table) != length(addresses_lat))
+  recast_Table <-
+    !identical(Table, 0L) &&
+    (!is.integer(Table) ||
+       length(Table) != length(addresses_lat))
   if (recast_Table) {
     .Table <- 0L
   }
 
-  out <-
-    match_min_Haversine(lat, lon, addresses_lat, addresses_lon, .Table, r = R, dist0 = dist0)
+  out <- match_min_Haversine(lat, lon, addresses_lat, addresses_lon, .Table, r = R, dist0 = dist0)
 
   if (recast_Table) {
     if (length(Table) != length(addresses_lat)) {
