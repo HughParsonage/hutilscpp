@@ -22,6 +22,8 @@ test_that("match_nrst_haversine error", {
                "as.data.table")
   expect_error(match_nrst_haversine(lat1, lon1, lat2, lon2, R = raw(1)),
                "raw")
+  expect_error(match_nrst_haversine(lat1, lon1, lat2, lon2, R = 1:2),
+               regexp = "must be length.one")
   expect_error(match_nrst_haversine(lat1, lon1, lat2, lon2, close_enough = "a"),
                "`close_enough` was a character",
                fixed = TRUE)

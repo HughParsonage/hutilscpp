@@ -29,7 +29,7 @@ isnt_number <- function(a, na.bad = TRUE, infinite.bad = TRUE) {
   if (length(a) != 1L) {
     o <- TRUE
     ac <- deparse(substitute(a))
-    attr(o, "ErrorMessage") <- paste0("`", ac, "` had length ", length(a), ", but must be length.one.")
+    attr(o, "ErrorMessage") <- paste0("`", ac, "` had length ", length(a), ", but must be length-one.")
     return(o)
   }
   if (na.bad && is.na(a)) {
