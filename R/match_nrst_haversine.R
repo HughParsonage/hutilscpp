@@ -93,8 +93,8 @@ match_nrst_haversine <- function(lat,
     }
     stopifnot(!anyNA(dist0), is.numeric(dist0))
   }
-  if (is.infinite(dist0)) {
-    dist0 <- -1
+  if (is.infinite(R)) {
+    R <- -1
   }
 
   # Must be an integer (Rcpp handles the lengths)
