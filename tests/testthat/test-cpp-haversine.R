@@ -3,6 +3,19 @@ context("test-haversine")
 test_that("Error handling", {
   expect_error(haversineDistance(1, 1:2, 1:3, 1:4), regexp = "ength")
   expect_error(haversineDistance(1:2, 1:2, 1:3, 1:4), regexp = "ength")
+  expect_error(which_min_HaversineDistance(1, 1:2, 1, 1),
+               regexp = "length(lat1) != length(lat2)",
+               fixed = TRUE)
+  expect_error(match_min_Haversine(1, 1:2, 1, 1, 0L),
+               regexp = "length(lat1) != length(lon1)",
+               fixed = TRUE)
+  expect_error(match_min_Haversine(1, 1, 1:2, 1, 0L),
+               regexp = "length(lat2) != length(lon2)",
+               fixed = TRUE)
+  expect_warning(match_min_Haversine(1, 1, 1:2, 1:2, 0L, excl_self = TRUE),
+                 regexp = "`excl_self = true`, yet lengths of `lat1` and `lat2` differ.",
+                 fixed = TRUE)
+
 })
 
 # Same as hutils
@@ -25,6 +38,13 @@ test_that("which_min_HaversineDistance", {
   lat2 <- -33.09
   lon2 <- 150
   expect_identical(which_min_HaversineDistance(lat1, lon1, lat2, lon2), 2L)
+
+  expect_identical(which_min_HaversineDistance (double(5), seq(-0.1, 0, length.out = 5), 0, 0,
+                                                upperBound = 0),
+                   5L)
+  expect_identical(which_min_HaversineDistance (double(5), seq(-0.1, 0, length.out = 5), 0, 0,
+                                                upperBound = 100),
+                   5L)
 })
 
 test_that("match_min_Haversine", {
@@ -35,7 +55,15 @@ test_that("match_min_Haversine", {
   lon1 <- c(144.96, 144.978)
 
   expect_identical(match_min_Haversine(lat1, lon1, lat2, lon2, 0L)[[1L]], c(5L, 5L))
+  expect_identical(match_min_Haversine(lat1, lon1, lat2, lon2, 0L, r = 0.002)[[1L]], c(5L, 5L))
   expect_identical(match_min_Haversine(lat1, lon1, lat2, lon2, 101:105)[[1L]], c(5L, 5L) + 100L)
+})
+
+test_that("match_min_Haversine excl_self", {
+  lat1 <- c(-37.875, -37.88)
+  lon1 <- c(144.96, 144.978)
+  mat <- match_min_Haversine(lat1, lon1, lat1, lon1, 0L)
+  expect_equal(NROW(mat), length(lat1))
 })
 
 test_that("unitless", {
