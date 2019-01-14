@@ -30,8 +30,8 @@ May be provided as a string to emphasize the units, e.g. \code{close_enough = "0
 Only \code{km} and \code{m} are permitted.}
 
 \item{excl_self}{(bool, default: \code{FALSE}) For each \eqn{x_i} of the first coordinates,
-exclude the \code{y_i} point when determining closest match. Useful to determine the
-nearest neighbour within a set of coordinates, \code{viz.}
+exclude the \eqn{y_i}-th point when determining closest match. Useful to determine the
+nearest neighbour within a set of coordinates, \emph{viz.}
 \code{match_nrst_haversine(x, y, x, y, excl_self = TRUE)}.}
 
 \item{as.data.table}{Return result as a \code{data.table}?
