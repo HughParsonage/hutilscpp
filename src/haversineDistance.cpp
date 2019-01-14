@@ -113,12 +113,12 @@ int which_min_HaversineDistance (NumericVector lat1,
   return out;
 }
 
-// nocov start
+// #nocov start
 // [[Rcpp::export]]
 void showValue(const char* what, double x) {
   Rcout << "The value " << what << " is " << x << std::endl;
 }
-// nocov end
+// #nocov end
 
 // [[Rcpp::export]]
 List match_min_Haversine (NumericVector lat1,
@@ -227,17 +227,17 @@ List match_min_Haversine (NumericVector lat1,
 
     if (use_tbl) {
       if (k >= tabl.length()) {
-        showValue("k", k); // nocov
-        showValue("i", i); // nocov
-        stop("k >= tabl.length"); // nocov
+        showValue("k", k); // #nocov
+        showValue("i", i); // #nocov
+        stop("k >= tabl.length"); // #nocov
       }
       out[i] = tabl[k];
       out2[i] = min_dist;
     } else {
       if (k >= lon2.length()) {
-        showValue("k", k); // nocov
-        showValue("i", i); // nocov
-        stop("k >= tabl.length"); // nocov
+        showValue("k", k); // #nocov
+        showValue("i", i); // #nocov
+        stop("k >= tabl.length"); // #nocov
       }
       ++k;  // for R indexing
       out[i] = k;
