@@ -20,4 +20,5 @@ Suggests:
     hutils,
     bench,
     testthat,
+    TeXCheckR,
     covr

@@ -198,8 +198,12 @@ texParse <- function(open, close, maxTeXGroup = 20L) {
     .Call(`_hutilscpp_texParse`, open, close, maxTeXGroup)
 }
 
-extractMandatory <- function(x, command) {
-    .Call(`_hutilscpp_extractMandatory`, x, command)
+showValuea <- function(what, x) {
+    invisible(.Call(`_hutilscpp_showValuea`, what, x))
+}
+
+extractMandatory <- function(x, command, nCommands) {
+    .Call(`_hutilscpp_extractMandatory`, x, command, nCommands)
 }
 
 do_which_true_onwards <- function(x) {

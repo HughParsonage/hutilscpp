@@ -47,11 +47,16 @@ Rcpp::IntegerMatrix texParse(LogicalVector open, LogicalVector close, int maxTeX
   return out;
 }
 
-
+// #nocov start
+// [[Rcpp::export]]
+void showValuea(const char* what, double x) {
+  Rcout << "The value " << what << " is " << x << std::endl;
+}
+// #nocov end
 
 
 // [[Rcpp::export]]
-CharacterVector extractMandatory (CharacterVector x, CharacterVector command) {
+List extractMandatory (CharacterVector x, CharacterVector command, int nCommands) {
   int N = x.length();
   int command_len = command.length();
   const char *xp = x[0];
@@ -69,7 +74,10 @@ CharacterVector extractMandatory (CharacterVector x, CharacterVector command) {
 
   int command_no = 0;
 
-  CharacterVector out(N);
+  CharacterVector support(N);
+  IntegerVector commandNo(nCommands);
+  IntegerVector commandOpeners(nCommands);
+  IntegerVector commandClosers(nCommands);
   for (int i = 0; i < N; ++i) {
     if (x[i] == command[0]) {
       for (int ci = 1; ci < command_len; ++ci) {
@@ -91,12 +99,18 @@ CharacterVector extractMandatory (CharacterVector x, CharacterVector command) {
 
         while (!within_brace && k < N) {
           ++k;
+          if (x[k] == " " || x[k] == "") {
+            // \abc {def}
+            continue;
+          }
           if (x[k] == "[") {
             ++opt_group;
             int rel_opt_group = 1;
-            int kkkk = 0;
-            while (rel_opt_group && k < N && kkkk < N) {
-              ++kkkk;
+            while (rel_opt_group && k < N) {
+              // just keep moving forward until we get out of the current
+              // optional group.
+              ++k;
+
               if (x[k] == "]") {
                 --rel_opt_group;
                 --opt_group;
@@ -106,22 +120,38 @@ CharacterVector extractMandatory (CharacterVector x, CharacterVector command) {
                   ++opt_group;
                 }
               }
-              ++k ;
             }
+            // Current position is on the closing ']'
+            ++k; // move to next character once we're done with optional group
+          }
+          if (k >= N) { // in case the document is not well-formed.
+            break;
           }
           within_brace = x[k] == "{";
 
           // abc{xyz} but not abcd{xyz}
           if (x[k] != "" && x[k] != " " && x[k] != "{") {
             k = N + 1;  // effectively break both while loops
+          } else {
+            commandOpeners[command_no] = k;
           }
         }
-        ++command_no ;
 
         while (k < N) {
-          out[k] = x[k];
+          support[k] = x[k];
+          if (command_no >= nCommands) {
+            showValuea("command_no = ", command_no);
+            showValuea("k = ", k);
+            stop("command_no overflow");
+          }
+          // R indexing
+          commandNo[command_no] = command_no + 1;
+
+
           finish_extract = x[k] == "}";
           if (finish_extract) {
+            commandClosers[command_no] = k + 1;
+            ++command_no;
             break;
           }
           ++k;
@@ -129,6 +159,12 @@ CharacterVector extractMandatory (CharacterVector x, CharacterVector command) {
       }
     }
   }
+
+  List out = List::create(Named("support") = support,
+                          Named("Openers") = commandOpeners,
+                          Named("Closers") = commandClosers);
+
+
   return out;
 }
 

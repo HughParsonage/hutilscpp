@@ -3,7 +3,42 @@ context("test-tex")
 test_that("extractMandatory works", {
   library(hutils)
   x <- c('a', '', 'b', 'd', '{', 'e', '}', '.')
-  res <- extractMandatory(x, c('b', 'd'))
+  res <- extractMandatory(x, c('b', 'd'), nCommands = 1L)[[1]]
   expect_equal(res,
                if_else(nzchar(res), x, ''))
+
+  xop <- strsplit("qxy[ab]{jys}", split = "")[[1]]
+  res_op <- extractMandatory(xop, c("q", "x", "y"), nCommands = 1L)[[1]]
+  expect_true("y" %in% res_op)
+})
+
+test_that("Works with space before brace", {
+  x <- c('a', '', 'b', 'd', ' ', '{', 'e', '}', '.')
+  res <- extractMandatory(x, c('b', 'd'), nCommands = 1L)[[1]]
+  expect_true(any(nzchar(x)))
+})
+
+
+test_that("Big popper", {
+  skip_if_not_installed("TeXCheckR")
+  skip_if_not(file.exists("~/AP-2018-retirement/report.tex"))
+  library(TeXCheckR)
+  Housing <- read_tex_document("~/AP-2018-retirement/report.tex")
+  Housing_split = unlist(strsplit(Housing, split = ""))
+  nFootnotes <- (length(grep("\\\\footnote(?![A-Za-z])[^\\{]*\\{", Housing, perl = TRUE)))
+  footnote <- strsplit("footnote", split = "")[[1L]]
+
+  res <- extractMandatory(Housing_split, footnote, nCommands = nFootnotes)
+
+  DT <-
+    data.table(Ope = res$Openers,
+               Clo = res$Closers)[, I := .I][, .(Text = paste0(res$support[.BY[[1]]:.BY[[2]]],
+                                                               collapse = "")),
+                                             keyby = c("Ope", "Clo", "I")]
+
+  expect_true(any(grepl("For example, see: \\textcites[][]{IndustrySuperAustralia2015inquiryintoeconom",
+                        DT$Text[1:10],
+                        fixed = TRUE)))
+
+
 })

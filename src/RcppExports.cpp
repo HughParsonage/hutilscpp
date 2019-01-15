@@ -414,15 +414,27 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// showValuea
+void showValuea(const char* what, double x);
+RcppExport SEXP _hutilscpp_showValuea(SEXP whatSEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const char* >::type what(whatSEXP);
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    showValuea(what, x);
+    return R_NilValue;
+END_RCPP
+}
 // extractMandatory
-CharacterVector extractMandatory(CharacterVector x, CharacterVector command);
-RcppExport SEXP _hutilscpp_extractMandatory(SEXP xSEXP, SEXP commandSEXP) {
+List extractMandatory(CharacterVector x, CharacterVector command, int nCommands);
+RcppExport SEXP _hutilscpp_extractMandatory(SEXP xSEXP, SEXP commandSEXP, SEXP nCommandsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type command(commandSEXP);
-    rcpp_result_gen = Rcpp::wrap(extractMandatory(x, command));
+    Rcpp::traits::input_parameter< int >::type nCommands(nCommandsSEXP);
+    rcpp_result_gen = Rcpp::wrap(extractMandatory(x, command, nCommands));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -473,7 +485,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_squishn", (DL_FUNC) &_hutilscpp_squishn, 4},
     {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 4},
     {"_hutilscpp_texParse", (DL_FUNC) &_hutilscpp_texParse, 3},
-    {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 2},
+    {"_hutilscpp_showValuea", (DL_FUNC) &_hutilscpp_showValuea, 2},
+    {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
     {"do_c_pmax",                              (DL_FUNC) &do_c_pmax,                              3},
     {NULL, NULL, 0}
