@@ -206,17 +206,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// lexicalCast
-std::vector<std::string> lexicalCast(std::vector<int> v);
-RcppExport SEXP _hutilscpp_lexicalCast(SEXP vSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::vector<int> >::type v(vSEXP);
-    rcpp_result_gen = Rcpp::wrap(lexicalCast(v));
-    return rcpp_result_gen;
-END_RCPP
-}
 // pmax3
 NumericVector pmax3(NumericVector x, NumericVector y, NumericVector z);
 RcppExport SEXP _hutilscpp_pmax3(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
@@ -467,7 +456,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
     {"_hutilscpp_showValue", (DL_FUNC) &_hutilscpp_showValue, 2},
     {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 8},
-    {"_hutilscpp_lexicalCast", (DL_FUNC) &_hutilscpp_lexicalCast, 1},
     {"_hutilscpp_pmax3", (DL_FUNC) &_hutilscpp_pmax3, 3},
     {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 2},
     {"_hutilscpp_do_pmaxC_int", (DL_FUNC) &_hutilscpp_do_pmaxC_int, 2},
@@ -487,7 +475,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_texParse", (DL_FUNC) &_hutilscpp_texParse, 3},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 2},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
-    {"do_c_pmax", (DL_FUNC) &do_c_pmax, 3},
+    {"do_c_pmax",                              (DL_FUNC) &do_c_pmax,                              3},
     {NULL, NULL, 0}
 };
 
