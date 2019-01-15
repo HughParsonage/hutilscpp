@@ -401,19 +401,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// texParse
-Rcpp::IntegerMatrix texParse(LogicalVector open, LogicalVector close, int maxTeXGroup);
-RcppExport SEXP _hutilscpp_texParse(SEXP openSEXP, SEXP closeSEXP, SEXP maxTeXGroupSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type open(openSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type close(closeSEXP);
-    Rcpp::traits::input_parameter< int >::type maxTeXGroup(maxTeXGroupSEXP);
-    rcpp_result_gen = Rcpp::wrap(texParse(open, close, maxTeXGroup));
-    return rcpp_result_gen;
-END_RCPP
-}
 // showValuea
 void showValuea(const char* what, double x);
 RcppExport SEXP _hutilscpp_showValuea(SEXP whatSEXP, SEXP xSEXP) {
@@ -484,7 +471,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_pminV", (DL_FUNC) &_hutilscpp_do_pminV, 2},
     {"_hutilscpp_squishn", (DL_FUNC) &_hutilscpp_squishn, 4},
     {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 4},
-    {"_hutilscpp_texParse", (DL_FUNC) &_hutilscpp_texParse, 3},
     {"_hutilscpp_showValuea", (DL_FUNC) &_hutilscpp_showValuea, 2},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},

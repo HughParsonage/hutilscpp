@@ -1,52 +1,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// [[Rcpp::export]]
-Rcpp::IntegerMatrix texParse(LogicalVector open, LogicalVector close, int maxTeXGroup = 20) {
-  int n = open.size();
-  int nalt = close.size();
-  if (n != nalt) {
-    stop("open and close differ.");
-  }
-  IntegerVector texGroup(n);
-  IntegerVector GROUP(n);
-  int currentTeXGroup = 0;
-  int currentGROUP = 0;
-  IntegerMatrix out(n, maxTeXGroup + 1);
-  for (int i = 0; i < n; ++i) {
-    bool openi = open[i];
-    bool closei = false;
-    if (openi) {
-      ++currentGROUP;
-    } else {
-      closei = close[i];
-      if (closei) {
-        --currentGROUP; // decrement after assignment
-      }
-    }
-    for (int j = 1; j <= currentGROUP; ++j) {
-      if (i == 0 || currentGROUP < 1) {
-        continue;
-      }
-      int outij = out(i - 1, j);
-      if (openi) {
-        ++outij;
-      }
-      out(i, j) = outij;
-    }
-
-
-    if (currentGROUP > 0) {
-      texGroup[i] = currentTeXGroup;
-      GROUP[i] = currentGROUP;
-      out(i, currentGROUP) = currentTeXGroup;
-    }
-
-
-  }
-  return out;
-}
-
 // #nocov start
 // [[Rcpp::export]]
 void showValuea(const char* what, double x) {
@@ -96,7 +50,6 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
         within_brace = false;
         finish_extract = false;
         k = i + cj;
-
         while (!within_brace && k < N) {
           ++k;
           if (x[k] == " " || x[k] == "") {
@@ -104,8 +57,10 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
             continue;
           }
           if (x[k] == "[") {
+
             ++opt_group;
             int rel_opt_group = 1;
+            int rel_group = 0;
             while (rel_opt_group && k < N) {
               // just keep moving forward until we get out of the current
               // optional group.
@@ -115,6 +70,20 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
                 --rel_opt_group;
                 --opt_group;
               } else {
+                if (x[k] == "{") {
+                  ++rel_group;
+                  while (rel_group && k < N) {
+                    ++k;
+
+                    if (x[k] == "}") {
+                      --rel_group;
+                    } else {
+                      if (x[k] == "{") {
+                        ++rel_group;
+                      }
+                    }
+                  }
+                }
                 if (x[k] == "[") {
                   ++rel_opt_group;
                   ++opt_group;
@@ -139,11 +108,13 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
 
         while (k < N) {
           support[k] = x[k];
+          // #nocov start
           if (command_no >= nCommands) {
             showValuea("command_no = ", command_no);
             showValuea("k = ", k);
             stop("command_no overflow");
           }
+          // #nocov end
           // R indexing
           commandNo[command_no] = command_no + 1;
 

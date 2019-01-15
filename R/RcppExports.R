@@ -194,10 +194,6 @@ squishi <- function(x, a, b, in_place = FALSE) {
     .Call(`_hutilscpp_squishi`, x, a, b, in_place)
 }
 
-texParse <- function(open, close, maxTeXGroup = 20L) {
-    .Call(`_hutilscpp_texParse`, open, close, maxTeXGroup)
-}
-
 showValuea <- function(what, x) {
     invisible(.Call(`_hutilscpp_showValuea`, what, x))
 }

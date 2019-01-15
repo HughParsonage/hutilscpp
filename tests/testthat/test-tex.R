@@ -22,6 +22,12 @@ test_that("Multiple optionals", {
   x <- strsplit("a \\Def[a [b] c]{df} x", split = "")[[1]]
   res <- extractMandatory(x, c("D", "e", "f"), 1L)
   expect_false("[" %in% res$support)
+  expect_true("d" %in% res$support)
+
+  x <- strsplit("a \\Def[a [b{q}] c]{df} x", split = "")[[1]]
+  res <- extractMandatory(x, c("D", "e", "f"), 1L)
+  expect_false("[" %in% res$support)
+  expect_true("d" %in% res$support)
 })
 
 test_that("Big popper", {
