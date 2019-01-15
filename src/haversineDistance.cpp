@@ -5,11 +5,11 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 double haversine_distance (double olat1, double olon1, double olat2, double olon2, double delta_lat = -1, double delta_lon = -1, bool unitless = false) {
-  double pi = 3.1415926535897;
-  double lat1 = olat1 * pi / 180 ;
-  double lat2 = olat2 * pi / 180 ;
-  double lon1 = olon1 * pi / 180 ;
-  double lon2 = olon2 * pi / 180 ;
+  // double pi = 3.1415926535897;
+  double lat1 = olat1 * M_PI / 180 ;
+  double lat2 = olat2 * M_PI / 180 ;
+  double lon1 = olon1 * M_PI / 180 ;
+  double lon2 = olon2 * M_PI / 180 ;
   // abs doesn't work with the precision req
   if (delta_lat < 0) {
     delta_lat = (lat1 > lat2) ? (lat1 - lat2) : (lat2 - lat1) ;
@@ -152,10 +152,10 @@ List match_min_Haversine (NumericVector lat1,
   double delta_lat = 0;
   double delta_lon = 0;
 
-  double pi = 3.1415926535897;
   IntegerVector out(N1);
   NumericVector out2(N1);
-  double to_rad = pi / 180;
+  double to_rad = M_PI / 180;
+  double dist0_km = dist0 / 1000;
 
   bool skip = false;
   int k = 0;
@@ -163,8 +163,13 @@ List match_min_Haversine (NumericVector lat1,
     Rcpp::checkUserInterrupt();
     lati = lat1[i];
     loni = lon1[i];
+
+    // Unitless distances to monitor for the minimum
     double min_dist = 50000;
     double cur_dist = 0;
+
+    // Use this to check the 'near enough' distance
+    double min_dist_km = 50000;
     k = 0;
     for (int j = 0; j < N2; ++j) {
       if (excl_self && j == i) {
@@ -205,7 +210,8 @@ List match_min_Haversine (NumericVector lat1,
           continue;
         }
       }
-      cur_dist = haversine_distance(lati, loni, latj, lonj, delta_lat, delta_lon);
+      // unitless if we just need to compare to min_dist
+      cur_dist = haversine_distance(lati, loni, latj, lonj, delta_lat, delta_lon, true);
       if (cur_dist < min_dist) {
         min_dist = cur_dist;
 
@@ -216,9 +222,10 @@ List match_min_Haversine (NumericVector lat1,
         k = 0;
         k += j;
 
-
-        // If within the "close-enough" distance, break to the next entry.
-        if (min_dist < (dist0 / 1000)) {
+        // Calculate the real distance
+        min_dist_km = haversine_distance(lati, loni, latj, lonj, delta_lat, delta_lon);
+        // If within the "close-enough" distance, break to the next item to geocode.
+        if (min_dist_km < dist0_km) {
           break ;
         }
       }
@@ -232,7 +239,7 @@ List match_min_Haversine (NumericVector lat1,
         stop("k >= tabl.length"); // #nocov
       }
       out[i] = tabl[k];
-      out2[i] = min_dist;
+      out2[i] = min_dist_km;
     } else {
       if (k >= lon2.length()) {
         showValue("k", k); // #nocov
@@ -241,7 +248,7 @@ List match_min_Haversine (NumericVector lat1,
       }
       ++k;  // for R indexing
       out[i] = k;
-      out2[i] = min_dist;
+      out2[i] = min_dist_km;
     }
   }
 
