@@ -133,7 +133,7 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
           if (x[k] != "" && x[k] != " " && x[k] != "{") {
             k = N + 1;  // effectively break both while loops
           } else {
-            commandOpeners[command_no] = k;
+            commandOpeners[command_no] = k + 1;
           }
         }
 
