@@ -21,6 +21,10 @@ AnyWhich <- function(x, a, gt, lt, eq) {
     .Call(`_hutilscpp_AnyWhich`, x, a, gt, lt, eq)
 }
 
+Implies <- function(x, y, anyNAx = TRUE, anyNAy = TRUE) {
+    .Call(`_hutilscpp_Implies`, x, y, anyNAx, anyNAy)
+}
+
 anyOutside_int <- function(x, a, b, nas_present = FALSE, na_is_outside = TRUE) {
     .Call(`_hutilscpp_anyOutside_int`, x, a, b, nas_present, na_is_outside)
 }
