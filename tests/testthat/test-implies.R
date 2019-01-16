@@ -21,5 +21,5 @@ test_that("implies same as hutils", {
 })
 
 test_that("No NAs", {
-  expect_true(Implies(FALSE, FALSE, anyNAx = TRUE, anyNAy = TRUE))
+  expect_true(Implies(FALSE, FALSE, anyNAx = FALSE, anyNAy = FALSE))
 })
