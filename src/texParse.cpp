@@ -13,15 +13,13 @@ void showValuea(const char* what, double x) {
 List extractMandatory (CharacterVector x, CharacterVector command, int nCommands) {
   int N = x.length();
   int command_len = command.length();
-  const char *xp = x[0];
-  const char *cp = command[0];
-
-  const char *c1 = cp;
+  // const char *xp = x[0];
+  // const char *cp = command[0];
 
   int curr_group = 0;
   bool finish_extract = false;
   bool within_brace = false;
-  bool within_optional = false;
+  // bool within_optional = false;
   int opt_group = 0;
   int cj = 0;
   int k = 0;
@@ -37,7 +35,8 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
       for (int ci = 1; ci < command_len; ++ci) {
         const char *cii = command[ci];
         const char *xic = x[i + ci];
-        if (x[i + ci] == command[ci]) {
+        // if (x[i + ci] == command[ci]) {
+        if (*xic == *cii) {
           ++cj;
           continue;
         } else {
@@ -57,7 +56,6 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
             continue;
           }
           if (x[k] == "[") {
-
             ++opt_group;
             int rel_opt_group = 1;
             int rel_group = 0;

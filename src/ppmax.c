@@ -2,10 +2,17 @@
 #include <Rmath.h>
 
 SEXP do_c_pmax(SEXP x, SEXP a, SEXP b) {
-  R_len_t nx = length(x), na = length(a);
+  R_len_t nx = length(x), na = length(a), nb = length(b);
   if (!isReal(x) || !isReal(a) || !isReal(b)) {
     error("x is not a real.");
   }
+  if (na != 1) {
+    error("a did not have length 1");
+  }
+  if (nb != 1) {
+    error("b did not have length 1");
+  }
+
   SEXP ans = PROTECT(allocVector(REALSXP, nx));
   double *restrict ansp = REAL(ans);
   const double *ap = REAL(a);
