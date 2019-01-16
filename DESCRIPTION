@@ -12,7 +12,7 @@ Encoding: UTF-8
 LazyData: true
 LinkingTo: 
     Rcpp,
-    RcppArmadillo
+    RcppProgress
 Imports: 
     Rcpp, data.table
 Roxygen: list(markdown = TRUE)

@@ -77,6 +77,10 @@ match_min_Haversine <- function(lat1, lon1, lat2, lon2, tabl, r = 0.002, dist0 =
     .Call(`_hutilscpp_match_min_Haversine`, lat1, lon1, lat2, lon2, tabl, r, dist0, excl_self, ncores)
 }
 
+long_computation_omp <- function(nb, threads = 1L) {
+    .Call(`_hutilscpp_long_computation_omp`, nb, threads)
+}
+
 #' @title Threeway parallel maximum
 #' @description Returns the parallel maximum of three 
 #' 

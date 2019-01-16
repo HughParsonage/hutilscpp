@@ -1,19 +1,9 @@
 #include <math.h>
+#include <Rcpp.h>
 
-
-// http://gallery.rcpp.org/articles/optimizing-code-vs-recognizing-patterns-with-3d-arrays/
-#include <RcppArmadillo.h>
-
-// Correctly setup the build environment
-// [[Rcpp::depends(RcppArmadillo)]]
-
-// [[Rcpp::plugins(openmp)]]
 using namespace Rcpp;
 
-// Protect against compilers without OpenMP
-#ifdef _OPENMP
-#include <omp.h>
-#endif
+
 
 
 // [[Rcpp::export]]
@@ -173,7 +163,6 @@ List match_min_Haversine (NumericVector lat1,
 
   bool skip = false;
   int k = 0;
-  #pragma omp parallel for num_threads(ncores)
   for (int i = 0; i < N1; ++i) {
     Rcpp::checkUserInterrupt();
     lati = lat1[i];
