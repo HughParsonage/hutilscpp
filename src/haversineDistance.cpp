@@ -1,5 +1,11 @@
-#include <Rcpp.h>
 #include <math.h>
+
+
+// http://gallery.rcpp.org/articles/optimizing-code-vs-recognizing-patterns-with-3d-arrays/
+#include <RcppArmadillo.h>
+
+// Correctly setup the build environment
+// [[Rcpp::depends(RcppArmadillo)]]
 
 // [[Rcpp::plugins(openmp)]]
 using namespace Rcpp;

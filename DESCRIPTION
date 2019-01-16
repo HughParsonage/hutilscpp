@@ -1,6 +1,6 @@
 Package: hutilscpp
 Title: Miscellaneous Functions in C++
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
     person(given = "Hugh",
            family = "Parsonage",
@@ -11,7 +11,8 @@ License: GPL-2
 Encoding: UTF-8
 LazyData: true
 LinkingTo: 
-    Rcpp
+    Rcpp,
+    RcppArmadillo
 Imports: 
     Rcpp, data.table
 Roxygen: list(markdown = TRUE)
