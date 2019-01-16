@@ -6,7 +6,7 @@
 \usage{
 match_nrst_haversine(lat, lon, addresses_lat, addresses_lon, Table = 0L,
   R = NULL, close_enough = 10, excl_self = FALSE,
-  as.data.table = TRUE)
+  as.data.table = TRUE, ncores = 1L)
 }
 \arguments{
 \item{lat, lon}{Coordinates to be geocoded. Numeric vectors of equal length.}

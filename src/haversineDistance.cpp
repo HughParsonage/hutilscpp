@@ -1,6 +1,13 @@
 #include <Rcpp.h>
 #include <math.h>
+
+// [[Rcpp::plugins(openmp)]]
 using namespace Rcpp;
+
+// Protect against compilers without OpenMP
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 
 // [[Rcpp::export]]
@@ -128,7 +135,8 @@ List match_min_Haversine (NumericVector lat1,
                           IntegerVector tabl,
                           double r = 0.002,
                           double dist0 = 10,
-                          bool excl_self = false) {
+                          bool excl_self = false,
+                          int ncores = 1) {
   int N1 = lat1.length();
   if (N1 != lon1.length()) {
     stop("length(lat1) != length(lon1).");
@@ -159,6 +167,7 @@ List match_min_Haversine (NumericVector lat1,
 
   bool skip = false;
   int k = 0;
+  #pragma omp parallel for num_threads(ncores)
   for (int i = 0; i < N1; ++i) {
     Rcpp::checkUserInterrupt();
     lati = lat1[i];

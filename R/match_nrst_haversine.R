@@ -57,7 +57,8 @@ match_nrst_haversine <- function(lat,
                                  R = NULL,
                                  close_enough = 10,
                                  excl_self = FALSE,
-                                 as.data.table = TRUE) {
+                                 as.data.table = TRUE,
+                                 ncores = 1L) {
   if (is.null(R)) {
     R <- -1
   }
@@ -107,7 +108,14 @@ match_nrst_haversine <- function(lat,
     .Table <- 0L
   }
 
-  out <- match_min_Haversine(lat, lon, addresses_lat, addresses_lon, .Table, r = R, dist0 = dist0)
+  out <- match_min_Haversine(lat,
+                             lon,
+                             addresses_lat,
+                             addresses_lon,
+                             .Table,
+                             r = R,
+                             dist0 = dist0,
+                             ncores = ncores)
 
   if (recast_Table) {
     if (length(Table) != length(addresses_lat)) {
