@@ -65,11 +65,11 @@ match_nrst_haversine <- function(lat,
   stopifnot(is.numeric(lat),
             is.numeric(lon),
             length(lat) == length(lon),
-            length(lat) > 1L,
+            length(lat) >= 1L,
             is.numeric(addresses_lat),
             is.numeric(addresses_lon),
             length(addresses_lat) == length(addresses_lon),
-            length(addresses_lat) > 1L)
+            length(addresses_lat) >= 1L)
   check_TF(excl_self)
   check_TF(as.data.table)
   if (R_err_msg <- isnt_number(R, infinite.bad = FALSE)) {
