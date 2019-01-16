@@ -27,6 +27,8 @@
 #' If \code{FALSE}, a list is returned. \code{TRUE} by default to
 #' avoid dumping a huge list to the console.
 #'
+#' @param ncores Integer number of cores to use.
+#'
 #' @return A list (or \code{data.table} if \code{as.data.table = TRUE}) with two elements,
 #' both the same length as \code{lat}, giving for point \code{lat,lon}:
 #' \describe{

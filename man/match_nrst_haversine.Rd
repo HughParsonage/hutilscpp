@@ -37,6 +37,8 @@ nearest neighbour within a set of coordinates, \emph{viz.}
 \item{as.data.table}{Return result as a \code{data.table}?
 If \code{FALSE}, a list is returned. \code{TRUE} by default to
 avoid dumping a huge list to the console.}
+
+\item{ncores}{Integer number of cores to use.}
 }
 \value{
 A list (or \code{data.table} if \code{as.data.table = TRUE}) with two elements,
