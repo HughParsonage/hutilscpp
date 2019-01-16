@@ -167,6 +167,11 @@ List match_min_Haversine (NumericVector lat1,
 
   bool skip = false;
   int k = 0;
+#ifdef _OPENMP
+  if ( ncores > 0 )
+    omp_set_num_threads( ncores );
+  REprintf("Number of threads=%i\n", omp_get_max_threads());
+#endif
 #pragma omp parallel for schedule(dynamic)
   for (int i = 0; i < N1; ++i) {
     // Rcpp::checkUserInterrupt();
