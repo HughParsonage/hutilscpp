@@ -1,5 +1,9 @@
 #include <math.h>
 #include <Rcpp.h>
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+// [[Rcpp::plugins(openmp)]]
 
 using namespace Rcpp;
 
@@ -163,8 +167,9 @@ List match_min_Haversine (NumericVector lat1,
 
   bool skip = false;
   int k = 0;
+#pragma omp parallel for schedule(dynamic)
   for (int i = 0; i < N1; ++i) {
-    Rcpp::checkUserInterrupt();
+    // Rcpp::checkUserInterrupt();
     lati = lat1[i];
     loni = lon1[i];
 
