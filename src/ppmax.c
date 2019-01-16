@@ -13,22 +13,20 @@ SEXP do_c_pmax(SEXP x, SEXP a, SEXP b) {
   const double *xp = REAL(x);
   const double aaa = ap[0];
   const double bbb = bp[0];
+
   if (aaa != R_PosInf && bbb != R_NegInf) {
     for (int i = 0; i < nx; i++) {
       double eleme = xp[i];
-      ansp[i] = eleme > aaa ? eleme : aaa;
-      ansp[i] = eleme < bbb ? eleme : bbb;
+      ansp[i] = eleme;
+      if (eleme >= aaa && eleme <= bbb) {
+        continue;
+      }
+      ansp[i] = eleme < aaa ? aaa : bbb;
     }
   } else {
     if (aaa != R_PosInf) {
       for (int i = 0; i < nx; i++) {
         double eleme = xp[i];
-        /* if (isnan(eleme)) {
-          ansp[i] = eleme;
-        } else {
-          ansp[i] = eleme > aaa ? eleme : aaa;
-        }
-         */
         ansp[i] = eleme > aaa ? eleme : aaa;
       }
     } else {
