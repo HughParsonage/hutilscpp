@@ -73,12 +73,12 @@ showValue <- function(what, x) {
     invisible(.Call(`_hutilscpp_showValue`, what, x))
 }
 
-match_min_Haversine <- function(lat1, lon1, lat2, lon2, tabl, r = 0.002, dist0 = 10, excl_self = FALSE, ncores = 1L) {
-    .Call(`_hutilscpp_match_min_Haversine`, lat1, lon1, lat2, lon2, tabl, r, dist0, excl_self, ncores)
+match_min_Haversine <- function(lat1, lon1, lat2, lon2, tabl, r = 0.002, cartR = -1, dist0 = 10, excl_self = FALSE, ncores = 1L) {
+    .Call(`_hutilscpp_match_min_Haversine`, lat1, lon1, lat2, lon2, tabl, r, cartR, dist0, excl_self, ncores)
 }
 
-long_computation_omp <- function(nb, threads = 1L) {
-    .Call(`_hutilscpp_long_computation_omp`, nb, threads)
+theEuclidDistance <- function(x1, x2, y1, y2, unitless = FALSE) {
+    .Call(`_hutilscpp_theEuclidDistance`, x1, x2, y1, y2, unitless)
 }
 
 #' @title Threeway parallel maximum

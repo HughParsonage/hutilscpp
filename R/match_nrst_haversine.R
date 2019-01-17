@@ -27,7 +27,7 @@
 #' If \code{FALSE}, a list is returned. \code{TRUE} by default to
 #' avoid dumping a huge list to the console.
 #'
-#' @param ncores Integer number of cores to use.
+#' @param ncores Integer number of cores to use. Currently not implemented.
 #'
 #' @return A list (or \code{data.table} if \code{as.data.table = TRUE}) with two elements,
 #' both the same length as \code{lat}, giving for point \code{lat,lon}:
@@ -57,6 +57,7 @@ match_nrst_haversine <- function(lat,
                                  addresses_lon,
                                  Table = 0L,
                                  R = NULL,
+                                 cartesian_R = NULL,
                                  close_enough = 10,
                                  excl_self = FALSE,
                                  as.data.table = TRUE,
@@ -64,6 +65,10 @@ match_nrst_haversine <- function(lat,
   if (is.null(R)) {
     R <- -1
   }
+  if (is.null(cartesian_R)) {
+    cartesian_R <- -1
+  }
+
 
   stopifnot(is.numeric(lat),
             is.numeric(lon),
@@ -116,6 +121,7 @@ match_nrst_haversine <- function(lat,
                              addresses_lon,
                              .Table,
                              r = R,
+                             cartR = cartesian_R,
                              dist0 = dist0,
                              ncores = ncores)
 

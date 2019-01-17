@@ -5,8 +5,8 @@
 \title{Match coordinates to nearest coordinates}
 \usage{
 match_nrst_haversine(lat, lon, addresses_lat, addresses_lon, Table = 0L,
-  R = NULL, close_enough = 10, excl_self = FALSE,
-  as.data.table = TRUE, ncores = 1L)
+  R = NULL, cartesian_R = NULL, close_enough = 10,
+  excl_self = FALSE, as.data.table = TRUE, ncores = 1L)
 }
 \arguments{
 \item{lat, lon}{Coordinates to be geocoded. Numeric vectors of equal length.}
@@ -38,7 +38,7 @@ nearest neighbour within a set of coordinates, \emph{viz.}
 If \code{FALSE}, a list is returned. \code{TRUE} by default to
 avoid dumping a huge list to the console.}
 
-\item{ncores}{Integer number of cores to use.}
+\item{ncores}{Integer number of cores to use. Currently not implemented.}
 }
 \value{
 A list (or \code{data.table} if \code{as.data.table = TRUE}) with two elements,

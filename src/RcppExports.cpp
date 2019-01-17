@@ -203,8 +203,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // match_min_Haversine
-List match_min_Haversine(NumericVector lat1, NumericVector lon1, NumericVector lat2, NumericVector lon2, IntegerVector tabl, double r, double dist0, bool excl_self, int ncores);
-RcppExport SEXP _hutilscpp_match_min_Haversine(SEXP lat1SEXP, SEXP lon1SEXP, SEXP lat2SEXP, SEXP lon2SEXP, SEXP tablSEXP, SEXP rSEXP, SEXP dist0SEXP, SEXP excl_selfSEXP, SEXP ncoresSEXP) {
+List match_min_Haversine(NumericVector lat1, NumericVector lon1, NumericVector lat2, NumericVector lon2, IntegerVector tabl, double r, double cartR, double dist0, bool excl_self, int ncores);
+RcppExport SEXP _hutilscpp_match_min_Haversine(SEXP lat1SEXP, SEXP lon1SEXP, SEXP lat2SEXP, SEXP lon2SEXP, SEXP tablSEXP, SEXP rSEXP, SEXP cartRSEXP, SEXP dist0SEXP, SEXP excl_selfSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -214,22 +214,26 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type lon2(lon2SEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type tabl(tablSEXP);
     Rcpp::traits::input_parameter< double >::type r(rSEXP);
+    Rcpp::traits::input_parameter< double >::type cartR(cartRSEXP);
     Rcpp::traits::input_parameter< double >::type dist0(dist0SEXP);
     Rcpp::traits::input_parameter< bool >::type excl_self(excl_selfSEXP);
     Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
-    rcpp_result_gen = Rcpp::wrap(match_min_Haversine(lat1, lon1, lat2, lon2, tabl, r, dist0, excl_self, ncores));
+    rcpp_result_gen = Rcpp::wrap(match_min_Haversine(lat1, lon1, lat2, lon2, tabl, r, cartR, dist0, excl_self, ncores));
     return rcpp_result_gen;
 END_RCPP
 }
-// long_computation_omp
-double long_computation_omp(int nb, int threads);
-RcppExport SEXP _hutilscpp_long_computation_omp(SEXP nbSEXP, SEXP threadsSEXP) {
+// theEuclidDistance
+NumericVector theEuclidDistance(NumericVector x1, NumericVector x2, NumericVector y1, NumericVector y2, bool unitless);
+RcppExport SEXP _hutilscpp_theEuclidDistance(SEXP x1SEXP, SEXP x2SEXP, SEXP y1SEXP, SEXP y2SEXP, SEXP unitlessSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type nb(nbSEXP);
-    Rcpp::traits::input_parameter< int >::type threads(threadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(long_computation_omp(nb, threads));
+    Rcpp::traits::input_parameter< NumericVector >::type x1(x1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type x2(x2SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type y1(y1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type y2(y2SEXP);
+    Rcpp::traits::input_parameter< bool >::type unitless(unitlessSEXP);
+    rcpp_result_gen = Rcpp::wrap(theEuclidDistance(x1, x2, y1, y2, unitless));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -482,8 +486,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_haversineDistance", (DL_FUNC) &_hutilscpp_haversineDistance, 5},
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
     {"_hutilscpp_showValue", (DL_FUNC) &_hutilscpp_showValue, 2},
-    {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 9},
-    {"_hutilscpp_long_computation_omp", (DL_FUNC) &_hutilscpp_long_computation_omp, 2},
+    {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 10},
+    {"_hutilscpp_theEuclidDistance", (DL_FUNC) &_hutilscpp_theEuclidDistance, 5},
     {"_hutilscpp_pmax3", (DL_FUNC) &_hutilscpp_pmax3, 3},
     {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 2},
     {"_hutilscpp_do_pmaxC_int", (DL_FUNC) &_hutilscpp_do_pmaxC_int, 2},
@@ -503,7 +507,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_showValuea", (DL_FUNC) &_hutilscpp_showValuea, 2},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
-    {"do_c_pmax",                              (DL_FUNC) &do_c_pmax,                              3},
+    {"do_c_pmax",                              (DL_FUNC) &do_c_pmax,                               3},
     {NULL, NULL, 0}
 };
 

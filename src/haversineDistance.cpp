@@ -1,14 +1,7 @@
 #include <math.h>
 #include <Rcpp.h>
-#ifdef _OPENMP
-#include <omp.h>
-#endif
-// [[Rcpp::plugins(openmp)]]
 
 using namespace Rcpp;
-
-
-
 
 // [[Rcpp::export]]
 double haversine_distance (double olat1, double olon1, double olat2, double olon2, double delta_lat = -1, double delta_lon = -1, bool unitless = false) {
@@ -17,7 +10,7 @@ double haversine_distance (double olat1, double olon1, double olat2, double olon
   double lat2 = olat2 * M_PI / 180 ;
   double lon1 = olon1 * M_PI / 180 ;
   double lon2 = olon2 * M_PI / 180 ;
-  // abs doesn't work with the precision req
+  // std::abs doesn't work with the precision req
   if (delta_lat < 0) {
     delta_lat = (lat1 > lat2) ? (lat1 - lat2) : (lat2 - lat1) ;
   }
@@ -36,6 +29,21 @@ double haversine_distance (double olat1, double olon1, double olat2, double olon
   out *= 6371;
   out *= 2;
   return out;
+}
+
+double do_euclid_dist (double x1,
+                       double x2,
+                       double y1,
+                       double y2,
+                       bool unitless = false) {
+  double out = 0;
+  double x = x2 - x1;
+  double y = y2 - y1;
+  out = x * x + y * y;
+  if (unitless) {
+    return out;
+  }
+  return sqrt(out);
 }
 
 // unitless =>
@@ -96,7 +104,6 @@ int which_min_HaversineDistance (NumericVector lat1,
   bool skip = false;
 
   for (int i = 1; i < N; ++i) {
-
     // If the delta lat is greater than the upper bound, don't calculate haversine distance
     if (upperBound > 0) {
       delta_lat = lat1[i] - lat2;
@@ -134,6 +141,7 @@ List match_min_Haversine (NumericVector lat1,
                           NumericVector lon2,
                           IntegerVector tabl,
                           double r = 0.002,
+                          double cartR = -1,
                           double dist0 = 10,
                           bool excl_self = false,
                           int ncores = 1) {
@@ -157,6 +165,8 @@ List match_min_Haversine (NumericVector lat1,
   double latj = 0;
   double lonj = 0;
 
+  double euij = 0;
+
   double delta_lat = 0;
   double delta_lon = 0;
 
@@ -167,14 +177,8 @@ List match_min_Haversine (NumericVector lat1,
 
   bool skip = false;
   int k = 0;
-#ifdef _OPENMP
-  if ( ncores > 0 )
-    omp_set_num_threads( ncores );
-  REprintf("Number of threads=%i\n", omp_get_max_threads());
-#endif
-#pragma omp parallel for schedule(dynamic)
   for (int i = 0; i < N1; ++i) {
-    // Rcpp::checkUserInterrupt();
+    Rcpp::checkUserInterrupt();
     lati = lat1[i];
     loni = lon1[i];
 
@@ -202,6 +206,18 @@ List match_min_Haversine (NumericVector lat1,
 
       latj = lat2[j];
       lonj = lon2[j];
+
+      // haversine distance / euclidean is maximal for low latitude and
+      // longitudes of around 135 and
+      // is 114
+      if (cartR > 0) {
+        euij = do_euclid_dist(loni, lonj, lati, latj, true);
+        if (euij > cartR) {
+          continue;
+        }
+      }
+
+
       delta_lat = lati - latj;
       if (delta_lat < 0) {
         delta_lat = lati - latj;
@@ -240,7 +256,7 @@ List match_min_Haversine (NumericVector lat1,
         min_dist_km = haversine_distance(lati, loni, latj, lonj, delta_lat, delta_lon);
         // If within the "close-enough" distance, break to the next item to geocode.
         if (min_dist_km < dist0_km) {
-          break ;
+          break;
         }
       }
     }
@@ -274,6 +290,34 @@ List match_min_Haversine (NumericVector lat1,
                           Named("dist") = out2);
 
   return mat;
+}
+
+
+
+
+// [[Rcpp::export]]
+NumericVector theEuclidDistance (NumericVector x1,
+                                 NumericVector x2,
+                                 NumericVector y1,
+                                 NumericVector y2,
+                                 bool unitless = false) {
+  unsigned int N = x1.size();
+  if (N != y1.size() || N != x2.size() || N != y2.size()) {
+    stop("x and y lengths differ.");
+  }
+  NumericVector out(N);
+  double x1i = 0;
+  double x2i = 0;
+  double y1i = 0;
+  double y2i = 0;
+  for (unsigned int i = 0; i < N; ++i) {
+    x1i = x1[i];
+    x2i = x2[i];
+    y1i = y1[i];
+    y2i = y2[i];
+    out[i] = do_euclid_dist(x1i, x2i, y1i, y2i, unitless);
+  }
+  return out;
 }
 
 
