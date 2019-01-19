@@ -6,7 +6,8 @@
 \usage{
 match_nrst_haversine(lat, lon, addresses_lat, addresses_lon, Table = 0L,
   R = NULL, cartesian_R = NULL, close_enough = 10,
-  excl_self = FALSE, as.data.table = TRUE, ncores = 1L)
+  excl_self = FALSE, as.data.table = TRUE, .verify_box = TRUE,
+  ncores = 1L)
 }
 \arguments{
 \item{lat, lon}{Coordinates to be geocoded. Numeric vectors of equal length.}
@@ -19,6 +20,10 @@ then the positions in \code{lat2,lon2} are returned; if a vector, the correspond
 
 \item{R}{A "radius" of distances outside which distances will not be considered.
 Used for efficiency. The default of \code{R = 0.01} corresponds to about 15 km.}
+
+\item{cartesian_R}{The maximum radius of any address from the points to be geocoded. Used
+to accelerate the detection of minimum distances. Note, as the argument name suggests,
+the distance is in cartesian coordinates, so a small number is likely.}
 
 \item{close_enough}{The distance, in metres, below which a match will be considered to have occurred.
 (The distance that is considered "close enough" to be a match.)
@@ -37,6 +42,9 @@ nearest neighbour within a set of coordinates, \emph{viz.}
 \item{as.data.table}{Return result as a \code{data.table}?
 If \code{FALSE}, a list is returned. \code{TRUE} by default to
 avoid dumping a huge list to the console.}
+
+\item{.verify_box}{Check the initial guess against other points within the
+box of radius \eqn{\ell^\infty}.}
 
 \item{ncores}{Integer number of cores to use. Currently not implemented.}
 }

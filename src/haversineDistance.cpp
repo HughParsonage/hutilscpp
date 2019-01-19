@@ -130,7 +130,7 @@ int which_min_HaversineDistance (NumericVector lat1,
 // #nocov start
 // [[Rcpp::export]]
 void showValue(const char* what, double x) {
-  Rcout << "The value " << what << " is " << x << std::endl;
+  Rcout << " " << what << " \t " << x << std::endl;
 }
 // #nocov end
 
