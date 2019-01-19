@@ -67,6 +67,219 @@ NumericVector haversineDistance(NumericVector lat1, NumericVector lon1, NumericV
   return out;
 }
 
+
+
+
+
+// [[Rcpp::export]]
+NumericVector theEuclidDistance (NumericVector x1,
+                                 NumericVector x2,
+                                 NumericVector y1,
+                                 NumericVector y2,
+                                 bool unitless = false) {
+  unsigned int N = x1.size();
+  if (N != y1.size() || N != x2.size() || N != y2.size()) {
+    stop("x and y lengths differ.");
+  }
+  NumericVector out(N);
+  double x1i = 0;
+  double x2i = 0;
+  double y1i = 0;
+  double y2i = 0;
+  for (unsigned int i = 0; i < N; ++i) {
+    x1i = x1[i];
+    x2i = x2[i];
+    y1i = y1[i];
+    y2i = y2[i];
+    out[i] = do_euclid_dist(x1i, x2i, y1i, y2i, unitless);
+  }
+  return out;
+}
+
+// [[Rcpp::export]]
+double hausdorffEuclid (NumericVector x,
+                        NumericVector y) {
+  int N = x.size();
+  double maxmin_dist = 0;
+  for (int i = 0; i < N; ++i) {
+    double xi = x[i];
+    double yi = y[i];
+    double min_dist_i = 0;
+    for (int j = 0; j < N; ++j) {
+      if (i == j) {
+        continue;
+      }
+      double xj = x[j];
+      double yj = y[j];
+      double dij = 0;
+      dij = do_euclid_dist(xi, xj, yi, yj);
+      if (min_dist_i == 0 || dij < min_dist_i) {
+        min_dist_i = dij;
+      }
+    }
+    if (min_dist_i > maxmin_dist) {
+      maxmin_dist = min_dist_i;
+    }
+  }
+  return maxmin_dist;
+}
+
+// [[Rcpp::export]]
+bool is_sorted_ascending (NumericVector x) {
+  unsigned int N = x.size();
+  for (unsigned int i = 1; i < N; ++i) {
+    if (x[i] < x[i - 1]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+// [[Rcpp::export]]
+List pole_of_inaccessibility (NumericVector x,
+                              NumericVector y,
+                              double minx,
+                              double maxx,
+                              double miny,
+                              double maxy) {
+  int N = x.size();
+  if (N != y.size()) {
+    stop("lengths of x and y differ");
+  }
+
+  // Use minimum and maximum as parameters as these define
+  // the bounding box: important to avoid (a) results
+  // that are 'technically correct' but perverse and (b)
+  // results that drift out
+  const double wx = maxx - minx;
+  const double wy = maxy - miny;
+
+  double xc = minx + wx / 2;
+  double yc = miny + wy / 2;
+
+  double xp = xc;
+  double yp = yc;
+  double r = 0;
+  double rxy = (wx > wy) ? wx : wy;
+
+  double xi, yi = 0;
+
+  // Note all values are incremented at the head of the while loop
+  // so are not the first but the 'zeroth' entries of the sequence.
+  // Create a grid
+  double g_res = 1;
+  double max_g_res = 1;
+  double min_g_res = 0.5;
+
+
+  // Cycle through at a given resolution, keep going until
+  // there is a cell with no points. This is a good first
+  // approximation to a radius.
+  int min_points_in_grid = N;
+  bool interior_nonempty = true;
+  int chances_remaining = 0;
+
+  double xmin, xmax, ymin, ymax = 0;
+
+  int Debug1 = 0;
+  int Debug2 = 0;
+  int Debug3 = 0;
+  bool reached_binary_maximum = false;
+
+  // For every resolution "g_res" does there exist an empty cell
+  // of that resolution?
+  // TODO: Once a cell is a found move to a close point
+  while (interior_nonempty || chances_remaining) {
+    ++Debug1;
+
+    if (!interior_nonempty) {
+      reached_binary_maximum = true;
+      --chances_remaining;
+    }
+    if (!reached_binary_maximum && interior_nonempty) {
+      g_res *= 2;
+      max_g_res *= 2;
+      min_g_res *= 2;
+    }
+
+    // Increment radix towards the resolution we know to be too fine
+    if (reached_binary_maximum) {
+      ++Debug3;
+      if (interior_nonempty) {
+        // needs to be finer
+        g_res += (max_g_res - g_res) / 2;
+      } else {
+        // needs to be more coarse
+        g_res -= (g_res - min_g_res) / 2;
+      }
+
+    }
+    min_points_in_grid = N; // need to reestablish
+
+
+
+// translations right and up in x and y
+    double tx = wx / g_res;
+    double ty = wy / g_res;
+
+    double west_edge = minx - tx;
+    double east_edge = minx;
+
+    // grid centres
+    double xg = west_edge + tx / 2;
+    Rcpp::checkUserInterrupt();
+    for (int gridx = 0; min_points_in_grid && (gridx < g_res); ++gridx) {
+      west_edge += tx;
+      east_edge += tx;
+      xg += tx;
+
+      double south_edge = miny - ty;
+      double north_edge = miny;
+      double yg = south_edge + ty / 2;
+      for (int gridy = 0; min_points_in_grid && (gridy < g_res); ++gridy) {
+        north_edge += ty;
+        south_edge += ty;
+        yg += ty;
+
+        // now count number of points in this cell
+        int npoints = 0;
+        for (int i = 0; i < N; ++i) {
+          xi = x[i];
+          if (xi < west_edge || xi > east_edge) {
+            continue;
+          }
+          yi = y[i];
+          if (yi < south_edge || yi > north_edge) {
+            continue;
+          }
+          ++npoints;
+        }
+        if (npoints < min_points_in_grid && north_edge < maxy && east_edge < maxx) {
+          min_points_in_grid = npoints;
+          r = g_res;
+          xp = xg;
+          yp = yg;
+          xmin = west_edge;
+          xmax = east_edge;
+          ymin = south_edge;
+          ymax = north_edge;
+        }
+      }
+    }
+    interior_nonempty = min_points_in_grid > 0;
+  }
+
+
+  List out = List::create (Named("x_centre") = xp,
+                           Named("y_centre") = yp,
+                           Named("xmin") = xmin,
+                           Named("xmax") = xmax,
+                           Named("ymin") = ymin,
+                           Named("ymax") = ymax,
+                           Named("Radius") = 1/r);
+  return out;
+}
+
 // [[Rcpp::export]]
 int which_min_HaversineDistance (NumericVector lat1,
                                  NumericVector lon1,
