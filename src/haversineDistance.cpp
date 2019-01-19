@@ -3,27 +3,45 @@
 
 using namespace Rcpp;
 
-// [[Rcpp::export]]
-double haversine_distance (double olat1, double olon1, double olat2, double olon2, double delta_lat = -1, double delta_lon = -1, bool unitless = false) {
-  // double pi = 3.1415926535897;
-  double lat1 = olat1 * M_PI / 180 ;
-  double lat2 = olat2 * M_PI / 180 ;
-  double lon1 = olon1 * M_PI / 180 ;
-  double lon2 = olon2 * M_PI / 180 ;
-  // std::abs doesn't work with the precision req
-  if (delta_lat < 0) {
-    delta_lat = (lat1 > lat2) ? (lat1 - lat2) : (lat2 - lat1) ;
-  }
-  if (delta_lon < 0) {
-    delta_lon = (lon1 > lon2) ? (lon1 - lon2) : (lon2 - lon1) ;
-  }
 
-  double num = std::pow(sin(delta_lat / 2), 2);
-  double den = (cos(lat1) * cos(lat2)) * std::pow(sin(delta_lon / 2), 2);
-  double out = num + den;
+// #nocov start
+// [[Rcpp::export]]
+void showValue(const char* what, double x) {
+  Rcout << " " << what << " \t " << x << std::endl;
+}
+// #nocov end
+
+
+double sinhalfsq (double x) {
+  const double o = sin(x / 2);
+  return o * o;
+  // return 0.5 - 0.5 * cos(x); // slowest!
+  // return (sin(x/2) * sin(x/2));
+}
+
+// [[Rcpp::export]]
+double haversine_distance (double olat1, double olon1, double olat2, double olon2, bool unitless = false) {
+  // double pi = 3.1415926535897;
+  const double lat1 = olat1 * (M_PI / 180) ;
+  const double lat2 = olat2 * (M_PI / 180) ;
+  const double lon1 = olon1 * (M_PI / 180) ;
+  const double lon2 = olon2 * (M_PI / 180) ;
+  // std::abs doesn't work with the precision req
+
+  const double delta_lat = (lat1 > lat2) ? (lat1 - lat2) : (lat2 - lat1) ;
+  const double delta_lon = (lon1 > lon2) ? (lon1 - lon2) : (lon2 - lon1) ;
+
+  // 6371 * 2 * asin(sqrt(sin(d_lat / 2)^2 + cos(lat1) * cos(lat2) * sin(d_lon / 2)^2))
+  double out = 0;
   if (unitless) {
+    // just assume sin(x) = x
+    out = delta_lat * delta_lat + delta_lon * delta_lon * cos(lat1) * cos(lat2);
     return out;
   }
+
+  double den = cos(lat1) * cos(lat2) * sinhalfsq(delta_lon);
+  out = sinhalfsq(delta_lat);
+  out += den;
   out = sqrt(out);
   out = asin(out);
   out *= 6371;
@@ -57,7 +75,7 @@ NumericVector haversineDistance(NumericVector lat1, NumericVector lon1, NumericV
   NumericVector out(N);
   if (unitless) {
     for (int i = 0; i < N; ++i) {
-      out[i] = haversine_distance(lat1[i], lon1[i], lat2[i], lon2[i], -1, -1, true);
+      out[i] = haversine_distance(lat1[i], lon1[i], lat2[i], lon2[i], true);
     }
   } else {
     for (int i = 0; i < N; ++i) {
@@ -340,13 +358,6 @@ int which_min_HaversineDistance (NumericVector lat1,
   return out;
 }
 
-// #nocov start
-// [[Rcpp::export]]
-void showValue(const char* what, double x) {
-  Rcout << " " << what << " \t " << x << std::endl;
-}
-// #nocov end
-
 // [[Rcpp::export]]
 List match_min_Haversine (NumericVector lat1,
                           NumericVector lon1,
@@ -355,7 +366,9 @@ List match_min_Haversine (NumericVector lat1,
                           IntegerVector tabl,
                           double r = 0.002,
                           double cartR = -1,
-                          double dist0 = 10,
+                          double dist0_km = 0.01,
+                          bool verify_cartR = false,
+                          bool do_verify_box = false,
                           bool excl_self = false,
                           int ncores = 1) {
   int N1 = lat1.length();
@@ -386,21 +399,31 @@ List match_min_Haversine (NumericVector lat1,
   IntegerVector out(N1);
   NumericVector out2(N1);
   double to_rad = M_PI / 180;
-  double dist0_km = dist0 / 1000;
 
+  // half-equatorial circumference: used as an 'infinity' for
+  // min_dist while also available to check we have actually
+  // achieved a minimum distance. (Should be 1 and around 20,000.)
+  double BIGDIST = haversine_distance(0, 0, 0, 179.99, true);
+  double BIGDISTKM = haversine_distance(0, 0, 0, 179.99, false);
   bool skip = false;
+  bool do_verify_cartR = verify_cartR;
+  bool do_check_cartR = cartR > 0;
   int k = 0;
+  int nPoints_Require_Box_Verify = 0;
+
   for (int i = 0; i < N1; ++i) {
-    Rcpp::checkUserInterrupt();
+    if (ncores == 1 && (i % 16) == 0) {
+      Rcpp::checkUserInterrupt();
+    }
     lati = lat1[i];
     loni = lon1[i];
 
     // Unitless distances to monitor for the minimum
-    double min_dist = 50000;
+    double min_dist = BIGDIST;
     double cur_dist = 0;
 
-    // Use this to check the 'near enough' distance
-    double min_dist_km = 50000;
+    // Use this to check the 'near enough' distance after a minimum candidate
+    double min_dist_km = BIGDISTKM;
     k = 0;
     for (int j = 0; j < N2; ++j) {
       if (excl_self && j == i) {
@@ -422,39 +445,15 @@ List match_min_Haversine (NumericVector lat1,
 
       // haversine distance / euclidean is maximal for low latitude and
       // longitudes of around 135 and
-      // is 114
-      if (cartR > 0) {
+      // is 114. See data-raw/euclid-vs-haversine
+      if (do_check_cartR) {
         euij = do_euclid_dist(loni, lonj, lati, latj, true);
         if (euij > cartR) {
           continue;
         }
       }
-
-
-      delta_lat = lati - latj;
-      if (delta_lat < 0) {
-        delta_lat = lati - latj;
-      }
-      delta_lat *= to_rad;
-      if (r > 0) {
-        skip = delta_lat > r;
-        if (skip) {
-          continue;
-        }
-      }
-      delta_lon = loni - lonj;
-      if (delta_lon < 0) {
-        delta_lon = lonj - loni ;
-      }
-      delta_lon *= to_rad;
-      if (r > 0) {
-        skip = delta_lon > r;
-        if (skip) {
-          continue;
-        }
-      }
       // unitless if we just need to compare to min_dist
-      cur_dist = haversine_distance(lati, loni, latj, lonj, delta_lat, delta_lon, true);
+      cur_dist = haversine_distance(lati, loni, latj, lonj, true);
       if (cur_dist < min_dist) {
         min_dist = cur_dist;
 
@@ -466,7 +465,7 @@ List match_min_Haversine (NumericVector lat1,
         k += j;
 
         // Calculate the real distance
-        min_dist_km = haversine_distance(lati, loni, latj, lonj, delta_lat, delta_lon);
+        min_dist_km = haversine_distance(lati, loni, latj, lonj);
         // If within the "close-enough" distance, break to the next item to geocode.
         if (min_dist_km < dist0_km) {
           break;
@@ -474,6 +473,54 @@ List match_min_Haversine (NumericVector lat1,
       }
     }
 
+
+    if (do_verify_box) {
+
+      // The half-length of the square to check within
+      double box_r = do_euclid_dist(loni, lon2[k], lati, lat2[k]);
+      double cur_dist_km_new = 0;
+      double box_max_lat = lat2[k] + box_r;
+      double box_min_lat = lat2[k] - box_r;
+      double box_max_lon = lon2[k] + box_r;
+      double box_min_lon = lon2[k] - box_r;
+      for (int j = 0; j < N2; ++j) {
+        double lat2j = lat2[j], lon2j = lon2[j];
+        if (lat2j > box_min_lat &&
+            lat2j < box_max_lat &&
+            lon2j > box_min_lon &&
+            lon2j < box_max_lon) {
+          ++nPoints_Require_Box_Verify;
+          cur_dist_km_new = haversine_distance(lati, loni, lat2j, lon2j);
+          if (i == 0 && (j == 1 || j == N2 - 1 || j == k)) {
+            showValue("min_dist_km", min_dist_km);
+            showValue("cur_dist_km_new", cur_dist_km_new);
+            showValue("box_r", box_r);
+          }
+          if (cur_dist_km_new < min_dist_km) {
+            k = 0;
+            k += j;
+            min_dist_km = cur_dist_km_new;
+          }
+        }
+      }
+    }
+
+    if (do_verify_cartR && min_dist_km == BIGDISTKM) {
+      // We have failed to identify a small distance
+      // Likely reason: too ambitious cartR
+      do_check_cartR = false; // set from here onwards -- if it happens once, likely to happen again
+
+      for (int j = 0; j < N2; ++j) {
+        double cur_dist_km = 0;
+        cur_dist_km = haversine_distance(lati, loni, latj, lonj, false);
+        if (cur_dist_km < min_dist_km) {
+          min_dist_km = cur_dist_km;
+          if (min_dist_km < dist0_km) {
+            break;
+          }
+        }
+      }
+    }
 
     if (use_tbl) {
       if (k >= tabl.length()) {
@@ -495,44 +542,10 @@ List match_min_Haversine (NumericVector lat1,
     }
   }
 
-  // NumericMatrix mat(N1, 2);
-  // mat(_, 0) = out;
-  // mat(_, 1) = out2;
-
   List mat = List::create(Named("pos") = out,
                           Named("dist") = out2);
-
   return mat;
 }
-
-
-
-
-// [[Rcpp::export]]
-NumericVector theEuclidDistance (NumericVector x1,
-                                 NumericVector x2,
-                                 NumericVector y1,
-                                 NumericVector y2,
-                                 bool unitless = false) {
-  unsigned int N = x1.size();
-  if (N != y1.size() || N != x2.size() || N != y2.size()) {
-    stop("x and y lengths differ.");
-  }
-  NumericVector out(N);
-  double x1i = 0;
-  double x2i = 0;
-  double y1i = 0;
-  double y2i = 0;
-  for (unsigned int i = 0; i < N; ++i) {
-    x1i = x1[i];
-    x2i = x2[i];
-    y1i = y1[i];
-    y2i = y2[i];
-    out[i] = do_euclid_dist(x1i, x2i, y1i, y2i, unitless);
-  }
-  return out;
-}
-
 
 
 

@@ -9,6 +9,10 @@
 #' then the positions in \code{lat2,lon2} are returned; if a vector, the corresponding values.
 #' @param R A "radius" of distances outside which distances will not be considered.
 #' Used for efficiency. The default of \code{R = 0.01} corresponds to about 15 km.
+#' @param cartesian_R The maximum radius of any address from the points to be geocoded. Used
+#' to accelerate the detection of minimum distances. Note, as the argument name suggests,
+#' the distance is in cartesian coordinates, so a small number is likely.
+#'
 #' @param close_enough The distance, in metres, below which a match will be considered to have occurred.
 #' (The distance that is considered "close enough" to be a match.)
 #'
@@ -26,6 +30,9 @@
 #' @param as.data.table Return result as a \code{data.table}?
 #' If \code{FALSE}, a list is returned. \code{TRUE} by default to
 #' avoid dumping a huge list to the console.
+#'
+#' @param .verify_box Check the initial guess against other points within the
+#' box of radius \eqn{\ell^\infty}.
 #'
 #' @param ncores Integer number of cores to use. Currently not implemented.
 #'
@@ -61,15 +68,11 @@ match_nrst_haversine <- function(lat,
                                  close_enough = 10,
                                  excl_self = FALSE,
                                  as.data.table = TRUE,
+                                 .verify_box = TRUE,
                                  ncores = 1L) {
   if (is.null(R)) {
     R <- -1
   }
-  if (is.null(cartesian_R)) {
-    cartesian_R <- -1
-  }
-
-
   stopifnot(is.numeric(lat),
             is.numeric(lon),
             length(lat) == length(lon),
@@ -83,23 +86,16 @@ match_nrst_haversine <- function(lat,
   if (R_err_msg <- isnt_number(R, infinite.bad = FALSE)) {
     stop(attr(R_err_msg, "ErrorMessage"))
   }
-  dist0 <- close_enough
+
   if (ce_err_msg <- isnt_number(close_enough)) {
     if (length(close_enough) != 1L || !grepl("^[0-9]+(\\.[0-9]+)?\\s*k?m$", close_enough)) {
       stop(attr(ce_err_msg, "ErrorMessage"), "\n",
-           "`close_enough` may be a string of numbers ending in 'km' or 'm' to designate units.")
+           "`close_enough` may be a string of numbers ",
+           "ending in 'km' or 'm' to designate units.")
     }
-
-    # put km before m!
-    if (endsWith(close_enough, "km")) {
-      dist0 <- sub("\\s*km$", "", close_enough)
-      # use as.double here and as.numeric later to separate warning msgs
-      dist0 <- as.double(dist0) * 1000
-    } else if (endsWith(close_enough, "m")) {
-      dist0 <- sub("\\s*m$", "", close_enough)
-      dist0 <- as.numeric(dist0)
-    }
-    stopifnot(!anyNA(dist0), is.numeric(dist0))
+    dist0_km <- units2km(close_enough)
+  } else {
+    dist0_km <- close_enough / 1000
   }
   if (is.infinite(R)) {
     R <- -1
@@ -115,6 +111,26 @@ match_nrst_haversine <- function(lat,
     .Table <- 0L
   }
 
+  min_lat <- min(lat)
+  max_lat <- max(lat)
+  min_lon <- min(lon)
+  max_lon <- max(lon)
+  verify_cartR <- FALSE
+  if (is.null(cartesian_R)) {
+    if (min_lat > -63 && max_lat < 63) {
+      # Within 63 degrees of latitude, the cartesian distance
+      # is at least 50 times the distance in km.
+      cartesian_R <- 0.02  # within a km
+      verify_cartR <- TRUE
+    }
+  }
+
+  if (length(Table) != length(addresses_lat)) {
+    warning("`Table` was provided, but was not the same ",
+            "length as `addresses_lat`, ",
+            "so returning positions.")
+  }
+
   out <- match_min_Haversine(lat,
                              lon,
                              addresses_lat,
@@ -122,13 +138,16 @@ match_nrst_haversine <- function(lat,
                              .Table,
                              r = R,
                              cartR = cartesian_R,
-                             dist0 = dist0,
+                             verify_cartR = verify_cartR,
+                             do_verify_box = .verify_box,
+                             dist0_km = dist0_km,
                              ncores = ncores)
 
   if (recast_Table) {
     if (length(Table) != length(addresses_lat)) {
-      warning("`Table` was provided, but was not the same length as `addresses_lat`, ",
-              "so returning positions.")
+      # Don't emit warning in case user has warnings as errors.
+      # warning("`Table` was provided, but was not the same length as `addresses_lat`, ",
+      #         "so returning positions.")
     } else {
       out[[1L]] <- Table[out[[1L]]]
     }
