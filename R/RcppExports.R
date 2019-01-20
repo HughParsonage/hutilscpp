@@ -93,41 +93,29 @@ match_min_Haversine <- function(lat1, lon1, lat2, lon2, tabl, r = 0.002, cartR =
     .Call(`_hutilscpp_match_min_Haversine`, lat1, lon1, lat2, lon2, tabl, r, cartR, dist0_km, verify_cartR, do_verify_box, excl_self, ncores)
 }
 
-#' @title Threeway parallel maximum
-#' @description Returns the parallel maximum of three 
-#' 
-#' @name pmax3
-#' @param x,y,z Numeric vectors of identical lengths.
-#' @return The parallel maximum of the vectors.
-#' @export pmax3
-NULL
-
-pmax3 <- function(x, y, z) {
-    .Call(`_hutilscpp_pmax3`, x, y, z)
-}
-
 #' @name do_pmaxC
 #' @title Internal pmaxC helpers
 #' @description Internal functions used when the overheads of assertions
-#' would be too expensive.
+#' would be too expensive. The \code{_IP_} flavours modify in place.
 #' @param x A numeric/integer vector.
 #' @param a A single numeric/integer.
+#' @param in_place Modify \code{x} in place?
 #' @export do_pmaxC_dbl do_pmaxC_int do_pmax0 do_pmaxIPint0 do_pmaxIPnum0
 NULL
 
 #' @rdname do_pmaxC
-do_pmaxC_dbl <- function(x, a) {
-    .Call(`_hutilscpp_do_pmaxC_dbl`, x, a)
+do_pmaxC_dbl <- function(x, a, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmaxC_dbl`, x, a, in_place)
 }
 
 #' @rdname do_pmaxC
-do_pmaxC_int <- function(x, a) {
-    .Call(`_hutilscpp_do_pmaxC_int`, x, a)
+do_pmaxC_int <- function(x, a, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmaxC_int`, x, a, in_place)
 }
 
 #' @rdname do_pmaxC
-do_pmax0 <- function(x) {
-    .Call(`_hutilscpp_do_pmax0`, x)
+do_pmax0 <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmax0`, x, in_place)
 }
 
 do_pmaxIP_int <- function(x, a) {
@@ -154,18 +142,19 @@ do_pmaxIPint0 <- function(x) {
 #' @name do_pmaxV
 #' @param x A numeric vector.
 #' @param y A numeric vector, the same length as x.
+#' @param in_place (bool, default: \code{false}) Should the function operate on \code{x} in-place?
 #' @return The parallel maximum of the input values.
 #' @export do_pmaxNumNum do_pmaxIntInt
 NULL
 
 #' @rdname do_pmaxV
-do_pmaxNumNum <- function(x, y) {
-    .Call(`_hutilscpp_do_pmaxNumNum`, x, y)
+do_pmaxNumNum <- function(x, y, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmaxNumNum`, x, y, in_place)
 }
 
 #' @rdname do_pmaxV
-do_pmaxIntInt <- function(x, y) {
-    .Call(`_hutilscpp_do_pmaxIntInt`, x, y)
+do_pmaxIntInt <- function(x, y, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmaxIntInt`, x, y, in_place)
 }
 
 #' @title Parallel maximum
@@ -198,12 +187,19 @@ do_pmin0_int <- function(x, in_place = FALSE) {
 #' @name do_pminV
 #' @param x A numeric vector.
 #' @param y A numeric vector, the same length as x.
+#' @param in_place (bool, default: \code{false}) Modify \code{x} in-place?
 #' @return The parallel maximum of the input values.
-#' @export do_pminV
+#' @export do_pminV_dbl do_pminV_int
 NULL
 
-do_pminV <- function(x, y) {
-    .Call(`_hutilscpp_do_pminV`, x, y)
+#' @rdname do_pminV
+do_pminV_dbl <- function(x, y, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pminV_dbl`, x, y, in_place)
+}
+
+#' @rdname do_pminV
+do_pminV_int <- function(x, y, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pminV_int`, x, y, in_place)
 }
 
 squishn <- function(x, a, b, in_place = FALSE) {
@@ -212,6 +208,14 @@ squishn <- function(x, a, b, in_place = FALSE) {
 
 squishi <- function(x, a, b, in_place = FALSE) {
     .Call(`_hutilscpp_squishi`, x, a, b, in_place)
+}
+
+do_summary3_dbl <- function(x, y, z, in_place = FALSE, do_max = TRUE) {
+    .Call(`_hutilscpp_do_summary3_dbl`, x, y, z, in_place, do_max)
+}
+
+do_summary3_int <- function(x, y, z, in_place = FALSE, do_max = TRUE) {
+    .Call(`_hutilscpp_do_summary3_int`, x, y, z, in_place, do_max)
 }
 
 #' @name helper1

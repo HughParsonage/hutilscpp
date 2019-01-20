@@ -1,3 +1,7 @@
+#include <Rcpp.h>
+// #include <RcppParallel.h>
+using namespace Rcpp;
+
 //' @title Parallel maximum
 //' @description A faster \code{pmin()}.
 //'
@@ -9,22 +13,15 @@
 //' @note This function will always be faster than \code{pmin(x, a)} when \code{a} is a single value, but can be slower than \code{pmin.int(x, a)} when \code{x} is short. Use this function when comparing a numeric vector with a single value.
 //' @export do_pminC
 
-
-#include <Rcpp.h>
-// #include <RcppParallel.h>
-using namespace Rcpp;
-
 // [[Rcpp::export]]
 NumericVector do_pminC(NumericVector x, double a, bool in_place = false) {
   int n = x.length();
-  NumericVector out = in_place ? NumericVector(x) : NumericVector(n);
+  NumericVector out = in_place ? NumericVector(x) : NumericVector(clone(x));
 
   for (int i = 0; i < n; ++i) {
     double xi = x[i];
     if (xi > a) {
       out[i] = a;
-    } else {
-      out[i] = xi;
     }
   }
 

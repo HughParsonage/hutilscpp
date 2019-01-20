@@ -3,7 +3,9 @@
 #'
 #' @name pmaxC
 #' @param x A numeric vector.
+#' @param y,z Other numeric vectors the same length as \code{x}
 #' @param a A single numeric value.
+#'
 #' @param in_place (logical, default: \code{FALSE}) Should \code{x}
 #' be modified in-place.
 #' @return The parallel maximum/minimum of the input values. \code{pmax0(x)} is
@@ -17,7 +19,7 @@
 #' @examples
 #' pmaxC(-5:5, 2)
 #'
-#' @export pmaxC pmax0
+#' @export pmaxC pmax0 pmaxV pmax3
 #'
 #'
 
@@ -103,24 +105,81 @@ pmax0 <- function(x, in_place = FALSE) {
 }
 
 #' @rdname pmaxC
-#' @export pminC
-pminC <- function(x, a = 0, in_place = FALSE) {
-  if (!is.numeric(x)) {
-    stop("`x` was a ", class(x), ", but must be numeric.")
+pmaxV <- function(x, y, in_place = FALSE) {
+  if (is.integer(x) && is.integer(y)) {
+    return(do_pmaxIntInt(x, y))
   }
-  if (!length(x)) {
-    return(x)
+  if (is.double(x) && is.double(y)) {
+    return(do_pmaxNumNum(x, y))
   }
-  if (!is.numeric(a)) {
-    stop("`a` was a ", class(a), ", but must be numeric.")
+  if (is.integer(y)) {
+    stop("`y` is type integer, yet `x` is type double.")
   }
-  if (length(a) != 1L) {
-    stop("`a` had length ", length(a), ", but must be length-one. ",
-         "If you require the parallel maximum of two equal-length vectors, ",
-         "use pmaxV(x, y).")
+  if (is.double(y)) {
+    stop("`y` is type double, yet `x` is type integer.")
   }
+}
+
+#' @rdname pmaxC
+pmax3 <- function(x, y, z, in_place = FALSE) {
   check_TF(in_place)
-  do_pminC(x, a, in_place = in_place)
+  lx <- length(x)
+  if (length(y) == lx && length(z) == lx) {
+    if (is.integer(x) && is.integer(y) && is.integer(z)) {
+      return(do_summary3_int(x, y, z, in_place, do_max = TRUE))
+    }
+    if (is.double(x) && is.double(y) && is.double(z)) {
+      return(do_summary3_dbl(x, y, z, in_place, do_max = TRUE))
+    }
+  } else {
+    if (length(y) != lx) {
+      if (length(y) != 1L) {
+        stop("`y` had length ", length(y), ", yet ",
+             "`x` had length ", length(x), ". ",
+             "`y` and `z` must be the same length as `x`, (or length-one).")
+      }
+
+      x <- pmaxC(x, y, in_place = in_place)
+    } else {
+      x <- pmaxV(x, y, in_place = in_place)
+    }
+    if (length(z) != lx) {
+      if (length(z) != 1L) {
+        stop("`z` had length ", length(z), ", yet ",
+             "`x` had length ", length(x), ". ",
+             "`y` and `z` must be the same length as `x`, (or length-one).")
+      }
+      return(pmaxC(x, z, in_place = in_place))
+    } else {
+      return(pmaxV(x, z, in_place = in_place))
+    }
+  }
+
+  if (is.integer(x) && (is.double(y) || is.double(z))) {
+    yi <- as.integer(y)
+    if (is.double(y) && max(abs(y - yi)) > sqrt(.Machine$double.eps)) {
+      wb <- which.max(abs(y - yi)) > sqrt(.Machine$double.eps)
+      stop("`x` was type 'integer' and `y` was type double, but entry ", wb,
+           " was not equal to the integer equivalent. ", )
+    }
+    zi <- as.integer(z)
+    if (is.double(z) && max(abs(z - zi)) > sqrt(.Machine$double.eps)) {
+      wb <- which.max(abs(z - zi)) > sqrt(.Machine$double.eps)
+      stop("`x` was type 'integer' and `z` was type double, but entry ", wb,
+           " was not equal to the integer equivalent. ", )
+    }
+    return(do_summary3_int(x, y, z, in_place = in_place, do_max = TRUE))
+  }
+  if (is.double(x) && is.numeric(y) && is.numeric(z)) {
+    return(do_summary3_dbl(x, as.double(y), as.double(z), in_place = in_place, do_max = TRUE))
+  }
+
+  if (!is.numeric(x) || !is.numeric(y) || !is.numeric(z)) {
+    stop("`x` was of type ", typeof(x),
+         "`y` was of type ", typeof(y),
+         "`z` was of type ", typeof(z), ". ",
+         "All of `x`, `y`, and `z` must be numeric.")
+  }
 }
 
 

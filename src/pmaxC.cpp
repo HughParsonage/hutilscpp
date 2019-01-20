@@ -1,9 +1,10 @@
 //' @name do_pmaxC
 //' @title Internal pmaxC helpers
 //' @description Internal functions used when the overheads of assertions
-//' would be too expensive.
+//' would be too expensive. The \code{_IP_} flavours modify in place.
 //' @param x A numeric/integer vector.
 //' @param a A single numeric/integer.
+//' @param in_place Modify \code{x} in place?
 //' @export do_pmaxC_dbl do_pmaxC_int do_pmax0 do_pmaxIPint0 do_pmaxIPnum0
 
 #include <Rcpp.h>
@@ -58,9 +59,23 @@ using namespace Rcpp;
 
 //' @rdname do_pmaxC
 // [[Rcpp::export]]
-NumericVector do_pmaxC_dbl(NumericVector x, double a) {
+NumericVector do_pmaxC_dbl(NumericVector x, double a, bool in_place = false) {
   int n = x.length();
-  NumericVector out(clone(x));
+  NumericVector out = in_place ? NumericVector(x) : NumericVector(clone(x));
+
+  for (int i = 0; i < n; ++i) {
+    if (x[i] < a) {
+      out[i] = a;
+    }
+  }
+  return out;
+}
+
+//' @rdname do_pmaxC
+// [[Rcpp::export]]
+IntegerVector do_pmaxC_int(IntegerVector x, int a, bool in_place = false) {
+  int n = x.length();
+  IntegerVector out = in_place ? IntegerVector(x) : IntegerVector(clone(x));
 
   for (int i = 0; i < n; ++i) {
     if (x[i] < a) {
@@ -73,27 +88,11 @@ NumericVector do_pmaxC_dbl(NumericVector x, double a) {
 
 //' @rdname do_pmaxC
 // [[Rcpp::export]]
-IntegerVector do_pmaxC_int(IntegerVector x, int a) {
+NumericVector do_pmax0(NumericVector x, bool in_place = false) {
   int n = x.length();
-  IntegerVector out(clone(x));
+  NumericVector out = in_place ? NumericVector(x) : NumericVector(clone(x));
 
   for (int i = 0; i < n; ++i) {
-    if (x[i] < a) {
-      out[i] = a;
-    }
-  }
-
-  return out;
-}
-
-//' @rdname do_pmaxC
-// [[Rcpp::export]]
-NumericVector do_pmax0(NumericVector x) {
-  int n = x.length();
-  NumericVector out(clone(x));
-  int i = 0;
-
-  for (i = 0; i < n; ++i) {
     if (x[i] < 0) {
       out[i] = 0;
     }

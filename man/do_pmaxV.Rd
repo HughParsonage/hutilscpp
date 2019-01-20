@@ -6,14 +6,16 @@
 \alias{do_pmaxIntInt}
 \title{Parallel maximum in C++}
 \usage{
-do_pmaxNumNum(x, y)
+do_pmaxNumNum(x, y, in_place = FALSE)
 
-do_pmaxIntInt(x, y)
+do_pmaxIntInt(x, y, in_place = FALSE)
 }
 \arguments{
 \item{x}{A numeric vector.}
 
 \item{y}{A numeric vector, the same length as x.}
+
+\item{in_place}{(bool, default: \code{false}) Should the function operate on \code{x} in-place?}
 }
 \value{
 The parallel maximum of the input values.

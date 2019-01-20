@@ -9,11 +9,11 @@
 \alias{do_pmaxIPint0}
 \title{Internal pmaxC helpers}
 \usage{
-do_pmaxC_dbl(x, a)
+do_pmaxC_dbl(x, a, in_place = FALSE)
 
-do_pmaxC_int(x, a)
+do_pmaxC_int(x, a, in_place = FALSE)
 
-do_pmax0(x)
+do_pmax0(x, in_place = FALSE)
 
 do_pmaxIPnum0(x)
 
@@ -23,8 +23,10 @@ do_pmaxIPint0(x)
 \item{x}{A numeric/integer vector.}
 
 \item{a}{A single numeric/integer.}
+
+\item{in_place}{Modify \code{x} in place?}
 }
 \description{
 Internal functions used when the overheads of assertions
-would be too expensive.
+would be too expensive. The \code{_IP_} flavours modify in place.
 }

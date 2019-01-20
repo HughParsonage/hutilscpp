@@ -3,14 +3,17 @@
 \name{pmaxC}
 \alias{pmaxC}
 \alias{pmax0}
-\alias{pminC}
+\alias{pmaxV}
+\alias{pmax3}
 \title{Parallel maximum/minimum}
 \usage{
 pmaxC(x, a, in_place = FALSE)
 
 pmax0(x, in_place = FALSE)
 
-pminC(x, a = 0, in_place = FALSE)
+pmaxV(x, y, in_place = FALSE)
+
+pmax3(x, y, z, in_place = FALSE)
 }
 \arguments{
 \item{x}{A numeric vector.}
@@ -19,6 +22,8 @@ pminC(x, a = 0, in_place = FALSE)
 
 \item{in_place}{(logical, default: \code{FALSE}) Should \code{x}
 be modified in-place.}
+
+\item{y, z}{Other numeric vectors the same length as \code{x}}
 }
 \value{
 The parallel maximum/minimum of the input values. \code{pmax0(x)} is

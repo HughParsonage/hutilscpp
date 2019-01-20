@@ -277,51 +277,41 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// pmax3
-NumericVector pmax3(NumericVector x, NumericVector y, NumericVector z);
-RcppExport SEXP _hutilscpp_pmax3(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
-    rcpp_result_gen = Rcpp::wrap(pmax3(x, y, z));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_pmaxC_dbl
-NumericVector do_pmaxC_dbl(NumericVector x, double a);
-RcppExport SEXP _hutilscpp_do_pmaxC_dbl(SEXP xSEXP, SEXP aSEXP) {
+NumericVector do_pmaxC_dbl(NumericVector x, double a, bool in_place);
+RcppExport SEXP _hutilscpp_do_pmaxC_dbl(SEXP xSEXP, SEXP aSEXP, SEXP in_placeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< double >::type a(aSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_pmaxC_dbl(x, a));
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmaxC_dbl(x, a, in_place));
     return rcpp_result_gen;
 END_RCPP
 }
 // do_pmaxC_int
-IntegerVector do_pmaxC_int(IntegerVector x, int a);
-RcppExport SEXP _hutilscpp_do_pmaxC_int(SEXP xSEXP, SEXP aSEXP) {
+IntegerVector do_pmaxC_int(IntegerVector x, int a, bool in_place);
+RcppExport SEXP _hutilscpp_do_pmaxC_int(SEXP xSEXP, SEXP aSEXP, SEXP in_placeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type a(aSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_pmaxC_int(x, a));
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmaxC_int(x, a, in_place));
     return rcpp_result_gen;
 END_RCPP
 }
 // do_pmax0
-NumericVector do_pmax0(NumericVector x);
-RcppExport SEXP _hutilscpp_do_pmax0(SEXP xSEXP) {
+NumericVector do_pmax0(NumericVector x, bool in_place);
+RcppExport SEXP _hutilscpp_do_pmax0(SEXP xSEXP, SEXP in_placeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_pmax0(x));
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmax0(x, in_place));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -372,26 +362,28 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_pmaxNumNum
-NumericVector do_pmaxNumNum(NumericVector x, NumericVector y);
-RcppExport SEXP _hutilscpp_do_pmaxNumNum(SEXP xSEXP, SEXP ySEXP) {
+NumericVector do_pmaxNumNum(NumericVector x, NumericVector y, bool in_place);
+RcppExport SEXP _hutilscpp_do_pmaxNumNum(SEXP xSEXP, SEXP ySEXP, SEXP in_placeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(do_pmaxNumNum(x, y));
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmaxNumNum(x, y, in_place));
     return rcpp_result_gen;
 END_RCPP
 }
 // do_pmaxIntInt
-IntegerVector do_pmaxIntInt(IntegerVector x, IntegerVector y);
-RcppExport SEXP _hutilscpp_do_pmaxIntInt(SEXP xSEXP, SEXP ySEXP) {
+IntegerVector do_pmaxIntInt(IntegerVector x, IntegerVector y, bool in_place);
+RcppExport SEXP _hutilscpp_do_pmaxIntInt(SEXP xSEXP, SEXP ySEXP, SEXP in_placeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(do_pmaxIntInt(x, y));
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmaxIntInt(x, y, in_place));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -432,15 +424,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_pminV
-NumericVector do_pminV(NumericVector x, NumericVector y);
-RcppExport SEXP _hutilscpp_do_pminV(SEXP xSEXP, SEXP ySEXP) {
+// do_pminV_dbl
+NumericVector do_pminV_dbl(NumericVector x, NumericVector y, bool in_place);
+RcppExport SEXP _hutilscpp_do_pminV_dbl(SEXP xSEXP, SEXP ySEXP, SEXP in_placeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(do_pminV(x, y));
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pminV_dbl(x, y, in_place));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_pminV_int
+IntegerVector do_pminV_int(IntegerVector x, IntegerVector y, bool in_place);
+RcppExport SEXP _hutilscpp_do_pminV_int(SEXP xSEXP, SEXP ySEXP, SEXP in_placeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pminV_int(x, y, in_place));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -469,6 +475,36 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type b(bSEXP);
     Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
     rcpp_result_gen = Rcpp::wrap(squishi(x, a, b, in_place));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_summary3_dbl
+DoubleVector do_summary3_dbl(DoubleVector x, DoubleVector y, DoubleVector z, bool in_place, bool do_max);
+RcppExport SEXP _hutilscpp_do_summary3_dbl(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP in_placeSEXP, SEXP do_maxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type z(zSEXP);
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    Rcpp::traits::input_parameter< bool >::type do_max(do_maxSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_summary3_dbl(x, y, z, in_place, do_max));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_summary3_int
+IntegerVector do_summary3_int(IntegerVector x, IntegerVector y, IntegerVector z, bool in_place, bool do_max);
+RcppExport SEXP _hutilscpp_do_summary3_int(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP in_placeSEXP, SEXP do_maxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type z(zSEXP);
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    Rcpp::traits::input_parameter< bool >::type do_max(do_maxSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_summary3_int(x, y, z, in_place, do_max));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -545,22 +581,24 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_pole_of_inaccessibility", (DL_FUNC) &_hutilscpp_pole_of_inaccessibility, 6},
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
     {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 12},
-    {"_hutilscpp_pmax3", (DL_FUNC) &_hutilscpp_pmax3, 3},
-    {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 2},
-    {"_hutilscpp_do_pmaxC_int", (DL_FUNC) &_hutilscpp_do_pmaxC_int, 2},
-    {"_hutilscpp_do_pmax0", (DL_FUNC) &_hutilscpp_do_pmax0, 1},
+    {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 3},
+    {"_hutilscpp_do_pmaxC_int", (DL_FUNC) &_hutilscpp_do_pmaxC_int, 3},
+    {"_hutilscpp_do_pmax0", (DL_FUNC) &_hutilscpp_do_pmax0, 2},
     {"_hutilscpp_do_pmaxIP_int", (DL_FUNC) &_hutilscpp_do_pmaxIP_int, 2},
     {"_hutilscpp_do_pmaxIP_dbl", (DL_FUNC) &_hutilscpp_do_pmaxIP_dbl, 2},
     {"_hutilscpp_do_pmaxIPnum0", (DL_FUNC) &_hutilscpp_do_pmaxIPnum0, 1},
     {"_hutilscpp_do_pmaxIPint0", (DL_FUNC) &_hutilscpp_do_pmaxIPint0, 1},
-    {"_hutilscpp_do_pmaxNumNum", (DL_FUNC) &_hutilscpp_do_pmaxNumNum, 2},
-    {"_hutilscpp_do_pmaxIntInt", (DL_FUNC) &_hutilscpp_do_pmaxIntInt, 2},
+    {"_hutilscpp_do_pmaxNumNum", (DL_FUNC) &_hutilscpp_do_pmaxNumNum, 3},
+    {"_hutilscpp_do_pmaxIntInt", (DL_FUNC) &_hutilscpp_do_pmaxIntInt, 3},
     {"_hutilscpp_do_pminC", (DL_FUNC) &_hutilscpp_do_pminC, 3},
     {"_hutilscpp_do_pmin0_dbl", (DL_FUNC) &_hutilscpp_do_pmin0_dbl, 2},
     {"_hutilscpp_do_pmin0_int", (DL_FUNC) &_hutilscpp_do_pmin0_int, 2},
-    {"_hutilscpp_do_pminV", (DL_FUNC) &_hutilscpp_do_pminV, 2},
+    {"_hutilscpp_do_pminV_dbl", (DL_FUNC) &_hutilscpp_do_pminV_dbl, 3},
+    {"_hutilscpp_do_pminV_int", (DL_FUNC) &_hutilscpp_do_pminV_int, 3},
     {"_hutilscpp_squishn", (DL_FUNC) &_hutilscpp_squishn, 4},
     {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 4},
+    {"_hutilscpp_do_summary3_dbl", (DL_FUNC) &_hutilscpp_do_summary3_dbl, 5},
+    {"_hutilscpp_do_summary3_int", (DL_FUNC) &_hutilscpp_do_summary3_int, 5},
     {"_hutilscpp_helper1", (DL_FUNC) &_hutilscpp_helper1, 4},
     {"_hutilscpp_showValuea", (DL_FUNC) &_hutilscpp_showValuea, 2},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},

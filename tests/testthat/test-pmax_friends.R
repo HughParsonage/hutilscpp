@@ -19,6 +19,21 @@ test_that("grattan functions and pmax pmin give identical results", {
   expect_error(pminV(1, 1:2))
 })
 
+test_that("No in-place by default", {
+  x <- rcauchy(100)
+  rx <- range(x)
+  y <- rcauchy(100)
+  z <- rcauchy(100)
+  a <- rcauchy(1)
+  pmaxC(x, a)
+  pminC(x, a)
+  pmaxV(x, y)
+  pminV(x, y)
+  pmax3(x, y, z)
+  pmin3(x, y, z)
+  expect_identical(range(x), rx)
+})
+
 test_that("pmaxIPint0", {
   skip_if_not_installed("hutils")
   expect_equal(pmax0(-2:2),
@@ -121,7 +136,7 @@ test_that("pmaxV", {
 
 test_that("pmaxV error", {
   expect_error(pmaxV(1:5, 1:5 + 0.5), regexp = "type double")
-  expect_error(do_pminV(1:5, 1:6), "same length")
+  expect_error(do_pminV_int(1:5, 1:6), "same length")
   expect_error(do_pmaxIntInt(1:5, 1:6), "same length")
   expect_error(do_pmaxNumNum(1:5 + 0, 1:6 + 0), "same length")
 })
