@@ -49,7 +49,7 @@ IntegerVector do_pmin0_int(IntegerVector x, bool in_place = false) {
   IntegerVector out = in_place ? IntegerVector(x) : IntegerVector(clone(x));
 
   for (int i = 0; i < n; ++i) {
-    double xi = x[i];
+    int xi = x[i];
     if (xi > 0) {
       out[i] = 0;
     }
