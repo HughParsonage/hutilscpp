@@ -6,8 +6,9 @@ using namespace Rcpp;
 
 // #nocov start
 // [[Rcpp::export]]
-void showValue(const char* what, double x) {
-  Rcout << " " << what << " \t " << x << std::endl;
+int showValue(const char* what, double x) {
+  // Rcout << " " << what << " \t " << x << std::endl;
+  return 0;
 }
 // #nocov end
 

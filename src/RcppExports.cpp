@@ -144,9 +144,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// showValue
+int showValue(const char* what, double x);
+RcppExport SEXP _hutilscpp_showValue(SEXP whatSEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const char* >::type what(whatSEXP);
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(showValue(what, x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // haversine_distance
-double haversine_distance(double olat1, double olon1, double olat2, double olon2, double delta_lat, double delta_lon, bool unitless);
-RcppExport SEXP _hutilscpp_haversine_distance(SEXP olat1SEXP, SEXP olon1SEXP, SEXP olat2SEXP, SEXP olon2SEXP, SEXP delta_latSEXP, SEXP delta_lonSEXP, SEXP unitlessSEXP) {
+double haversine_distance(double olat1, double olon1, double olat2, double olon2, bool unitless);
+RcppExport SEXP _hutilscpp_haversine_distance(SEXP olat1SEXP, SEXP olon1SEXP, SEXP olat2SEXP, SEXP olon2SEXP, SEXP unitlessSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -154,10 +166,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type olon1(olon1SEXP);
     Rcpp::traits::input_parameter< double >::type olat2(olat2SEXP);
     Rcpp::traits::input_parameter< double >::type olon2(olon2SEXP);
-    Rcpp::traits::input_parameter< double >::type delta_lat(delta_latSEXP);
-    Rcpp::traits::input_parameter< double >::type delta_lon(delta_lonSEXP);
     Rcpp::traits::input_parameter< bool >::type unitless(unitlessSEXP);
-    rcpp_result_gen = Rcpp::wrap(haversine_distance(olat1, olon1, olat2, olon2, delta_lat, delta_lon, unitless));
+    rcpp_result_gen = Rcpp::wrap(haversine_distance(olat1, olon1, olat2, olon2, unitless));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -176,6 +186,60 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// theEuclidDistance
+NumericVector theEuclidDistance(NumericVector x1, NumericVector x2, NumericVector y1, NumericVector y2, bool unitless);
+RcppExport SEXP _hutilscpp_theEuclidDistance(SEXP x1SEXP, SEXP x2SEXP, SEXP y1SEXP, SEXP y2SEXP, SEXP unitlessSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x1(x1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type x2(x2SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type y1(y1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type y2(y2SEXP);
+    Rcpp::traits::input_parameter< bool >::type unitless(unitlessSEXP);
+    rcpp_result_gen = Rcpp::wrap(theEuclidDistance(x1, x2, y1, y2, unitless));
+    return rcpp_result_gen;
+END_RCPP
+}
+// hausdorffEuclid
+double hausdorffEuclid(NumericVector x, NumericVector y);
+RcppExport SEXP _hutilscpp_hausdorffEuclid(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(hausdorffEuclid(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// is_sorted_ascending
+bool is_sorted_ascending(NumericVector x);
+RcppExport SEXP _hutilscpp_is_sorted_ascending(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_sorted_ascending(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pole_of_inaccessibility
+List pole_of_inaccessibility(NumericVector x, NumericVector y, double minx, double maxx, double miny, double maxy);
+RcppExport SEXP _hutilscpp_pole_of_inaccessibility(SEXP xSEXP, SEXP ySEXP, SEXP minxSEXP, SEXP maxxSEXP, SEXP minySEXP, SEXP maxySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< double >::type minx(minxSEXP);
+    Rcpp::traits::input_parameter< double >::type maxx(maxxSEXP);
+    Rcpp::traits::input_parameter< double >::type miny(minySEXP);
+    Rcpp::traits::input_parameter< double >::type maxy(maxySEXP);
+    rcpp_result_gen = Rcpp::wrap(pole_of_inaccessibility(x, y, minx, maxx, miny, maxy));
+    return rcpp_result_gen;
+END_RCPP
+}
 // which_min_HaversineDistance
 int which_min_HaversineDistance(NumericVector lat1, NumericVector lon1, double lat2, double lon2, double upperBound);
 RcppExport SEXP _hutilscpp_which_min_HaversineDistance(SEXP lat1SEXP, SEXP lon1SEXP, SEXP lat2SEXP, SEXP lon2SEXP, SEXP upperBoundSEXP) {
@@ -191,20 +255,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// showValue
-void showValue(const char* what, double x);
-RcppExport SEXP _hutilscpp_showValue(SEXP whatSEXP, SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const char* >::type what(whatSEXP);
-    Rcpp::traits::input_parameter< double >::type x(xSEXP);
-    showValue(what, x);
-    return R_NilValue;
-END_RCPP
-}
 // match_min_Haversine
-List match_min_Haversine(NumericVector lat1, NumericVector lon1, NumericVector lat2, NumericVector lon2, IntegerVector tabl, double r, double cartR, double dist0, bool excl_self, int ncores);
-RcppExport SEXP _hutilscpp_match_min_Haversine(SEXP lat1SEXP, SEXP lon1SEXP, SEXP lat2SEXP, SEXP lon2SEXP, SEXP tablSEXP, SEXP rSEXP, SEXP cartRSEXP, SEXP dist0SEXP, SEXP excl_selfSEXP, SEXP ncoresSEXP) {
+List match_min_Haversine(NumericVector lat1, NumericVector lon1, NumericVector lat2, NumericVector lon2, IntegerVector tabl, double r, double cartR, double dist0_km, bool verify_cartR, bool do_verify_box, bool excl_self, int ncores);
+RcppExport SEXP _hutilscpp_match_min_Haversine(SEXP lat1SEXP, SEXP lon1SEXP, SEXP lat2SEXP, SEXP lon2SEXP, SEXP tablSEXP, SEXP rSEXP, SEXP cartRSEXP, SEXP dist0_kmSEXP, SEXP verify_cartRSEXP, SEXP do_verify_boxSEXP, SEXP excl_selfSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -215,25 +268,12 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type tabl(tablSEXP);
     Rcpp::traits::input_parameter< double >::type r(rSEXP);
     Rcpp::traits::input_parameter< double >::type cartR(cartRSEXP);
-    Rcpp::traits::input_parameter< double >::type dist0(dist0SEXP);
+    Rcpp::traits::input_parameter< double >::type dist0_km(dist0_kmSEXP);
+    Rcpp::traits::input_parameter< bool >::type verify_cartR(verify_cartRSEXP);
+    Rcpp::traits::input_parameter< bool >::type do_verify_box(do_verify_boxSEXP);
     Rcpp::traits::input_parameter< bool >::type excl_self(excl_selfSEXP);
     Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
-    rcpp_result_gen = Rcpp::wrap(match_min_Haversine(lat1, lon1, lat2, lon2, tabl, r, cartR, dist0, excl_self, ncores));
-    return rcpp_result_gen;
-END_RCPP
-}
-// theEuclidDistance
-NumericVector theEuclidDistance(NumericVector x1, NumericVector x2, NumericVector y1, NumericVector y2, bool unitless);
-RcppExport SEXP _hutilscpp_theEuclidDistance(SEXP x1SEXP, SEXP x2SEXP, SEXP y1SEXP, SEXP y2SEXP, SEXP unitlessSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x1(x1SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type x2(x2SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type y1(y1SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type y2(y2SEXP);
-    Rcpp::traits::input_parameter< bool >::type unitless(unitlessSEXP);
-    rcpp_result_gen = Rcpp::wrap(theEuclidDistance(x1, x2, y1, y2, unitless));
+    rcpp_result_gen = Rcpp::wrap(match_min_Haversine(lat1, lon1, lat2, lon2, tabl, r, cartR, dist0_km, verify_cartR, do_verify_box, excl_self, ncores));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -432,6 +472,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// helper1
+int helper1(NumericVector x, NumericVector y, double miny, double maxy);
+RcppExport SEXP _hutilscpp_helper1(SEXP xSEXP, SEXP ySEXP, SEXP minySEXP, SEXP maxySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< double >::type miny(minySEXP);
+    Rcpp::traits::input_parameter< double >::type maxy(maxySEXP);
+    rcpp_result_gen = Rcpp::wrap(helper1(x, y, miny, maxy));
+    return rcpp_result_gen;
+END_RCPP
+}
 // showValuea
 void showValuea(const char* what, double x);
 RcppExport SEXP _hutilscpp_showValuea(SEXP whatSEXP, SEXP xSEXP) {
@@ -482,12 +536,15 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which_first", (DL_FUNC) &_hutilscpp_do_which_first, 1},
     {"_hutilscpp_do_which_last", (DL_FUNC) &_hutilscpp_do_which_last, 1},
     {"_hutilscpp_do_which_first_false", (DL_FUNC) &_hutilscpp_do_which_first_false, 1},
-    {"_hutilscpp_haversine_distance", (DL_FUNC) &_hutilscpp_haversine_distance, 7},
-    {"_hutilscpp_haversineDistance", (DL_FUNC) &_hutilscpp_haversineDistance, 5},
-    {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
     {"_hutilscpp_showValue", (DL_FUNC) &_hutilscpp_showValue, 2},
-    {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 10},
+    {"_hutilscpp_haversine_distance", (DL_FUNC) &_hutilscpp_haversine_distance, 5},
+    {"_hutilscpp_haversineDistance", (DL_FUNC) &_hutilscpp_haversineDistance, 5},
     {"_hutilscpp_theEuclidDistance", (DL_FUNC) &_hutilscpp_theEuclidDistance, 5},
+    {"_hutilscpp_hausdorffEuclid", (DL_FUNC) &_hutilscpp_hausdorffEuclid, 2},
+    {"_hutilscpp_is_sorted_ascending", (DL_FUNC) &_hutilscpp_is_sorted_ascending, 1},
+    {"_hutilscpp_pole_of_inaccessibility", (DL_FUNC) &_hutilscpp_pole_of_inaccessibility, 6},
+    {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
+    {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 12},
     {"_hutilscpp_pmax3", (DL_FUNC) &_hutilscpp_pmax3, 3},
     {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 2},
     {"_hutilscpp_do_pmaxC_int", (DL_FUNC) &_hutilscpp_do_pmaxC_int, 2},
@@ -504,6 +561,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_pminV", (DL_FUNC) &_hutilscpp_do_pminV, 2},
     {"_hutilscpp_squishn", (DL_FUNC) &_hutilscpp_squishn, 4},
     {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 4},
+    {"_hutilscpp_helper1", (DL_FUNC) &_hutilscpp_helper1, 4},
     {"_hutilscpp_showValuea", (DL_FUNC) &_hutilscpp_showValuea, 2},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},

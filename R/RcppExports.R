@@ -57,28 +57,40 @@ do_which_first_false <- function(x) {
     .Call(`_hutilscpp_do_which_first_false`, x)
 }
 
-haversine_distance <- function(olat1, olon1, olat2, olon2, delta_lat = -1, delta_lon = -1, unitless = FALSE) {
-    .Call(`_hutilscpp_haversine_distance`, olat1, olon1, olat2, olon2, delta_lat, delta_lon, unitless)
+showValue <- function(what, x) {
+    .Call(`_hutilscpp_showValue`, what, x)
+}
+
+haversine_distance <- function(olat1, olon1, olat2, olon2, unitless = FALSE) {
+    .Call(`_hutilscpp_haversine_distance`, olat1, olon1, olat2, olon2, unitless)
 }
 
 haversineDistance <- function(lat1, lon1, lat2, lon2, unitless = FALSE) {
     .Call(`_hutilscpp_haversineDistance`, lat1, lon1, lat2, lon2, unitless)
 }
 
+theEuclidDistance <- function(x1, x2, y1, y2, unitless = FALSE) {
+    .Call(`_hutilscpp_theEuclidDistance`, x1, x2, y1, y2, unitless)
+}
+
+hausdorffEuclid <- function(x, y) {
+    .Call(`_hutilscpp_hausdorffEuclid`, x, y)
+}
+
+is_sorted_ascending <- function(x) {
+    .Call(`_hutilscpp_is_sorted_ascending`, x)
+}
+
+pole_of_inaccessibility <- function(x, y, minx, maxx, miny, maxy) {
+    .Call(`_hutilscpp_pole_of_inaccessibility`, x, y, minx, maxx, miny, maxy)
+}
+
 which_min_HaversineDistance <- function(lat1, lon1, lat2, lon2, upperBound = 10) {
     .Call(`_hutilscpp_which_min_HaversineDistance`, lat1, lon1, lat2, lon2, upperBound)
 }
 
-showValue <- function(what, x) {
-    invisible(.Call(`_hutilscpp_showValue`, what, x))
-}
-
-match_min_Haversine <- function(lat1, lon1, lat2, lon2, tabl, r = 0.002, cartR = -1, dist0 = 10, excl_self = FALSE, ncores = 1L) {
-    .Call(`_hutilscpp_match_min_Haversine`, lat1, lon1, lat2, lon2, tabl, r, cartR, dist0, excl_self, ncores)
-}
-
-theEuclidDistance <- function(x1, x2, y1, y2, unitless = FALSE) {
-    .Call(`_hutilscpp_theEuclidDistance`, x1, x2, y1, y2, unitless)
+match_min_Haversine <- function(lat1, lon1, lat2, lon2, tabl, r = 0.002, cartR = -1, dist0_km = 0.01, verify_cartR = FALSE, do_verify_box = FALSE, excl_self = FALSE, ncores = 1L) {
+    .Call(`_hutilscpp_match_min_Haversine`, lat1, lon1, lat2, lon2, tabl, r, cartR, dist0_km, verify_cartR, do_verify_box, excl_self, ncores)
 }
 
 #' @title Threeway parallel maximum
@@ -200,6 +212,15 @@ squishn <- function(x, a, b, in_place = FALSE) {
 
 squishi <- function(x, a, b, in_place = FALSE) {
     .Call(`_hutilscpp_squishi`, x, a, b, in_place)
+}
+
+#' @name helper1
+#' @title Helper
+#' @param x,y,miny,maxy Inputs.
+NULL
+
+helper1 <- function(x, y, miny, maxy) {
+    .Call(`_hutilscpp_helper1`, x, y, miny, maxy)
 }
 
 showValuea <- function(what, x) {

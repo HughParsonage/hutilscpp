@@ -4,19 +4,16 @@
 \alias{match_nrst_haversine}
 \title{Match coordinates to nearest coordinates}
 \usage{
-match_nrst_haversine(lat, lon, addresses_lat, addresses_lon, Table = 0L,
-  R = NULL, cartesian_R = NULL, close_enough = 10,
-  excl_self = FALSE, as.data.table = TRUE, .verify_box = TRUE,
-  ncores = 1L)
+match_nrst_haversine(lat, lon, addresses_lat, addresses_lon,
+  Index = seq_along(addresses_lat), R = NULL, cartesian_R = NULL,
+  close_enough = 10, excl_self = FALSE, as.data.table = TRUE,
+  .verify_box = TRUE, ncores = 1L)
 }
 \arguments{
 \item{lat, lon}{Coordinates to be geocoded. Numeric vectors of equal length.}
 
 \item{addresses_lat, addresses_lon}{Coordinates of known locations. Numeric vectors of equal length
 (likely to be a different length than the length of \code{lat}, except when \code{excl_self = TRUE}).}
-
-\item{Table}{Either \code{0L} or an integer vector the same length as \code{lat}. If \code{0L},
-then the positions in \code{lat2,lon2} are returned; if a vector, the corresponding values.}
 
 \item{R}{A "radius" of distances outside which distances will not be considered.
 Used for efficiency. The default of \code{R = 0.01} corresponds to about 15 km.}
@@ -47,6 +44,9 @@ avoid dumping a huge list to the console.}
 box of radius \eqn{\ell^\infty}.}
 
 \item{ncores}{Integer number of cores to use. Currently not implemented.}
+
+\item{Table}{Either \code{0L} or an integer vector the same length as \code{lat}. If \code{0L},
+then the positions in \code{lat2,lon2} are returned; if a vector, the corresponding values.}
 }
 \value{
 A list (or \code{data.table} if \code{as.data.table = TRUE}) with two elements,

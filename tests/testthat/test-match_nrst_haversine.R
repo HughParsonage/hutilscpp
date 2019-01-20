@@ -28,7 +28,7 @@ test_that("match_nrst_haversine error", {
                "`close_enough` was a character",
                fixed = TRUE)
 
-  expect_warning(Table14_res <- match_nrst_haversine(lat1, lon1, lat2, lon2, Table = 1:4),
+  expect_warning(Table14_res <- match_nrst_haversine(lat1, lon1, lat2, lon2, Index = 1:4),
                  "not the same length as")
   expect_identical(Table14_res[[1L]], c(3L, 3L))
 
@@ -61,7 +61,7 @@ test_that("match_nrst_haversine Table", {
   lat1 <- c(-37.855, -37.99)
   lon1 <- c(145.001, 144.98)
 
-  res <- match_nrst_haversine(lat1, lon1, lat2, lon2, Table = letters[1:6])
+  res <- match_nrst_haversine(lat1, lon1, lat2, lon2, Index = letters[1:6])
   expect_true(is.character(res[[1]]))
 })
 
@@ -76,10 +76,12 @@ test_that("Suffixes", {
   res10m <- match_nrst_haversine(c(-37, -38), c(150, 149),
                                  seq(-39, -36, length.out = 100),
                                  seq(148, 151, length.out = 100),
+                                 .verify_box = FALSE,
                                  close_enough = "10m")
   res10m_in_km <-  match_nrst_haversine(c(-37, -38), c(150, 149),
                                         seq(-39, -36, length.out = 100),
                                         seq(148, 151, length.out = 100),
+                                        .verify_box = FALSE,
                                         close_enough = "0.010km")
   expect_identical(res10, res10_RInf)
   expect_identical(res10, res10m)
@@ -88,6 +90,7 @@ test_that("Suffixes", {
                                           c(149.95, 150.05),
                                           seq(-1, 1, length.out = 1000),
                                           seq(150, 150, length.out = 1000),
+                                         .verify_box = FALSE,
                                           close_enough = 0)
   expect_identical(res_equator_0m[[1]], rep(500L, 2L))
 
@@ -95,13 +98,16 @@ test_that("Suffixes", {
                                            c(149.95, 150.05),
                                            seq(-1, 1, length.out = 1000),
                                            seq(150, 150, length.out = 1000),
+                                           .verify_box = FALSE,
                                            close_enough = 10e3)
   expect_true(all(res_equator_10km[[2]] < 10))
   expect_true(all(res_equator_10km[[2]] > 5))
   res_equator_123km <- match_nrst_haversine(c(0, 0),
                                             c(149.95, 150.05),
                                             seq(-1, 1, length.out = 1000),
-                                            seq(150, 150, length.out = 1000),
+                                            rep(150, length.out = 1000),
+                                            cartesian_R = 90,
+                                            .verify_box = FALSE,
                                             close_enough = "53.0 km")
   expect_true(all(res_equator_123km[[2]] < 53))
   expect_true(all(res_equator_123km[[2]] > 52))

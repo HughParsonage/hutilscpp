@@ -62,7 +62,7 @@ match_nrst_haversine <- function(lat,
                                  lon,
                                  addresses_lat,
                                  addresses_lon,
-                                 Table = 0L,
+                                 Index = seq_along(addresses_lat),
                                  R = NULL,
                                  cartesian_R = NULL,
                                  close_enough = 10,
@@ -70,9 +70,7 @@ match_nrst_haversine <- function(lat,
                                  as.data.table = TRUE,
                                  .verify_box = TRUE,
                                  ncores = 1L) {
-  if (is.null(R)) {
-    R <- -1
-  }
+
   stopifnot(is.numeric(lat),
             is.numeric(lon),
             length(lat) == length(lon),
@@ -83,8 +81,14 @@ match_nrst_haversine <- function(lat,
             length(addresses_lat) >= 1L)
   check_TF(excl_self)
   check_TF(as.data.table)
+  if (is.null(R)) {
+    R <- -1
+  }
   if (R_err_msg <- isnt_number(R, infinite.bad = FALSE)) {
     stop(attr(R_err_msg, "ErrorMessage"))
+  }
+  if (is.infinite(R)) {
+    R <- -1
   }
 
   if (ce_err_msg <- isnt_number(close_enough)) {
@@ -97,19 +101,7 @@ match_nrst_haversine <- function(lat,
   } else {
     dist0_km <- close_enough / 1000
   }
-  if (is.infinite(R)) {
-    R <- -1
-  }
 
-  # Must be an integer (Rcpp handles the lengths)
-  .Table <- Table
-  recast_Table <-
-    !identical(Table, 0L) &&
-    (!is.integer(Table) ||
-       length(Table) != length(addresses_lat))
-  if (recast_Table) {
-    .Table <- 0L
-  }
 
   min_lat <- min(lat)
   max_lat <- max(lat)
@@ -125,32 +117,32 @@ match_nrst_haversine <- function(lat,
     }
   }
 
-  if (length(Table) != length(addresses_lat)) {
+  if (length(Index) != length(addresses_lat)) {
     warning("`Table` was provided, but was not the same ",
             "length as `addresses_lat`, ",
             "so returning positions.")
+    Index <- seq_along(addresses_lat)
   }
+  Index.int <-
+    if (!is.integer(Index)) {
+      seq_along(Index)
+    } else {
+      Index
+    }
 
   out <- match_min_Haversine(lat,
                              lon,
                              addresses_lat,
                              addresses_lon,
-                             .Table,
+                             Index.int,
                              r = R,
                              cartR = cartesian_R,
                              verify_cartR = verify_cartR,
                              do_verify_box = .verify_box,
                              dist0_km = dist0_km,
                              ncores = ncores)
-
-  if (recast_Table) {
-    if (length(Table) != length(addresses_lat)) {
-      # Don't emit warning in case user has warnings as errors.
-      # warning("`Table` was provided, but was not the same length as `addresses_lat`, ",
-      #         "so returning positions.")
-    } else {
-      out[[1L]] <- Table[out[[1L]]]
-    }
+  if (!is.integer(Index)) {
+    out[[1L]] <- Index[out[[1L]]]
   }
 
   if (as.data.table) {
