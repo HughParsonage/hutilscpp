@@ -1,0 +1,22 @@
+context("test-range-cpp")
+
+test_that("range works", {
+  y <- 1
+  expect_identical(range(y), range_rcpp(y))
+  y <- c(1, 1)
+  expect_identical(range(y), range_rcpp(y))
+  y <- as.integer(y)
+  expect_identical(range(y), range_rcpp(y))
+  y <- runif(500)
+  expect_identical(range(y), range_rcpp(y))
+  y <- sample(1:500, size = 450)
+  expect_identical(range(y), range_rcpp(y))
+  y <- seq(0, 100, length.out = 5)
+  expect_identical(range(y), range_rcpp(y))
+  y <- rev(y)
+  expect_identical(range(y), range_rcpp(y))
+  y <- as.integer(y)
+  expect_identical(range(y), range_rcpp(y))
+  y <- rev(y)
+  expect_identical(range(y), range_rcpp(y))
+})
