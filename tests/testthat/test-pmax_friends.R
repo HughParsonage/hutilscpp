@@ -153,3 +153,33 @@ test_that("benchmark", {
   bench_time_pmaxC_y2_0 <- bench::system_time(pmaxC(y, 0, in_place = TRUE))
   expect_lt(as.double(bench_time_pmaxC_y2_0[2]), 4) # seconds
 })
+
+test_that("pmax3", {
+  x <- sample(-5:5, size = 7)
+  y <- sample(-5:5, size = 7)
+  z <- sample(-5:5, size = 7)
+  expect_equal(pmax3(x, y, z), pmax(x, pmax(y, z)))
+  expect_true(is.integer(pmax3(x, y, z)))
+  expect_equal(pmax3(x, 1L, z), pmax(x, pmax(z, 1L)))
+  expect_equal(pmax3(x, z, 1L), pmax(x, pmax(z, 1L)))
+  expect_error(pmax3(x, z[1:5], z), "length 5")
+  expect_error(pmax3(x, z, z[1:4]), "length 4")
+  y <- as.double(y)
+  expect_equal(pmax3(x, y, z), pmax(x, pmax(y, z)))
+  expect_true(is.integer(pmax3(x, y, z)))
+  expect_equal(pmax3(x, 1L, z), pmax(x, pmax(z, 1L)))
+  expect_equal(pmax3(x, z, 1L), pmax(x, pmax(z, 1L)))
+  expect_error(pmax3(x, z[1:5], z), "length 5")
+  expect_error(pmax3(x, z, z[1:4]), "length 4")
+  z <- as.double(z)
+  expect_equal(pmax3(x, y, z), pmax(x, pmax(y, z)))
+  expect_true(is.integer(pmax3(x, y, z)))
+  expect_equal(pmax3(x, 1L, z), pmax(x, pmax(z, 1L)))
+  expect_equal(pmax3(x, z, 1L), pmax(x, pmax(z, 1L)))
+  expect_error(pmax3(x, z[1:5], z), "length 5")
+  expect_error(pmax3(x, z, z[1:4]), "length 4")
+  expect_error(do_summary3_dbl(0, 1:2 + 0, 1:3 + 0), "same length")
+  expect_error(do_summary3_dbl(0L, 1:2, 1:3), "same length")
+})
+
+

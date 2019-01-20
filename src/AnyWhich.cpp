@@ -69,3 +69,4 @@ int AnyWhich(NumericVector x, double a, bool gt, bool lt, bool eq) {
 }
 
 
+

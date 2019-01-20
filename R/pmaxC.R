@@ -132,6 +132,13 @@ pmax3 <- function(x, y, z, in_place = FALSE) {
       return(do_summary3_dbl(x, y, z, in_place, do_max = TRUE))
     }
   } else {
+    as_x <- function(b) {
+      if (is.integer(x)) {
+        as.integer(b)
+      } else {
+        as.double(b)
+      }
+    }
     if (length(y) != lx) {
       if (length(y) != 1L) {
         stop("`y` had length ", length(y), ", yet ",
@@ -139,9 +146,9 @@ pmax3 <- function(x, y, z, in_place = FALSE) {
              "`y` and `z` must be the same length as `x`, (or length-one).")
       }
 
-      x <- pmaxC(x, y, in_place = in_place)
+      x <- pmaxC(x, as_x(y), in_place = in_place)
     } else {
-      x <- pmaxV(x, y, in_place = in_place)
+      x <- pmaxV(x, as_x(y), in_place = in_place)
     }
     if (length(z) != lx) {
       if (length(z) != 1L) {
@@ -151,22 +158,25 @@ pmax3 <- function(x, y, z, in_place = FALSE) {
       }
       return(pmaxC(x, z, in_place = in_place))
     } else {
-      return(pmaxV(x, z, in_place = in_place))
+      zi <- as.integer(z)
+      if (wb <- which_first(zi != z)) {
+        stop("`x` was type 'integer' and `z` was type double, but entry ", wb,
+             " was not equal to the integer equivalent. ", )
+      }
+      return(pmaxV(x, if (is.integer(x)) zi else as.double(z), in_place = in_place))
     }
   }
 
   if (is.integer(x) && (is.double(y) || is.double(z))) {
     yi <- as.integer(y)
-    if (is.double(y) && max(abs(y - yi)) > sqrt(.Machine$double.eps)) {
-      wb <- which.max(abs(y - yi)) > sqrt(.Machine$double.eps)
+    if (is.double(y) && {wb <- which_first(y != yi)}) {
       stop("`x` was type 'integer' and `y` was type double, but entry ", wb,
-           " was not equal to the integer equivalent. ", )
+           " was not equal to the integer equivalent. ")
     }
     zi <- as.integer(z)
-    if (is.double(z) && max(abs(z - zi)) > sqrt(.Machine$double.eps)) {
-      wb <- which.max(abs(z - zi)) > sqrt(.Machine$double.eps)
+    if (is.double(z) && {wb <- which_first(z != zi)}) {
       stop("`x` was type 'integer' and `z` was type double, but entry ", wb,
-           " was not equal to the integer equivalent. ", )
+           " was not equal to the integer equivalent. ")
     }
     return(do_summary3_int(x, y, z, in_place = in_place, do_max = TRUE))
   }

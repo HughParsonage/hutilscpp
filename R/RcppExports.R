@@ -45,6 +45,14 @@ do_cumsum_reset_double <- function(x, y) {
     .Call(`_hutilscpp_do_cumsum_reset_double`, x, y)
 }
 
+do_range_int <- function(x) {
+    .Call(`_hutilscpp_do_range_int`, x)
+}
+
+do_range_dbl <- function(x) {
+    .Call(`_hutilscpp_do_range_dbl`, x)
+}
+
 do_which_first <- function(x) {
     .Call(`_hutilscpp_do_which_first`, x)
 }
@@ -55,6 +63,10 @@ do_which_last <- function(x) {
 
 do_which_first_false <- function(x) {
     .Call(`_hutilscpp_do_which_first_false`, x)
+}
+
+do_which_first_int_int <- function(x, y, eq = TRUE, gt = FALSE, lt = FALSE) {
+    .Call(`_hutilscpp_do_which_first_int_int`, x, y, eq, gt, lt)
 }
 
 showValue <- function(what, x) {

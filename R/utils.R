@@ -47,3 +47,6 @@ isnt_number <- function(a, na.bad = TRUE, infinite.bad = TRUE) {
   FALSE
 }
 
+# isnt_
+
+
