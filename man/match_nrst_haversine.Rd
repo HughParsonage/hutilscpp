@@ -15,6 +15,10 @@ match_nrst_haversine(lat, lon, addresses_lat, addresses_lon,
 \item{addresses_lat, addresses_lon}{Coordinates of known locations. Numeric vectors of equal length
 (likely to be a different length than the length of \code{lat}, except when \code{excl_self = TRUE}).}
 
+\item{Index}{A vector the same length as \code{lat} to encode the match between \code{lat,lon}
+and \code{addresses_lat,addresses_lon}. By default, the integer position in
+\code{addresses_lat,addresses_lon}.}
+
 \item{R}{A "radius" of distances outside which distances will not be considered.
 Used for efficiency. The default of \code{R = 0.01} corresponds to about 15 km.}
 
@@ -44,9 +48,6 @@ avoid dumping a huge list to the console.}
 box of radius \eqn{\ell^\infty}.}
 
 \item{ncores}{Integer number of cores to use. Currently not implemented.}
-
-\item{Table}{Either \code{0L} or an integer vector the same length as \code{lat}. If \code{0L},
-then the positions in \code{lat2,lon2} are returned; if a vector, the corresponding values.}
 }
 \value{
 A list (or \code{data.table} if \code{as.data.table = TRUE}) with two elements,

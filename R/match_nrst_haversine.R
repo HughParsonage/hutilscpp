@@ -5,8 +5,9 @@
 #' @param lat,lon Coordinates to be geocoded. Numeric vectors of equal length.
 #' @param addresses_lat,addresses_lon Coordinates of known locations. Numeric vectors of equal length
 #' (likely to be a different length than the length of \code{lat}, except when \code{excl_self = TRUE}).
-#' @param Table Either \code{0L} or an integer vector the same length as \code{lat}. If \code{0L},
-#' then the positions in \code{lat2,lon2} are returned; if a vector, the corresponding values.
+#' @param Index A vector the same length as \code{lat} to encode the match between \code{lat,lon}
+#' and \code{addresses_lat,addresses_lon}. By default, the integer position in
+#' \code{addresses_lat,addresses_lon}.
 #' @param R A "radius" of distances outside which distances will not be considered.
 #' Used for efficiency. The default of \code{R = 0.01} corresponds to about 15 km.
 #' @param cartesian_R The maximum radius of any address from the points to be geocoded. Used
