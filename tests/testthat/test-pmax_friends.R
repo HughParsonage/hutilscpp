@@ -163,9 +163,9 @@ test_that("benchmark", {
 })
 
 test_that("pmax3", {
-  x <- sample(-5:5, size = 7)
-  y <- sample(-5:5, size = 7)
-  z <- sample(-5:5, size = 7)
+  x <- c(-1L, 1L, -2L, -5L, -4L, 2L, 3L)
+  y <- c(5L, -4L, 1L, 4L, -1L, 0L, -3L)
+  z <- c(0L, -2L, -4L, -1L, 3L, 2L, -5L)
   expect_equal(pmax3(x, y, z), pmax(x, pmax(y, z)))
   expect_true(is.integer(pmax3(x, y, z)))
   expect_equal(pmax3(x, 1L, z), pmax(x, pmax(z, 1L)))
@@ -191,9 +191,9 @@ test_that("pmax3", {
 })
 
 test_that("pmin3", {
-  x <- sample(-5:5, size = 7)
-  y <- sample(-5:5, size = 7)
-  z <- sample(-5:5, size = 7)
+  x <- c(-3L, 2L, -1L, 5L, 3L, -5L, -2L)
+  y <- c(-4L, -5L, 4L, 2L, 5L, -3L, -1L)
+  z <- c(3L, -4L, -2L, 5L, -1L, 4L, 0L)
   expect_equal(pmin3(x, y, z), pmin(x, pmin(y, z)))
   expect_true(is.integer(pmin3(x, y, z)))
   expect_equal(pmin3(x, 1L, z), pmin(x, pmin(z, 1L)))
@@ -215,7 +215,18 @@ test_that("pmin3", {
   expect_error(pmin3(x, z[1:5], z), "length 5")
   expect_error(pmin3(x, z, z[1:4]), "length 4")
   expect_error(pmin3(2:3, c(2, 2.5), 2:3), regexp = "type double, but entry 2")
+  expect_error(pmin3(2:3, 2:3, c(0, -0.1)), regexp = "type double, but entry 2")
   expect_error(pmin3("a", "b", "c"), regexp = "must be numeric")
+
+  x <- as.double(x)
+  expect_equal(pmin3(x, y, z), pmin(x, pmin(y, z)))
+  expect_true(is.double(pmin3(x, y, z)))
+  expect_equal(pmin3(x, 1L, z), pmin(x, pmin(z, 1L)))
+  expect_equal(pmin3(x, z, 1L), pmin(x, pmin(z, 1L)))
+  expect_error(pmin3(x, z[1:5], z), "length 5")
+  expect_error(pmin3(x, z, z[1:4]), "length 4")
+
+
 })
 
 

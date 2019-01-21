@@ -57,8 +57,16 @@ epsilon <- function() {
 #' @noRd
 #' @param xi integer version of \code{x}. May be cheaper if already known
 which_isnt_integerish <- function(x, xi = as.integer(x)) {
+  if (is.integer(x)) {
+    return(0L)
+  }
   e <- epsilon()
-  d_r <- do_range_dbl(x - xi, -e, e)
+  # slower to use -e, e when *validating* data,
+  # which should be the benchmark, since it
+  # doesn't matter how fast you are when you
+  # are about to error.
+  d_r <- do_range_dbl(x - xi)
+
 
   if (d_r[2L] > e) {
     return(as.integer(d_r[4L]))
