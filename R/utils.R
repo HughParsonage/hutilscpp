@@ -61,10 +61,10 @@ which_isnt_integerish <- function(x, xi = as.integer(x)) {
   d_r <- do_range_dbl(x - xi, -e, e)
 
   if (d_r[2L] > e) {
-    return(d_r[4L])
+    return(as.integer(d_r[4L]))
   }
   if (d_r[1L] < -e) {
-    return(d_r[3])
+    return(as.integer(d_r[3L]))
   }
   0L
 }
