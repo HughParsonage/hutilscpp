@@ -131,52 +131,43 @@ pmax3 <- function(x, y, z, in_place = FALSE) {
     if (is.double(x) && is.double(y) && is.double(z)) {
       return(do_summary3_dbl(x, y, z, in_place, do_max = TRUE))
     }
-  } else {
-    as_x <- function(b) {
-      if (is.integer(x)) {
-        as.integer(b)
-      } else {
-        as.double(b)
-      }
-    }
-    if (length(y) != lx) {
-      if (length(y) != 1L) {
-        stop("`y` had length ", length(y), ", yet ",
-             "`x` had length ", length(x), ". ",
-             "`y` and `z` must be the same length as `x`, (or length-one).")
-      }
-
-      x <- pmaxC(x, as_x(y), in_place = in_place)
-    } else {
-      x <- pmaxV(x, as_x(y), in_place = in_place)
-    }
-    if (length(z) != lx) {
-      if (length(z) != 1L) {
-        stop("`z` had length ", length(z), ", yet ",
-             "`x` had length ", length(x), ". ",
-             "`y` and `z` must be the same length as `x`, (or length-one).")
-      }
-      return(pmaxC(x, z, in_place = in_place))
-    } else {
-      zi <- as.integer(z)
-      if (wb <- which_first(zi != z)) {
-        stop("`x` was type integer and `z` was type double, but entry ", wb,
-             " was not equal to the integer equivalent. ", )
-      }
-      return(pmaxV(x, if (is.integer(x)) zi else as.double(z), in_place = in_place))
-    }
+  }
+  if (!is.numeric(x) || !is.numeric(y) || !is.numeric(z)) {
+    stop("`x` was of type ", typeof(x),
+         "`y` was of type ", typeof(y),
+         "`z` was of type ", typeof(z), ". ",
+         "All of `x`, `y`, and `z` must be numeric.")
+  }
+  # lengths differ
+  if (length(y) != lx && length(y) != 1L) {
+    stop("`y` had length ", length(y), ", yet ",
+         "`x` had length ", length(x), ". ",
+         "`y` and `z` must be the same length as `x`, (or length-one).")
+  }
+  if (length(z) != lx && length(z) != 1L) {
+    stop("`z` had length ", length(z), ", yet ",
+         "`x` had length ", length(x), ". ",
+         "`y` and `z` must be the same length as `x`, (or length-one).")
   }
 
   if (is.integer(x) && (is.double(y) || is.double(z))) {
-    yi <- as.integer(y)
-    if (is.double(y) && {wb <- which_isnt_integerish(y, yi)}) {
-      stop("`x` was type integer and `y` was type double, but entry ", wb,
-           " was not equal to the integer equivalent. ")
+    yi <- y
+    zi <- z
+    if (is.double(y)) {
+      yi <- as.integer(y)
+      if (AND(is.double(y),
+              wb <- which_isnt_integerish(y, yi))) {
+        stop("`x` was type integer and `y` was type double, but entry ", wb,
+             " was not equal to the integer equivalent. ")
+      }
     }
-    zi <- as.integer(z)
-    if (is.double(z) && {wb <- which_isnt_integerish(z, zi)}) {
-      stop("`x` was type integer and `z` was type double, but entry ", wb,
-           " was not equal to the integer equivalent. ")
+    if (is.double(z)) {
+      zi <- as.integer(z)
+      if (AND(is.double(z),
+              wb <- which_isnt_integerish(z, zi))) {
+        stop("`x` was type integer and `z` was type double, but entry ", wb,
+             " was not equal to the integer equivalent. ")
+      }
     }
     return(do_summary3_int(x, yi, zi, in_place = in_place, do_max = TRUE))
   }
@@ -184,12 +175,7 @@ pmax3 <- function(x, y, z, in_place = FALSE) {
     return(do_summary3_dbl(x, as.double(y), as.double(z), in_place = in_place, do_max = TRUE))
   }
 
-  if (!is.numeric(x) || !is.numeric(y) || !is.numeric(z)) {
-    stop("`x` was of type ", class(x),
-         "`y` was of type ", class(y),
-         "`z` was of type ", class(z), ". ",
-         "All of `x`, `y`, and `z` must be numeric.")
-  }
+  pmax(x, pmax(y, z))
 }
 
 

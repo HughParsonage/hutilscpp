@@ -141,7 +141,8 @@ pmin3 <- function(x, y, z, in_place = FALSE) {
     z <- as.double(z)
     return(do_summary3_dbl(x, y, z, in_place = in_place, do_max = FALSE))
   }
-  stop("Unexpected error: pmin3:144") # nocov
+  # Finally
+  pmin(x, pmin(y, z))
 }
 
 

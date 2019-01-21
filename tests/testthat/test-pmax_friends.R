@@ -188,6 +188,15 @@ test_that("pmax3", {
   expect_error(pmax3(x, z, z[1:4]), "length 4")
   expect_error(pmax3(2:3, c(2, 2.5), 2:3), regexp = "type double, but entry 2")
   expect_error(pmax3("a", "b", "c"), regexp = "must be numeric")
+
+  x <- as.double(x)
+  expect_equal(pmax3(x, y, z), pmax(x, pmax(y, z)))
+  expect_true(is.double(pmax3(x, y, z)))
+  expect_equal(pmax3(x, 1L, z), pmax(x, pmax(z, 1L)))
+  expect_equal(pmax3(x, z, 1L), pmax(x, pmax(z, 1L)))
+  expect_error(pmax3(x, z[1:5], z), "length 5")
+  expect_error(pmax3(x, z, z[1:4]), "length 4")
+
 })
 
 test_that("pmin3", {
