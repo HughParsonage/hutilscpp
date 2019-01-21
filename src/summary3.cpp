@@ -8,16 +8,17 @@ DoubleVector do_summary3_dbl(DoubleVector x, DoubleVector y, DoubleVector z,
   const int n = x.length();
   const int ny = y.length();
   const int nz = z.length();
-  if ((n != ny) || (n != nz)){
-    stop("x, y, z must have the same length.");
-  }
+  const bool y1 = ny == 1;
+  const bool z1 = nz == 1;
   NumericVector out = in_place ? NumericVector(x) : NumericVector(clone(x));
+  const double y0 = y[0];
+  const double z0 = z[0];
 
   if (do_max) {
     for (int i = 0; i < n; ++i) {
       double xi = x[i];
-      double yi = y[i];
-      double zi = z[i];
+      double yi = y1 ? y0 : y[i];
+      double zi = z1 ? z0 : z[i];
       if (xi < zi && yi < zi){
         out[i] = zi;
       } else {
@@ -29,8 +30,8 @@ DoubleVector do_summary3_dbl(DoubleVector x, DoubleVector y, DoubleVector z,
   } else {
     for (int i = 0; i < n; ++i) {
       double xi = x[i];
-      double yi = y[i];
-      double zi = z[i];
+      double yi = y1 ? y0 : y[i];
+      double zi = z1 ? z0 : z[i];
       if (xi > zi && yi > zi){
         out[i] = zi;
       } else {
@@ -51,16 +52,17 @@ IntegerVector do_summary3_int(IntegerVector x, IntegerVector y, IntegerVector z,
   const int n = x.length();
   const int ny = y.length();
   const int nz = z.length();
-  if ((n != ny) || (n != nz)){
-    stop("x, y, z must have the same length.");
-  }
+  const bool y1 = ny == 1;
+  const bool z1 = nz == 1;
   IntegerVector out = in_place ? IntegerVector(x) : IntegerVector(clone(x));
+  const int y0 = y[0];
+  const int z0 = z[0];
 
   if (do_max) {
     for (int i = 0; i < n; ++i) {
       int xi = x[i];
-      int yi = y[i];
-      int zi = z[i];
+      int yi = y1 ? y0 : y[i];
+      int zi = z1 ? z0 : z[i];
       if (xi < zi && yi < zi){
         out[i] = zi;
       } else {
@@ -72,8 +74,8 @@ IntegerVector do_summary3_int(IntegerVector x, IntegerVector y, IntegerVector z,
   } else {
     for (int i = 0; i < n; ++i) {
       int xi = x[i];
-      int yi = y[i];
-      int zi = z[i];
+      int yi = y1 ? y0 : y[i];
+      int zi = z1 ? z0 : z[i];
       if (xi > zi && yi > zi){
         out[i] = zi;
       } else {

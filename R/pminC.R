@@ -83,6 +83,8 @@ pminC <- function(x, a = 0, in_place = FALSE) {
 pmin3 <- function(x, y, z, in_place = FALSE) {
   check_TF(in_place)
   lx <- length(x)
+
+  # Handle immediate cases
   if (length(y) == lx && length(z) == lx) {
     if (is.integer(x) && is.integer(y) && is.integer(z)) {
       return(do_summary3_int(x, y, z, in_place, do_max = FALSE))
@@ -90,57 +92,56 @@ pmin3 <- function(x, y, z, in_place = FALSE) {
     if (is.double(x) && is.double(y) && is.double(z)) {
       return(do_summary3_dbl(x, y, z, in_place, do_max = FALSE))
     }
-  } else {
-    if (length(y) != lx) {
-      if (length(y) != 1L) {
-        stop("`y` had length ", length(y), ", yet ",
-             "`x` had length ", length(x), ". ",
-             "`y` and `z` must be the same length as `x`, (or length-one).")
-      }
-
-      x <- pminC(x, y, in_place = in_place)
-    } else {
-      x <- pminV(x, y, in_place = in_place)
-    }
-    if (length(z) != lx) {
-      if (length(z) != 1L) {
-        stop("`z` had length ", length(z), ", yet ",
-             "`x` had length ", length(x), ". ",
-             "`y` and `z` must be the same length as `x`, (or length-one).")
-      }
-      return(pminC(x, z, in_place = in_place))
-    } else {
-      return(pminV(x, z, in_place = in_place))
-    }
   }
-
-  if (is.integer(x) && (is.double(y) || is.double(z))) {
-    yi <- as.integer(y)
-    if (is.double(y) && max(abs(y - yi)) > sqrt(.Machine$double.eps)) {
-      wb <- which.max(abs(y - yi)) > sqrt(.Machine$double.eps)
-      stop("`x` was type 'integer' and `y` was type double, but entry ", wb,
-           " was not equal to the integer equivalent. ", )
-    }
-    zi <- as.integer(z)
-    if (is.double(z) && max(abs(z - zi)) > sqrt(.Machine$double.eps)) {
-      wb <- which.max(abs(z - zi)) > sqrt(.Machine$double.eps)
-      stop("`x` was type 'integer' and `z` was type double, but entry ", wb,
-           " was not equal to the integer equivalent. ", )
-    }
-    return(do_summary3_int(x, y, z, in_place = in_place, do_max = FALSE))
-  }
-  if (is.double(x) && is.numeric(y) && is.numeric(z)) {
-    y <- as.double(y)
-    z <- as.double(z)
-    return(do_summary3_dbl(x, y, z, in_place = in_place, do_max = FALSE))
-  }
-
   if (!is.numeric(x) || !is.numeric(y) || !is.numeric(z)) {
     stop("`x` was of type ", typeof(x),
          "`y` was of type ", typeof(y),
          "`z` was of type ", typeof(z), ". ",
          "All of `x`, `y`, and `z` must be numeric.")
   }
+  # lengths differ
+  if (length(y) != lx && length(y) != 1L) {
+    stop("`y` had length ", length(y), ", yet ",
+         "`x` had length ", length(x), ". ",
+         "`y` and `z` must be the same length as `x`, (or length-one).")
+  }
+  if (length(z) != lx && length(z) != 1L) {
+    stop("`z` had length ", length(z), ", yet ",
+         "`x` had length ", length(x), ". ",
+         "`y` and `z` must be the same length as `x`, (or length-one).")
+  }
+
+
+
+
+  if (is.integer(x)) {
+    yi <- y
+    zi <- z
+    if (is.double(y)) {
+      yi <- as.integer(y)
+      if (AND(is.double(y),
+              wb <- which_isnt_integerish(y, yi))) {
+        stop("`x` was type integer and `y` was type double, but entry ", wb,
+             " was not equal to the integer equivalent. ")
+      }
+    }
+    if (is.double(z)) {
+      zi <- as.integer(z)
+      if (AND(is.double(z),
+              wb <- which_isnt_integerish(z, zi))) {
+        stop("`x` was type integer and `z` was type double, but entry ", wb,
+             " was not equal to the integer equivalent. ")
+      }
+    }
+    return(do_summary3_int(x, yi, zi, in_place = in_place, do_max = FALSE))
+  }
+
+  if (is.double(x) && is.numeric(y) && is.numeric(z)) {
+    y <- as.double(y)
+    z <- as.double(z)
+    return(do_summary3_dbl(x, y, z, in_place = in_place, do_max = FALSE))
+  }
+  stop("Unexpected error: pmin3:144") # nocov
 }
 
 

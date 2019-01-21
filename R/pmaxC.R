@@ -160,7 +160,7 @@ pmax3 <- function(x, y, z, in_place = FALSE) {
     } else {
       zi <- as.integer(z)
       if (wb <- which_first(zi != z)) {
-        stop("`x` was type 'integer' and `z` was type double, but entry ", wb,
+        stop("`x` was type integer and `z` was type double, but entry ", wb,
              " was not equal to the integer equivalent. ", )
       }
       return(pmaxV(x, if (is.integer(x)) zi else as.double(z), in_place = in_place))
@@ -169,16 +169,16 @@ pmax3 <- function(x, y, z, in_place = FALSE) {
 
   if (is.integer(x) && (is.double(y) || is.double(z))) {
     yi <- as.integer(y)
-    if (is.double(y) && {wb <- which_first(y != yi)}) {
-      stop("`x` was type 'integer' and `y` was type double, but entry ", wb,
+    if (is.double(y) && {wb <- which_isnt_integerish(y, yi)}) {
+      stop("`x` was type integer and `y` was type double, but entry ", wb,
            " was not equal to the integer equivalent. ")
     }
     zi <- as.integer(z)
-    if (is.double(z) && {wb <- which_first(z != zi)}) {
-      stop("`x` was type 'integer' and `z` was type double, but entry ", wb,
+    if (is.double(z) && {wb <- which_isnt_integerish(z, zi)}) {
+      stop("`x` was type integer and `z` was type double, but entry ", wb,
            " was not equal to the integer equivalent. ")
     }
-    return(do_summary3_int(x, y, z, in_place = in_place, do_max = TRUE))
+    return(do_summary3_int(x, yi, zi, in_place = in_place, do_max = TRUE))
   }
   if (is.double(x) && is.numeric(y) && is.numeric(z)) {
     return(do_summary3_dbl(x, as.double(y), as.double(z), in_place = in_place, do_max = TRUE))

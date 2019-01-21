@@ -47,6 +47,25 @@ isnt_number <- function(a, na.bad = TRUE, infinite.bad = TRUE) {
   FALSE
 }
 
-# isnt_
+AND <- `&&`
+OR <- `||`
 
+epsilon <- function() {
+  sqrt(.Machine$double.eps)
+}
+
+#' @noRd
+#' @param xi integer version of \code{x}. May be cheaper if already known
+which_isnt_integerish <- function(x, xi = as.integer(x)) {
+  e <- epsilon()
+  d_r <- do_range_dbl(x - xi, -e, e)
+
+  if (d_r[2L] > e) {
+    return(d_r[4L])
+  }
+  if (d_r[1L] < -e) {
+    return(d_r[3])
+  }
+  0L
+}
 

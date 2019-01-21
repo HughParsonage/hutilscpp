@@ -186,8 +186,8 @@ test_that("pmax3", {
   expect_equal(pmax3(x, z, 1L), pmax(x, pmax(z, 1L)))
   expect_error(pmax3(x, z[1:5], z), "length 5")
   expect_error(pmax3(x, z, z[1:4]), "length 4")
-  expect_error(do_summary3_dbl(0, 1:2 + 0, 1:3 + 0), "same length")
-  expect_error(do_summary3_dbl(0L, 1:2, 1:3), "same length")
+  expect_error(pmax3(2:3, c(2, 2.5), 2:3), regexp = "type double, but entry 2")
+  expect_error(pmax3("a", "b", "c"), regexp = "must be numeric")
 })
 
 test_that("pmin3", {
@@ -214,8 +214,8 @@ test_that("pmin3", {
   expect_equal(pmin3(x, z, 1L), pmin(x, pmin(z, 1L)))
   expect_error(pmin3(x, z[1:5], z), "length 5")
   expect_error(pmin3(x, z, z[1:4]), "length 4")
-  expect_error(do_summary3_dbl(0, 1:2 + 0, 1:3 + 0), "same length")
-  expect_error(do_summary3_dbl(0L, 1:2, 1:3), "same length")
+  expect_error(pmin3(2:3, c(2, 2.5), 2:3), regexp = "type double, but entry 2")
+  expect_error(pmin3("a", "b", "c"), regexp = "must be numeric")
 })
 
 

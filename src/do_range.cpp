@@ -2,27 +2,40 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-IntegerVector do_range_int (IntegerVector x) {
+IntegerVector do_range_int (IntegerVector x, int halt_if_min = 1, int halt_if_max = -1) {
   int n = x.size();
   int maxi = x[n - 1];
+  int which_max = n - 1;
   int mini = x[0];
-  if (maxi < mini) {
-    mini = maxi;
-    maxi = x[0];
-  }
-  for (int i = 1; i < n; ++i) {
+  int which_min = 0;
+  const bool do_halt = halt_if_min < halt_if_max;
+
+  for (int i = 0; i < n; ++i) {
     int xi = x[i];
     if (xi < mini) {
       mini = xi;
+      which_min = i;
     } else {
       if (xi > maxi) {
         maxi = xi;
+        which_max = i;
+      }
+    }
+    if (do_halt) {
+      if (mini <= halt_if_min ||
+          maxi >= halt_if_max) {
+        break;
       }
     }
   }
-  IntegerVector out(2);
+  IntegerVector out(4);
+  ++which_min;
+  ++which_max;
   out[0] = mini;
   out[1] = maxi;
+  out[2] = which_min;
+  out[3] = which_max;
+
   return out;
 
 }
@@ -32,27 +45,38 @@ using namespace Rcpp;
 
 
 // [[Rcpp::export]]
-DoubleVector do_range_dbl (DoubleVector x) {
+DoubleVector do_range_dbl (DoubleVector x, double halt_if_min = 1, double halt_if_max = -1) {
   int n = x.size();
   double maxi = x[n - 1];
+  double which_max = n - 1;
   double mini = x[0];
-  if (maxi < mini) {
-    mini = maxi;
-    maxi = x[0];
-  }
-  for (int i = 1; i < n; ++i) {
+  double which_min = 0;
+  const bool do_halt = halt_if_min < halt_if_max;
+  for (int i = 0; i < n; ++i) {
     double xi = x[i];
     if (xi < mini) {
       mini = xi;
+      which_min = i;
     } else {
       if (xi > maxi) {
         maxi = xi;
+        which_max = i;
+      }
+    }
+    if (do_halt) {
+      if (mini <= halt_if_min ||
+          maxi >= halt_if_max) {
+        break;
       }
     }
   }
-  DoubleVector out(2);
+  ++which_min;
+  ++which_max;
+  DoubleVector out(4);
   out[0] = mini;
   out[1] = maxi;
+  out[2] = which_min;
+  out[3] = which_max;
   return out;
 
 }

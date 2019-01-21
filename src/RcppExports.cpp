@@ -112,24 +112,28 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_range_int
-IntegerVector do_range_int(IntegerVector x);
-RcppExport SEXP _hutilscpp_do_range_int(SEXP xSEXP) {
+IntegerVector do_range_int(IntegerVector x, int halt_if_min, int halt_if_max);
+RcppExport SEXP _hutilscpp_do_range_int(SEXP xSEXP, SEXP halt_if_minSEXP, SEXP halt_if_maxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_range_int(x));
+    Rcpp::traits::input_parameter< int >::type halt_if_min(halt_if_minSEXP);
+    Rcpp::traits::input_parameter< int >::type halt_if_max(halt_if_maxSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_range_int(x, halt_if_min, halt_if_max));
     return rcpp_result_gen;
 END_RCPP
 }
 // do_range_dbl
-DoubleVector do_range_dbl(DoubleVector x);
-RcppExport SEXP _hutilscpp_do_range_dbl(SEXP xSEXP) {
+DoubleVector do_range_dbl(DoubleVector x, double halt_if_min, double halt_if_max);
+RcppExport SEXP _hutilscpp_do_range_dbl(SEXP xSEXP, SEXP halt_if_minSEXP, SEXP halt_if_maxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_range_dbl(x));
+    Rcpp::traits::input_parameter< double >::type halt_if_min(halt_if_minSEXP);
+    Rcpp::traits::input_parameter< double >::type halt_if_max(halt_if_maxSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_range_dbl(x, halt_if_min, halt_if_max));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -606,8 +610,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_cumsum_reset_logical", (DL_FUNC) &_hutilscpp_do_cumsum_reset_logical, 1},
     {"_hutilscpp_do_cumsum_reset_integer", (DL_FUNC) &_hutilscpp_do_cumsum_reset_integer, 2},
     {"_hutilscpp_do_cumsum_reset_double", (DL_FUNC) &_hutilscpp_do_cumsum_reset_double, 2},
-    {"_hutilscpp_do_range_int", (DL_FUNC) &_hutilscpp_do_range_int, 1},
-    {"_hutilscpp_do_range_dbl", (DL_FUNC) &_hutilscpp_do_range_dbl, 1},
+    {"_hutilscpp_do_range_int", (DL_FUNC) &_hutilscpp_do_range_int, 3},
+    {"_hutilscpp_do_range_dbl", (DL_FUNC) &_hutilscpp_do_range_dbl, 3},
     {"_hutilscpp_do_which_first", (DL_FUNC) &_hutilscpp_do_which_first, 1},
     {"_hutilscpp_do_which_last", (DL_FUNC) &_hutilscpp_do_which_last, 1},
     {"_hutilscpp_do_which_first_false", (DL_FUNC) &_hutilscpp_do_which_first_false, 1},

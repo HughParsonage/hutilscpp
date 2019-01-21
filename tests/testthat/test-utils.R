@@ -16,3 +16,7 @@ test_that("isnt_number", {
   expect_true(isnt_number(Inf))
 })
 
+test_that("isnt_integersih", {
+  expect_identical(which_isnt_integerish(c(1, 2, 3)), 0L)
+  expect_identical(which_isnt_integerish(c(1, 2, 3.1)), 3L)
+})

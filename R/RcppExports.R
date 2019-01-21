@@ -45,12 +45,12 @@ do_cumsum_reset_double <- function(x, y) {
     .Call(`_hutilscpp_do_cumsum_reset_double`, x, y)
 }
 
-do_range_int <- function(x) {
-    .Call(`_hutilscpp_do_range_int`, x)
+do_range_int <- function(x, halt_if_min = 1L, halt_if_max = -1L) {
+    .Call(`_hutilscpp_do_range_int`, x, halt_if_min, halt_if_max)
 }
 
-do_range_dbl <- function(x) {
-    .Call(`_hutilscpp_do_range_dbl`, x)
+do_range_dbl <- function(x, halt_if_min = 1, halt_if_max = -1) {
+    .Call(`_hutilscpp_do_range_dbl`, x, halt_if_min, halt_if_max)
 }
 
 do_which_first <- function(x) {

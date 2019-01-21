@@ -7,7 +7,12 @@
 range_rcpp(x)
 }
 \arguments{
-\item{x}{A vector for which the range is desired.}
+\item{x}{A vector for which the range is desired. Missing values
+have no defined behaviour.}
+}
+\value{
+A vector, the first two positions give the range and
+the next two give the positions where the max and min occur.
 }
 \description{
 Range C++
