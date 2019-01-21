@@ -52,6 +52,10 @@ DoubleVector do_range_dbl (DoubleVector x, double halt_if_min = 1, double halt_i
   double mini = x[0];
   double which_min = 0;
   const bool do_halt = halt_if_min < halt_if_max;
+  if (do_halt) {
+    maxi = x[0];
+    which_max = 0;
+  }
   for (int i = 0; i < n; ++i) {
     double xi = x[i];
     if (xi < mini) {

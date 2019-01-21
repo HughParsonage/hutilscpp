@@ -20,3 +20,18 @@ test_that("range works", {
   y <- rev(y)
   expect_identical(range(y), range_rcpp(y)[1:2])
 })
+
+test_that("range falls through", {
+  y <- as.character(c(letters, 1:5, letters))
+  expect_equal(range_rcpp(y)[1:2], range_rcpp(y))
+})
+
+test_that("halting", {
+  z <- c(0, 0, -2, 2)
+  y <- do_range_dbl(z, -1, 1)
+  expect_equal(y[1:2], c(-2, 0))
+  expect_equal(y[3], c(3))
+  y <- do_range_dbl(z, -3, 1)
+  expect_equal(y[4], c(4))
+})
+
