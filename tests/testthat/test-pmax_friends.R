@@ -129,6 +129,14 @@ test_that("pminC in-place", {
   expect_equal(max(oi), 0L)
 })
 
+test_that("pminV character", {
+  o <- letters[10:5]
+  o2 <- rep(letters[6], 6)
+  sW <- suppressWarnings
+  expect_equal(sW({pminV(o, o2, in_place = TRUE)}), pmin(o, o2))
+  expect_equal(o, letters[10:5])
+})
+
 test_that("pmaxV", {
   expect_identical(pmaxV(1:5, 11:15), 11:15)
   expect_identical(pmaxV(1:5, 5:1), c(5L, 4L, 3L, 4L, 5L))

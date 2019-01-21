@@ -185,9 +185,9 @@ pmax3 <- function(x, y, z, in_place = FALSE) {
   }
 
   if (!is.numeric(x) || !is.numeric(y) || !is.numeric(z)) {
-    stop("`x` was of type ", typeof(x),
-         "`y` was of type ", typeof(y),
-         "`z` was of type ", typeof(z), ". ",
+    stop("`x` was of type ", class(x),
+         "`y` was of type ", class(y),
+         "`z` was of type ", class(z), ". ",
          "All of `x`, `y`, and `z` must be numeric.")
   }
 }
