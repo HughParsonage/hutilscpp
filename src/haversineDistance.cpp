@@ -154,13 +154,136 @@ bool is_sorted_ascending (NumericVector x) {
   return true;
 }
 
+// 00 -> bottom left
+// 01 -> top left
+// 10 -> bottom right
+// 11 -> top right
+// [[Rcpp::export]]
+IntegerVector EmptiestQuarter (NumericVector x,
+                               NumericVector y,
+                               double minx,
+                               double maxx,
+                               double miny,
+                               double maxy) {
+  double xcentre = minx + (maxx - minx) / 2;
+  double ycentre = miny + (maxy - miny) / 2;
+  int N = x.size();
+  int q = -1;
+  int o = -1;
+
+ int min_points = N;
+  double x0, x1, y0, y1 = 0;
+  for (q = 0; q < 4; ++q) {
+
+    int q_points = 0;
+    switch (q) {
+    case 0:
+      x0 = minx;
+      x1 = xcentre;
+      y0 = miny;
+      y1 = ycentre;
+      break;
+    case 1:
+      x0 = minx;
+      x1 = xcentre;
+      y0 = ycentre;
+      y1 = maxy;
+      break;
+    case 2:
+      x0 = xcentre;
+      x1 = maxx;
+      y0 = miny;
+      y1 = ycentre;
+      break;
+    case 3:
+      x0 = xcentre;
+      x1 = maxx;
+      y0 = ycentre;
+      y1 = maxy;
+      break;
+    }
+    for (int i = 0; i < N; ++i) {
+      double xi = x[i];
+      double yi = y[i];
+      if (xi > x0 && xi < x1 && yi > y0 && yi < y1) {
+        ++q_points;
+      }
+    }
+    if (q_points < min_points) {
+      min_points = q_points;
+      o = q;
+    }
+  }
+  IntegerVector out(2);
+  out[0] = o;
+  out[1] = min_points;
+  return out;
+}
+
+// [[Rcpp::export]]
+IntegerVector theEmptiestQuarters (NumericVector x,
+                                   NumericVector y,
+                                   double minx,
+                                   double maxx,
+                                   double miny,
+                                   double maxy,
+                                   int depth = 4) {
+  IntegerVector out(depth);
+  double xcentre = minx + (maxx - minx) / 2;
+  double ycentre = miny + (maxy - miny) / 2;
+  double x0, x1, y0, y1 = 0;
+  x0 += minx;
+  x1 += maxx;
+  y0 += miny;
+  y1 += maxy;
+  double dx, dy = 0;
+  int o = EmptiestQuarter(x, y, minx, maxx, miny, maxy)[0];
+  for (int i = 0; i < depth; ++i) {
+    out[i] = o;
+    dx = x1 - x0;
+    dx /= 2;
+    dy = y1 - y0;
+    dy /= 2;
+    switch (o) {
+    case 0:
+      x1 -= dx;
+      y1 -= dy;
+      break;
+    case 1:
+      x1 -= dx;
+      y0 += dy;
+      break;
+    case 2:
+      x0 += dx;
+      y1 -= dy;
+      break;
+    case 3:
+      x0 += dx;
+      y0 += dy;
+      break;
+    }
+    IntegerVector eq = EmptiestQuarter(x, y, x0, x1, y0, y1);
+    o = eq[0];
+    int nPoints = eq[1];
+    if (nPoints == 0) {
+      for (int j = i + 1; j < depth; ++j) {
+        out[j] = -1;
+      }
+      break;
+    }
+  }
+
+  return out;
+}
+
 // [[Rcpp::export]]
 List pole_of_inaccessibility (NumericVector x,
                               NumericVector y,
                               double minx,
                               double maxx,
                               double miny,
-                              double maxy) {
+                              double maxy,
+                              int chances = 10) {
   int N = x.size();
   if (N != y.size()) {
     stop("lengths of x and y differ");
@@ -196,7 +319,7 @@ List pole_of_inaccessibility (NumericVector x,
   // approximation to a radius.
   int min_points_in_grid = N;
   bool interior_nonempty = true;
-  int chances_remaining = 0;
+  int chances_remaining = chances;
 
   double xmin, xmax, ymin, ymax = 0;
 
@@ -219,19 +342,6 @@ List pole_of_inaccessibility (NumericVector x,
       g_res *= 2;
       max_g_res *= 2;
       min_g_res *= 2;
-    }
-
-    // Increment radix towards the resolution we know to be too fine
-    if (reached_binary_maximum) {
-      ++Debug3;
-      if (interior_nonempty) {
-        // needs to be finer
-        g_res += (max_g_res - g_res) / 2;
-      } else {
-        // needs to be more coarse
-        g_res -= (g_res - min_g_res) / 2;
-      }
-
     }
     min_points_in_grid = N; // need to reestablish
 
@@ -286,6 +396,12 @@ List pole_of_inaccessibility (NumericVector x,
       }
     }
     interior_nonempty = min_points_in_grid > 0;
+    // Increment radix towards the resolution we know to be too fine
+    if (!interior_nonempty && reached_binary_maximum && chances_remaining) {
+      ++Debug3;
+      showValue("D3", Debug3);
+      return pole_of_inaccessibility(x, y, xmin, xmax, ymin, ymax, --chances_remaining);
+    }
   }
 
 

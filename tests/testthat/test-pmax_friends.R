@@ -239,5 +239,10 @@ test_that("pmin3", {
 
 })
 
+test_that("pmax pure c error", {
+  expect_error(.Call("do_c_pmax", 1:5 + 0, 1:2 + 0, 1), regexp = "a did not have length 1")
+  expect_error(.Call("do_c_pmax", 1:5 + 0, 1, 1:2 + 0), regexp = "b did not have length 1")
+})
+
 
 

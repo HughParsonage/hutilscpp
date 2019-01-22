@@ -265,9 +265,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// pole_of_inaccessibility
-List pole_of_inaccessibility(NumericVector x, NumericVector y, double minx, double maxx, double miny, double maxy);
-RcppExport SEXP _hutilscpp_pole_of_inaccessibility(SEXP xSEXP, SEXP ySEXP, SEXP minxSEXP, SEXP maxxSEXP, SEXP minySEXP, SEXP maxySEXP) {
+// EmptiestQuarter
+IntegerVector EmptiestQuarter(NumericVector x, NumericVector y, double minx, double maxx, double miny, double maxy);
+RcppExport SEXP _hutilscpp_EmptiestQuarter(SEXP xSEXP, SEXP ySEXP, SEXP minxSEXP, SEXP maxxSEXP, SEXP minySEXP, SEXP maxySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -277,7 +277,41 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type maxx(maxxSEXP);
     Rcpp::traits::input_parameter< double >::type miny(minySEXP);
     Rcpp::traits::input_parameter< double >::type maxy(maxySEXP);
-    rcpp_result_gen = Rcpp::wrap(pole_of_inaccessibility(x, y, minx, maxx, miny, maxy));
+    rcpp_result_gen = Rcpp::wrap(EmptiestQuarter(x, y, minx, maxx, miny, maxy));
+    return rcpp_result_gen;
+END_RCPP
+}
+// theEmptiestQuarters
+IntegerVector theEmptiestQuarters(NumericVector x, NumericVector y, double minx, double maxx, double miny, double maxy, int depth);
+RcppExport SEXP _hutilscpp_theEmptiestQuarters(SEXP xSEXP, SEXP ySEXP, SEXP minxSEXP, SEXP maxxSEXP, SEXP minySEXP, SEXP maxySEXP, SEXP depthSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< double >::type minx(minxSEXP);
+    Rcpp::traits::input_parameter< double >::type maxx(maxxSEXP);
+    Rcpp::traits::input_parameter< double >::type miny(minySEXP);
+    Rcpp::traits::input_parameter< double >::type maxy(maxySEXP);
+    Rcpp::traits::input_parameter< int >::type depth(depthSEXP);
+    rcpp_result_gen = Rcpp::wrap(theEmptiestQuarters(x, y, minx, maxx, miny, maxy, depth));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pole_of_inaccessibility
+List pole_of_inaccessibility(NumericVector x, NumericVector y, double minx, double maxx, double miny, double maxy, int chances);
+RcppExport SEXP _hutilscpp_pole_of_inaccessibility(SEXP xSEXP, SEXP ySEXP, SEXP minxSEXP, SEXP maxxSEXP, SEXP minySEXP, SEXP maxySEXP, SEXP chancesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< double >::type minx(minxSEXP);
+    Rcpp::traits::input_parameter< double >::type maxx(maxxSEXP);
+    Rcpp::traits::input_parameter< double >::type miny(minySEXP);
+    Rcpp::traits::input_parameter< double >::type maxy(maxySEXP);
+    Rcpp::traits::input_parameter< int >::type chances(chancesSEXP);
+    rcpp_result_gen = Rcpp::wrap(pole_of_inaccessibility(x, y, minx, maxx, miny, maxy, chances));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -622,7 +656,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_theEuclidDistance", (DL_FUNC) &_hutilscpp_theEuclidDistance, 5},
     {"_hutilscpp_hausdorffEuclid", (DL_FUNC) &_hutilscpp_hausdorffEuclid, 2},
     {"_hutilscpp_is_sorted_ascending", (DL_FUNC) &_hutilscpp_is_sorted_ascending, 1},
-    {"_hutilscpp_pole_of_inaccessibility", (DL_FUNC) &_hutilscpp_pole_of_inaccessibility, 6},
+    {"_hutilscpp_EmptiestQuarter", (DL_FUNC) &_hutilscpp_EmptiestQuarter, 6},
+    {"_hutilscpp_theEmptiestQuarters", (DL_FUNC) &_hutilscpp_theEmptiestQuarters, 7},
+    {"_hutilscpp_pole_of_inaccessibility", (DL_FUNC) &_hutilscpp_pole_of_inaccessibility, 7},
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
     {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 12},
     {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 3},

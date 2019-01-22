@@ -80,3 +80,55 @@ test_that("unitless", {
                    order(haversineDistance(lat1, lon1, lat2, lon2, unitless = TRUE)))
 })
 
+test_that("theEuclidDistance", {
+  expect_equal(theEuclidDistance(0, 0, 0, 0), 0)
+  expect_equal(theEuclidDistance(0, 1, 0, 0), 1)
+  expect_equal(theEuclidDistance(0, 1, 0, 0, unitless = TRUE), 1)
+  expect_equal(theEuclidDistance(0, 1, 0, 1), sqrt(2))
+  expect_equal(theEuclidDistance(0, 1, 0, 1, unitless = TRUE), 2)
+
+  x <- seq(1e7, by = 0.5, length.out = 200)
+  ax <- seq(1e7, by = 0.7, length.out = 200)
+  y <- seq(1e7 + 50, by = 1.1, length.out = 200)
+  ay <- seq(1e7 + 50, by = 0.9, length.out = 200)
+  dist_euc <- function(p, q, r, s) sqrt((p - q)^2 + (r - s)^2)
+  # Can't be identical
+  expect_equal(theEuclidDistance(x, ax, y, ay), dist_euc(x, ax, y, ay))
+  expect_error(theEuclidDistance(x, ax, y, ay[1:5]),
+               regexp = "lengths")
+
+
+})
+
+test_that("hausdorff distance", {
+  o <- hausdorffEuclid(c(0, 0, 1), c(0, 1, 1))
+  expect_equal(o, 1)
+  o <- hausdorffEuclid(c(0, 0.5, 1), c(0, 0.7, 0))
+  expect_equal(o, sqrt(0.74))
+})
+
+test_that("is_sorted_ascending", {
+  expect_true(is_sorted_ascending(c(0, 1.5, 3)))
+  expect_false(is_sorted_ascending(c(0, 1.5, 3, 1)))
+})
+
+test_that("pole of inaccessibility", {
+  skip("Unimplemented")
+  res <- pole_of_inaccessibility(c(double(100), 0:100),
+                                 c(0:100, double(100)),
+                                 minx = -0.1,
+                                 maxx = 101,
+                                 miny = -0.2,
+                                 maxy = 101)
+})
+
+test_that("Emptiest quadrants", {
+  library(data.table)
+  x <- c(sample(0:49, size = 2000, replace = TRUE), sample(76:100, size = 1000, replace = TRUE))
+  y <- seq(0, 100, length.out = length(x))
+  expect_identical(EmptiestQuarter(x, y, min(x), max(x), min(y), max(y)),  c(2L, 0L))
+  expect_identical(last(theEmptiestQuarters(x, y, min(x), max(x), min(y), max(y))), -1L)
+})
+
+
+

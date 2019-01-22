@@ -34,6 +34,16 @@ test_that("match", {
   expect_identical(which_first(int_m == 2L), 2L)
 })
 
+test_that("which_first_int_int", {
+  x <- sample.int(10, size = 1000, replace = TRUE)
+  y <- sample.int(10, size = 1000, replace = TRUE)
+  expect_identical(do_which_first_int_int(x, y), which.max(x == y))
+  expect_identical(do_which_first_int_int(x, y, FALSE), which.max(x != y))
+  expect_identical(do_which_first_int_int(x, y, TRUE, gt = TRUE), which.max(x >= y))
+  expect_identical(do_which_first_int_int(x, y, TRUE, lt = TRUE), which.max(x <= y))
+  expect_identical(do_which_first_int_int(x, y, FALSE, gt = TRUE), which.max(x > y))
+  expect_identical(do_which_first_int_int(x, y, FALSE, lt = TRUE), which.max(x < y))
+})
 
 
 

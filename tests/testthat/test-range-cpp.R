@@ -33,5 +33,12 @@ test_that("halting", {
   expect_equal(y[3], c(3))
   y <- do_range_dbl(z, -3, 1)
   expect_equal(y[4], c(4))
+
+  z <- as.integer(z)
+  y <- do_range_int(z, -1L, 1L)
+  expect_equal(y[1:2], c(-2, 0))
+  expect_equal(y[3], c(3))
+  y <- do_range_int(z, -3, 1)
+  expect_equal(y[4], c(4))
 })
 

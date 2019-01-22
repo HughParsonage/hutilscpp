@@ -9,6 +9,10 @@ IntegerVector do_range_int (IntegerVector x, int halt_if_min = 1, int halt_if_ma
   int mini = x[0];
   int which_min = 0;
   const bool do_halt = halt_if_min < halt_if_max;
+  if (do_halt) {
+    maxi = x[0];
+    which_max = 0;
+  }
 
   for (int i = 0; i < n; ++i) {
     int xi = x[i];
