@@ -142,7 +142,7 @@ pmin3 <- function(x, y, z, in_place = FALSE) {
     return(do_summary3_dbl(x, y, z, in_place = in_place, do_max = FALSE))
   }
   # Finally
-  pmin(x, pmin(y, z))
+  pmin(x, pmin(y, z)) # nocov
 }
 
 

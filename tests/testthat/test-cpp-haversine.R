@@ -267,7 +267,7 @@ test_that("poleInaccessibility3 infinite xmin_new's", {
                  xmax = 1.0,
                  ymin = 0.9,
                  ymax = 1.0))
-  DT_NE <- DT[i <= 0.9 | j <= 0.9]
+  DT_NE <- DT[implies(i > 0.9, j <= 0.9)]
   DT_NE[, x := 1 - j][, y := 1 - i]
   setnames(DT_NE, c("i", "j"), c("LATITUDE", "LONGITUDE"))
   res <- poleInaccessibility3(DT = DT_NE)

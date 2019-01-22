@@ -175,7 +175,7 @@ pmax3 <- function(x, y, z, in_place = FALSE) {
     return(do_summary3_dbl(x, as.double(y), as.double(z), in_place = in_place, do_max = TRUE))
   }
 
-  pmax(x, pmax(y, z))
+  pmax(x, pmax(y, z)) # nocov
 }
 
 
