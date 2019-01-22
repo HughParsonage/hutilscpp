@@ -134,12 +134,21 @@ test_that("Emptiest quadrants", {
                    y = runif(10000, -1, 1))
   DT_NE <- DT[not(x > 0 & y > 0 & y - 2 * x <= 0.2 & y - x >= -0.1)]
 
-  # library(ggplot2);ggplot(DT[not(x > 0 & y > 0 & y - 2 * x <= 0.2 & y - x >= -0.1)], aes(x, y)) + geom_point()
+
+  # library(ggplot2);ggplot(DT_NE, aes(x, y)) + geom_point()
   expect_identical(DT_NE[, EmptiestQuarter(x, y, -1, 1, -1, 1)],
                    c(3L, DT_NE[x >= 0 & y >= 0, .N]))
+  expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 3L)
   expect_equal((DT_NE[, theEmptiestQuarters(x, y)])[1:2],
                c(3, 3))
 
+  # Cover all the quarters
+  DT_NE[, y := -y]
+  expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 2L)
+  DT_NE[, x := -x]
+  expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 0L)
+  DT_NE[, y := -y]
+  expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 1L)
 })
 
 
