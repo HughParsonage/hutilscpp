@@ -13,7 +13,9 @@ LazyData: true
 LinkingTo: 
     Rcpp
 Imports: 
-    Rcpp, data.table
+    Rcpp, 
+    data.table, 
+    utils
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
 Suggests: 
