@@ -2,7 +2,7 @@
 using namespace Rcpp;
 #include "cpphutils.h"
 
-// [[Rcpp::export]]
+
 IntegerVector do_range_int (IntegerVector x, int halt_if_min, int halt_if_max) {
   int n = x.size();
   int maxi = x[n - 1];
@@ -46,7 +46,7 @@ IntegerVector do_range_int (IntegerVector x, int halt_if_min, int halt_if_max) {
 }
 
 
-// [[Rcpp::export]]
+
 DoubleVector do_range_dbl (DoubleVector x, double halt_if_min, double halt_if_max) {
   int n = x.size();
   double maxi = x[n - 1];

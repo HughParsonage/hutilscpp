@@ -76,6 +76,32 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_range_dbl
+DoubleVector do_range_dbl(NumericVector x, double halt_if_min, double halt_if_max);
+RcppExport SEXP _hutilscpp_do_range_dbl(SEXP xSEXP, SEXP halt_if_minSEXP, SEXP halt_if_maxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type halt_if_min(halt_if_minSEXP);
+    Rcpp::traits::input_parameter< double >::type halt_if_max(halt_if_maxSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_range_dbl(x, halt_if_min, halt_if_max));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_range_int
+IntegerVector do_range_int(IntegerVector x, int halt_if_min, int halt_if_max);
+RcppExport SEXP _hutilscpp_do_range_int(SEXP xSEXP, SEXP halt_if_minSEXP, SEXP halt_if_maxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type halt_if_min(halt_if_minSEXP);
+    Rcpp::traits::input_parameter< int >::type halt_if_max(halt_if_maxSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_range_int(x, halt_if_min, halt_if_max));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_cumsum_reset_logical
 IntegerVector do_cumsum_reset_logical(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_cumsum_reset_logical(SEXP xSEXP) {
@@ -108,32 +134,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
     rcpp_result_gen = Rcpp::wrap(do_cumsum_reset_double(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_range_int
-IntegerVector do_range_int(IntegerVector x, int halt_if_min, int halt_if_max);
-RcppExport SEXP _hutilscpp_do_range_int(SEXP xSEXP, SEXP halt_if_minSEXP, SEXP halt_if_maxSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type halt_if_min(halt_if_minSEXP);
-    Rcpp::traits::input_parameter< int >::type halt_if_max(halt_if_maxSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_range_int(x, halt_if_min, halt_if_max));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_range_dbl
-DoubleVector do_range_dbl(DoubleVector x, double halt_if_min, double halt_if_max);
-RcppExport SEXP _hutilscpp_do_range_dbl(SEXP xSEXP, SEXP halt_if_minSEXP, SEXP halt_if_maxSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type halt_if_min(halt_if_minSEXP);
-    Rcpp::traits::input_parameter< double >::type halt_if_max(halt_if_maxSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_range_dbl(x, halt_if_min, halt_if_max));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -641,11 +641,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_Implies", (DL_FUNC) &_hutilscpp_Implies, 4},
     {"_hutilscpp_anyOutside_int", (DL_FUNC) &_hutilscpp_anyOutside_int, 5},
     {"_hutilscpp_anyOutside_dbl", (DL_FUNC) &_hutilscpp_anyOutside_dbl, 5},
+    {"_hutilscpp_do_range_dbl", (DL_FUNC) &_hutilscpp_do_range_dbl, 3},
+    {"_hutilscpp_do_range_int", (DL_FUNC) &_hutilscpp_do_range_int, 3},
     {"_hutilscpp_do_cumsum_reset_logical", (DL_FUNC) &_hutilscpp_do_cumsum_reset_logical, 1},
     {"_hutilscpp_do_cumsum_reset_integer", (DL_FUNC) &_hutilscpp_do_cumsum_reset_integer, 2},
     {"_hutilscpp_do_cumsum_reset_double", (DL_FUNC) &_hutilscpp_do_cumsum_reset_double, 2},
-    {"_hutilscpp_do_range_int", (DL_FUNC) &_hutilscpp_do_range_int, 3},
-    {"_hutilscpp_do_range_dbl", (DL_FUNC) &_hutilscpp_do_range_dbl, 3},
     {"_hutilscpp_do_which_first", (DL_FUNC) &_hutilscpp_do_which_first, 1},
     {"_hutilscpp_do_which_last", (DL_FUNC) &_hutilscpp_do_which_last, 1},
     {"_hutilscpp_do_which_first_false", (DL_FUNC) &_hutilscpp_do_which_first_false, 1},
