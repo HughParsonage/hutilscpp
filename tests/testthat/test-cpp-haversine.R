@@ -226,10 +226,13 @@ test_that("Emptiest quadrants", {
   # Cover all the quarters
   DT_NE[, y := -y]
   expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 2L)
+  expect_identical(first(DT_NE[, theEmptiestQuarters(x, y)]), 2L)
   DT_NE[, x := -x]
   expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 0L)
+  expect_identical(first(DT_NE[, theEmptiestQuarters(x, y)]), 0L)
   DT_NE[, y := -y]
   expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 1L)
+  expect_identical(first(DT_NE[, theEmptiestQuarters(x, y)]), 1L)
 
 
 })
