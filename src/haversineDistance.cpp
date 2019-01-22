@@ -1,5 +1,6 @@
 #include <math.h>
 #include <Rcpp.h>
+#include "cpphutils.h"
 
 using namespace Rcpp;
 
@@ -161,17 +162,33 @@ bool is_sorted_ascending (NumericVector x) {
 // [[Rcpp::export]]
 IntegerVector EmptiestQuarter (NumericVector x,
                                NumericVector y,
-                               double minx,
-                               double maxx,
-                               double miny,
-                               double maxy) {
+                               double minx = 1,
+                               double maxx = -1,
+                               double miny = 1,
+                               double maxy = -1) {
+  NumericVector x_range(4);
+  x_range[0] = minx, x_range[1] = maxx;
+  if (minx > maxx) {
+    x_range = NumericVector(do_range_dbl(x));
+    minx = x_range[0];
+    maxx = x_range[1];
+  }
+  NumericVector y_range(4);
+  y_range[0] = miny, y_range[1] = maxy;
+  if (miny > maxy) {
+    y_range = NumericVector(do_range_dbl(y));
+    miny = y_range[0];
+    maxy = y_range[1];
+  }
+
+
   double xcentre = minx + (maxx - minx) / 2;
   double ycentre = miny + (maxy - miny) / 2;
   int N = x.size();
   int q = -1;
   int o = -1;
 
- int min_points = N;
+  int min_points = N;
   double x0, x1, y0, y1 = 0;
   for (q = 0; q < 4; ++q) {
 
@@ -223,11 +240,25 @@ IntegerVector EmptiestQuarter (NumericVector x,
 // [[Rcpp::export]]
 IntegerVector theEmptiestQuarters (NumericVector x,
                                    NumericVector y,
-                                   double minx,
-                                   double maxx,
-                                   double miny,
-                                   double maxy,
+                                   double minx = 1,
+                                   double maxx = -1,
+                                   double miny = 1,
+                                   double maxy = -1,
                                    int depth = 4) {
+  NumericVector x_range(4);
+  x_range[0] = minx, x_range[1] = maxx;
+  if (minx > maxx) {
+    x_range = NumericVector(do_range_dbl(x));
+    minx = x_range[0];
+    maxx = x_range[1];
+  }
+  NumericVector y_range(4);
+  y_range[0] = miny, y_range[1] = maxy;
+  if (miny > maxy) {
+    y_range = NumericVector(do_range_dbl(y));
+    miny = y_range[0];
+    maxy = y_range[1];
+  }
   IntegerVector out(depth);
   double xcentre = minx + (maxx - minx) / 2;
   double ycentre = miny + (maxy - miny) / 2;

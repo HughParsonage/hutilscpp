@@ -1,8 +1,9 @@
 #include <Rcpp.h>
 using namespace Rcpp;
+#include "cpphutils.h"
 
 // [[Rcpp::export]]
-IntegerVector do_range_int (IntegerVector x, int halt_if_min = 1, int halt_if_max = -1) {
+IntegerVector do_range_int (IntegerVector x, int halt_if_min, int halt_if_max) {
   int n = x.size();
   int maxi = x[n - 1];
   int which_max = n - 1;
@@ -44,12 +45,9 @@ IntegerVector do_range_int (IntegerVector x, int halt_if_min = 1, int halt_if_ma
 
 }
 
-#include <Rcpp.h>
-using namespace Rcpp;
-
 
 // [[Rcpp::export]]
-DoubleVector do_range_dbl (DoubleVector x, double halt_if_min = 1, double halt_if_max = -1) {
+DoubleVector do_range_dbl (DoubleVector x, double halt_if_min, double halt_if_max) {
   int n = x.size();
   double maxi = x[n - 1];
   double which_max = n - 1;

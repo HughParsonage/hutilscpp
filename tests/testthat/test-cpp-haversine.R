@@ -128,6 +128,18 @@ test_that("Emptiest quadrants", {
   y <- seq(0, 100, length.out = length(x))
   expect_identical(EmptiestQuarter(x, y, min(x), max(x), min(y), max(y)),  c(2L, 0L))
   expect_identical(last(theEmptiestQuarters(x, y, min(x), max(x), min(y), max(y))), -1L)
+
+  not <- `!`
+  DT <- data.table(x = runif(10000, -1, 1),
+                   y = runif(10000, -1, 1))
+  DT_NE <- DT[not(x > 0 & y > 0 & y - 2 * x <= 0.2 & y - x >= -0.1)]
+
+  library(ggplot2);ggplot(DT[not(x > 0 & y > 0 & y - 2 * x <= 0.2 & y - x >= -0.1)], aes(x, y)) + geom_point()
+  expect_identical(DT_NE[, EmptiestQuarter(x, y, -1, 1, -1, 1)],
+                   c(3L, DT_NE[x >= 0 & y >= 0, .N]))
+  expect_equal((DT_NE[, theEmptiestQuarters(x, y)])[1:2],
+               c(3, 3))
+
 })
 
 
