@@ -70,7 +70,7 @@ do_which_first_int_int <- function(x, y, eq = TRUE, gt = FALSE, lt = FALSE) {
 }
 
 showValue <- function(what, x) {
-    invisible(.Call(`_hutilscpp_showValue`, what, x))
+    .Call(`_hutilscpp_showValue`, what, x)
 }
 
 haversine_distance <- function(olat1, olon1, olat2, olon2, unitless = FALSE) {
@@ -241,6 +241,7 @@ do_summary3_int <- function(x, y, z, in_place = FALSE, do_max = TRUE) {
 #' @name helper1
 #' @title Helper
 #' @param x,y,miny,maxy Inputs.
+#' @noRd
 NULL
 
 helper1 <- function(x, y, miny, maxy) {

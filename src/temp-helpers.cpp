@@ -1,9 +1,11 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+// #nocov start
 //' @name helper1
 //' @title Helper
 //' @param x,y,miny,maxy Inputs.
+//' @noRd
 
 // [[Rcpp::export]]
 int helper1(NumericVector x, NumericVector y, double miny, double maxy) {
@@ -22,5 +24,5 @@ int helper1(NumericVector x, NumericVector y, double miny, double maxy) {
   }
   return o;
 }
-
+// # nocov end
 
