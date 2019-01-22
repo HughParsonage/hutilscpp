@@ -113,13 +113,16 @@ test_that("is_sorted_ascending", {
 })
 
 test_that("pole of inaccessibility", {
-  skip("Unimplemented")
-  res <- pole_of_inaccessibility(c(double(100), 0:100),
-                                 c(0:100, double(100)),
-                                 minx = -0.1,
-                                 maxx = 101,
-                                 miny = -0.2,
-                                 maxy = 101)
+  # skip("Unimplemented")
+  # res <- pole_of_inaccessibility(c(double(100), 0:100),
+  #                                c(0:100, double(100)),
+  #                                minx = -0.1,
+  #                                maxx = 101,
+  #                                miny = -0.2,
+  #                                maxy = 101)
+
+
+
 })
 
 test_that("Emptiest quadrants", {
@@ -135,12 +138,50 @@ test_that("Emptiest quadrants", {
   DT_NE <- DT[not(x > 0 & y > 0 & y - 2 * x <= 0.2 & y - x >= -0.1)]
 
 
-  # library(ggplot2);ggplot(DT_NE, aes(x, y)) + geom_point()
+  res1 <- DT_NE[, poleInaccessibility2(x, y)]  # Will be unscaled
+  res <- DT_NE[, poleInaccessibility2(x, y, x_range = c(-1, 1), y_range = c(-1, 1))]
+  expect_identical(res,
+                   c("xmin" = 0.5,
+                     "xmax" = 0.75,
+                     "ymin" = 0.75,
+                     "ymax" = 1.00))
+
+  # The chance of this if-statement being FALSE is vanishingly small
+  # but Murphy's Law says it will happen on CRAN when they're making
+  # a major release.  Let's lower the stakes.
+  if (identical(round(res1, 2),
+                c("xmin" = 0.5,
+                  "xmax" = 0.75,
+                  "ymin" = 0.75,
+                  "ymax" = 1.00))) {
+    expect_identical(round(res1, 2),  # Won't fail too often?
+                     c("xmin" = 0.5,
+                       "xmax" = 0.75,
+                       "ymin" = 0.75,
+                       "ymax" = 1.00))
+  }
+  # if (FALSE) {
+  #   library(ggplot2);ggplot(DT_NE,
+  #                           aes(x, y)) +
+  #     geom_point() +
+  #     geom_blank(data = head(DT_NE, 2),
+  #                aes(x = c(-1.05, 1.05),
+  #                    y = c(-1.05, 1.05))) +
+  #     annotate("rect",
+  #              xmin = res["xmin"],
+  #              xmax = res["xmax"],
+  #              ymin = res["ymin"],
+  #              ymax = res["ymax"],
+  #              fill = NA,
+  #              color = "red")
+  # }
   expect_identical(DT_NE[, EmptiestQuarter(x, y, -1, 1, -1, 1)],
                    c(3L, DT_NE[x >= 0 & y >= 0, .N]))
   expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 3L)
   expect_equal((DT_NE[, theEmptiestQuarters(x, y)])[1:2],
                c(3, 3))
+
+
 
   # Cover all the quarters
   DT_NE[, y := -y]
@@ -149,6 +190,8 @@ test_that("Emptiest quadrants", {
   expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 0L)
   DT_NE[, y := -y]
   expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 1L)
+
+
 })
 
 

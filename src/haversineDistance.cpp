@@ -307,6 +307,21 @@ IntegerVector theEmptiestQuarters (NumericVector x,
   return out;
 }
 
+// IntegerVector FirstEmptyQtr (NumericVector x,
+//                              NumericVector y,
+//                              double minx = 1,
+//                              double maxx = -1,
+//                              double miny = 1,
+//                              double maxy = -1,
+//                              int depth = 4) {
+//   for (int xp = 1; xp <= depth; ++xp) {
+//     int two_xp = pow(2, xp);
+//     for ()
+//   }
+// }
+
+
+
 // [[Rcpp::export]]
 List pole_of_inaccessibility (NumericVector x,
                               NumericVector y,
