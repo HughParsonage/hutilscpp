@@ -214,6 +214,12 @@ test_that("Emptiest quadrants", {
                            y > res3["ymin"] &
                            y < res3["ymax"])])
 
+  res3 <- DT_NE[, poleInaccessibility3(x, y, x_range = c(-1, 1), y_range = c(-1, 1))]
+  expect_false(DT_NE[, any(x > res3["xmin"] &
+                             x < res3["xmax"] &
+                             y > res3["ymin"] &
+                             y < res3["ymax"])])
+
 
   expect_identical(DT_NE[, EmptiestQuarter(x, y, -1, 1, -1, 1)],
                    c(3L, DT_NE[x >= 0 & y >= 0, .N]))
@@ -235,6 +241,33 @@ test_that("Emptiest quadrants", {
   expect_identical(first(DT_NE[, theEmptiestQuarters(x, y)]), 1L)
 
 
+})
+
+test_that("poleInaccessibility error handling", {
+  expect_error(poleInaccessibility2(), regexp = "were all NULL")
+  expect_error(poleInaccessibility3(), regexp = "were all NULL")
+})
+
+test_that("poleInaccessibility3 infinite xmin_new's", {
+  # Essentially need to test when a box occurs at the edges
+  library(data.table)
+  DT <- data.table(i = runif(10000),
+                   j = runif(10000))
+  DT_NE <- DT[i <= 0.9 | j <= 0.9]
+  res <- DT_NE[, poleInaccessibility3(i, j)]
+  expect_equal(round(res, 2),
+               c(xmin = 0.9,
+                 xmax = 1.0,
+                 ymin = 0.9,
+                 ymax = 1.0))
+  DT_NE[, x := 1 - j][, y := 1 - i]
+  setnames(DT_NE, c("i", "j"), c("LATITUDE", "LONGITUDE"))
+  res <- poleInaccessibility3(DT = DT_NE)
+  expect_equal(round(res, 2),
+               c(xmin = 0.9,
+                 xmax = 1.0,
+                 ymin = 0.9,
+                 ymax = 1.0))
 })
 
 
