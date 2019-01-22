@@ -26,7 +26,20 @@ poleInaccessibility2 <- function(x = NULL,
     setnames(DT,
              c("x", "y"),
              c("LONGITUDE", "LATITUDE"))
+  } else {
+    if (!hasName(DT, "LATITUDE") || !hasName(DT, "LONGITUDE")) {
+      stop("`DT` was supplied but did not have both a column 'LATITUDE' and a column 'LONGITUDE'.")
+    }
+
+    if (!is.null(x) || !is.null(y)) {
+      warning("`DT` was provided, but `x` and `y` are not both NULL and will be ignored.")
+    }
   }
+  # CRAN NOTE avoidance
+  LATITUDE <- LONGITUDE <- NULL
+
+  # Get the ranges so we can remap to the original scale
+  # after we identify the 'binary' position of the empty ball
   if (is.null(x_range)) {
     x_range <- DT[, range_rcpp(LONGITUDE)]
     global_minx <- x_range[1]
@@ -120,7 +133,17 @@ poleInaccessibility3 <- function(x = NULL,
     setnames(DT,
              c("x", "y"),
              c("LONGITUDE", "LATITUDE"))
+  } else {
+    if (!hasName(DT, "LATITUDE") || !hasName(DT, "LONGITUDE")) {
+      stop("`DT` was supplied but did not have both a column 'LATITUDE' and a column 'LONGITUDE'.")
+    }
+
+    if (!is.null(x) || !is.null(y)) {
+      warning("`DT` was provided, but `x` and `y` are not both NULL and will be ignored.")
+    }
   }
+  # CRAN NOTE avoidance
+  LATITUDE <- LONGITUDE <- NULL
   if (is.null(x_range)) {
     x_range <- DT[, range_rcpp(LONGITUDE)]
     global_minx <- x_range[1]
@@ -138,9 +161,7 @@ poleInaccessibility3 <- function(x = NULL,
     global_maxy <- y_range[2]
   }
 
-  p2 <- poleInaccessibility2(x = x,
-                             y = y,
-                             DT = DT,
+  p2 <- poleInaccessibility2(DT = DT,
                              x_range = x_range,
                              y_range = y_range)
   stopifnot(hasName(DT, "LONGITUDE"))

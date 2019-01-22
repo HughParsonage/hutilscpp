@@ -251,15 +251,23 @@ test_that("poleInaccessibility error handling", {
 test_that("poleInaccessibility3 infinite xmin_new's", {
   # Essentially need to test when a box occurs at the edges
   library(data.table)
-  DT <- data.table(i = runif(10000),
-                   j = runif(10000))
-  DT_NE <- DT[i <= 0.9 | j <= 0.9]
+  library(hutils) # for implies
+  DT <- data.table(i = c(runif(50000), 0.9),
+                   j = c(runif(50000), 0.9))
+  DT_NE <- DT[implies(i > 0.9, j <= 0.9)]
   res <- DT_NE[, poleInaccessibility3(i, j)]
+  if (round(res[1], 2) != 0.90 ||
+      round(res[3], 2) != 0.90) {
+    if (identical(Sys.getenv("USERNAME"), "hughp")) {
+      saveRDS(DT, "~/hutilscpp/data-raw/DT260.rds")
+    }
+  }
   expect_equal(round(res, 2),
                c(xmin = 0.9,
                  xmax = 1.0,
                  ymin = 0.9,
                  ymax = 1.0))
+  DT_NE <- DT[i <= 0.9 | j <= 0.9]
   DT_NE[, x := 1 - j][, y := 1 - i]
   setnames(DT_NE, c("i", "j"), c("LATITUDE", "LONGITUDE"))
   res <- poleInaccessibility3(DT = DT_NE)
