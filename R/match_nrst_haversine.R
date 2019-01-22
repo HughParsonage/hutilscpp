@@ -118,6 +118,10 @@ match_nrst_haversine <- function(lat,
     }
   }
 
+
+
+
+
   if (length(Index) != length(addresses_lat)) {
     warning("`Table` was provided, but was not the same ",
             "length as `addresses_lat`, ",

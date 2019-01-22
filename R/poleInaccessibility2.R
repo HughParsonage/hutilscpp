@@ -28,15 +28,17 @@ poleInaccessibility2 <- function(x = NULL,
              c("LONGITUDE", "LATITUDE"))
   }
   if (is.null(x_range)) {
-    global_minx <- DT[, min(x)]
-    global_maxx <- DT[, max(x)]
+    x_range <- DT[, range_rcpp(LONGITUDE)]
+    global_minx <- x_range[1]
+    global_maxx <- x_range[2]
   } else {
     global_minx <- x_range[1]
     global_maxx <- x_range[2]
   }
   if (is.null(y_range)) {
-    global_miny <- DT[, min(y)]
-    global_maxy <- DT[, max(y)]
+    y_range <- DT[, range_rcpp(LATITUDE)]
+    global_miny <- y_range[1]
+    global_maxy <- y_range[2]
   } else {
     global_miny <- y_range[1]
     global_maxy <- y_range[2]
@@ -58,7 +60,9 @@ poleInaccessibility2 <- function(x = NULL,
       setkeyv(DT_expand, key(n_by_quarter))
 
       zero_by_quarter <-
-        DT_expand[!n_by_quarter]
+        # n = 1L because we only want/need the first?
+        head(DT_expand[!n_by_quarter], 1L) # anti-join to identify
+
     }
   }
 
@@ -80,6 +84,7 @@ poleInaccessibility2 <- function(x = NULL,
 cut_DT <- function(DT, depth = 1L, x_range = NULL, y_range = NULL) {
   stopifnot(hasName(DT, "LONGITUDE"))
   stopifnot(hasName(DT, "LATITUDE"))
+  LONGITUDE <- LATITUDE <- NULL
   if (is.null(x_range)) {
     x_range <- DT[, range_rcpp(LONGITUDE)]
   }
@@ -100,4 +105,87 @@ cut_DT <- function(DT, depth = 1L, x_range = NULL, y_range = NULL) {
   setnames(DT, "ybreaks", paste0("ybreaks", depth))
   DT[]
 }
+
+poleInaccessibility3 <- function(x = NULL,
+                                 y = NULL,
+                                 DT = NULL,
+                                 x_range = NULL,
+                                 y_range = NULL) {
+  if (is.null(DT) && is.null(x) && is.null(y)) {
+    stop("`DT`, `x`, and `y` were all NULL. ",
+         "`DT` or both `x` and `y` must be provided.")
+  }
+  if (is.null(DT)) {
+    DT <- data.table(x, y)
+    setnames(DT,
+             c("x", "y"),
+             c("LONGITUDE", "LATITUDE"))
+  }
+  if (is.null(x_range)) {
+    x_range <- DT[, range_rcpp(LONGITUDE)]
+    global_minx <- x_range[1]
+    global_maxx <- x_range[2]
+  } else {
+    global_minx <- x_range[1]
+    global_maxx <- x_range[2]
+  }
+  if (is.null(y_range)) {
+    y_range <- DT[, range_rcpp(LATITUDE)]
+    global_miny <- y_range[1]
+    global_maxy <- y_range[2]
+  } else {
+    global_miny <- y_range[1]
+    global_maxy <- y_range[2]
+  }
+
+  p2 <- poleInaccessibility2(x = x,
+                             y = y,
+                             DT = DT,
+                             x_range = x_range,
+                             y_range = y_range)
+  stopifnot(hasName(DT, "LONGITUDE"))
+  stopifnot(hasName(DT, "LATITUDE"))
+  LONGITUDE <- LATITUDE <- NULL
+  # range_dbl internals has four, which
+  # will conflict with %between%
+  y_box <- c(p2["ymin"], p2["ymax"])
+  stopifnot(length(y_box) == 2L)
+
+  # suppress warnings about no non-missing arguments to min
+  # we don't mind +/-Inf as they will be excluded in the if
+  # statements ante
+  suppressWarnings({
+    # Look outward, west and east, stop once we hit any point
+    xmin_new <-  DT[LATITUDE %between% c(y_box) & LONGITUDE < p2["xmin"], max(LONGITUDE)]
+    xmax_new <-  DT[LATITUDE %between% c(y_box) & LONGITUDE > p2["xmax"], min(LONGITUDE)]
+
+
+    if (xmin_new < global_minx) {
+      xmin_new <- global_minx
+    }
+    if (xmax_new > global_maxx) {
+      xmax_new <- global_maxx
+    }
+    x_box <- c(xmin_new, xmax_new)
+    # We need to take into account the new xmins immediately to ensure we take the
+    # *intersection* of empty boxes
+    ymin_new <- DT[LONGITUDE %between% c(x_box) & LATITUDE < p2["ymin"], max(LATITUDE)]
+    ymax_new <- DT[LONGITUDE %between% c(x_box) & LATITUDE > p2["ymax"], min(LATITUDE)]
+
+  })
+  if (ymin_new < global_miny) {
+    ymin_new <- global_miny
+  }
+  if (ymax_new > global_maxy) {
+    ymax_new <- global_maxy
+  }
+
+  c("xmin" = xmin_new,
+    "xmax" = xmax_new,
+    "ymin" = ymin_new,
+    "ymax" = ymax_new)
+}
+
+
+
 
