@@ -33,6 +33,15 @@ test_that("Multiple optionals", {
   res <- extractMandatory(x, c("D", "e", "f"), 1L)
   expect_false("[" %in% res$support)
   expect_true("d" %in% res$support)
+
+  x <- strsplit("a \\Defg[a [b{q{}}] c]{df} \\Def{a} b", split = "")[[1]]
+  res <- extractMandatory(x, c("D", "e", "f"), 1L)
+})
+
+test_that("Bad document", {
+  x <- strsplit("a{b", split = "")[[1]]
+  res <- extractMandatory(x, c("foo"))
+  expect_false(any(nzchar(res$support)))
 })
 
 test_that("Big popper", {
