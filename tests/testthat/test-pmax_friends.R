@@ -198,10 +198,6 @@ test_that("pmax3", {
   expect_error(pmax3(x, z[1:5], z), "length 5")
   expect_error(pmax3(x, z, z[1:4]), "length 4")
 
-  # Finally, fall through
-  expect_equal(pmax3("a", "b", "c"),
-               pmax("a", pmax("b", "c")))
-
 })
 
 test_that("pmin3", {
@@ -239,10 +235,6 @@ test_that("pmin3", {
   expect_equal(pmin3(x, z, 1L), pmin(x, pmin(z, 1L)))
   expect_error(pmin3(x, z[1:5], z), "length 5")
   expect_error(pmin3(x, z, z[1:4]), "length 4")
-
-  # Finally, fall through
-  expect_equal(pmin3("a", "b", "c"),
-               pmin("a", pmin("b", "c")))
 
 
 })
