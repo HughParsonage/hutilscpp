@@ -253,8 +253,8 @@ test_that("poleInaccessibility3 infinite xmin_new's", {
   # Essentially need to test when a box occurs at the edges
   library(data.table)
   library(hutils) # for implies
-  DT <- data.table(i = c(runif(5000), runif(50000, 0.8, 1), 0.9),
-                   j = c(runif(5000), runif(50000, 0.8, 1), 0.9))
+  DT <- data.table(i = c(runif(5000), runif(50000, 0.8, 1), 0.9, 1, 0),
+                   j = c(runif(5000), runif(50000, 0.8, 1), 0.9, 1, 0))
   DT_NE <- DT[implies(i > 0.9, j <= 0.9)]
   res <- DT_NE[, poleInaccessibility3(i, j)]
   if (round(res[1], 2) != 0.90 ||
@@ -277,6 +277,36 @@ test_that("poleInaccessibility3 infinite xmin_new's", {
                  xmax = 1.0,
                  ymin = 0.9,
                  ymax = 1.0))
+  rm(DT, DT_NE)
+
+  # Cover xymins
+  DT <- data.table(i = c(runif(5000), runif(50000, 0.8, 1), 0.9, 1, 0),
+                   j = c(runif(5000), runif(50000, 0.8, 1), 0.9, 1, 0))
+  DT_NE <- DT[implies(i > 0.9, j <= 0.9)]
+  DT_NE[, y := -i][, x := -j]
+  res <- DT_NE[, poleInaccessibility3(x, y)]
+  expect_equal(round(res, 2),
+               c(xmin = -1.0,
+                 xmax = -0.9,
+                 ymin = -1.0,
+                 ymax = -0.9))
+})
+
+test_that("poleInaccessibility error handling", {
+  expect_error(poleInaccessibility2(data.table(), "supplied but did not have.*LATITUDE.*LONGITUDE"))
+  expect_warning(poleInaccessibility2(data.table(LONGITUDE = 1:5 + 0,
+                                                 LATITUDE = 11:15 + 0),
+                                      x = 0, y = 0),
+                 "`x` and `y` are not both NULL and will be ignored.",
+                 fixed = TRUE)
+  expect_error(poleInaccessibility3(data.table(), "supplied but did not have.*LATITUDE.*LONGITUDE"))
+  expect_warning(poleInaccessibility3(data.table(LONGITUDE = 1:5 + 0,
+                                                 LATITUDE = 11:15 + 0),
+                                      x = 0, y = 0),
+                 "`x` and `y` are not both NULL and will be ignored.",
+                 fixed = TRUE)
+  expect_error(cut_DT(data.table()),
+               "lacked column")
 })
 
 

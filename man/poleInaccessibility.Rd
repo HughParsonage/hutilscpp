@@ -7,10 +7,10 @@
 \title{Find a binary pole of inaccesibility}
 \usage{
 poleInaccessibility2(x = NULL, y = NULL, DT = NULL, x_range = NULL,
-  y_range = NULL)
+  y_range = NULL, copy_DT = TRUE)
 
 poleInaccessibility3(x = NULL, y = NULL, DT = NULL, x_range = NULL,
-  y_range = NULL, test_both = TRUE)
+  y_range = NULL, copy_DT = TRUE, test_both = TRUE)
 }
 \arguments{
 \item{x, y}{Coordinates.}
@@ -21,6 +21,9 @@ the \code{x} and \code{y} coordinates.}
 \item{x_range, y_range}{Numeric vectors of length-2; the range of \code{x} and \code{y}.
 Use this rather than the default when the 'vicinity' of \code{x,y} is different from
 the minimum closed rectangle covering the points.}
+
+\item{copy_DT}{(logical, default: \code{TRUE}) Run \code{\link[data.table]{copy}} on \code{DT}
+before proceeding. If \code{FALSE}, \code{DT} have additional columns updated by reference.}
 
 \item{test_both}{(logical, default: \code{TRUE}) For \code{3}, test both stretching vertically
 then horizontally and horizontally then vertically.}

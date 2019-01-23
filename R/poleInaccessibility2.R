@@ -8,6 +8,8 @@
 #' the minimum closed rectangle covering the points.
 #' @param test_both (logical, default: \code{TRUE}) For \code{3}, test both stretching vertically
 #' then horizontally and horizontally then vertically.
+#' @param copy_DT (logical, default: \code{TRUE}) Run \code{\link[data.table]{copy}} on \code{DT}
+#' before proceeding. If \code{FALSE}, \code{DT} have additional columns updated by reference.
 #' @return
 #' \describe{
 #' \item{\code{poleInaccessibility2}}{
@@ -42,7 +44,8 @@ poleInaccessibility2 <- function(x = NULL,
                                  y = NULL,
                                  DT = NULL,
                                  x_range = NULL,
-                                 y_range = NULL) {
+                                 y_range = NULL,
+                                 copy_DT = TRUE) {
   if (is.null(DT) && is.null(x) && is.null(y)) {
     stop("`DT`, `x`, and `y` were all NULL. ",
          "`DT` or both `x` and `y` must be provided.")
@@ -59,6 +62,9 @@ poleInaccessibility2 <- function(x = NULL,
 
     if (!is.null(x) || !is.null(y)) {
       warning("`DT` was provided, but `x` and `y` are not both NULL and will be ignored.")
+    }
+    if (copy_DT) {
+      DT <- copy(DT)
     }
   }
   # CRAN NOTE avoidance
@@ -152,6 +158,7 @@ poleInaccessibility3 <- function(x = NULL,
                                  DT = NULL,
                                  x_range = NULL,
                                  y_range = NULL,
+                                 copy_DT = TRUE,
                                  test_both = TRUE) {
   if (is.null(DT) && is.null(x) && is.null(y)) {
     stop("`DT`, `x`, and `y` were all NULL. ",
@@ -169,6 +176,9 @@ poleInaccessibility3 <- function(x = NULL,
 
     if (!is.null(x) || !is.null(y)) {
       warning("`DT` was provided, but `x` and `y` are not both NULL and will be ignored.")
+    }
+    if (copy_DT) {
+      DT <- copy(DT)
     }
   }
   # CRAN NOTE avoidance
@@ -192,7 +202,9 @@ poleInaccessibility3 <- function(x = NULL,
 
   p2 <- poleInaccessibility2(DT = DT,
                              x_range = x_range,
-                             y_range = y_range)
+                             y_range = y_range,
+                             # Already copied
+                             copy_DT = FALSE)
   stopifnot(hasName(DT, "LONGITUDE"))
   stopifnot(hasName(DT, "LATITUDE"))
   LONGITUDE <- LATITUDE <- NULL
