@@ -7,9 +7,9 @@ using namespace Rcpp;
 
 // #nocov start
 // [[Rcpp::export]]
-int showValue(const char* what, double x) {
-  // Rcout << " " << what << " \t " << x << std::endl;
-  return 0;
+void showValue(const char* what, double x) {
+  Rcout << " " << what << " \t " << x << std::endl;
+  // return 0;
 }
 // #nocov end
 
@@ -495,16 +495,16 @@ List match_min_Haversine (NumericVector lat1,
       }
     }
 
-
     if (do_verify_box) {
-
       // The half-length of the square to check within
       double box_r = do_euclid_dist(loni, lon2[k], lati, lat2[k]);
       double cur_dist_km_new = 0;
-      double box_max_lat = lat2[k] + box_r;
-      double box_min_lat = lat2[k] - box_r;
-      double box_max_lon = lon2[k] + box_r;
-      double box_min_lon = lon2[k] - box_r;
+
+      // Box is around the *target*
+      double box_max_lat = lati + box_r;
+      double box_min_lat = lati - box_r;
+      double box_max_lon = loni + box_r;
+      double box_min_lon = loni - box_r;
       for (int j = 0; j < N2; ++j) {
         double lat2j = lat2[j], lon2j = lon2[j];
         if (lat2j > box_min_lat &&
@@ -513,11 +513,6 @@ List match_min_Haversine (NumericVector lat1,
             lon2j < box_max_lon) {
           ++nPoints_Require_Box_Verify;
           cur_dist_km_new = haversine_distance(lati, loni, lat2j, lon2j);
-          if (i == 0 && (j == 1 || j == N2 - 1 || j == k)) {
-            showValue("min_dist_km", min_dist_km);
-            showValue("cur_dist_km_new", cur_dist_km_new);
-            showValue("box_r", box_r);
-          }
           if (cur_dist_km_new < min_dist_km) {
             k = 0;
             k += j;

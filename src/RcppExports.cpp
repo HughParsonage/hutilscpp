@@ -186,15 +186,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // showValue
-int showValue(const char* what, double x);
+void showValue(const char* what, double x);
 RcppExport SEXP _hutilscpp_showValue(SEXP whatSEXP, SEXP xSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const char* >::type what(whatSEXP);
     Rcpp::traits::input_parameter< double >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(showValue(what, x));
-    return rcpp_result_gen;
+    showValue(what, x);
+    return R_NilValue;
 END_RCPP
 }
 // haversine_distance

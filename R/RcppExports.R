@@ -70,7 +70,7 @@ do_which_first_int_int <- function(x, y, eq = TRUE, gt = FALSE, lt = FALSE) {
 }
 
 showValue <- function(what, x) {
-    .Call(`_hutilscpp_showValue`, what, x)
+    invisible(.Call(`_hutilscpp_showValue`, what, x))
 }
 
 haversine_distance <- function(olat1, olon1, olat2, olon2, unitless = FALSE) {

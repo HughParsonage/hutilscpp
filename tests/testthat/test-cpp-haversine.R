@@ -112,18 +112,6 @@ test_that("is_sorted_ascending", {
   expect_false(is_sorted_ascending(c(0, 1.5, 3, 1)))
 })
 
-test_that("pole of inaccessibility", {
-  skip("Unimplemented")
-  # res <- pole_of_inaccessibility(c(double(100), 0:100),
-  #                                c(0:100, double(100)),
-  #                                minx = -0.1,
-  #                                maxx = 101,
-  #                                miny = -0.2,
-  #                                maxy = 101)
-
-
-})
-
 test_that("Emptiest quadrants", {
   library(data.table)
   x <- c(sample(0:49, size = 2000, replace = TRUE), sample(76:100, size = 1000, replace = TRUE))
@@ -323,24 +311,17 @@ test_that("match_min_haversine stops first at sufficiently close, then gets clos
   expect_equal(pos2[["pos"]], 2L)
   expect_equal(floor(pos2[["dist"]]), 55)
   pos3 <-
-    match_min_Haversine(0, 0,
-                        y, x,
-                        1L,
-                        r = 0,
-                        dist0_km = 20,
-                        do_verify_box = FALSE,
-                        verify_cartR = FALSE,
-                        cartR = 0)
+    match_nrst_haversine(0, 0,
+                         y, x,
+                         close_enough = "70km",
+                         .verify_box = FALSE)
+
 
   pos4 <-
-    match_min_Haversine(0, 0,
-                        y, x,
-                        1L,
-                        r = 0,
-                        dist0_km = 20,
-                        do_verify_box = TRUE,
-                        verify_cartR = FALSE,
-                        cartR = 0)
+    match_nrst_haversine(0, 0,
+                         y, x,
+                         close_enough = "70km",
+                         .verify_box = TRUE)
   expect_equal(pos3[["pos"]], 3L)
   expect_equal(pos4[["pos"]], 4L)
 
