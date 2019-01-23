@@ -101,10 +101,6 @@ theEmptiestQuarters <- function(x, y, minx = 1, maxx = -1, miny = 1, maxy = -1, 
     .Call(`_hutilscpp_theEmptiestQuarters`, x, y, minx, maxx, miny, maxy, depth)
 }
 
-pole_of_inaccessibility <- function(x, y, minx, maxx, miny, maxy, chances = 10L) {
-    .Call(`_hutilscpp_pole_of_inaccessibility`, x, y, minx, maxx, miny, maxy, chances)
-}
-
 which_min_HaversineDistance <- function(lat1, lon1, lat2, lon2, upperBound = 10) {
     .Call(`_hutilscpp_which_min_HaversineDistance`, lat1, lon1, lat2, lon2, upperBound)
 }
