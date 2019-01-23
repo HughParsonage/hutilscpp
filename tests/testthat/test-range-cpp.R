@@ -42,3 +42,18 @@ test_that("halting", {
   expect_equal(y[4], c(4))
 })
 
+test_that("range on empty", {
+  expect_warning(range0 <- range_rcpp(double(0)),
+                 regexp = "no non-missing arguments to range_rcpp; returning c(Inf, -Inf).",
+                 fixed = TRUE)
+  expect_equal(range0, c(Inf, -Inf))
+  expect_warning(range_rcpp(integer(0)),
+                 regexp = "no non-missing arguments to range_rcpp; returning c(Inf, -Inf).",
+                 fixed = TRUE)
+  expect_warning(range0i <- range_rcpp(integer(0), integer0_range_is_integer = TRUE),
+                 regexp = "no non-missing arguments to range_rcpp; returning c(INT_MAX, -INT_MAX).",
+                 fixed = TRUE)
+  expect_true(is.integer(range0i))
+  expect_true(is.unsorted(range0i))
+})
+

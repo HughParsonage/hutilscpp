@@ -4,13 +4,20 @@
 \alias{range_rcpp}
 \title{Range C++}
 \usage{
-range_rcpp(x, warn_empty = TRUE)
+range_rcpp(x, warn_empty = TRUE, integer0_range_is_integer = FALSE)
 }
 \arguments{
 \item{x}{A vector for which the range is desired. Missing values
 have no defined behaviour.}
 
-\item{warn_empty}{(logical, default: \code{TRUE})}
+\item{warn_empty}{(logical, default: \code{TRUE}) If \code{x} is
+empty (i.e. has no length), should a warning be emitted (like \code{\link[base]{range}})?}
+
+\item{integer0_range_is_integer}{(logical, default: \code{FALSE})
+If \code{x} is a length-zero integer, should the result also be an integer?
+Set to \code{FALSE} for compatibility with \code{\link[base]{range}}, but can
+be set to \code{TRUE} if an integer result is desired, in which case
+\code{range_rcpp(integer())} is \code{(INT_MAX, -INT_MAX)}.}
 }
 \value{
 A vector, the first two positions give the range and
