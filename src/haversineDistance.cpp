@@ -531,6 +531,8 @@ List match_min_Haversine (NumericVector lat1,
         double cur_dist_km = 0;
         cur_dist_km = haversine_distance(lati, loni, latj, lonj, false);
         if (cur_dist_km < min_dist_km) {
+          k = 0;
+          k += j;
           min_dist_km = cur_dist_km;
           if (min_dist_km < dist0_km) {
             break;

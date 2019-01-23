@@ -241,43 +241,36 @@ test_that("poleInaccessibility3 infinite xmin_new's", {
   # Essentially need to test when a box occurs at the edges
   library(data.table)
   library(hutils) # for implies
-  DT <- data.table(i = c(runif(5000), runif(50000, 0.85, 1), 0.9, 1, 0),
-                   j = c(runif(5000), runif(50000, 0.85, 1), 0.9, 1, 0))
-  DT_NE <- DT[implies(i > 0.9, j <= 0.9)]
-  res <- DT_NE[, poleInaccessibility3(i, j)]
-  if (round(res[1], 2) != 0.90 ||
-      round(res[3], 2) != 0.90) {
-    if (identical(Sys.getenv("USERNAME"), "hughp")) {
-      saveRDS(DT, "~/hutilscpp/data-raw/DT260.rds")
-    }
-  }
-  expect_equal(round(res, 2),
-               c(xmin = 0.9,
+  DT <- data.table(x = c(runif(10000),
+                         runif(10000) * 0.9,
+                         0.91, 0.92,
+                         # Complete the box
+                         1, 0.909),
+                   y = c(runif(10000) * 0.9,
+                         runif(10000),
+                         0.925, 0.91,
+                         # Complete the box
+                         0.909, 1))
+  resT <- DT[, poleInaccessibility3(x, y)]
+  resF <- DT[, poleInaccessibility3(x, y, test_both = FALSE)]
+  expect_equal(resT,
+               c(xmin = 0.92,
                  xmax = 1.0,
-                 ymin = 0.9,
+                 ymin = 0.909,
                  ymax = 1.0))
-  DT_NE <- DT[implies(i > 0.9, j <= 0.9)]
-  DT_NE[, x := 1 - j][, y := 1 - i]
-  setnames(DT_NE, c("i", "j"), c("LATITUDE", "LONGITUDE"))
-  res <- poleInaccessibility3(DT = DT_NE)
-  expect_equal(round(res, 2),
-               c(xmin = 0.9,
+  expect_equal(resF,
+               c(xmin = 0.909,
                  xmax = 1.0,
-                 ymin = 0.9,
+                 ymin = 0.925,
                  ymax = 1.0))
-  rm(DT, DT_NE)
 
-  # Cover xymins
-  DT <- data.table(i = c(runif(5000), runif(50000, 0.85, 1), 0.9, 1, 0),
-                   j = c(runif(5000), runif(50000, 0.85, 1), 0.9, 1, 0))
-  DT_NE <- DT[implies(i > 0.9, j <= 0.9)]
-  DT_NE[, y := -i][, x := -j]
-  res <- DT_NE[, poleInaccessibility3(x, y)]
-  expect_equal(round(res, 2),
-               c(xmin = -1.0,
-                 xmax = -0.9,
+  DT[, y := -y][, x := -x]
+  res <- DT[, poleInaccessibility3(x, y)]
+  expect_equal(res,
+               c(xmin = -1,
+                 xmax = -0.92,
                  ymin = -1.0,
-                 ymax = -0.9))
+                 ymax = -0.909))
 })
 
 test_that("poleInaccessibility error handling", {
@@ -324,8 +317,21 @@ test_that("match_min_haversine stops first at sufficiently close, then gets clos
                          .verify_box = TRUE)
   expect_equal(pos3[["pos"]], 3L)
   expect_equal(pos4[["pos"]], 4L)
+})
 
-
+test_that("When the main match_min_haversine fails to pick a match", {
+  lon <- c(-1, -0.5, 0.1, 0.05)
+  lat <- double(4)
+  match0 <- match_min_Haversine(0, 0,
+                                lat, lon,
+                                r = 0,
+                                # small but nonzero
+                                cartR = 0.00001,
+                                verify_cartR = TRUE,
+                                do_verify_box = FALSE,
+                                tabl = 1L,
+                                dist0_km = 200)
+  expect_equal
 })
 
 
