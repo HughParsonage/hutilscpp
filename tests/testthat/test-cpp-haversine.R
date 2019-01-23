@@ -293,13 +293,15 @@ test_that("poleInaccessibility3 infinite xmin_new's", {
 })
 
 test_that("poleInaccessibility error handling", {
-  expect_error(poleInaccessibility2(data.table(), "supplied but did not have.*LATITUDE.*LONGITUDE"))
+  expect_error(poleInaccessibility2(DT = data.table()),
+               "supplied but did not have.*LATITUDE.*LONGITUDE")
   expect_warning(poleInaccessibility2(data.table(LONGITUDE = 1:5 + 0,
                                                  LATITUDE = 11:15 + 0),
                                       x = 0, y = 0),
                  "`x` and `y` are not both NULL and will be ignored.",
                  fixed = TRUE)
-  expect_error(poleInaccessibility3(data.table(), "supplied but did not have.*LATITUDE.*LONGITUDE"))
+  expect_error(poleInaccessibility3(DT = data.table()),
+               regexp = "supplied but did not have.*LATITUDE.*LONGITUDE")
   expect_warning(poleInaccessibility3(data.table(LONGITUDE = 1:5 + 0,
                                                  LATITUDE = 11:15 + 0),
                                       x = 0, y = 0),
