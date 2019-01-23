@@ -311,5 +311,42 @@ test_that("poleInaccessibility error handling", {
                "lacked column")
 })
 
+test_that("match_min_haversine stops first at sufficiently close, then gets closer", {
+  x <- c(-1, -0.5, 0.1, 0.05)
+  y <- double(4)
+  pos2 <-
+    match_nrst_haversine(0, 0, y, x,
+                         .verify_box = FALSE,
+                         close_enough = "70 km",
+                         R = 0,
+                         cartesian_R = 0)
+  expect_equal(pos2[["pos"]], 2L)
+  expect_equal(floor(pos2[["dist"]]), 55)
+  pos3 <-
+    match_min_Haversine(0, 0,
+                        y, x,
+                        1L,
+                        r = 0,
+                        dist0_km = 20,
+                        do_verify_box = FALSE,
+                        verify_cartR = FALSE,
+                        cartR = 0)
+
+  pos4 <-
+    match_min_Haversine(0, 0,
+                        y, x,
+                        1L,
+                        r = 0,
+                        dist0_km = 20,
+                        do_verify_box = TRUE,
+                        verify_cartR = FALSE,
+                        cartR = 0)
+  expect_equal(pos3[["pos"]], 3L)
+  expect_equal(pos4[["pos"]], 4L)
+
+
+})
+
+
 
 

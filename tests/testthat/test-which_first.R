@@ -37,6 +37,7 @@ test_that("match", {
 test_that("which_first_int_int", {
   x <- sample.int(10, size = 1000, replace = TRUE)
   y <- sample.int(10, size = 1000, replace = TRUE)
+  expect_error(do_which_first_int_int(1:9, 1:10), "lengths")
   expect_identical(do_which_first_int_int(x, y), which.max(x == y))
   expect_identical(do_which_first_int_int(x, y, FALSE), which.max(x != y))
   expect_identical(do_which_first_int_int(x, y, TRUE, gt = TRUE), which.max(x >= y))
