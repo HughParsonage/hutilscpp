@@ -43,6 +43,11 @@ test_that("which_first_int_int", {
   expect_identical(do_which_first_int_int(x, y, TRUE, lt = TRUE), which.max(x <= y))
   expect_identical(do_which_first_int_int(x, y, FALSE, gt = TRUE), which.max(x > y))
   expect_identical(do_which_first_int_int(x, y, FALSE, lt = TRUE), which.max(x < y))
+  x <- c(0L, 1L)
+  y <- c(0L, 1L)
+  expect_identical(do_which_first_int_int(x, y, eq = FALSE), 0L)
+  y <- c(2L, 1L)
+  expect_identical(do_which_first_int_int(y, x, eq = TRUE, lt = TRUE), 2L)
 })
 
 

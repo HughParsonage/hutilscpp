@@ -51,16 +51,16 @@ int do_which_first_int_int (IntegerVector x,
   //  0  1  2  3  4  5
   const int op = !(eq || gt || lt) ? 0 : (eq ? (gt ? 2 : (lt ? 3 : 1)) : (gt ? 4 : 5));
 
-  if (op == 0) {
-    for (int i = 0; i < n; ++i) {
-      int xi = x[i];
-      int yi = y[i];
-      if (xi != yi) {
-        return ++i;
-      }
-    }
-    return 0;
-  }
+  // if (op == 0) {
+  //   for (int i = 0; i < n; ++i) {
+  //     int xi = x[i];
+  //     int yi = y[i];
+  //     if (xi != yi) {
+  //       return ++i;
+  //     }
+  //   }
+  //   return 0;
+  // }
 
   for (int i = 0; i < n; ++i) {
     switch (op) {
