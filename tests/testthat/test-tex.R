@@ -2,7 +2,7 @@ context("test-tex")
 
 test_that("extractMandatory works", {
   library(hutils)
-  x <- c('a', '', 'b', 'd', '{', 'e', '}', '.')
+  x <- c('a', '', 'b', 'd', '{', 'e', '}', '.', 'b', 'e')
   res <- extractMandatory(x, c('b', 'd'), nCommands = 1L)[[1]]
   expect_equal(res,
                if_else(nzchar(res), x, ''))
@@ -25,6 +25,11 @@ test_that("Multiple optionals", {
   expect_true("d" %in% res$support)
 
   x <- strsplit("a \\Def[a [b{q}] c]{df} x", split = "")[[1]]
+  res <- extractMandatory(x, c("D", "e", "f"), 1L)
+  expect_false("[" %in% res$support)
+  expect_true("d" %in% res$support)
+#
+  x <- strsplit("a \\Def[a [b{q{}}] c]{df} xDe", split = "")[[1]]
   res <- extractMandatory(x, c("D", "e", "f"), 1L)
   expect_false("[" %in% res$support)
   expect_true("d" %in% res$support)

@@ -33,6 +33,10 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
   for (int i = 0; i < N; ++i) {
     if (x[i] == command[0]) {
       for (int ci = 1; ci < command_len; ++ci) {
+        // Consider command = \abc and document ends with ab
+        if (i + ci >= N) {
+          break;
+        }
         const char *cii = command[ci];
         const char *xic = x[i + ci];
         // if (x[i + ci] == command[ci]) {
@@ -49,7 +53,7 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
         within_brace = false;
         finish_extract = false;
         k = i + cj;
-        while (!within_brace && k < N) {
+        while (!within_brace && k < N - 1) {
           ++k;
           if (x[k] == " " || x[k] == "") {
             // \abc {def}
@@ -59,7 +63,7 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
             ++opt_group;
             int rel_opt_group = 1;
             int rel_group = 0;
-            while (rel_opt_group && k < N) {
+            while (rel_opt_group && k < N - 1) {
               // just keep moving forward until we get out of the current
               // optional group.
               ++k;
@@ -70,9 +74,8 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
               } else {
                 if (x[k] == "{") {
                   ++rel_group;
-                  while (rel_group && k < N) {
+                  while (rel_group && k < N - 1) {
                     ++k;
-
                     if (x[k] == "}") {
                       --rel_group;
                     } else {
