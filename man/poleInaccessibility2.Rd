@@ -14,7 +14,11 @@ poleInaccessibility2(x = NULL, y = NULL, DT = NULL, x_range = NULL,
 the \code{x} and \code{y} coordinates.}
 
 \item{x_range, y_range}{Numeric vectors of length-2; the range of \code{x} and \code{y}.
-Use this rather than the default}
+Use this rather than the default when the 'vicinity' of \code{x,y} is different from
+the minimum closed rectangle covering the points.}
+
+\item{test_both}{(logical, default: \code{TRUE}) For \code{3}, test both stretching vertically
+then horizontally and horizontally then vertically.}
 }
 \value{
 A named vector containing the

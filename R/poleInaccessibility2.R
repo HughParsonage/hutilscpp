@@ -3,7 +3,10 @@
 #' @param DT A \code{data.table} containing \code{LONGITUDE} and \code{LATITUDE} to define
 #' the \code{x} and \code{y} coordinates.
 #' @param x_range,y_range Numeric vectors of length-2; the range of \code{x} and \code{y}.
-#' Use this rather than the default
+#' Use this rather than the default when the 'vicinity' of \code{x,y} is different from
+#' the minimum closed rectangle covering the points.
+#' @param test_both (logical, default: \code{TRUE}) For \code{3}, test both stretching vertically
+#' then horizontally and horizontally then vertically.
 #' @return A named vector containing the
 #' \code{xmin}, \code{xmax} and
 #' \code{ymin}, \code{ymax} coordinates of
@@ -95,26 +98,27 @@ poleInaccessibility2 <- function(x = NULL,
 
 
 cut_DT <- function(DT, depth = 1L, x_range = NULL, y_range = NULL) {
-  stopifnot(hasName(DT, "LONGITUDE"))
-  stopifnot(hasName(DT, "LATITUDE"))
+  if (anyNA(match(c("LATITUDE", "LONGITUDE"), names(DT), nomatch = NA_integer_))) {
+    stop("`DT` lacked columns 'LATITUDE' and 'LONGITUDE'.")
+  }
   LONGITUDE <- LATITUDE <- NULL
   if (is.null(x_range)) {
-    x_range <- DT[, range_rcpp(LONGITUDE)]
+    x_range <- range_rcpp(.subset2(DT, "LONGITUDE"))
   }
   if (is.null(y_range)) {
-    y_range <- DT[, range_rcpp(LATITUDE)]
+    y_range <- range_rcpp(.subset2(DT, "LATITUDE"))
   }
   DT[, "xbreaks" := .bincode(LONGITUDE,
                              include.lowest = TRUE,
                              breaks = seq.int(from = x_range[1],
                                               to = x_range[2],
-                                              length.out = 2^depth + 1L))]
+                                              length.out = 2^depth + 1))]
   setnames(DT, "xbreaks", paste0("xbreaks", depth))
   DT[, "ybreaks" := .bincode(LATITUDE,
                              include.lowest = TRUE,
                              breaks = seq.int(from = y_range[1],
                                               to = y_range[2],
-                                              length.out = 2^depth + 1L))]
+                                              length.out = 2^depth + 1))]
   setnames(DT, "ybreaks", paste0("ybreaks", depth))
   DT[]
 }
@@ -123,7 +127,8 @@ poleInaccessibility3 <- function(x = NULL,
                                  y = NULL,
                                  DT = NULL,
                                  x_range = NULL,
-                                 y_range = NULL) {
+                                 y_range = NULL,
+                                 test_both = TRUE) {
   if (is.null(DT) && is.null(x) && is.null(y)) {
     stop("`DT`, `x`, and `y` were all NULL. ",
          "`DT` or both `x` and `y` must be provided.")
@@ -134,7 +139,7 @@ poleInaccessibility3 <- function(x = NULL,
              c("x", "y"),
              c("LONGITUDE", "LATITUDE"))
   } else {
-    if (!hasName(DT, "LATITUDE") || !hasName(DT, "LONGITUDE")) {
+    if (anyNA(match(c("LATITUDE", "LONGITUDE"), names(DT), nomatch = NA_integer_))) {
       stop("`DT` was supplied but did not have both a column 'LATITUDE' and a column 'LONGITUDE'.")
     }
 
@@ -180,7 +185,6 @@ poleInaccessibility3 <- function(x = NULL,
     xmin_new <-  DT[LATITUDE %between% c(y_box) & LONGITUDE < p2["xmin"], max(LONGITUDE)]
     xmax_new <-  DT[LATITUDE %between% c(y_box) & LONGITUDE > p2["xmax"], min(LONGITUDE)]
 
-
     if (xmin_new < global_minx) {
       xmin_new <- global_minx
     }
@@ -200,11 +204,45 @@ poleInaccessibility3 <- function(x = NULL,
   if (ymax_new > global_maxy) {
     ymax_new <- global_maxy
   }
+  out <- c("xmin" = xmin_new,
+           "xmax" = xmax_new,
+           "ymin" = ymin_new,
+           "ymax" = ymax_new)
+  A <- (out[2] - out[1]) * (out[4] - out[3])
 
-  c("xmin" = xmin_new,
-    "xmax" = xmax_new,
-    "ymin" = ymin_new,
-    "ymax" = ymax_new)
+  if (test_both) {
+    x_box <- c(p2["xmin"], p2["xmax"])
+    suppressWarnings({
+      ymin_new <- DT[LONGITUDE %between% c(x_box) & LATITUDE < p2["ymin"], max(LATITUDE)]
+      ymax_new <- DT[LONGITUDE %between% c(x_box) & LATITUDE > p2["ymax"], min(LATITUDE)]
+
+      if (ymin_new < global_miny) {
+        ymin_new <- global_miny
+      }
+      if (ymax_new > global_maxy) {
+        ymax_new <- global_maxy
+      }
+      y_box <- c(ymin_new, ymax_new)
+
+      xmin_new <-  DT[LATITUDE %between% c(y_box) & LONGITUDE < p2["xmin"], max(LONGITUDE)]
+      xmax_new <-  DT[LATITUDE %between% c(y_box) & LONGITUDE > p2["xmax"], min(LONGITUDE)]
+    })
+    if (xmin_new < global_minx) {
+      xmin_new <- global_minx
+    }
+    if (xmax_new > global_maxx) {
+      xmax_new <- global_maxx
+    }
+    out2 <- c("xmin" = xmin_new,
+              "xmax" = xmax_new,
+              "ymin" = ymin_new,
+              "ymax" = ymax_new)
+    A2 <- (out2[2] - out2[1]) * (out2[4] - out2[3])
+    if (A2 > A) {
+      return(out2)
+    }
+  }
+  out
 }
 
 

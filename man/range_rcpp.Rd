@@ -4,11 +4,13 @@
 \alias{range_rcpp}
 \title{Range C++}
 \usage{
-range_rcpp(x)
+range_rcpp(x, warn_empty = TRUE)
 }
 \arguments{
 \item{x}{A vector for which the range is desired. Missing values
 have no defined behaviour.}
+
+\item{warn_empty}{(logical, default: \code{TRUE})}
 }
 \value{
 A vector, the first two positions give the range and
