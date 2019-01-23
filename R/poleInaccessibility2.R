@@ -1,4 +1,5 @@
 #' Find a binary pole of inaccesibility
+#' @name poleInaccessibility
 #' @param x,y Coordinates.
 #' @param DT A \code{data.table} containing \code{LONGITUDE} and \code{LATITUDE} to define
 #' the \code{x} and \code{y} coordinates.
@@ -7,14 +8,36 @@
 #' the minimum closed rectangle covering the points.
 #' @param test_both (logical, default: \code{TRUE}) For \code{3}, test both stretching vertically
 #' then horizontally and horizontally then vertically.
-#' @return A named vector containing the
+#' @return
+#' \describe{
+#' \item{\code{poleInaccessibility2}}{
+#' A named vector containing the
 #' \code{xmin}, \code{xmax} and
 #' \code{ymin}, \code{ymax} coordinates of
-#' the largest rectangle of width an integer power of two that is empty.
+#' the largest rectangle of width an integer power of two that is empty.}
+#' \item{\code{poleInaccessibility3}}{
+#' Starting with the rectangle formed by \code{poleInaccessibility2},
+#' the rectangle formed by stretching it out vertically and horizontally until
+#' the edges intersect the points \code{x,y}
+#' }
+#' }
 #'
+#' @examples
+#' library(data.table)
+#' library(hutils)
+#' # A square with a 10 by 10 square of the northeast corner removed
+#' x <- runif(1e4, 0, 100)
+#' y <- runif(1e4, 0, 100)
+#' DT <- data.table(x, y)
+#' # remove the NE corner
+#' DT_NE <- DT[implies(x > 90, y < 89)]
+#' DT_NE[, poleInaccessibility2(x, y)]
+#' DT_NE[, poleInaccessibility3(x, y)]
 #'
+#' @export poleInaccessibility2 poleInaccessibility3
 
 
+#' @rdname poleInaccessibility
 poleInaccessibility2 <- function(x = NULL,
                                  y = NULL,
                                  DT = NULL,
@@ -123,6 +146,7 @@ cut_DT <- function(DT, depth = 1L, x_range = NULL, y_range = NULL) {
   DT[]
 }
 
+#' @rdname poleInaccessibility
 poleInaccessibility3 <- function(x = NULL,
                                  y = NULL,
                                  DT = NULL,
