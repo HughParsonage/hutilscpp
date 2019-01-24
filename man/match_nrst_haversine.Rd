@@ -5,7 +5,7 @@
 \title{Match coordinates to nearest coordinates}
 \usage{
 match_nrst_haversine(lat, lon, addresses_lat, addresses_lon,
-  Index = seq_along(addresses_lat), R = NULL, cartesian_R = NULL,
+  Index = seq_along(addresses_lat), cartesian_R = NULL,
   close_enough = 10, excl_self = FALSE, as.data.table = TRUE,
   .verify_box = TRUE, ncores = 1L)
 }
@@ -18,9 +18,6 @@ match_nrst_haversine(lat, lon, addresses_lat, addresses_lon,
 \item{Index}{A vector the same length as \code{lat} to encode the match between \code{lat,lon}
 and \code{addresses_lat,addresses_lon}. By default, the integer position in
 \code{addresses_lat,addresses_lon}.}
-
-\item{R}{A "radius" of distances outside which distances will not be considered.
-Used for efficiency. The default of \code{R = 0.01} corresponds to about 15 km.}
 
 \item{cartesian_R}{The maximum radius of any address from the points to be geocoded. Used
 to accelerate the detection of minimum distances. Note, as the argument name suggests,
@@ -48,6 +45,9 @@ avoid dumping a huge list to the console.}
 box of radius \eqn{\ell^\infty}.}
 
 \item{ncores}{Integer number of cores to use. Currently not implemented.}
+
+\item{R}{A "radius" of distances outside which distances will not be considered.
+Used for efficiency. The default of \code{R = 0.01} corresponds to about 15 km.}
 }
 \value{
 A list (or \code{data.table} if \code{as.data.table = TRUE}) with two elements,
