@@ -13,10 +13,17 @@
 #' @return A vector, the first two positions give the range and
 #' the next two give the positions where the max and min occur.
 #'
+#' Essentially this is equivalent to \code{c(range(x), which.min(x), which.max(x))}.
+#' Note that the type is not strictly preserved, but no loss should occur. In particular,
+#' logical \code{x} results in an integer result, and a double \code{x} will
+#' have double values for \code{which.min|max(x)}.
+#'
 #'
 #' @export range_rcpp
 
-range_rcpp <- function(x, warn_empty = TRUE, integer0_range_is_integer = FALSE) {
+range_rcpp <- function(x,
+                       warn_empty = TRUE,
+                       integer0_range_is_integer = FALSE) {
   if (!length(x)) {
     if (is.integer(x) && integer0_range_is_integer) {
       if (warn_empty) {
@@ -36,6 +43,21 @@ range_rcpp <- function(x, warn_empty = TRUE, integer0_range_is_integer = FALSE) 
   }
   if (is.double(x)) {
     return(do_range_dbl(x))
+  }
+  if (is.logical(x)) {
+    if (anyNA(x)) {
+      return(c(NA, NA, NA, NA))
+    }
+    if (any(x, na.rm = TRUE)) {
+      if (all(x, na.rm = TRUE)) {
+        o <- c(TRUE, TRUE, rep(do_which_first(x), 2L))
+      } else {
+        o <- c(FALSE, TRUE, do_which_first(x), do_which_first_false(x))
+      }
+    } else {
+      o <- c(FALSE, FALSE, rep(do_which_first_false(x), 2L))
+    }
+    return(o)
   }
   range(x)
 }

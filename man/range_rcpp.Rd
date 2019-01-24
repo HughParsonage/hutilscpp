@@ -22,6 +22,11 @@ be set to \code{TRUE} if an integer result is desired, in which case
 \value{
 A vector, the first two positions give the range and
 the next two give the positions where the max and min occur.
+
+Essentially this is equivalent to \code{c(range(x), which.min(x), which.max(x))}.
+Note that the type is not strictly preserved, but no loss should occur. In particular,
+logical \code{x} results in an integer result, and a double \code{x} will
+have double values for \code{which.min|max(x)}.
 }
 \description{
 Range C++

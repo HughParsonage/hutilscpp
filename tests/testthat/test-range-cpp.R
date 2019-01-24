@@ -57,3 +57,9 @@ test_that("range on empty", {
   expect_true(is.unsorted(range0i))
 })
 
+test_that("Range on empty", {
+  expect_equal(range_rcpp(logical(100)), c(range(logical(100)), 1L, 1L))
+  expect_equal(range_rcpp(!logical(100)), c(range(!logical(100)), 1L, 1L))
+  expect_equal(range_rcpp(c(FALSE, TRUE, FALSE)), c(0L, 1L, 2L, 1L))
+  expect_equal(range_rcpp(c(FALSE, TRUE, NA)), c(NA, NA, NA, NA))
+})
