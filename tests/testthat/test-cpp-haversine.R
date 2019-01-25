@@ -55,7 +55,6 @@ test_that("match_min_Haversine", {
   lon1 <- c(144.96, 144.978)
 
   expect_identical(match_min_Haversine(lat1, lon1, lat2, lon2, 0L)[[1L]], c(5L, 5L))
-  expect_identical(match_min_Haversine(lat1, lon1, lat2, lon2, 0L, r = 0.002)[[1L]], c(5L, 5L))
   expect_identical(match_min_Haversine(lat1, lon1, lat2, lon2, 101:105)[[1L]], c(5L, 5L) + 100L)
 })
 
@@ -299,7 +298,6 @@ test_that("match_min_haversine stops first at sufficiently close, then gets clos
     match_nrst_haversine(0, 0, y, x,
                          .verify_box = FALSE,
                          close_enough = "70 km",
-                         R = 0,
                          cartesian_R = 0)
   expect_equal(pos2[["pos"]], 2L)
   expect_equal(floor(pos2[["dist"]]), 55)
@@ -324,14 +322,13 @@ test_that("When the main match_min_haversine fails to pick a match", {
   lat <- double(4)
   match0 <- match_min_Haversine(0, 0,
                                 lat, lon,
-                                r = 0,
                                 # small but nonzero
                                 cartR = 0.00001,
                                 verify_cartR = TRUE,
                                 do_verify_box = FALSE,
                                 tabl = 1L,
                                 dist0_km = 200)
-  expect_equal
+  expect_equal(match0$pos, 1L)
 })
 
 

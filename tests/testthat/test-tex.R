@@ -40,7 +40,7 @@ test_that("Multiple optionals", {
 
 test_that("Bad document", {
   x <- strsplit("a{b", split = "")[[1]]
-  res <- extractMandatory(x, c("foo"))
+  res <- extractMandatory(x, c("foo"), 1L)
   expect_false(any(nzchar(res$support)))
 })
 
