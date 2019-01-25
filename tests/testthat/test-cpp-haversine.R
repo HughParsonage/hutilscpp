@@ -302,9 +302,11 @@ test_that("match_min_haversine stops first at sufficiently close, then gets clos
   expect_equal(pos2[["pos"]], 2L)
   expect_equal(floor(pos2[["dist"]]), 55)
   pos3 <-
-    match_nrst_haversine(0, 0,
+    match_nrst_haversine(0,
+                         0,
                          y, x,
                          close_enough = "70km",
+                         cartesian_R = 0.4,
                          .verify_box = FALSE)
 
 

@@ -20,10 +20,6 @@ test_that("match_nrst_haversine error", {
                "excl_self")
   expect_error(match_nrst_haversine(lat1, lon1, lat2, lon2, as.data.table = NULL),
                "as.data.table")
-  expect_error(match_nrst_haversine(lat1, lon1, lat2, lon2, R = raw(1)),
-               "raw")
-  expect_error(match_nrst_haversine(lat1, lon1, lat2, lon2, R = 1:2),
-               regexp = "must be length.one")
   expect_error(match_nrst_haversine(lat1, lon1, lat2, lon2, close_enough = "a"),
                "`close_enough` was a character",
                fixed = TRUE)
@@ -71,8 +67,7 @@ test_that("Suffixes", {
                                 seq(148, 151, length.out = 100))
   res10_RInf <- match_nrst_haversine(c(-37, -38), c(150, 149),
                                      seq(-39, -36, length.out = 100),
-                                     seq(148, 151, length.out = 100),
-                                     R = Inf)
+                                     seq(148, 151, length.out = 100))
   res10m <- match_nrst_haversine(c(-37, -38), c(150, 149),
                                  seq(-39, -36, length.out = 100),
                                  seq(148, 151, length.out = 100),
@@ -90,6 +85,7 @@ test_that("Suffixes", {
                                           c(149.95, 150.05),
                                           seq(-1, 1, length.out = 1000),
                                           seq(150, 150, length.out = 1000),
+                                         cartesian_R = 0,
                                          .verify_box = FALSE,
                                           close_enough = 0)
   expect_identical(res_equator_0m[[1]], rep(500L, 2L))
@@ -98,6 +94,7 @@ test_that("Suffixes", {
                                            c(149.95, 150.05),
                                            seq(-1, 1, length.out = 1000),
                                            seq(150, 150, length.out = 1000),
+                                           cartesian = 0,
                                            .verify_box = FALSE,
                                            close_enough = 10e3)
   expect_true(all(res_equator_10km[[2]] < 10))
