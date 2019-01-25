@@ -45,9 +45,6 @@ avoid dumping a huge list to the console.}
 box of radius \eqn{\ell^\infty}.}
 
 \item{ncores}{Integer number of cores to use. Currently not implemented.}
-
-\item{R}{A "radius" of distances outside which distances will not be considered.
-Used for efficiency. The default of \code{R = 0.01} corresponds to about 15 km.}
 }
 \value{
 A list (or \code{data.table} if \code{as.data.table = TRUE}) with two elements,

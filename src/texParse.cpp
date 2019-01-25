@@ -22,7 +22,7 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
   // bool within_optional = false;
   int opt_group = 0;
   int cj = 0;
-  int k = 0;
+
 
   int command_no = 0;
 
@@ -31,7 +31,9 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
   IntegerVector commandOpeners(nCommands);
   IntegerVector commandClosers(nCommands);
   for (int i = 0; i < N; ++i) {
+    int k = 0;
     if (x[i] == command[0]) {
+      showValuea("k", k);
       for (int ci = 1; ci < command_len; ++ci) {
         // Consider command = \abc and document ends with ab
         if (i + ci >= N) {
@@ -40,9 +42,10 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
         const char *cii = command[ci];
         const char *xic = x[i + ci];
         // if (x[i + ci] == command[ci]) {
+        showValuea("i + ci", i + ci);
+        showValuea("cj", cj);
         if (*xic == *cii) {
           ++cj;
-          continue;
         } else {
           cj = 0;
           break;
@@ -54,6 +57,7 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
         finish_extract = false;
         k = i + cj;
         while (!within_brace && k < N - 1) {
+          showValuea("++k1", k);
           ++k;
           if (x[k] == " " || x[k] == "") {
             // \abc {def}
@@ -67,6 +71,7 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
               // just keep moving forward until we get out of the current
               // optional group.
               ++k;
+              showValuea("++k1_rel_group", k);
 
               if (x[k] == "]") {
                 --rel_opt_group;
@@ -91,6 +96,7 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
                 }
               }
             }
+            showValuea("++k2", k);
             // Current position is on the closing ']'
             ++k; // move to next character once we're done with optional group
           }
@@ -101,12 +107,15 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
 
           // abc{xyz} but not abcd{xyz}
           if (x[k] != "" && x[k] != " " && x[k] != "{") {
+            showValuea("x[k]", k);
             k = N + 1;  // effectively break both while loops
           } else {
             commandOpeners[command_no] = k + 1;
           }
         }
 
+        showValuea("at while(k < N), k", k);
+        showValuea("at while(k < N), N", N);
         while (k < N) {
           support[k] = x[k];
           // #nocov start

@@ -386,7 +386,6 @@ List match_min_Haversine (NumericVector lat1,
                           NumericVector lat2,
                           NumericVector lon2,
                           IntegerVector tabl,
-                          double r = 0.002,
                           double cartR = -1,
                           double dist0_km = 0.01,
                           bool verify_cartR = false,
@@ -446,6 +445,11 @@ List match_min_Haversine (NumericVector lat1,
 
     // Use this to check the 'near enough' distance after a minimum candidate
     double min_dist_km = BIGDISTKM;
+    double max_lati = lati + cartR;
+    double min_lati = lati - cartR;
+    double max_loni = loni + cartR;
+    double min_loni = loni - cartR;
+
     k = 0;
     for (int j = 0; j < N2; ++j) {
       if (excl_self && j == i) {
@@ -459,21 +463,22 @@ List match_min_Haversine (NumericVector lat1,
         // we've already found to be closest.
 
         // Perhaps not? Consider x = {1, 2, 4, 8, 16}
-
       }
 
       latj = lat2[j];
       lonj = lon2[j];
 
-      // haversine distance / euclidean is maximal for low latitude and
-      // longitudes of around 135 and
-      // is 114. See data-raw/euclid-vs-haversine
+      // Don't calculate haversine distance when the current
+      // point is outside the box defined by cartR
       if (do_check_cartR) {
-        euij = do_euclid_dist(loni, lonj, lati, latj, true);
-        if (euij > cartR) {
+        if (latj < min_lati ||
+            latj > max_lati ||
+            lonj < min_loni ||
+            lonj > max_loni) {
           continue;
         }
       }
+
       // unitless if we just need to compare to min_dist
       cur_dist = haversine_distance(lati, loni, latj, lonj, true);
       if (cur_dist < min_dist) {

@@ -8,8 +8,6 @@
 #' @param Index A vector the same length as \code{lat} to encode the match between \code{lat,lon}
 #' and \code{addresses_lat,addresses_lon}. By default, the integer position in
 #' \code{addresses_lat,addresses_lon}.
-#' @param R A "radius" of distances outside which distances will not be considered.
-#' Used for efficiency. The default of \code{R = 0.01} corresponds to about 15 km.
 #' @param cartesian_R The maximum radius of any address from the points to be geocoded. Used
 #' to accelerate the detection of minimum distances. Note, as the argument name suggests,
 #' the distance is in cartesian coordinates, so a small number is likely.
@@ -64,7 +62,6 @@ match_nrst_haversine <- function(lat,
                                  addresses_lat,
                                  addresses_lon,
                                  Index = seq_along(addresses_lat),
-                                 R = NULL,
                                  cartesian_R = NULL,
                                  close_enough = 10,
                                  excl_self = FALSE,
@@ -82,15 +79,6 @@ match_nrst_haversine <- function(lat,
             length(addresses_lat) >= 1L)
   check_TF(excl_self)
   check_TF(as.data.table)
-  if (is.null(R)) {
-    R <- -1
-  }
-  if (R_err_msg <- isnt_number(R, infinite.bad = FALSE)) {
-    stop(attr(R_err_msg, "ErrorMessage"))
-  }
-  if (is.infinite(R)) {
-    R <- -1
-  }
 
   if (ce_err_msg <- isnt_number(close_enough)) {
     if (length(close_enough) != 1L || !grepl("^[0-9]+(\\.[0-9]+)?\\s*k?m$", close_enough)) {
@@ -140,7 +128,6 @@ match_nrst_haversine <- function(lat,
                              addresses_lat,
                              addresses_lon,
                              Index.int,
-                             r = R,
                              cartR = cartesian_R,
                              verify_cartR = verify_cartR,
                              do_verify_box = .verify_box,
