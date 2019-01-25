@@ -30,6 +30,7 @@ are_even <- function(x, check_integerish = TRUE) {
   }
 }
 
+#' @rdname are_even
 which_are_even <- function(x, check_integerish = TRUE) {
   if (is.integer(x)) {
     return(do_which_even(x, double(0)))

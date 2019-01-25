@@ -2,9 +2,12 @@
 % Please edit documentation in R/are_even.R
 \name{are_even}
 \alias{are_even}
+\alias{which_are_even}
 \title{Are even}
 \usage{
 are_even(x, check_integerish = TRUE)
+
+which_are_even(x, check_integerish = TRUE)
 }
 \arguments{
 \item{x}{An integer vector. Double vectors may also be used.}
