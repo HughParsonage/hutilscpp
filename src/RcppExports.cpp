@@ -137,6 +137,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_are_even
+LogicalVector do_are_even(IntegerVector x, DoubleVector y);
+RcppExport SEXP _hutilscpp_do_are_even(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(do_are_even(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_even
+IntegerVector do_which_even(IntegerVector x, DoubleVector y);
+RcppExport SEXP _hutilscpp_do_which_even(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_even(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_which_first
 int do_which_first(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_first(SEXP xSEXP) {
@@ -313,8 +337,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // match_min_Haversine
-List match_min_Haversine(NumericVector lat1, NumericVector lon1, NumericVector lat2, NumericVector lon2, IntegerVector tabl, double r, double cartR, double dist0_km, bool verify_cartR, bool do_verify_box, bool excl_self, int ncores);
-RcppExport SEXP _hutilscpp_match_min_Haversine(SEXP lat1SEXP, SEXP lon1SEXP, SEXP lat2SEXP, SEXP lon2SEXP, SEXP tablSEXP, SEXP rSEXP, SEXP cartRSEXP, SEXP dist0_kmSEXP, SEXP verify_cartRSEXP, SEXP do_verify_boxSEXP, SEXP excl_selfSEXP, SEXP ncoresSEXP) {
+List match_min_Haversine(NumericVector lat1, NumericVector lon1, NumericVector lat2, NumericVector lon2, IntegerVector tabl, double cartR, double dist0_km, bool verify_cartR, bool do_verify_box, bool excl_self, int ncores);
+RcppExport SEXP _hutilscpp_match_min_Haversine(SEXP lat1SEXP, SEXP lon1SEXP, SEXP lat2SEXP, SEXP lon2SEXP, SEXP tablSEXP, SEXP cartRSEXP, SEXP dist0_kmSEXP, SEXP verify_cartRSEXP, SEXP do_verify_boxSEXP, SEXP excl_selfSEXP, SEXP ncoresSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -323,14 +347,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type lat2(lat2SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type lon2(lon2SEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type tabl(tablSEXP);
-    Rcpp::traits::input_parameter< double >::type r(rSEXP);
     Rcpp::traits::input_parameter< double >::type cartR(cartRSEXP);
     Rcpp::traits::input_parameter< double >::type dist0_km(dist0_kmSEXP);
     Rcpp::traits::input_parameter< bool >::type verify_cartR(verify_cartRSEXP);
     Rcpp::traits::input_parameter< bool >::type do_verify_box(do_verify_boxSEXP);
     Rcpp::traits::input_parameter< bool >::type excl_self(excl_selfSEXP);
     Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
-    rcpp_result_gen = Rcpp::wrap(match_min_Haversine(lat1, lon1, lat2, lon2, tabl, r, cartR, dist0_km, verify_cartR, do_verify_box, excl_self, ncores));
+    rcpp_result_gen = Rcpp::wrap(match_min_Haversine(lat1, lon1, lat2, lon2, tabl, cartR, dist0_km, verify_cartR, do_verify_box, excl_self, ncores));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -628,6 +651,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_cumsum_reset_logical", (DL_FUNC) &_hutilscpp_do_cumsum_reset_logical, 1},
     {"_hutilscpp_do_cumsum_reset_integer", (DL_FUNC) &_hutilscpp_do_cumsum_reset_integer, 2},
     {"_hutilscpp_do_cumsum_reset_double", (DL_FUNC) &_hutilscpp_do_cumsum_reset_double, 2},
+    {"_hutilscpp_do_are_even", (DL_FUNC) &_hutilscpp_do_are_even, 2},
+    {"_hutilscpp_do_which_even", (DL_FUNC) &_hutilscpp_do_which_even, 2},
     {"_hutilscpp_do_which_first", (DL_FUNC) &_hutilscpp_do_which_first, 1},
     {"_hutilscpp_do_which_last", (DL_FUNC) &_hutilscpp_do_which_last, 1},
     {"_hutilscpp_do_which_first_false", (DL_FUNC) &_hutilscpp_do_which_first_false, 1},
@@ -641,7 +666,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_EmptiestQuarter", (DL_FUNC) &_hutilscpp_EmptiestQuarter, 6},
     {"_hutilscpp_theEmptiestQuarters", (DL_FUNC) &_hutilscpp_theEmptiestQuarters, 7},
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
-    {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 12},
+    {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 11},
     {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 3},
     {"_hutilscpp_do_pmaxC_int", (DL_FUNC) &_hutilscpp_do_pmaxC_int, 3},
     {"_hutilscpp_do_pmax0", (DL_FUNC) &_hutilscpp_do_pmax0, 2},
@@ -664,7 +689,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_showValuea", (DL_FUNC) &_hutilscpp_showValuea, 2},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
-    {"do_c_pmax",                              (DL_FUNC) &do_c_pmax,                               3},
+    {"do_c_pmax", (DL_FUNC) &do_c_pmax, 3},
     {NULL, NULL, 0}
 };
 

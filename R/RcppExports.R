@@ -53,6 +53,14 @@ do_cumsum_reset_double <- function(x, y) {
     .Call(`_hutilscpp_do_cumsum_reset_double`, x, y)
 }
 
+do_are_even <- function(x, y) {
+    .Call(`_hutilscpp_do_are_even`, x, y)
+}
+
+do_which_even <- function(x, y) {
+    .Call(`_hutilscpp_do_which_even`, x, y)
+}
+
 do_which_first <- function(x) {
     .Call(`_hutilscpp_do_which_first`, x)
 }
@@ -105,8 +113,8 @@ which_min_HaversineDistance <- function(lat1, lon1, lat2, lon2, upperBound = 10)
     .Call(`_hutilscpp_which_min_HaversineDistance`, lat1, lon1, lat2, lon2, upperBound)
 }
 
-match_min_Haversine <- function(lat1, lon1, lat2, lon2, tabl, r = 0.002, cartR = -1, dist0_km = 0.01, verify_cartR = FALSE, do_verify_box = FALSE, excl_self = FALSE, ncores = 1L) {
-    .Call(`_hutilscpp_match_min_Haversine`, lat1, lon1, lat2, lon2, tabl, r, cartR, dist0_km, verify_cartR, do_verify_box, excl_self, ncores)
+match_min_Haversine <- function(lat1, lon1, lat2, lon2, tabl, cartR = -1, dist0_km = 0.01, verify_cartR = FALSE, do_verify_box = FALSE, excl_self = FALSE, ncores = 1L) {
+    .Call(`_hutilscpp_match_min_Haversine`, lat1, lon1, lat2, lon2, tabl, cartR, dist0_km, verify_cartR, do_verify_box, excl_self, ncores)
 }
 
 #' @name do_pmaxC
