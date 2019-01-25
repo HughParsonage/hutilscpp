@@ -9,6 +9,10 @@ test_that("even works", {
                c(TRUE, FALSE, TRUE))
   expect_equal(which_are_even(c(0, 1, 4)),
                c(1L, 3L))
+  expect_identical(which_are_even(c(0L, 1L, 4L)),
+                   c(1L, 3L))
+  expect_identical(which_are_even(c(5L, 1L, 3L)),
+                   integer(0L))
 })
 
 test_that("error handling", {

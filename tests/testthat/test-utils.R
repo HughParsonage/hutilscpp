@@ -14,6 +14,10 @@ test_that("isnt_number", {
   expect_true(isnt_number(NA_integer_))
   expect_false(isnt_number(Inf, infinite.bad = FALSE))
   expect_true(isnt_number(Inf))
+  x <- integer(0L)
+  expect_error(pmaxC(1:5, x),
+               regexp = "`a` had length 0, but must be length-one",
+               fixed = TRUE)
 })
 
 test_that("isnt_integersih", {
