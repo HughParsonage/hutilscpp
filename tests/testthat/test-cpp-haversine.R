@@ -180,21 +180,21 @@ test_that("Emptiest quadrants", {
                        "ymin" = 0.75,
                        "ymax" = 1.00))
   }
-  if (FALSE) {
-    library(ggplot2);ggplot(DT_NE,
-                            aes(x, y)) +
-      geom_point() +
-      geom_blank(data = head(DT_NE, 2),
-                 aes(x = c(-1.01, 1.01),
-                     y = c(-1.01, 1.01))) +
-      annotate("rect",
-               xmin = res["xmin"],
-               xmax = res["xmax"],
-               ymin = res["ymin"],
-               ymax = res["ymax"],
-               fill = NA,
-               color = "red")
-  }
+  # if (FALSE) {
+  #   library(ggplot2);ggplot(DT_NE,
+  #                           aes(x, y)) +
+  #     geom_point() +
+  #     geom_blank(data = head(DT_NE, 2),
+  #                aes(x = c(-1.01, 1.01),
+  #                    y = c(-1.01, 1.01))) +
+  #     annotate("rect",
+  #              xmin = res["xmin"],
+  #              xmax = res["xmax"],
+  #              ymin = res["ymin"],
+  #              ymax = res["ymax"],
+  #              fill = NA,
+  #              color = "red")
+  # }
   res3 <- DT_NE[, poleInaccessibility3(x, y)]
   expect_false(DT_NE[, any(x > res3["xmin"] &
                            x < res3["xmax"] &

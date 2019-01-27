@@ -2,9 +2,9 @@
 using namespace Rcpp;
 
 // #nocov start
-// [[Rcpp::export]]
-void showValuea(const char* what, double x) {
-  Rcout << "The value " << what << " is " << x << std::endl;
+int showValuea(const char* what, double x) {
+  // Rcout << "The value " << what << " is " << x << std::endl;
+  return 0;
 }
 // #nocov end
 

@@ -27,11 +27,8 @@
 #'
 #' @examples
 #'
-#' N <- 1e6
-#' mem_lim <- memory.limit()
-#' if (is.finite(mem_lim) && mem_lim > 32e3) {
-#'   N <- 1e8
-#' }
+#' N <- 1e5
+#' # N <- 1e8  ## too slow for CRAN
 #'
 #' # Two examples, from slowest to fastest,
 #' # run with N = 1e8 elements
