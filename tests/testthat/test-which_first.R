@@ -58,6 +58,7 @@ test_that("which_first works", {
 
 
   y <- -5:5
+  y0 <- integer(0)
   yr <- rev(y)
   expect_identical(which_first(y == -4), 2L)
   expect_identical(which_first(y == -4L), 2L)
@@ -71,6 +72,9 @@ test_that("which_first works", {
   expect_identical(which_first(y != -5), 2L)
   expect_identical(which_first(y != -5L), 2L)
   expect_identical(which_first(y != 2.5), 1L)
+  # corner case
+  expect_identical(which_first(y0 != 0), 0L)
+  expect_identical(which_first(y0 != 0L), 0L)
 
   expect_identical(which_first(y >= 5), length(y))
   expect_identical(which_first(y >= 5L), length(y))
@@ -100,6 +104,19 @@ test_that("which_first works", {
   expect_identical(which_first(y > 0), 7L)
   expect_identical(which_first(y > -1), 6L)
 
+  y2 <- as.integer(c(0, -1, -2, -1, 0))
+  y3 <- as.integer(c(2, 1, 0, 3))
+  expect_identical(which_first(y2 <= -2.5),
+                   Position(f = function(k) k <= -2.5,
+                            x = y2,
+                            nomatch = 0L))
+  expect_identical(which_first(y3 <= 0.5),
+                   Position(f = function(k) k <= 0.5,
+                            x = y3,
+                            nomatch = 0L))
+
+  expr <- c(0, 5, 3, 2)
+  expect_identical(which_first(expr %in% c(22, 32)), 0L)
   expect_identical(which_first(expr %in% c(2, 3)), 3L)
   expr <- as.integer(expr)
   expect_identical(which_first(expr %in% c(2, 3)), 3L)

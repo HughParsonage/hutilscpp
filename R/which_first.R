@@ -113,7 +113,7 @@ which_first <- function(expr) {
            }
            if (is.integer(lhs_eval)) {
              # Need to pass int to Rcpp, but 2 != 2.5
-             if (is.double(rhs) && as.integer(rhs_eval) != rhs_eval) {
+             if (is.double(rhs_eval) && as.integer(rhs_eval) != rhs_eval) {
                return(0L)
              }
              o <- AnyWhich_int(lhs_eval, as.integer(rhs_eval), gt = FALSE, lt = FALSE, eq = TRUE)
@@ -128,6 +128,9 @@ which_first <- function(expr) {
                if (!length(rhs)) {
                  return(0L)
                } else {
+                 # if rhs isn't even an integer, then
+                 # the first element of any integer vector
+                 # will not be equal to it.
                  return(1L)
                }
              }
@@ -141,7 +144,9 @@ which_first <- function(expr) {
            if (is.integer(lhs_eval)) {
              if (!is.integer(rhs_eval)) {
                if (as.integer(rhs_eval) != rhs_eval && rhs_eval < 0) {
-                 # as.integer truncates *towards* zero
+                 # as.integer truncates *towards* zero so -2.5 => 2
+                 # -3 <= -2.5 == 2
+                 # yet 2.5 <= 2
                  rhs_eval <- as.integer(rhs_eval) - 1L
                } else {
                  rhs_eval <- as.integer(rhs_eval)
