@@ -7,7 +7,7 @@
 match_nrst_haversine(lat, lon, addresses_lat, addresses_lon,
   Index = seq_along(addresses_lat), cartesian_R = NULL,
   close_enough = 10, excl_self = FALSE, as.data.table = TRUE,
-  .verify_box = TRUE, ncores = 1L)
+  .verify_box = TRUE)
 }
 \arguments{
 \item{lat, lon}{Coordinates to be geocoded. Numeric vectors of equal length.}
@@ -16,7 +16,8 @@ match_nrst_haversine(lat, lon, addresses_lat, addresses_lon,
 (likely to be a different length than the length of \code{lat}, except when \code{excl_self = TRUE}).}
 
 \item{Index}{A vector the same length as \code{lat} to encode the match between \code{lat,lon}
-and \code{addresses_lat,addresses_lon}. By default, the integer position in
+and \code{addresses_lat,addresses_lon}. The default is to use the integer position
+of the nearest match to
 \code{addresses_lat,addresses_lon}.}
 
 \item{cartesian_R}{The maximum radius of any address from the points to be geocoded. Used
@@ -43,8 +44,6 @@ avoid dumping a huge list to the console.}
 
 \item{.verify_box}{Check the initial guess against other points within the
 box of radius \eqn{\ell^\infty}.}
-
-\item{ncores}{Integer number of cores to use. Currently not implemented.}
 }
 \value{
 A list (or \code{data.table} if \code{as.data.table = TRUE}) with two elements,

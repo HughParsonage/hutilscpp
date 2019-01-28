@@ -36,9 +36,9 @@ But even for smaller vectors, it has the benefit of returning
 \code{0L} if none of the values in \code{expr} are \code{TRUE}, unlike
 \code{which.max}.
 
-Compared to \code{\link[base]{Position}} for an appropriate
-choice of \code{f}, \code{which_first} is comparable in speed
-when the expression is \code{TRUE}. However, \code{which_first}
+Compared to \code{\link[base:funprog]{Position}} for an appropriate
+choice of \code{f} the speed of \code{which_first} is not much faster
+when the expression is \code{TRUE} for some position. However, \code{which_first}
 is faster when all elements of \code{expr} are \code{FALSE}.
 Thus \code{which_first} has a smaller worst-case time than the
 alternatives for most \code{x}.
