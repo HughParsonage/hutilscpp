@@ -1,4 +1,4 @@
-#' Find a binary pole of inaccesibility
+#' Find a binary pole of inaccessibility
 #' @name poleInaccessibility
 #' @param x,y Coordinates.
 #' @param DT A \code{data.table} containing \code{LONGITUDE} and \code{LATITUDE} to define

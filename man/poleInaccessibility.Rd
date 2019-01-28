@@ -4,7 +4,7 @@
 \alias{poleInaccessibility}
 \alias{poleInaccessibility2}
 \alias{poleInaccessibility3}
-\title{Find a binary pole of inaccesibility}
+\title{Find a binary pole of inaccessibility}
 \usage{
 poleInaccessibility2(x = NULL, y = NULL, DT = NULL, x_range = NULL,
   y_range = NULL, copy_DT = TRUE)
@@ -43,7 +43,7 @@ the edges intersect the points \code{x,y}
 }
 }
 \description{
-Find a binary pole of inaccesibility
+Find a binary pole of inaccessibility
 }
 \examples{
 library(data.table)
