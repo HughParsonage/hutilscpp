@@ -8,7 +8,8 @@
 #' and \code{b}; values above \code{b}
 #' replaced with \code{b} and values below \code{a} replaced with \code{a}.
 #'
-#' A
+#' @examples
+#' squish(-5:5,-1, 1)
 #'
 #' @export
 

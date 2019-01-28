@@ -17,9 +17,11 @@ squish(x, a, b, in_place = FALSE)
 A numeric/integer vector with the values of \code{x} "squished" between \code{a}
 and \code{b}; values above \code{b}
 replaced with \code{b} and values below \code{a} replaced with \code{a}.
-
-A
 }
 \description{
 Squish into a range
+}
+\examples{
+squish(-5:5,-1, 1)
+
 }
