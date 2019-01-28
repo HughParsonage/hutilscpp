@@ -97,6 +97,9 @@ test_that("which_first works", {
   expect_identical(which_first(yr < 1.5), 5L)
   expect_identical(which_first(yr < -4), length(yr))
 
+  expect_identical(which_first(y > 0), 7L)
+  expect_identical(which_first(y > -1), 6L)
+
   expect_identical(which_first(expr %in% c(2, 3)), 3L)
   expr <- as.integer(expr)
   expect_identical(which_first(expr %in% c(2, 3)), 3L)
