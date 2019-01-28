@@ -76,6 +76,8 @@ test_that("which_first works", {
   # corner case
   expect_identical(which_first(y0 != 0), 0L)
   expect_identical(which_first(y0 != 0L), 0L)
+  expect_identical(which_first(y0 != 0.5), 0L)
+
 
   expect_identical(which_first(y >= 5), length(y))
   expect_identical(which_first(y >= 5L), length(y))
@@ -104,6 +106,8 @@ test_that("which_first works", {
 
   expect_identical(which_first(y > 0), 7L)
   expect_identical(which_first(y > -1), 6L)
+  expect_identical(which_first(y > -2.5),
+                   any(y > -2.5) * which.max(y > -2.5))
 
   y2 <- as.integer(c(0, -1, -2, -1, 0))
   y3 <- as.integer(c(2, 1, 0, 3))
