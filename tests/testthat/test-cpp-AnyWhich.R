@@ -1,7 +1,10 @@
 context("test-cpp-anywhich")
 
 test_that("AnyWhich error handling", {
-  expect_error(AnyWhich(1, 1, gt = TRUE, lt = TRUE, eq = FALSE))
+  expect_error(AnyWhich_dbl(1, 1, gt = TRUE, lt = TRUE, eq = FALSE),
+               regexp = "both TRUE")
+  expect_error(AnyWhich_int(1L, 1L, gt = TRUE, lt = TRUE, eq = FALSE),
+               regexp = "both TRUE")
 })
 
 test_that("AnyWhich basic", {
