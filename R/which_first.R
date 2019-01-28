@@ -76,10 +76,13 @@ which_first <- function(expr) {
       anyNA(match(operator <- as.character(sexpr[[1L]]),
                   c("==", "<=", ">=", ">", "<", "!=", "%in%"))) ||
       !is.name(lhs <- sexpr[[2L]]) ||
-      NOR(is.numeric(rhs <- sexpr[[3L]]),
-          AND(# c(0, 1, 2) is not numeric but it is when evaluated
-              is.numeric(eval.parent(rhs)),
-              operator == "%in%"))) {
+      # For now, restrict to RHS
+      NOR(is.numeric(rhs <- sexpr[[3L]]),        # bare doubles and integers
+          OR(AND(as.character(rhs[[1L]]) == "-", # negatives
+                 is.numeric(rhs[[2L]])),
+             AND(operator == "%in%",             # numeric vectors with %in%
+                 # c(0, 1, 2) is not numeric but it is when evaluated
+                 is.numeric(eval.parent(rhs)))))) {
     o <- which.max(expr)
 
     # o == 1L is wrong if all expr are FALSE
