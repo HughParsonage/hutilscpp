@@ -252,10 +252,6 @@ helper1 <- function(x, y, miny, maxy) {
     .Call(`_hutilscpp_helper1`, x, y, miny, maxy)
 }
 
-showValuea <- function(what, x) {
-    invisible(.Call(`_hutilscpp_showValuea`, what, x))
-}
-
 extractMandatory <- function(x, command, nCommands) {
     .Call(`_hutilscpp_extractMandatory`, x, command, nCommands)
 }

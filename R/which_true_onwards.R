@@ -2,6 +2,10 @@
 #' @param x A logical vector. \code{NA} values are not permitted.
 #' @return The position of the first \code{TRUE} value in \code{x} at which all
 #' the following values are \code{TRUE}.
+#'
+#' @examples
+#' which_true_onwards(c(TRUE, FALSE, TRUE, TRUE, TRUE))
+#'
 #' @export
 
 which_true_onwards <- function(x) {

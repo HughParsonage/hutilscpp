@@ -602,17 +602,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// showValuea
-void showValuea(const char* what, double x);
-RcppExport SEXP _hutilscpp_showValuea(SEXP whatSEXP, SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const char* >::type what(whatSEXP);
-    Rcpp::traits::input_parameter< double >::type x(xSEXP);
-    showValuea(what, x);
-    return R_NilValue;
-END_RCPP
-}
 // extractMandatory
 List extractMandatory(CharacterVector x, CharacterVector command, int nCommands);
 RcppExport SEXP _hutilscpp_extractMandatory(SEXP xSEXP, SEXP commandSEXP, SEXP nCommandsSEXP) {
@@ -686,10 +675,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_summary3_dbl", (DL_FUNC) &_hutilscpp_do_summary3_dbl, 5},
     {"_hutilscpp_do_summary3_int", (DL_FUNC) &_hutilscpp_do_summary3_int, 5},
     {"_hutilscpp_helper1", (DL_FUNC) &_hutilscpp_helper1, 4},
-    {"_hutilscpp_showValuea", (DL_FUNC) &_hutilscpp_showValuea, 2},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
-    {"do_c_pmax", (DL_FUNC) &do_c_pmax, 3},
+    {"do_c_pmax",                              (DL_FUNC) &do_c_pmax,                               3},
     {NULL, NULL, 0}
 };
 
