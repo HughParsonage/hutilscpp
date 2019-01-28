@@ -47,6 +47,12 @@ test_that("Bad document", {
   expect_false(any(nzchar(res$support)))
 })
 
+test_that("Braces may appear within command", {
+  x <- strsplit(c("the \\XYZ{cliff \\za{ba} wood.} flighty."), split = "")[[1L]]
+  res <- extractMandatory(x, strsplit("XYZ", split = "")[[1]], 1L)
+  expect_true(all(strsplit("cliff \\za{ba} wood.", split = "")[[1L]] %in% res$support))
+})
+
 test_that("Big popper", {
   skip_if_not_installed("TeXCheckR")
   skip_if_not_installed("data.table")

@@ -51,6 +51,8 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
           break;
         }
       }
+      // Zero if at the same group level as the command name
+      int rel_group = 0;
       if (cj == command_len - 1) {
         // Now wait until we see an opening brace
         within_brace = false;
@@ -66,7 +68,6 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
           if (x[k] == "[") {
             ++opt_group;
             int rel_opt_group = 1;
-            int rel_group = 0;
             while (rel_opt_group && k < N - 1) {
               // just keep moving forward until we get out of the current
               // optional group.
@@ -103,7 +104,7 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
           if (k >= N) { // in case the document is not well-formed.
             break;
           }
-          within_brace = x[k] == "{";
+          within_brace = (rel_group == 0) && x[k] == "{";
 
           // abc{xyz} but not abcd{xyz}
           if (x[k] != "" && x[k] != " " && x[k] != "{") {
@@ -127,9 +128,16 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
           // #nocov end
           // R indexing
           commandNo[command_no] = command_no + 1;
+          if (x[k] == "{") {
+            ++rel_group;
+          } else {
+            if (x[k] == "}") {
+              --rel_group;
+            }
+          }
 
 
-          finish_extract = x[k] == "}";
+          finish_extract = (rel_group == 0) && x[k] == "}";
           if (finish_extract) {
             commandClosers[command_no] = k + 1;
             ++command_no;
