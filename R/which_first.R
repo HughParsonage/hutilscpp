@@ -1,6 +1,6 @@
 #' Where does a logical expression first return \code{TRUE}?
 #' @description A faster and safer version of \code{which.max} applied
-#' to simple to parse logical expressions.
+#' to simple-to-parse logical expressions.
 #'
 #' @param expr An expression, such as \code{x == 2}.
 #' @return The same as \code{which.max(expr)} or \code{which(expr)[1]} but returns \code{0L}
@@ -12,15 +12,16 @@
 #' \code{==},  \code{!=}, \code{>}, \code{>=}, \code{<}, \code{<=},
 #' or \code{\%in\%}.
 #' and \code{RHS} is a single numeric value, then \code{expr} is not
-#' evaluated directly; instead each element of \code{LHS} is compared
+#' evaluated directly; instead, each element of \code{LHS} is compared
 #' individually.
 #'
 #' If \code{expr} is not of the above form, then \code{expr} is evaluated
 #' and passed to \code{which.max}.
 #'
-#' Using this function can be significantly faster when the computation
-#' of \code{expr} would be expensive. (The difference is only likely to
-#' be clear when \code{length(x)} is much larger than 10 million.)
+#' Using this function can be significantly faster than the alternatives
+#' when the computation
+#' of \code{expr} would be expensive, though the difference is only likely to
+#' be clear when \code{length(x)} is much larger than 10 million.
 #' But even for smaller vectors, it has the benefit of returning
 #' \code{0L} if none of the values in \code{expr} are \code{TRUE}, unlike
 #' \code{which.max}.
@@ -114,6 +115,9 @@ which_first <- function(expr) {
            if (is.integer(lhs_eval)) {
              # Need to pass int to Rcpp, but 2 != 2.5
              if (is.double(rhs_eval) && as.integer(rhs_eval) != rhs_eval) {
+               # if rhs isn't even an integer, then
+               # the first element of any integer vector
+               # will not be equal to it.
                return(0L)
              }
              o <- AnyWhich_int(lhs_eval, as.integer(rhs_eval), gt = FALSE, lt = FALSE, eq = TRUE)
@@ -124,13 +128,14 @@ which_first <- function(expr) {
              o <- AnyWhich_dbl(lhs_eval, as.double(rhs_eval), gt = FALSE, lt = FALSE, eq = FALSE)
            }
            if (is.integer(lhs_eval)) {
-             if (is.double(rhs) && as.integer(rhs) != rhs) {
-               if (!length(rhs)) {
+             if (is.double(rhs_eval) && as.integer(rhs_eval) != rhs_eval) {
+               # Like ==, if rhs isn't even an integer, then
+               # the first element of any integer vector
+               # will not be equal to it. But if lhs_eval
+               # has no length, we should return 0L
+               if (!length(lhs_eval)) {
                  return(0L)
                } else {
-                 # if rhs isn't even an integer, then
-                 # the first element of any integer vector
-                 # will not be equal to it.
                  return(1L)
                }
              }

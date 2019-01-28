@@ -67,6 +67,7 @@ test_that("which_first works", {
   expect_identical(which_first(y == -0.01), 0L)
   expect_identical(which_first(y == 5), length(y))
   expect_identical(which_first(y == 5L), length(y))
+  expect_identical(which_first(y == 2.5), 0L)
 
   expect_identical(which_first(y != -4), 1L)
   expect_identical(which_first(y != -5), 2L)

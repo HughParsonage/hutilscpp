@@ -15,7 +15,7 @@ when \code{expr} has no \code{TRUE} values.
 }
 \description{
 A faster and safer version of \code{which.max} applied
-to simple to parse logical expressions.
+to simple-to-parse logical expressions.
 }
 \details{
 If the \code{expr} is of the form \code{LHS <operator> RHS}
@@ -23,15 +23,16 @@ and \code{LHS} is a single symbol, \code{operator} is one of
 \code{==},  \code{!=}, \code{>}, \code{>=}, \code{<}, \code{<=},
 or \code{\%in\%}.
 and \code{RHS} is a single numeric value, then \code{expr} is not
-evaluated directly; instead each element of \code{LHS} is compared
+evaluated directly; instead, each element of \code{LHS} is compared
 individually.
 
 If \code{expr} is not of the above form, then \code{expr} is evaluated
 and passed to \code{which.max}.
 
-Using this function can be significantly faster when the computation
-of \code{expr} would be expensive. (The difference is only likely to
-be clear when \code{length(x)} is much larger than 10 million.)
+Using this function can be significantly faster than the alternatives
+when the computation
+of \code{expr} would be expensive, though the difference is only likely to
+be clear when \code{length(x)} is much larger than 10 million.
 But even for smaller vectors, it has the benefit of returning
 \code{0L} if none of the values in \code{expr} are \code{TRUE}, unlike
 \code{which.max}.
