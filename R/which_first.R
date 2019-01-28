@@ -9,7 +9,8 @@
 #' @details
 #' If the \code{expr} is of the form \code{LHS <operator> RHS}
 #' and \code{LHS} is a single symbol, \code{operator} is one of
-#' \code{==},  \code{!=}, \code{>}, \code{>=}, \code{<}, or \code{<=},
+#' \code{==},  \code{!=}, \code{>}, \code{>=}, \code{<}, \code{<=},
+#' or \code{\%in\%}.
 #' and \code{RHS} is a single numeric value, then \code{expr} is not
 #' evaluated directed; instead each element of \code{LHS} is compared
 #' individually.
@@ -61,9 +62,12 @@ which_first <- function(expr) {
   if (!is.call(sexpr) ||
       length(sexpr) != 3L ||
       anyNA(match(operator <- as.character(sexpr[[1L]]),
-                  c("==", "<=", ">=", ">", "<", "!="))) ||
+                  c("==", "<=", ">=", ">", "<", "!=", "%in%"))) ||
       !is.name(lhs <- sexpr[[2L]]) ||
-      !is.numeric(rhs <- sexpr[[3L]])) {
+      NOR(is.numeric(rhs <- sexpr[[3L]]),
+          AND(operator == "%in%",
+              # c(0, 1, 2) is not numeric but it is when evaluated
+              is.numeric(rhs_eval <- eval.parent(rhs))))) {
     o <- which.max(expr)
 
     # o == 1L is wrong if all expr are FALSE
@@ -111,6 +115,13 @@ which_first <- function(expr) {
          },
          ">" = {
            AnyWhich(lhs_eval, as.double(rhs), gt = TRUE, lt = FALSE, eq = FALSE)
+         },
+         "%in%" = {
+           if (is.integer(lhs_eval)) {
+             AnyWhichInInt(lhs_eval, as.integer(rhs_eval))
+           } else {
+             AnyWhichInDbl(lhs_eval, as.double(rhs_eval))
+           }
          },
 
          # nocov start

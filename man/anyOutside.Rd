@@ -19,16 +19,16 @@ otherwise only non-NA values outside \code{[a, b]}.
 
 If \code{nas_absent = TRUE} but \code{x} has missing values then the result is unreliable.}
 
-\item{na_is_outside}{(logical, default: \code{NA}) How should \code{NA}s be treated?
-If \code{NA}, the default, then the first value in \code{x} that is either
+\item{na_is_outside}{(logical, default: \code{NA}) How should \code{NA}s in \code{x} be treated?
+\describe{
+\item{If \code{NA}}{ the default, then the first value in \code{x} that is either
 outside \code{[a, b]} or \code{NA} is detected: if it is \code{NA}, then
-\code{NA_integer_} is returned; otherwise the position of that value is returned.
-
-implies a return value of \code{NA_integer_}.
-If \code{FALSE} then \code{NA} values are effectively skipped; the position of the first
-\emph{known} value outside \code{[a, b]} is returned.
-If \code{TRUE}, the position of the first value that is either
+\code{NA_integer_} is returned; otherwise the position of that value is returned.}#'
+\item{If \code{FALSE}}{then \code{NA} values are effectively skipped; the position of the first
+\emph{known} value outside \code{[a, b]} is returned.}
+\item{If \code{TRUE}}{the position of the first value that is either
 outside \code{[a, b]} or \code{NA} is returned.}
+}}
 }
 \value{
 \code{0L} if no values in \code{x} are outside \code{[a, b]}. Otherwise, the position

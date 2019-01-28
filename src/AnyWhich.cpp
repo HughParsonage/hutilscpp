@@ -68,5 +68,34 @@ int AnyWhich(NumericVector x, double a, bool gt, bool lt, bool eq) {
   return 0;
 }
 
+// [[Rcpp::export]]
+int AnyWhichInDbl (DoubleVector x, DoubleVector Table) {
+  int N = x.size();
+  int M = Table.size();
+
+  for (int i = 0; i < N; ++i) {
+    for (int j = 0; j < M; ++j) {
+      if (x[i] == Table[j]) {
+        return ++i;
+      }
+    }
+  }
+  return 0;
+}
+
+// [[Rcpp::export]]
+int AnyWhichInInt (IntegerVector x, IntegerVector Table) {
+  int N = x.size();
+  int M = Table.size();
+
+  for (int i = 0; i < N; ++i) {
+    for (int j = 0; j < M; ++j) {
+      if (x[i] == Table[j]) {
+        return ++i;
+      }
+    }
+  }
+  return 0;
+}
 
 

@@ -1,7 +1,7 @@
 context("test-which_first")
 
 test_that("which_first works", {
-  x <- runif(10)
+  x <- runif(10, 1, 2)
   expr <- c(0, 5, 3, 2)
   expect_identical(which_first(x < 0), 0L)
   expect_identical(which_first(x > 0), 1L)
@@ -9,6 +9,12 @@ test_that("which_first works", {
   expect_identical(which_first(x >= 0), 1L)
   expect_identical(which_first(x <= 0), 0L)
   expect_identical(which_first(x != 0), 1L)
+  expect_identical(which_first(x != 0), 1L)
+
+  expect_identical(which_first(expr %in% c(2, 3)), 3L)
+  expr <- as.integer(expr)
+  expect_identical(which_first(expr %in% c(2, 3)), 3L)
+  expect_identical(which_first(expr %in% c(2L, 3L)), 3L)
 })
 
 test_that("Conflicts with expressions", {

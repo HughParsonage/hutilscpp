@@ -20,7 +20,8 @@ to simple to parse logical expressions.
 \details{
 If the \code{expr} is of the form \code{LHS <operator> RHS}
 and \code{LHS} is a single symbol, \code{operator} is one of
-\code{==},  \code{!=}, \code{>}, \code{>=}, \code{<}, or \code{<=},
+\code{==},  \code{!=}, \code{>}, \code{>=}, \code{<}, \code{<=},
+or \code{\%in\%}.
 and \code{RHS} is a single numeric value, then \code{expr} is not
 evaluated directed; instead each element of \code{LHS} is compared
 individually.

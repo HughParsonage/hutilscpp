@@ -32,6 +32,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// AnyWhichInDbl
+int AnyWhichInDbl(DoubleVector x, DoubleVector Table);
+RcppExport SEXP _hutilscpp_AnyWhichInDbl(SEXP xSEXP, SEXP TableSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type Table(TableSEXP);
+    rcpp_result_gen = Rcpp::wrap(AnyWhichInDbl(x, Table));
+    return rcpp_result_gen;
+END_RCPP
+}
+// AnyWhichInInt
+int AnyWhichInInt(IntegerVector x, IntegerVector Table);
+RcppExport SEXP _hutilscpp_AnyWhichInInt(SEXP xSEXP, SEXP TableSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type Table(TableSEXP);
+    rcpp_result_gen = Rcpp::wrap(AnyWhichInInt(x, Table));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Implies
 LogicalVector Implies(LogicalVector x, LogicalVector y, bool anyNAx, bool anyNAy);
 RcppExport SEXP _hutilscpp_Implies(SEXP xSEXP, SEXP ySEXP, SEXP anyNAxSEXP, SEXP anyNAySEXP) {
@@ -632,6 +656,8 @@ RcppExport SEXP do_c_pmax(SEXP, SEXP, SEXP);
 static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_AnyCharMatch", (DL_FUNC) &_hutilscpp_AnyCharMatch, 2},
     {"_hutilscpp_AnyWhich", (DL_FUNC) &_hutilscpp_AnyWhich, 5},
+    {"_hutilscpp_AnyWhichInDbl", (DL_FUNC) &_hutilscpp_AnyWhichInDbl, 2},
+    {"_hutilscpp_AnyWhichInInt", (DL_FUNC) &_hutilscpp_AnyWhichInInt, 2},
     {"_hutilscpp_Implies", (DL_FUNC) &_hutilscpp_Implies, 4},
     {"_hutilscpp_anyOutside_int", (DL_FUNC) &_hutilscpp_anyOutside_int, 5},
     {"_hutilscpp_anyOutside_dbl", (DL_FUNC) &_hutilscpp_anyOutside_dbl, 5},

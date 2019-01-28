@@ -21,6 +21,14 @@ AnyWhich <- function(x, a, gt, lt, eq) {
     .Call(`_hutilscpp_AnyWhich`, x, a, gt, lt, eq)
 }
 
+AnyWhichInDbl <- function(x, Table) {
+    .Call(`_hutilscpp_AnyWhichInDbl`, x, Table)
+}
+
+AnyWhichInInt <- function(x, Table) {
+    .Call(`_hutilscpp_AnyWhichInInt`, x, Table)
+}
+
 Implies <- function(x, y, anyNAx = TRUE, anyNAy = TRUE) {
     .Call(`_hutilscpp_Implies`, x, y, anyNAx, anyNAy)
 }
