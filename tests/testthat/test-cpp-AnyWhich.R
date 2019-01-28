@@ -5,8 +5,10 @@ test_that("AnyWhich error handling", {
 })
 
 test_that("AnyWhich basic", {
-  expect_equal(AnyWhich(5:1, 2, gt = FALSE, lt = TRUE, eq = TRUE), 4L)
-  expect_equal(AnyWhich(5:1, 2, gt = FALSE, lt = TRUE, eq = FALSE), 5L)
+  expect_equal(AnyWhich_int(5:1, 2L, gt = FALSE, lt = TRUE, eq = TRUE), 4L)
+  expect_equal(AnyWhich_dbl(5:1 + 0, 2, gt = FALSE, lt = TRUE, eq = TRUE), 4L)
+  expect_equal(AnyWhich_int(5:1, 2L, gt = FALSE, lt = TRUE, eq = FALSE), 5L)
+  expect_equal(AnyWhich_dbl(5:1 + 0, 2, gt = FALSE, lt = TRUE, eq = FALSE), 5L)
   cov <- 50 + 5:1
   expect_equal(which_first(cov <= 54), 2L)
   expect_equal(which_first(cov < 54), 3L)
