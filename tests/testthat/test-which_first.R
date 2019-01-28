@@ -14,7 +14,9 @@ test_that("which_first works", {
   expect_identical(which_first(expr %in% c(2, 3)), 3L)
   expr <- as.integer(expr)
   expect_identical(which_first(expr %in% c(2, 3)), 3L)
+  expect_identical(which_first(expr %in% c(7, 9)), 0L)
   expect_identical(which_first(expr %in% c(2L, 3L)), 3L)
+  expect_identical(which_first(expr %in% c(8L, 9L)), 0L)
 })
 
 test_that("Conflicts with expressions", {
