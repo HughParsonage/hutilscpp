@@ -17,9 +17,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// AnyWhich
-int AnyWhich(NumericVector x, double a, bool gt, bool lt, bool eq);
-RcppExport SEXP _hutilscpp_AnyWhich(SEXP xSEXP, SEXP aSEXP, SEXP gtSEXP, SEXP ltSEXP, SEXP eqSEXP) {
+// AnyWhich_dbl
+int AnyWhich_dbl(NumericVector x, double a, bool gt, bool lt, bool eq);
+RcppExport SEXP _hutilscpp_AnyWhich_dbl(SEXP xSEXP, SEXP aSEXP, SEXP gtSEXP, SEXP ltSEXP, SEXP eqSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -28,7 +28,22 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type gt(gtSEXP);
     Rcpp::traits::input_parameter< bool >::type lt(ltSEXP);
     Rcpp::traits::input_parameter< bool >::type eq(eqSEXP);
-    rcpp_result_gen = Rcpp::wrap(AnyWhich(x, a, gt, lt, eq));
+    rcpp_result_gen = Rcpp::wrap(AnyWhich_dbl(x, a, gt, lt, eq));
+    return rcpp_result_gen;
+END_RCPP
+}
+// AnyWhich_int
+int AnyWhich_int(IntegerVector x, int a, bool gt, bool lt, bool eq);
+RcppExport SEXP _hutilscpp_AnyWhich_int(SEXP xSEXP, SEXP aSEXP, SEXP gtSEXP, SEXP ltSEXP, SEXP eqSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type a(aSEXP);
+    Rcpp::traits::input_parameter< bool >::type gt(gtSEXP);
+    Rcpp::traits::input_parameter< bool >::type lt(ltSEXP);
+    Rcpp::traits::input_parameter< bool >::type eq(eqSEXP);
+    rcpp_result_gen = Rcpp::wrap(AnyWhich_int(x, a, gt, lt, eq));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -641,7 +656,8 @@ RcppExport SEXP do_c_pmax(SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_AnyCharMatch", (DL_FUNC) &_hutilscpp_AnyCharMatch, 2},
-    {"_hutilscpp_AnyWhich", (DL_FUNC) &_hutilscpp_AnyWhich, 5},
+    {"_hutilscpp_AnyWhich_dbl", (DL_FUNC) &_hutilscpp_AnyWhich_dbl, 5},
+    {"_hutilscpp_AnyWhich_int", (DL_FUNC) &_hutilscpp_AnyWhich_int, 5},
     {"_hutilscpp_AnyWhichInDbl", (DL_FUNC) &_hutilscpp_AnyWhichInDbl, 2},
     {"_hutilscpp_AnyWhichInInt", (DL_FUNC) &_hutilscpp_AnyWhichInInt, 2},
     {"_hutilscpp_Implies", (DL_FUNC) &_hutilscpp_Implies, 4},

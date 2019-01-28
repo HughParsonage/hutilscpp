@@ -23,7 +23,7 @@ and \code{LHS} is a single symbol, \code{operator} is one of
 \code{==},  \code{!=}, \code{>}, \code{>=}, \code{<}, \code{<=},
 or \code{\%in\%}.
 and \code{RHS} is a single numeric value, then \code{expr} is not
-evaluated directed; instead each element of \code{LHS} is compared
+evaluated directly; instead each element of \code{LHS} is compared
 individually.
 
 If \code{expr} is not of the above form, then \code{expr} is evaluated
@@ -35,6 +35,13 @@ be clear when \code{length(x)} is much larger than 10 million.)
 But even for smaller vectors, it has the benefit of returning
 \code{0L} if none of the values in \code{expr} are \code{TRUE}, unlike
 \code{which.max}.
+
+Compared to \code{\link[base]{Position}} for an appropriate
+choice of \code{f}, \code{which_first} is comparable in speed
+when the expression is \code{TRUE}. However, \code{which_first}
+is faster when all elements of \code{expr} are \code{FALSE}.
+Thus \code{which_first} has a smaller worst-case time than the
+alternatives for most \code{x}.
 }
 \examples{
 

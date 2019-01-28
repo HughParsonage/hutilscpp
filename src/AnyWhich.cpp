@@ -13,7 +13,63 @@ using namespace Rcpp;
 //'
 
 // [[Rcpp::export]]
-int AnyWhich(NumericVector x, double a, bool gt, bool lt, bool eq) {
+int AnyWhich_dbl(NumericVector x, double a, bool gt, bool lt, bool eq) {
+  int N = x.size();
+
+  if (gt) {
+    if (lt) {
+      stop("gt and lt were both TRUE.");
+    }
+    if (eq) {
+      for (int i = 0; i < N; ++i) {
+        if (x[i] >= a) {
+          return ++i; // 0 vs 1 indexing
+        }
+      }
+    } else {
+      for (int i = 0; i < N; ++i) {
+        if (x[i] > a) {
+          return ++i;
+        }
+      }
+    }
+  } else if (lt) {
+    if (eq) {
+      for (int i = 0; i < N; ++i) {
+        if (x[i] <= a) {
+          return ++i;
+        }
+      }
+    } else {
+      for (int i = 0; i < N; ++i) {
+        if (x[i] < a) {
+          return ++i;
+        }
+      }
+    }
+  } else {
+    if (eq) {
+      // Just equality
+      for (int i = 0; i < N; ++i) {
+        if (x[i] == a) {
+          return ++i;
+        }
+      }
+    } else {
+      // Just inequality
+      for (int i = 0; i < N; ++i) {
+        if (x[i] != a) {
+          return ++i;
+        }
+      }
+    }
+  }
+
+  return 0;
+}
+
+// [[Rcpp::export]]
+int AnyWhich_int(IntegerVector x, int a, bool gt, bool lt, bool eq) {
   int N = x.size();
 
   if (gt) {

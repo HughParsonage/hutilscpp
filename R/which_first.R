@@ -12,7 +12,7 @@
 #' \code{==},  \code{!=}, \code{>}, \code{>=}, \code{<}, \code{<=},
 #' or \code{\%in\%}.
 #' and \code{RHS} is a single numeric value, then \code{expr} is not
-#' evaluated directed; instead each element of \code{LHS} is compared
+#' evaluated directly; instead each element of \code{LHS} is compared
 #' individually.
 #'
 #' If \code{expr} is not of the above form, then \code{expr} is evaluated
@@ -24,6 +24,17 @@
 #' But even for smaller vectors, it has the benefit of returning
 #' \code{0L} if none of the values in \code{expr} are \code{TRUE}, unlike
 #' \code{which.max}.
+#'
+#' Compared to \code{\link[base]{Position}} for an appropriate
+#'  choice of \code{f}, \code{which_first} is comparable in speed
+#'  when the expression is \code{TRUE}. However, \code{which_first}
+#'  is faster when all elements of \code{expr} are \code{FALSE}.
+#'  Thus \code{which_first} has a smaller worst-case time than the
+#'  alternatives for most \code{x}.
+#'
+#'
+#'
+#'
 #'
 #'
 #' @examples
@@ -65,9 +76,9 @@ which_first <- function(expr) {
                   c("==", "<=", ">=", ">", "<", "!=", "%in%"))) ||
       !is.name(lhs <- sexpr[[2L]]) ||
       NOR(is.numeric(rhs <- sexpr[[3L]]),
-          AND(operator == "%in%",
-              # c(0, 1, 2) is not numeric but it is when evaluated
-              is.numeric(rhs_eval <- eval.parent(rhs))))) {
+          AND(# c(0, 1, 2) is not numeric but it is when evaluated
+              is.numeric(eval.parent(rhs)),
+              operator == "%in%"))) {
     o <- which.max(expr)
 
     # o == 1L is wrong if all expr are FALSE
@@ -78,7 +89,9 @@ which_first <- function(expr) {
   }
 
   lhs_eval <- eval.parent(lhs)
-  if (is.integer(lhs_eval) && operator == "==" && {is.integer(rhs) || rhs == as.integer(rhs)}) {
+  rhs_eval <- eval.parent(rhs)
+  if (is.integer(lhs_eval) && operator == "==" && OR(is.integer(rhs),
+                                                     rhs_eval == as.integer(rhs_eval))) {
     return(match(as.integer(rhs), lhs_eval, nomatch = 0L))
   }
 
@@ -86,7 +99,7 @@ which_first <- function(expr) {
   if (is.character(lhs_eval)) {
     oc <-
       switch(operator,
-             "==" = AnyCharMatch(lhs_eval, as.character(rhs)),
+             "==" = AnyCharMatch(lhs_eval, as.character(rhs_eval)),
              {
                o <- which.max(expr)
                if (o == 1L && !expr[1L]) {
@@ -99,29 +112,106 @@ which_first <- function(expr) {
 
   switch(operator,
          "==" = {
-           AnyWhich(lhs_eval, as.double(rhs), gt = FALSE, lt = FALSE, eq = TRUE)
+           if (is.double(lhs_eval)) {
+             o <- AnyWhich_dbl(lhs_eval, as.double(rhs_eval), gt = FALSE, lt = FALSE, eq = TRUE)
+           }
+           if (is.integer(lhs_eval)) {
+             # Need to pass int to Rcpp, but 2 != 2.5
+             if (is.double(rhs) && as.integer(rhs_eval) != rhs_eval) {
+               return(0L)
+             }
+             o <- AnyWhich_int(lhs_eval, as.integer(rhs_eval), gt = FALSE, lt = FALSE, eq = TRUE)
+           }
          },
          "!=" = {
-           AnyWhich(lhs_eval, as.double(rhs), gt = FALSE, lt = FALSE, eq = FALSE)
+           if (is.double(lhs_eval)) {
+             o <- AnyWhich_dbl(lhs_eval, as.double(rhs_eval), gt = FALSE, lt = FALSE, eq = FALSE)
+           }
+           if (is.integer(lhs_eval)) {
+             if (is.double(rhs) && as.integer(rhs) != rhs) {
+               if (!length(rhs)) {
+                 return(0L)
+               } else {
+                 return(1L)
+               }
+             }
+             o <- AnyWhich_int(lhs_eval, as.integer(rhs_eval), gt = FALSE, lt = FALSE, eq = FALSE)
+           }
          },
          "<=" = {
-           AnyWhich(lhs_eval, as.double(rhs), gt = FALSE, lt = TRUE, eq = TRUE)
+           if (is.double(lhs_eval)) {
+             o <- AnyWhich_dbl(lhs_eval, as.double(rhs_eval), gt = FALSE, lt = TRUE, eq = TRUE)
+           }
+           if (is.integer(lhs_eval)) {
+             if (!is.integer(rhs_eval)) {
+               if (as.integer(rhs_eval) != rhs_eval && rhs_eval < 0) {
+                 # as.integer truncates *towards* zero
+                 rhs_eval <- as.integer(rhs_eval) - 1L
+               } else {
+                 rhs_eval <- as.integer(rhs_eval)
+               }
+             }
+             o <- AnyWhich_int(lhs_eval, rhs_eval, gt = FALSE, lt = TRUE, eq = TRUE)
+           }
          },
          "<" = {
-           AnyWhich(lhs_eval, as.double(rhs), gt = FALSE, lt = TRUE, eq = FALSE)
+           if (is.double(lhs_eval)) {
+             o <- AnyWhich_dbl(lhs_eval, as.double(rhs_eval), gt = FALSE, lt = TRUE, eq = FALSE)
+           }
+           if (is.integer(lhs_eval)) {
+             if (!is.integer(rhs_eval)) {
+               if (as.integer(rhs_eval) != rhs_eval && rhs_eval > 0) {
+                 #  2.5 =>  2L
+                 # -2.5 => -2L
+                 rhs_eval <- as.integer(rhs_eval) + 1L
+               } else {
+                 rhs_eval <- as.integer(rhs_eval)
+               }
+             }
+             o <- AnyWhich_int(lhs_eval, rhs_eval, gt = FALSE, lt = TRUE, eq = FALSE)
+           }
          },
          ">=" = {
-           AnyWhich(lhs_eval, as.double(rhs), gt = TRUE, lt = FALSE, eq = TRUE)
+           if (is.double(lhs_eval)) {
+             o <- AnyWhich_dbl(lhs_eval, as.double(rhs_eval), gt = TRUE, lt = FALSE, eq = TRUE)
+           }
+           if (is.integer(lhs_eval)) {
+             if (!is.integer(rhs_eval)) {
+               if (as.integer(rhs_eval) != rhs_eval && rhs_eval > 0) {
+                 #  2.5 =>  2L
+                 # -2.5 => -2L
+                 rhs_eval <- as.integer(rhs_eval) + 1L
+               } else {
+                 rhs_eval <- as.integer(rhs_eval)
+               }
+             }
+             o <- AnyWhich_int(lhs_eval, rhs_eval, gt = TRUE, lt = FALSE, eq = TRUE)
+           }
          },
          ">" = {
-           AnyWhich(lhs_eval, as.double(rhs), gt = TRUE, lt = FALSE, eq = FALSE)
+           if (is.double(lhs_eval)) {
+             o <- AnyWhich_dbl(lhs_eval, as.double(rhs_eval), gt = TRUE, lt = FALSE, eq = FALSE)
+           }
+           if (is.integer(lhs_eval)) {
+             if (!is.integer(rhs_eval)) {
+               if (as.integer(rhs_eval) != rhs_eval && rhs_eval > 0) {
+                 #  2.5 =>  2L
+                 # -2.5 => -2L
+                 rhs_eval <- as.integer(rhs_eval) + 1L
+               } else {
+                 rhs_eval <- as.integer(rhs_eval)
+               }
+             }
+             o <- AnyWhich_int(lhs_eval, rhs_eval, gt = TRUE, lt = FALSE, eq = FALSE)
+           }
          },
          "%in%" = {
-           if (is.integer(lhs_eval)) {
-             AnyWhichInInt(lhs_eval, as.integer(rhs_eval))
-           } else {
-             AnyWhichInDbl(lhs_eval, as.double(rhs_eval))
-           }
+           o <-
+             if (is.integer(lhs_eval)) {
+               AnyWhichInInt(lhs_eval, as.integer(rhs_eval))
+             } else {
+               AnyWhichInDbl(lhs_eval, as.double(rhs_eval))
+             }
          },
 
          # nocov start
@@ -133,11 +223,10 @@ which_first <- function(expr) {
            if (o == 1L && !expr[1L]) {
              o <- 0L
            }
-           o
          }
          # nocov end
          )
-
+  return(o)
 }
 
 

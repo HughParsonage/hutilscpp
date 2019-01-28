@@ -17,8 +17,12 @@ AnyCharMatch <- function(x, a) {
 #'
 NULL
 
-AnyWhich <- function(x, a, gt, lt, eq) {
-    .Call(`_hutilscpp_AnyWhich`, x, a, gt, lt, eq)
+AnyWhich_dbl <- function(x, a, gt, lt, eq) {
+    .Call(`_hutilscpp_AnyWhich_dbl`, x, a, gt, lt, eq)
+}
+
+AnyWhich_int <- function(x, a, gt, lt, eq) {
+    .Call(`_hutilscpp_AnyWhich_int`, x, a, gt, lt, eq)
 }
 
 AnyWhichInDbl <- function(x, Table) {
