@@ -207,10 +207,10 @@ which_first <- function(expr, verbose = FALSE) {
            }
            if (is.integer(lhs_eval)) {
              if (!is.integer(rhs_eval)) {
-               if (as.integer(rhs_eval) != rhs_eval && rhs_eval > 0) {
+               if (as.integer(rhs_eval) != rhs_eval && rhs_eval < 0) {
                  #  2.5 =>  2L
                  # -2.5 => -2L
-                 rhs_eval <- as.integer(rhs_eval) + 1L
+                 rhs_eval <- as.integer(rhs_eval) - 1L
                } else {
                  rhs_eval <- as.integer(rhs_eval)
                }
