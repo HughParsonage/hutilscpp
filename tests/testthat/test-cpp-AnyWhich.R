@@ -15,4 +15,7 @@ test_that("AnyWhich basic", {
   cov <- 50 + 5:1
   expect_equal(which_first(cov <= 54), 2L)
   expect_equal(which_first(cov < 54), 3L)
+  x <- -5:5
+  y <- x - 1L
+  expect_equal(do_which_first_int_int(x, y, eq = FALSE, FALSE, TRUE), 0L)
 })
