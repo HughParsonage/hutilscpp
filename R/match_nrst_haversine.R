@@ -6,7 +6,8 @@
 #' @param addresses_lat,addresses_lon Coordinates of known locations. Numeric vectors of equal length
 #' (likely to be a different length than the length of \code{lat}, except when \code{excl_self = TRUE}).
 #' @param Index A vector the same length as \code{lat} to encode the match between \code{lat,lon}
-#' and \code{addresses_lat,addresses_lon}. By default, the integer position in
+#' and \code{addresses_lat,addresses_lon}. The default is to use the integer position
+#' of the nearest match to
 #' \code{addresses_lat,addresses_lon}.
 #' @param cartesian_R The maximum radius of any address from the points to be geocoded. Used
 #' to accelerate the detection of minimum distances. Note, as the argument name suggests,
@@ -33,7 +34,6 @@
 #' @param .verify_box Check the initial guess against other points within the
 #' box of radius \eqn{\ell^\infty}.
 #'
-#' @param ncores Integer number of cores to use. Currently not implemented.
 #'
 #' @return A list (or \code{data.table} if \code{as.data.table = TRUE}) with two elements,
 #' both the same length as \code{lat}, giving for point \code{lat,lon}:
@@ -66,8 +66,7 @@ match_nrst_haversine <- function(lat,
                                  close_enough = 10,
                                  excl_self = FALSE,
                                  as.data.table = TRUE,
-                                 .verify_box = TRUE,
-                                 ncores = 1L) {
+                                 .verify_box = TRUE) {
 
   stopifnot(is.numeric(lat),
             is.numeric(lon),
@@ -132,7 +131,7 @@ match_nrst_haversine <- function(lat,
                              verify_cartR = verify_cartR,
                              do_verify_box = .verify_box,
                              dist0_km = dist0_km,
-                             ncores = ncores)
+                             ncores = 1L)
   if (!is.integer(Index)) {
     out[[1L]] <- Index[out[[1L]]]
   }
