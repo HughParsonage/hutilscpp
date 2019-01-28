@@ -9,7 +9,7 @@
 #' replaced with \code{b} and values below \code{a} replaced with \code{a}.
 #'
 #' @examples
-#' squish(-5:5,-1, 1)
+#' squish(-5:5,-1L, 1L)
 #'
 #' @export
 
