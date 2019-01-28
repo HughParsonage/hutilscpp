@@ -43,7 +43,10 @@ test_that("Bad document", {
   res <- extractMandatory(x, c("foo"), 1L)
   expect_false(any(nzchar(res$support)))
   x <- strsplit("a[{b", split = "")[[1]]
-  res <- extractMandatory(x, c("foo"), 1L)
+  res <- extractMandatory(x, strsplit(c("foo"), split = "")[[1]], 1L)
+  expect_false(any(nzchar(res$support)))
+  x <- strsplit("b \\ad[s]", split = "")[[1]]
+  res <- extractMandatory(x, c("a", "d"), 1L)
   expect_false(any(nzchar(res$support)))
 })
 
