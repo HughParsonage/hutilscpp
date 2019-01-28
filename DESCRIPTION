@@ -22,11 +22,11 @@ LinkingTo:
 Imports: 
     Rcpp, 
     data.table, 
+    hutils,
     utils
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
 Suggests: 
-    hutils,
     bench,
     testthat,
     TeXCheckR,
