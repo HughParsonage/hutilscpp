@@ -39,12 +39,25 @@ test_that("which_min_HaversineDistance", {
   lon2 <- 150
   expect_identical(which_min_HaversineDistance(lat1, lon1, lat2, lon2), 2L)
 
-  expect_identical(which_min_HaversineDistance (double(5), seq(-0.1, 0, length.out = 5), 0, 0,
-                                                upperBound = 0),
+  expect_identical(which_min_HaversineDistance(double(5), seq(-0.1, 0, length.out = 5), 0, 0,
+                                               upperBound = 0),
                    5L)
-  expect_identical(which_min_HaversineDistance (double(5), seq(-0.1, 0, length.out = 5), 0, 0,
-                                                upperBound = 100),
+  expect_identical(which_min_HaversineDistance(double(5), seq(-0.1, 0, length.out = 5), 0, 0,
+                                               upperBound = 100),
                    5L)
+  lat1 <- rep_len(-33, 10)
+  lon1 <- 150 + seq(0, 1, length.out = 10)
+  lat2 <- -33
+  lon2 <- 150.09
+  expect_identical(which_min_HaversineDistance(lat1, lon1, lat2, lon2), 2L)
+
+  expect_identical(which_min_HaversineDistance(double(5), seq(-0.1, 0, length.out = 5), 0, 0,
+                                               upperBound = 0),
+                   5L)
+  expect_identical(which_min_HaversineDistance(double(5), seq(-0.1, 0, length.out = 5), 0, 0,
+                                               upperBound = 100),
+                   5L)
+
 })
 
 test_that("match_min_Haversine", {
