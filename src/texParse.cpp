@@ -16,7 +16,6 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
   // const char *xp = x[0];
   // const char *cp = command[0];
 
-  int curr_group = 0;
   bool finish_extract = false;
   bool within_brace = false;
   // bool within_optional = false;

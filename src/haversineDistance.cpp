@@ -98,7 +98,10 @@ NumericVector theEuclidDistance (NumericVector x1,
                                  NumericVector y2,
                                  bool unitless = false) {
   unsigned int N = x1.size();
-  if (N != y1.size() || N != x2.size() || N != y2.size()) {
+  unsigned int y1N = y1.size();
+  unsigned int x2N = x2.size();
+  unsigned int y2N = y2.size();
+  if (N != y1N || N != x2N || N != y2N) {
     stop("x and y lengths differ.");
   }
   NumericVector out(N);
@@ -260,9 +263,10 @@ IntegerVector theEmptiestQuarters (NumericVector x,
     maxy = y_range[1];
   }
   IntegerVector out(depth);
-  double xcentre = minx + (maxx - minx) / 2;
-  double ycentre = miny + (maxy - miny) / 2;
-  double x0, x1, y0, y1 = 0;
+  double x0 =0;
+  double x1 = 0;
+  double y0 = 0;
+  double y1 = 0;
   x0 += minx;
   x1 += maxx;
   y0 += miny;
@@ -412,25 +416,19 @@ List match_min_Haversine (NumericVector lat1,
   double latj = 0;
   double lonj = 0;
 
-  double euij = 0;
-
-  double delta_lat = 0;
-  double delta_lon = 0;
-
   IntegerVector out(N1);
   NumericVector out2(N1);
-  double to_rad = M_PI / 180;
 
   // half-equatorial circumference: used as an 'infinity' for
   // min_dist while also available to check we have actually
   // achieved a minimum distance. (Should be 1 and around 20,000.)
   double BIGDIST = haversine_distance(0, 0, 0, 179.99, true);
   double BIGDISTKM = haversine_distance(0, 0, 0, 179.99, false);
-  bool skip = false;
+
   bool do_verify_cartR = verify_cartR;
   bool do_check_cartR = cartR > 0;
+
   int k = 0;
-  int nPoints_Require_Box_Verify = 0;
 
   for (int i = 0; i < N1; ++i) {
     if (ncores == 1 && (i % 16) == 0) {
@@ -516,7 +514,6 @@ List match_min_Haversine (NumericVector lat1,
             lat2j < box_max_lat &&
             lon2j > box_min_lon &&
             lon2j < box_max_lon) {
-          ++nPoints_Require_Box_Verify;
           cur_dist_km_new = haversine_distance(lati, loni, lat2j, lon2j);
           if (cur_dist_km_new < min_dist_km) {
             k = 0;

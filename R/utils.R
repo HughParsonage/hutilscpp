@@ -77,3 +77,6 @@ which_isnt_integerish <- function(x, xi = as.integer(x)) {
   0L
 }
 
+isFALSE <- function(x) {
+  is.logical(x) && length(x) == 1L && !anyNA(x) && !x
+}

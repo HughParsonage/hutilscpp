@@ -250,16 +250,6 @@ do_summary3_int <- function(x, y, z, in_place = FALSE, do_max = TRUE) {
     .Call(`_hutilscpp_do_summary3_int`, x, y, z, in_place, do_max)
 }
 
-#' @name helper1
-#' @title Helper
-#' @param x,y,miny,maxy Inputs.
-#' @noRd
-NULL
-
-helper1 <- function(x, y, miny, maxy) {
-    .Call(`_hutilscpp_helper1`, x, y, miny, maxy)
-}
-
 extractMandatory <- function(x, command, nCommands) {
     .Call(`_hutilscpp_extractMandatory`, x, command, nCommands)
 }

@@ -4,7 +4,8 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 LogicalVector Implies (LogicalVector x, LogicalVector y, bool anyNAx = true, bool anyNAy = true) {
   unsigned int N = x.size();
-  if (N != y.size()) {
+  unsigned int yN = y.size();
+  if (N != yN) {
     stop("lengths of x and y differ.");
   }
 

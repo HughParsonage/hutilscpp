@@ -612,20 +612,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// helper1
-int helper1(NumericVector x, NumericVector y, double miny, double maxy);
-RcppExport SEXP _hutilscpp_helper1(SEXP xSEXP, SEXP ySEXP, SEXP minySEXP, SEXP maxySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< double >::type miny(minySEXP);
-    Rcpp::traits::input_parameter< double >::type maxy(maxySEXP);
-    rcpp_result_gen = Rcpp::wrap(helper1(x, y, miny, maxy));
-    return rcpp_result_gen;
-END_RCPP
-}
 // extractMandatory
 List extractMandatory(CharacterVector x, CharacterVector command, int nCommands);
 RcppExport SEXP _hutilscpp_extractMandatory(SEXP xSEXP, SEXP commandSEXP, SEXP nCommandsSEXP) {
@@ -700,7 +686,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 4},
     {"_hutilscpp_do_summary3_dbl", (DL_FUNC) &_hutilscpp_do_summary3_dbl, 5},
     {"_hutilscpp_do_summary3_int", (DL_FUNC) &_hutilscpp_do_summary3_int, 5},
-    {"_hutilscpp_helper1", (DL_FUNC) &_hutilscpp_helper1, 4},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
     {"do_c_pmax",                              (DL_FUNC) &do_c_pmax,                               3},
