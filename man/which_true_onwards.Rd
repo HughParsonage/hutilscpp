@@ -16,3 +16,7 @@ the following values are \code{TRUE}.
 \description{
 At which point are all values true onwards
 }
+\examples{
+which_true_onwards(c(TRUE, FALSE, TRUE, TRUE, TRUE))
+
+}
