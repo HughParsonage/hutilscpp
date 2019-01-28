@@ -34,7 +34,8 @@
 #'  alternatives for most \code{x}.
 #'
 #'
-#'
+#' @param verbose (logical, default: \code{FALSE}) If \code{TRUE} a message is emitted
+#' if \code{expr} could not be handled in the advertised way.
 #'
 #'
 #'
@@ -68,7 +69,7 @@
 #' @export
 
 
-which_first <- function(expr) {
+which_first <- function(expr, verbose = FALSE) {
   rhs <- NULL
   sexpr <- substitute(expr)
   if (!is.call(sexpr) ||
@@ -78,11 +79,14 @@ which_first <- function(expr) {
       !is.name(lhs <- sexpr[[2L]]) ||
       # For now, restrict to RHS
       NOR(is.numeric(rhs <- sexpr[[3L]]),        # bare doubles and integers
-          OR(AND(as.character(rhs[[1L]]) == "-", # negatives
+          OR(AND(is.call(rhs) && as.character(rhs[[1L]]) == "-", # negatives
                  is.numeric(rhs[[2L]])),
              AND(operator == "%in%",             # numeric vectors with %in%
                  # c(0, 1, 2) is not numeric but it is when evaluated
                  is.numeric(eval.parent(rhs)))))) {
+    if (verbose) {
+      message("Falling back to `which.max(expr)`.")
+    }
     o <- which.max(expr)
 
     # o == 1L is wrong if all expr are FALSE

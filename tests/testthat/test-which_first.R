@@ -137,6 +137,10 @@ test_that("Fall through", {
   y <- logical(5)
   expect_identical(which_first(y), 0L)
   expect_identical(which_first(!y), 1L)
+  expect_message(which_first(!y,
+                             verbose = TRUE),
+                 regexp = "which.max",
+                 fixed = TRUE)
 
   x <- c(letters, 1)
   expect_identical(which_first(x == 1), 27L)

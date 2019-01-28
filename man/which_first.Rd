@@ -4,10 +4,13 @@
 \alias{which_first}
 \title{Where does a logical expression first return \code{TRUE}?}
 \usage{
-which_first(expr)
+which_first(expr, verbose = FALSE)
 }
 \arguments{
 \item{expr}{An expression, such as \code{x == 2}.}
+
+\item{verbose}{(logical, default: \code{FALSE}) If \code{TRUE} a message is emitted
+if \code{expr} could not be handled in the advertised way.}
 }
 \value{
 The same as \code{which.max(expr)} or \code{which(expr)[1]} but returns \code{0L}
