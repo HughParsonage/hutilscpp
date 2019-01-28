@@ -9,7 +9,7 @@ bench_system_time <- function(expr) {
   # parent environment (reasonably). So we copy
   # the names of everything in expr so that
   # bench::system_time can run.
-  for (`***` in all.names(substitute(expr))) {
+  for (`***` in all.vars(substitute(expr))) {
     assign(`***`, value = get(`***`, envir = parent.frame()))
   }
   if (requireNamespace("bench", quietly = TRUE)) {

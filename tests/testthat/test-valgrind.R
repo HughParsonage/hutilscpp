@@ -10,3 +10,9 @@ test_that("pminC large", {
   expect_true(is.double(x))
 })
 
+test_that("bench_system_time without bench", {
+  expr <- x <- rep_len(c(0, -0.5, 1.2), 5e6)
+  bench_x <- (pminC(x, 0))
+  expect_true(is.numeric(bench_x))
+})
+
