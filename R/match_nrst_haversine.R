@@ -17,7 +17,7 @@
 #' (The distance that is considered "close enough" to be a match.)
 #'
 #' For example, \code{close_enough = 10} means the first location within ten metres will be matched,
-#' even if a more distant match occurs later.
+#' even if a closer match occurs later.
 #'
 #' May be provided as a string to emphasize the units, e.g. \code{close_enough = "0.25km"}.
 #' Only \code{km} and \code{m} are permitted.
