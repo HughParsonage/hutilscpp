@@ -25,3 +25,39 @@ or
 
 \code{forecast::is.constant(x)}
 }
+\examples{
+library(hutilscpp)
+library(data.table)
+N <- 1e9L
+N <- 1e6  # to avoid long-running examples on CRAN
+consti <- rep(13L, N)
+bench_system_time(uniqueN(consti) == 1L)
+#> process    real
+#>  5.734s  1.202s
+bench_system_time(is_constant(consti))
+#>   process      real
+#> 437.500ms 437.398ms
+nonconsti <- c(consti, -1L)
+bench_system_time(uniqueN(nonconsti) == 1L)
+#> process    real
+#> 17.812s  3.348s
+bench_system_time(is_constant(nonconsti))
+#>   process      real
+#> 437.500ms 431.104ms
+constc <- rep("a", N)
+bench_system_time(uniqueN(constc) == 1L)
+#> process    real
+#> 11.141s  3.580s
+bench_system_time(is_constant(constc))
+#> process    real
+#>  6.000s  6.011s
+nonconstc <- c(constc, "x")
+bench_system_time(uniqueN(nonconstc) == 1L)
+#> process    real
+#> 22.656s  5.629s
+bench_system_time(is_constant(nonconstc))
+#> process    real
+#>  5.906s  5.907s
+
+
+}
