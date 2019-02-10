@@ -61,8 +61,18 @@ is_constant <- function(x) {
     return(TRUE)
   }
   if (is.logical(x)) {
-    return(!any(x, na.rm = TRUE) && all(x, na.rm = TRUE))
+    if (anyNA(x)) {
+      if (any(x, na.rm = TRUE)) {
+        return(FALSE)
+      }
+      if (!all(x, na.rm = TRUE)) {
+        return(FALSE)
+      }
+      return(TRUE)
+    }
+    return(XOR(!any(x, na.rm = TRUE), all(x, na.rm = TRUE)))
   }
+  # Instead of anyNA(x) we only need to check the first element
   x1 <- x[1L]
   if (anyNA(x1)) {
     return(all(is.na(x)))
@@ -83,10 +93,6 @@ is_constant <- function(x) {
     # e.g. raw
     identical(x, rep_len(x1, length(x)))
   }
-}
-
-zz3 <- function(x) {
-  as.logical(which.max(x != x[1L]))
 }
 
 
