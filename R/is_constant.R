@@ -88,7 +88,7 @@ is_constant <- function(x) {
     # checks the second element)
     !AnyCharMatch(x, x1, opposite = TRUE)
   } else if (is.factor(x)) {
-    return(is_constant(as.integer(x)))
+    is_constant(as.integer(x))
   } else {
     # e.g. raw
     identical(x, rep_len(x1, length(x)))
