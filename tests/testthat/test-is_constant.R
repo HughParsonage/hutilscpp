@@ -1,5 +1,10 @@
 context("test-is_constant")
 
+test_that("Error handling", {
+  expect_error(is_constant(list(x = 0, y = integer(5))),
+               "atomic")
+})
+
 test_that("is_constant works", {
   expect_true(is_constant(NULL))
   expect_true(is_constant(integer(0)))

@@ -57,6 +57,10 @@
 #' @export
 
 is_constant <- function(x) {
+  if (!is.atomic(x)) {
+    stop("`x` was not atomic. ",
+         "Such objects are not supported.")
+  }
   if (length(x) <= 1L) {
     return(TRUE)
   }
