@@ -6,14 +6,15 @@
 using namespace Rcpp;
 
 // AnyCharMatch
-int AnyCharMatch(CharacterVector x, CharacterVector a);
-RcppExport SEXP _hutilscpp_AnyCharMatch(SEXP xSEXP, SEXP aSEXP) {
+int AnyCharMatch(CharacterVector x, CharacterVector a, bool opposite);
+RcppExport SEXP _hutilscpp_AnyCharMatch(SEXP xSEXP, SEXP aSEXP, SEXP oppositeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type a(aSEXP);
-    rcpp_result_gen = Rcpp::wrap(AnyCharMatch(x, a));
+    Rcpp::traits::input_parameter< bool >::type opposite(oppositeSEXP);
+    rcpp_result_gen = Rcpp::wrap(AnyCharMatch(x, a, opposite));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -655,7 +656,7 @@ END_RCPP
 RcppExport SEXP do_c_pmax(SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_hutilscpp_AnyCharMatch", (DL_FUNC) &_hutilscpp_AnyCharMatch, 2},
+    {"_hutilscpp_AnyCharMatch", (DL_FUNC) &_hutilscpp_AnyCharMatch, 3},
     {"_hutilscpp_AnyWhich_dbl", (DL_FUNC) &_hutilscpp_AnyWhich_dbl, 5},
     {"_hutilscpp_AnyWhich_int", (DL_FUNC) &_hutilscpp_AnyWhich_int, 5},
     {"_hutilscpp_AnyWhichInDbl", (DL_FUNC) &_hutilscpp_AnyWhichInDbl, 2},
