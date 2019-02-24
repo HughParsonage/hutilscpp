@@ -10,7 +10,7 @@ using namespace Rcpp;
 //' @param gt,lt,eq Booleans, whether or not the comparison is greater than, less than, or equal to.
 //' Only \code{gt} and \code{lt} are mutually exclusive. If all \code{FALSE}, find the first instance
 //' where none are equal (i.e. does \code{x} have more than one distinct value).
-//'
+//' @noRd
 
 // [[Rcpp::export]]
 int AnyWhich_dbl(NumericVector x, double a, bool gt, bool lt, bool eq) {
