@@ -129,6 +129,14 @@ match_min_Haversine <- function(lat1, lon1, lat2, lon2, tabl, cartR = -1, dist0_
     .Call(`_hutilscpp_match_min_Haversine`, lat1, lon1, lat2, lon2, tabl, cartR, dist0_km, verify_cartR, do_verify_box, excl_self, ncores)
 }
 
+or3 <- function(x, y, z) {
+    .Call(`_hutilscpp_or3`, x, y, z)
+}
+
+and3 <- function(x, y, z) {
+    .Call(`_hutilscpp_and3`, x, y, z)
+}
+
 #' @name do_pmaxC
 #' @title Internal pmaxC helpers
 #' @description Internal functions used when the overheads of assertions
@@ -207,6 +215,10 @@ NULL
 
 do_pminC <- function(x, a, in_place = FALSE) {
     .Call(`_hutilscpp_do_pminC`, x, a, in_place)
+}
+
+do_pminC_int <- function(x, a, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pminC_int`, x, a, in_place)
 }
 
 do_pmin0_dbl <- function(x, in_place = FALSE) {

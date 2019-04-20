@@ -11,7 +11,7 @@ pmin0(x, in_place = FALSE)
 
 pminV(x, y, in_place = FALSE)
 
-pminC(x, a = 0, in_place = FALSE)
+pminC(x, a = 0L, in_place = FALSE)
 
 pmin3(x, y, z, in_place = FALSE)
 }
