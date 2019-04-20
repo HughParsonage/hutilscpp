@@ -6,4 +6,5 @@ test_that("and3 works", {
   z <- c(TRUE, TRUE, FALSE)
   expect_equal(and3(x, y, z),
                x & y & z)
+  expect_equal(and3(x, y), x & y)
 })
