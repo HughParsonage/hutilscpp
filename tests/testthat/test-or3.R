@@ -6,5 +6,5 @@ test_that("logical3 works", {
   z <- c(TRUE, TRUE, FALSE)
   expect_equal(or3(x, y, z), x | y | z)
   z <- NULL
-  expect_equal(or3(x, y, z), x | y | z)
+  expect_equal(or3(x, y, z), x | y)
 })
