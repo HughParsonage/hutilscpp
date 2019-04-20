@@ -129,12 +129,12 @@ match_min_Haversine <- function(lat1, lon1, lat2, lon2, tabl, cartR = -1, dist0_
     .Call(`_hutilscpp_match_min_Haversine`, lat1, lon1, lat2, lon2, tabl, cartR, dist0_km, verify_cartR, do_verify_box, excl_self, ncores)
 }
 
-or3 <- function(x, y, z) {
-    .Call(`_hutilscpp_or3`, x, y, z)
+do_or3 <- function(x, y, z) {
+    .Call(`_hutilscpp_do_or3`, x, y, z)
 }
 
-and3 <- function(x, y, z) {
-    .Call(`_hutilscpp_and3`, x, y, z)
+do_and3 <- function(x, y, z) {
+    .Call(`_hutilscpp_do_and3`, x, y, z)
 }
 
 #' @name do_pmaxC

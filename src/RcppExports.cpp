@@ -397,6 +397,32 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_or3
+LogicalVector do_or3(LogicalVector x, LogicalVector y, LogicalVector z);
+RcppExport SEXP _hutilscpp_do_or3(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type z(zSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_or3(x, y, z));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_and3
+LogicalVector do_and3(LogicalVector x, LogicalVector y, LogicalVector z);
+RcppExport SEXP _hutilscpp_do_and3(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type z(zSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_and3(x, y, z));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_pmaxC_dbl
 NumericVector do_pmaxC_dbl(NumericVector x, double a, bool in_place);
 RcppExport SEXP _hutilscpp_do_pmaxC_dbl(SEXP xSEXP, SEXP aSEXP, SEXP in_placeSEXP) {
@@ -517,6 +543,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type a(aSEXP);
     Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
     rcpp_result_gen = Rcpp::wrap(do_pminC(x, a, in_place));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_pminC_int
+IntegerVector do_pminC_int(IntegerVector x, double a, bool in_place);
+RcppExport SEXP _hutilscpp_do_pminC_int(SEXP xSEXP, SEXP aSEXP, SEXP in_placeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type a(aSEXP);
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pminC_int(x, a, in_place));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -685,6 +724,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_theEmptiestQuarters", (DL_FUNC) &_hutilscpp_theEmptiestQuarters, 7},
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
     {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 11},
+    {"_hutilscpp_do_or3", (DL_FUNC) &_hutilscpp_do_or3, 3},
+    {"_hutilscpp_do_and3", (DL_FUNC) &_hutilscpp_do_and3, 3},
     {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 3},
     {"_hutilscpp_do_pmaxC_int", (DL_FUNC) &_hutilscpp_do_pmaxC_int, 3},
     {"_hutilscpp_do_pmax0", (DL_FUNC) &_hutilscpp_do_pmax0, 2},
@@ -695,6 +736,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_pmaxNumNum", (DL_FUNC) &_hutilscpp_do_pmaxNumNum, 3},
     {"_hutilscpp_do_pmaxIntInt", (DL_FUNC) &_hutilscpp_do_pmaxIntInt, 3},
     {"_hutilscpp_do_pminC", (DL_FUNC) &_hutilscpp_do_pminC, 3},
+    {"_hutilscpp_do_pminC_int", (DL_FUNC) &_hutilscpp_do_pminC_int, 3},
     {"_hutilscpp_do_pmin0_dbl", (DL_FUNC) &_hutilscpp_do_pmin0_dbl, 2},
     {"_hutilscpp_do_pmin0_int", (DL_FUNC) &_hutilscpp_do_pmin0_int, 2},
     {"_hutilscpp_do_pminV_dbl", (DL_FUNC) &_hutilscpp_do_pminV_dbl, 3},
