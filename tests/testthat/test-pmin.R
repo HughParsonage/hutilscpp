@@ -14,3 +14,15 @@ test_that("pmin's works", {
   yd <- as.double(y)
   expect_identical(pminV(xd, yd), base::pmin(xd, yd))
 })
+
+test_that("pminC int", {
+  x <- c(1L, -3L, 2L, .Machine$integer.max)
+  expect_identical(pminC(x, 3L), pmin.int(x, 3L))
+  expect_identical(do_pminC_int(x, 3L), pmin.int(x, 3L))
+  y <- c(x, 4L)
+  res <- pmin.int(y, 0L)
+  expect_identical(pminC(y, 0L, in_place = TRUE), res)
+  expect_equal(pminC(y, 0L), y)
+
+
+})

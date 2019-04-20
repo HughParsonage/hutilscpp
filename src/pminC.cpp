@@ -29,6 +29,19 @@ NumericVector do_pminC(NumericVector x, double a, bool in_place = false) {
 }
 
 // [[Rcpp::export]]
+IntegerVector do_pminC_int(IntegerVector x, double a, bool in_place = false) {
+  int n = x.length();
+  IntegerVector out = in_place ? IntegerVector(x) : IntegerVector(clone(x));
+
+  for (int i = 0; i < n; ++i) {
+    if (x[i] > a) {
+      out[i] = a;
+    }
+  }
+  return out;
+}
+
+// [[Rcpp::export]]
 NumericVector do_pmin0_dbl(NumericVector x, bool in_place = false) {
   int n = x.length();
   NumericVector out = in_place ? NumericVector(x) : NumericVector(clone(x));

@@ -60,7 +60,18 @@ pminV <- function(x, y, in_place = FALSE) {
 }
 
 #' @rdname pminC
-pminC <- function(x, a = 0, in_place = FALSE) {
+pminC <- function(x, a = 0L, in_place = FALSE) {
+  # Early returns
+  if (length(x) && length(a) == 1L &&
+      is.logical(in_place) && length(in_place) == 1L && !anyNA(in_place)) {
+    if (is.integer(x) && is.integer(a)) {
+      return(.Call(`_hutilscpp_do_pminC_int`, x, a, in_place))
+    }
+    if (is.double(x)) {
+      return(do_pminC(x, a, in_place = in_place))
+    }
+  }
+
   if (!is.numeric(x)) {
     stop("`x` was a ", class(x), ", but must be numeric.")
   }
