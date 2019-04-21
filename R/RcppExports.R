@@ -137,6 +137,10 @@ do_and3 <- function(x, y, z) {
     .Call(`_hutilscpp_do_and3`, x, y, z)
 }
 
+na_and <- function(x) {
+    .Call(`_hutilscpp_na_and`, x)
+}
+
 #' @name do_pmaxC
 #' @title Internal pmaxC helpers
 #' @description Internal functions used when the overheads of assertions

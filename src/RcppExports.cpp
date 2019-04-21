@@ -423,6 +423,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// na_and
+LogicalVector na_and(LogicalVector x);
+RcppExport SEXP _hutilscpp_na_and(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(na_and(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_pmaxC_dbl
 NumericVector do_pmaxC_dbl(NumericVector x, double a, bool in_place);
 RcppExport SEXP _hutilscpp_do_pmaxC_dbl(SEXP xSEXP, SEXP aSEXP, SEXP in_placeSEXP) {
@@ -726,6 +737,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 11},
     {"_hutilscpp_do_or3", (DL_FUNC) &_hutilscpp_do_or3, 3},
     {"_hutilscpp_do_and3", (DL_FUNC) &_hutilscpp_do_and3, 3},
+    {"_hutilscpp_na_and", (DL_FUNC) &_hutilscpp_na_and, 1},
     {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 3},
     {"_hutilscpp_do_pmaxC_int", (DL_FUNC) &_hutilscpp_do_pmaxC_int, 3},
     {"_hutilscpp_do_pmax0", (DL_FUNC) &_hutilscpp_do_pmax0, 2},
