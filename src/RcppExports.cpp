@@ -411,15 +411,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_and3
-LogicalVector do_and3(LogicalVector x, LogicalVector y, LogicalVector z);
-RcppExport SEXP _hutilscpp_do_and3(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
+LogicalVector do_and3(LogicalVector x, LogicalVector y, LogicalVector z, int max_length);
+RcppExport SEXP _hutilscpp_do_and3(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP max_lengthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< LogicalVector >::type y(ySEXP);
     Rcpp::traits::input_parameter< LogicalVector >::type z(zSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_and3(x, y, z));
+    Rcpp::traits::input_parameter< int >::type max_length(max_lengthSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_and3(x, y, z, max_length));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -736,7 +737,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
     {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 11},
     {"_hutilscpp_do_or3", (DL_FUNC) &_hutilscpp_do_or3, 3},
-    {"_hutilscpp_do_and3", (DL_FUNC) &_hutilscpp_do_and3, 3},
+    {"_hutilscpp_do_and3", (DL_FUNC) &_hutilscpp_do_and3, 4},
     {"_hutilscpp_na_and", (DL_FUNC) &_hutilscpp_na_and, 1},
     {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 3},
     {"_hutilscpp_do_pmaxC_int", (DL_FUNC) &_hutilscpp_do_pmaxC_int, 3},
