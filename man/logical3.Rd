@@ -13,6 +13,15 @@ or3(x, y, z = NULL)
 \arguments{
 \item{x, y, z}{Logical vectors. If \code{z} is \code{NULL} the function is equivalent to the
 binary versions; only \code{x} and \code{y} are used.}
+
+\item{nas_absent}{(logical, default: \code{FALSE}) Can it be assumed that \code{x,y,z} have
+no missing values? Set to \code{TRUE} when you are sure that that is the case; setting to
+\code{TRUE} falsely has no defined behaviour.}
+}
+\value{
+For \code{and3}, the same as \code{x & y & z};
+for \code{or3}, the same as \code{x | y | z}, designed to be efficient when component-wise
+short-circuiting is available.
 }
 \description{
 Vectorized logical with support for short-circuits
