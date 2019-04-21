@@ -2,6 +2,12 @@
 #' @name logical3
 #' @param x,y,z Logical vectors. If \code{z} is \code{NULL} the function is equivalent to the
 #' binary versions; only \code{x} and \code{y} are used.
+#' @param nas_absent (logical, default: \code{FALSE}) Can it be assumed that \code{x,y,z} have
+#' no missing values? Set to \code{TRUE} when you are sure that that is the case; setting to
+#' \code{TRUE} falsely has no defined behaviour.
+#' @return For \code{and3}, the same as \code{x & y & z};
+#' for \code{or3}, the same as \code{x | y | z}, designed to be efficient when component-wise
+#' short-circuiting is available.
 #' @export and3 or3
 #'
 
@@ -14,7 +20,7 @@ and3 <- function(x, y, z = NULL, nas_absent = FALSE) {
   ly <- length(y)
   lz <- length(.z)
 
-  if (lx == ly && ly == lz && nas_absent) {
+  if (lx == ly && ly == lz && isTRUE(nas_absent)) {
     return(do_and3(x, y, z))
   }
 
@@ -53,6 +59,14 @@ and3 <- function(x, y, z = NULL, nas_absent = FALSE) {
          max.length, ". ",
          "The only permissible vector lengths are 1 or the maximum length of the inputs.")
   }
+
+  # FALSE & <anything> always FALSE
+
+  # Tricky style decisions: this is cleaner in this case but the length-1 cases
+  # have lots of dangling elses
+  # if (isFALSE(x) || isFALSE(y) || isFALSE(.z)) {
+  #   return(logical(max.length))
+  # }
 
 
 
