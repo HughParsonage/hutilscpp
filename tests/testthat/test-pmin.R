@@ -3,6 +3,9 @@ context("test-pmin")
 test_that("Error handling", {
   expect_error(pminV(1:5, 1:6),
                regexp = "length")
+  expect_error(pminC(1:5, 0L, in_place = "not logical"))
+  expect_error(pminC("abc", "abc"),
+               regexp = "must be numeric")
 })
 
 test_that("pmin's works", {
@@ -23,6 +26,7 @@ test_that("pminC int", {
   res <- pmin.int(y, 0L)
   expect_identical(pminC(y, 0L, in_place = TRUE), res)
   expect_equal(pminC(y, 0L), y)
+  expect_equal(pminC(y, 0), y)
 
 
 })
