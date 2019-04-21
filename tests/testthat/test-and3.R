@@ -1,7 +1,10 @@
 context("test-and3")
 
 test_that("and3 error handling", {
-  expect_error(and3(TRUE, logical(2), logical(3)))
+  expect_error(and3(logical(2), logical(3)), regexp = "permissible.*lengths")
+  expect_error(and3(z = TRUE, logical(2), logical(3)), regexp = "permissible.*lengths")
+  expect_error(and3(y = TRUE, logical(2), logical(3)), regexp = "permissible.*lengths")
+  expect_error(and3(y = TRUE, logical(2), x = logical(3)), regexp = "permissible.*lengths")
 })
 
 test_that("and3 works", {
@@ -50,5 +53,22 @@ test_that("and3 works with NAs", {
                    info = paste("single", pos, lgvl))
     }
   }
+  for (x in c(TRUE, FALSE, NA)) {
+    for (y in c(TRUE, FALSE, NA)) {
+      for (z in c(TRUE, FALSE, NA)) {
+        expect_equal(and3(c(x, z), y, x),
+                     c(x, z) & y & x,
+                     info = paste("1", x, y, z))
+        expect_equal(and3(y = c(x, y), y, x),
+                     c(x, y) & y & x,
+                     info = paste("2", x, y, z))
+      }
+    }
+  }
+})
+
+test_that("nas_absent ok", {
+  expect_equal(and3(c(TRUE, FALSE), c(TRUE, FALSE), c(TRUE, FALSE), nas_absent = TRUE),
+               c(TRUE, FALSE))
 })
 
