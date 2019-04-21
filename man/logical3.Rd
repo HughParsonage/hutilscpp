@@ -6,13 +6,13 @@
 \alias{or3}
 \title{Vectorized logical with support for short-circuits}
 \usage{
-and3(x, y, z = NULL)
+and3(x, y, z = NULL, nas_absent = FALSE)
 
 or3(x, y, z = NULL)
 }
 \arguments{
-\item{x, y, z}{Logical vectors. If \code{z} is \code{NULL} it is interpreted as \code{TRUE} or
-\code{FALSE} recycled to the length of \code{x}.}
+\item{x, y, z}{Logical vectors. If \code{z} is \code{NULL} the function is equivalent to the
+binary versions; only \code{x} and \code{y} are used.}
 }
 \description{
 Vectorized logical with support for short-circuits
