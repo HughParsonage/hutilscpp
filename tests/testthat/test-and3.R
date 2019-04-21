@@ -5,6 +5,7 @@ test_that("and3 error handling", {
   expect_error(and3(z = TRUE, logical(2), logical(3)), regexp = "permissible.*lengths")
   expect_error(and3(y = TRUE, logical(2), logical(3)), regexp = "permissible.*lengths")
   expect_error(and3(y = TRUE, logical(2), x = logical(3)), regexp = "permissible.*lengths")
+  expect_error(and3(x = TRUE, logical(2), logical(3)), regexp = "permissible.*lengths")
 })
 
 test_that("and3 works", {

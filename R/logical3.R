@@ -21,13 +21,13 @@ and3 <- function(x, y, z = NULL, nas_absent = FALSE) {
   lz <- length(.z)
 
   if (lx == ly && ly == lz && isTRUE(nas_absent)) {
-    return(do_and3(x, y, z, lx))
+    return(do_and3(x, y, z))
   }
 
 
   max.length <- max(lx, ly, lz)
   if (max.length == 1L) {
-    return(x && y && z)
+    return(x && y && .z)
   }
   if (lx != 1L && lx != max.length) {
     stop("`length(x) = ", lx, ", yet ",
@@ -79,7 +79,7 @@ and3 <- function(x, y, z = NULL, nas_absent = FALSE) {
   if (lx == 1L) {
     # x cannot be NA or FALSE (already handled)
     if (is.null(z)) {
-      return(y)
+      return(y)  # nocov
     } else if (lz == 1L) {
       if (z) {
         return(y)
@@ -94,7 +94,7 @@ and3 <- function(x, y, z = NULL, nas_absent = FALSE) {
       return(x)
     }
   }
-  do_and3(x, y, .z, max.length)
+  do_and3(x, y, .z)
 }
 
 #' @rdname logical3
@@ -133,7 +133,7 @@ or3 <- function(x, y, z = NULL) {
   if (!is.null(z) && lz != 1L && lz != max.length) {
     stop("`length(z) = ", lz, ", yet ",
          if (lx == 1L) {
-           "`length(y) = "
+           "`length(z) = "
          } else {
            "`length(x) = "
          },
@@ -141,8 +141,28 @@ or3 <- function(x, y, z = NULL) {
          "The only permissible vector lengths are 1 or the maximum length of the inputs.")
   }
 
+  if (isTRUE(x) || isTRUE(y) || isTRUE(.z)) {
+    return(rep.int(TRUE, max.length))
+  }
+
   if (anyNA(x) || anyNA(y) || anyNA(.z)) {
     return(x | y | .z)
+  }
+
+  if (lx == 1L) {
+    if (ly == 1L) {
+      return(.z)
+    } else if (lz == 1L) {
+      return(y)
+    } else {
+      return(do_or3(y, .z, FALSE))
+    }
+  } else if (ly == 1L) {
+    if (lz == 1L) {
+      return(x)
+    } else {
+      return(do_or3(x, .z, FALSE))
+    }
   }
 
   do_or3(x, y, .z)
