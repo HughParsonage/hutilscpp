@@ -3,7 +3,7 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 LogicalVector do_or3(LogicalVector x, LogicalVector y, LogicalVector z) {
-  int N = x.size();
+  int N = x.length();
   if (y.length() != N) {
     stop("y and x have different lengths.");
   }
@@ -37,8 +37,8 @@ LogicalVector do_or3(LogicalVector x, LogicalVector y, LogicalVector z) {
 }
 
 // [[Rcpp::export]]
-LogicalVector do_and3(LogicalVector x, LogicalVector y, LogicalVector z, int max_length = -1) {
-  int N = max_length < 0 ? x.length() : max_length;
+LogicalVector do_and3(LogicalVector x, LogicalVector y, LogicalVector z) {
+  int N = x.length();
   if (y.length() != N) {
     stop("y and x have different lengths.");
   }

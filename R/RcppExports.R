@@ -133,8 +133,8 @@ do_or3 <- function(x, y, z) {
     .Call(`_hutilscpp_do_or3`, x, y, z)
 }
 
-do_and3 <- function(x, y, z, max_length = -1L) {
-    .Call(`_hutilscpp_do_and3`, x, y, z, max_length)
+do_and3 <- function(x, y, z) {
+    .Call(`_hutilscpp_do_and3`, x, y, z)
 }
 
 na_and <- function(x) {
