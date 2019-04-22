@@ -36,7 +36,7 @@ and3 <- function(x, y, z = NULL, nas_absent = FALSE) {
          } else {
            "`length(y) = "
          },
-         max.length, ". ",
+         max.length, "`. ",
          "The only permissible vector lengths are 1 or the maximum length of the inputs.")
   }
   if (ly != 1L && ly != max.length) {
@@ -46,7 +46,7 @@ and3 <- function(x, y, z = NULL, nas_absent = FALSE) {
          } else {
            "`length(x) = "
          },
-         max.length, ". ",
+         max.length, "`. ",
          "The only permissible vector lengths are 1 or the maximum length of the inputs.")
   }
   if (!is.null(z) && lz != 1L && lz != max.length) {
@@ -56,7 +56,7 @@ and3 <- function(x, y, z = NULL, nas_absent = FALSE) {
          } else {
            "`length(x) = "
          },
-         max.length, ". ",
+         max.length, "`. ",
          "The only permissible vector lengths are 1 or the maximum length of the inputs.")
   }
 
