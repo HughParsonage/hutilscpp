@@ -25,10 +25,12 @@ test_that("or3 length-1", {
 })
 
 test_that("length-1s 2/3", {
-  expect_equal(or3(FALSE, FALSE, c(TRUE, FALSE, NA)),
-               c(TRUE, FALSE, NA))
-  expect_equal(or3(FALSE, logical(3), c(TRUE, FALSE, NA)),
-               c(TRUE, FALSE, NA))
+  expect_equal(or3(FALSE, FALSE, c(TRUE, FALSE, FALSE)),
+               c(TRUE, FALSE, FALSE))
+  expect_equal(or3(logical(3), FALSE, c(TRUE, FALSE, FALSE)),
+               c(TRUE, FALSE, FALSE))
+  expect_equal(or3(FALSE, logical(3), c(TRUE, FALSE, FALSE)),
+               c(TRUE, FALSE, FALSE))
 })
 
 test_that("or3 works with NAs", {

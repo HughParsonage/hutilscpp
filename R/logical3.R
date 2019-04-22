@@ -85,7 +85,11 @@ and3 <- function(x, y, z = NULL, nas_absent = FALSE) {
         return(y)
       }
     } else {
-      # fall through
+      if (lz == ly) {
+        return(do_and3(z, y, TRUE))
+      } else {
+        return(z)
+      }
     }
 
   } else if (ly == 1L) {
