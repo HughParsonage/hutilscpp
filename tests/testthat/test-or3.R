@@ -24,6 +24,13 @@ test_that("or3 length-1", {
                TRUE)
 })
 
+test_that("length-1s 2/3", {
+  expect_equal(or3(FALSE, FALSE, c(TRUE, FALSE, NA)),
+               c(TRUE, FALSE, NA))
+  expect_equal(or3(FALSE, logical(3), c(TRUE, FALSE, NA)),
+               c(TRUE, FALSE, NA))
+})
+
 test_that("or3 works with NAs", {
   skip_if_not_installed("data.table")
   library(data.table)
@@ -70,4 +77,12 @@ test_that("or3 works with NAs", {
       }
     }
   }
+})
+
+test_that("C++", {
+  expect_error(do_or3(logical(3), logical(2), TRUE),
+               regexp = "different lengths")
+  expect_equal(do_or3(c(TRUE, FALSE), c(TRUE, FALSE), TRUE), c(TRUE, TRUE))
+  expect_equal(do_or3(c(TRUE, FALSE), c(TRUE, FALSE), FALSE), c(TRUE, FALSE))
+  expect_equal(do_or3(c(TRUE, FALSE), c(TRUE, FALSE), logical(0)), c(TRUE, FALSE))
 })

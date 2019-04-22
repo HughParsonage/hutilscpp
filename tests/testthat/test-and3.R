@@ -7,6 +7,7 @@ test_that("and3 error handling", {
   expect_error(and3(y = TRUE, logical(2), x = logical(3)), regexp = "permissible.*lengths")
   expect_error(and3(x = TRUE, logical(2), logical(3)), regexp = "permissible.*lengths")
   expect_error(and3(x = logical(3), logical(2), logical(3)), regexp = "permissible.*lengths")
+  expect_error(and3(x = logical(4), logical(1), logical(3)), regexp = "permissible.*lengths")
 })
 
 test_that("and3 works", {
@@ -72,5 +73,14 @@ test_that("and3 works with NAs", {
 test_that("nas_absent ok", {
   expect_equal(and3(c(TRUE, FALSE), c(TRUE, FALSE), c(TRUE, FALSE), nas_absent = TRUE),
                c(TRUE, FALSE))
+})
+
+test_that("C++", {
+  expect_error(do_and3(logical(3), logical(2), TRUE),
+               regexp = "different lengths")
+  expect_equal(do_and3(c(TRUE, FALSE), c(TRUE, FALSE), TRUE), c(TRUE, FALSE))
+  expect_equal(do_and3(c(TRUE, FALSE), c(TRUE, FALSE), FALSE), c(FALSE, FALSE))
+  expect_equal(do_and3(c(TRUE, FALSE), c(TRUE, FALSE), logical(0)), c(TRUE, FALSE))
+  expect_equal(na_and(c(TRUE, FALSE, NA)), c(TRUE, FALSE, NA) & NA)
 })
 
