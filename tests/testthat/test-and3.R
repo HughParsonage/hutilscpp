@@ -78,9 +78,13 @@ test_that("nas_absent ok", {
 test_that("C++", {
   expect_error(do_and3(logical(3), logical(2), TRUE),
                regexp = "different lengths")
+  expect_error(do_and3(c(TRUE, FALSE), c(TRUE, FALSE), c(TRUE, FALSE, FALSE)),
+               regexp = "wrong length")
   expect_equal(do_and3(c(TRUE, FALSE), c(TRUE, FALSE), TRUE), c(TRUE, FALSE))
   expect_equal(do_and3(c(TRUE, FALSE), c(TRUE, FALSE), FALSE), c(FALSE, FALSE))
   expect_equal(do_and3(c(TRUE, FALSE), c(TRUE, FALSE), logical(0)), c(TRUE, FALSE))
   expect_equal(na_and(c(TRUE, FALSE, NA)), c(TRUE, FALSE, NA) & NA)
+  expect_error(do_and3(c(TRUE, FALSE), c(TRUE, FALSE), c(TRUE, FALSE, FALSE)),
+               regexp = "wrong length")
 })
 
