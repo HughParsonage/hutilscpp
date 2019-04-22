@@ -759,7 +759,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_summary3_int", (DL_FUNC) &_hutilscpp_do_summary3_int, 5},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
-    {"do_c_pmax",                              (DL_FUNC) &do_c_pmax,                               3},
+    {"do_c_pmax",               (DL_FUNC) &do_c_pmax,               3},
     {NULL, NULL, 0}
 };
 
