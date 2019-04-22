@@ -6,6 +6,9 @@ test_that("Error handling", {
   expect_error(pminC(1:5, 0L, in_place = "not logical"))
   expect_error(pminC("abc", "abc"),
                regexp = "must be numeric")
+  expect_error(pminC(0:1, "abc"),
+               regexp = "`a` was a character, but must be numeric.",
+               fixed = TRUE)
 })
 
 test_that("pmin's works", {

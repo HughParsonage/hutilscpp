@@ -6,6 +6,8 @@ test_that("or3 error handling", {
   expect_error(or3(y = TRUE, logical(2), logical(3)), regexp = "permissible.*lengths")
   expect_error(or3(y = TRUE, logical(2), x = logical(3)), regexp = "permissible.*lengths")
   expect_error(or3(x = TRUE, logical(2), logical(3)), regexp = "permissible.*lengths")
+  expect_error(or3(x = logical(3), logical(2), logical(3)), regexp = "permissible.*lengths")
+  expect_error(or3(x = logical(1), logical(4), logical(3)), regexp = "permissible.*lengths")
 })
 
 test_that("logical3 works", {
@@ -15,6 +17,11 @@ test_that("logical3 works", {
   expect_equal(or3(x, y, z), x | y | z)
   z <- NULL
   expect_equal(or3(x, y, z), x | y)
+})
+
+test_that("or3 length-1", {
+  expect_equal(or3(TRUE, FALSE, TRUE),
+               TRUE)
 })
 
 test_that("or3 works with NAs", {
