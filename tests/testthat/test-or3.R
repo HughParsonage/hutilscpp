@@ -85,4 +85,6 @@ test_that("C++", {
   expect_equal(do_or3(c(TRUE, FALSE), c(TRUE, FALSE), TRUE), c(TRUE, TRUE))
   expect_equal(do_or3(c(TRUE, FALSE), c(TRUE, FALSE), FALSE), c(TRUE, FALSE))
   expect_equal(do_or3(c(TRUE, FALSE), c(TRUE, FALSE), logical(0)), c(TRUE, FALSE))
+  expect_error(do_or3(c(TRUE, FALSE), c(TRUE, FALSE), c(TRUE, FALSE, FALSE)),
+               regexp = "wrong length")
 })
