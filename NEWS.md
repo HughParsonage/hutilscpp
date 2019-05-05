@@ -2,6 +2,10 @@
 
 * Added a `NEWS.md` file to track changes to the package.
 
+## Bug fixes:
+
+* `which_first(x == y)` now supports logical `x` without returning arcane error messages.
+
 ## New functions:
 
 * `is_constant`, for testing atomic vectors

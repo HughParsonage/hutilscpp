@@ -84,32 +84,37 @@ which_first <- function(expr, verbose = FALSE) {
              AND(operator == "%in%",             # numeric vectors with %in%
                  # c(0, 1, 2) is not numeric but it is when evaluated
                  is.numeric(eval.parent(rhs)))))) {
-    if (verbose) {
-      message("Falling back to `which.max(expr)`.")
-    }
-    o <- which.max(expr)
-
-    # o == 1L is wrong if all expr are FALSE
-    if (o == 1L && !expr[1L]) {
-      o <- 0L
-    }
+    o <- .which_first(expr, verbose = verbose)
     return(o)
   }
 
   lhs_eval <- eval.parent(lhs)
   rhs_eval <- eval.parent(rhs)
 
+  if (is.logical(lhs_eval)) {
+    if (anyNA(rhs_eval)) {
+      switch(operator,
+             "==" = {
+               warning("`rhs` appears to be logical NA. Treating as\n\twhich_first(is.na(x))")
+               o <- .which_first(is.na(x))
+             },
+             "!=" = {
+               warning("`rhs` appears to be logical NA. Treating as\n\twhich_first(!is.na(x))")
+               o <- .which_first(!is.na(x))
+             },
+             stop("`rhs` appears to be logical NA. This is not supported for operator '", operator, "'."))
+    } else {
+      o <- .which_first_logical(lhs_eval, as.logical(rhs_eval), operator = operator)
+    }
+    return(o)
+  }
 
   if (is.character(lhs_eval)) {
     oc <-
       switch(operator,
              "==" = AnyCharMatch(lhs_eval, as.character(rhs_eval)),
              {
-               o <- which.max(expr)
-               if (o == 1L && !expr[1L]) {
-                 o <- 0L
-               }
-               o
+               o <- .which_first(expr, verbose = verbose)
              })
     return(oc)
   }
@@ -118,8 +123,7 @@ which_first <- function(expr, verbose = FALSE) {
          "==" = {
            if (is.double(lhs_eval)) {
              o <- AnyWhich_dbl(lhs_eval, as.double(rhs_eval), gt = FALSE, lt = FALSE, eq = TRUE)
-           }
-           if (is.integer(lhs_eval)) {
+           } else if (is.integer(lhs_eval)) {
              # Need to pass int to Rcpp, but 2 != 2.5
              if (is.double(rhs_eval) && as.integer(rhs_eval) != rhs_eval) {
                # if rhs isn't even an integer, then
@@ -128,13 +132,14 @@ which_first <- function(expr, verbose = FALSE) {
                return(0L)
              }
              o <- AnyWhich_int(lhs_eval, as.integer(rhs_eval), gt = FALSE, lt = FALSE, eq = TRUE)
+           } else {
+             o <- .which_first(expr, verbose = verbose)
            }
          },
          "!=" = {
            if (is.double(lhs_eval)) {
              o <- AnyWhich_dbl(lhs_eval, as.double(rhs_eval), gt = FALSE, lt = FALSE, eq = FALSE)
-           }
-           if (is.integer(lhs_eval)) {
+           } else if (is.integer(lhs_eval)) {
              if (is.double(rhs_eval) && as.integer(rhs_eval) != rhs_eval) {
                # Like ==, if rhs isn't even an integer, then
                # the first element of any integer vector
@@ -147,6 +152,8 @@ which_first <- function(expr, verbose = FALSE) {
                }
              }
              o <- AnyWhich_int(lhs_eval, as.integer(rhs_eval), gt = FALSE, lt = FALSE, eq = FALSE)
+           } else {
+             o <- .which_first(expr)
            }
          },
          "<=" = {
@@ -241,6 +248,50 @@ which_first <- function(expr, verbose = FALSE) {
          )
   return(o)
 }
+
+.which_first <- function(expr, verbose = FALSE) {
+  if (verbose) {
+    message("Falling back to `which.max(expr)`.")
+  }
+  o <- which.max(expr)
+  if (length(o) == 0L) {
+    # i.e. all expr NA
+    return(0L)
+  }
+  # o == 1L is wrong if all expr are FALSE
+  if (o == 1L && !expr[1L]) {
+    o <- 0L
+  }
+  o
+}
+
+.which_first_logical <- function(lhs, rhs, operator = "==", verbose = FALSE) {
+  stopifnot(is.logical(rhs), length(rhs) == 1L, length(lhs) > 1L, !anyNA(rhs),
+            is.logical(verbose))
+  rhs <-
+    switch(operator,
+           "==" = rhs,
+           "!=" = !rhs,
+           "<" = if (rhs) rhs else return(0L),
+           "<=" = if (rhs) return(1L) else rhs,
+           ">" = if (rhs) return(0L) else rhs,
+           ">=" = if (rhs) rhs else return(1L),
+           stop("Internal error 260:20190505."))
+  if (rhs) {
+    o <- which.max(lhs)
+    # can't just test o == 1 because it may be NA
+    if (!lhs[o]) {
+      o <- 0L
+    }
+  } else {
+    o <- which.min(lhs)
+    if (lhs[o]) {
+      o <- 0L
+    }
+  }
+  o
+}
+
 
 
 
