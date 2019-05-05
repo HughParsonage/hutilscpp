@@ -176,7 +176,63 @@ test_that("which_first_int_int", {
   expect_identical(do_which_first_int_int(y, x, eq = TRUE, lt = TRUE), 2L)
 })
 
+test_that(".which_first_logical all NA", {
+  skip("For later consideration.")
+  x <- c(NA, NA, NA)
+  expect_equal(.which_first_logical(x, NA), 1)
+  expect_equal(.which_first_logical(x, TRUE), 0)
+  expect_equal(.which_first_logical(x, FALSE), 0)
+})
+test_that(".which_first_logical one NA", {
+  skip("For later consideration.")
+  x <- c(NA, NA, TRUE)
+  expect_equal(.which_first_logical(x, NA), 1)
+  expect_equal(.which_first_logical(x, TRUE), 3)
+  expect_equal(.which_first_logical(x, FALSE), 0)
+  y <- c(NA, NA, FALSE)
+  expect_equal(.which_first_logical(y, NA), 1)
+  expect_equal(.which_first_logical(y, TRUE), 0)
+  expect_equal(.which_first_logical(y, FALSE), 3)
+  z <- c(TRUE, NA, NA)
+  expect_equal(.which_first_logical(z, NA), 2)
+  expect_equal(.which_first_logical(z, TRUE), 1)
+  expect_equal(.which_first_logical(z, FALSE), 0)
+})
+test_that(".which_first_logical every", {
+  skip("For later consideration.")
+  x <- c(NA, TRUE, FALSE)
+  expect_equal(.which_first_logical(x, NA), 1)
+  expect_equal(.which_first_logical(x, TRUE), 2)
+  expect_equal(.which_first_logical(x, FALSE), 3)
+  y <- c(FALSE, NA, TRUE)
+  expect_equal(.which_first_logical(y, NA), 2)
+  expect_equal(.which_first_logical(y, TRUE), 3)
+  expect_equal(.which_first_logical(y, FALSE), 1)
+})
+test_that(".which_first_logical no NA", {
+  x <- c(TRUE, TRUE, TRUE)
 
+  expect_equal(.which_first_logical(x, TRUE), 1)
+  expect_equal(.which_first_logical(x, FALSE), 0)
+
+  y <- c(FALSE, FALSE, FALSE)
+
+  expect_equal(.which_first_logical(y, TRUE), 0)
+  expect_equal(.which_first_logical(y, FALSE), 1)
+
+  z <- c(FALSE, TRUE, FALSE)
+
+  expect_equal(.which_first_logical(z, TRUE), 2)
+  expect_equal(.which_first_logical(z, FALSE), 1)
+})
+
+test_that("unexpected o", {
+  x <- c(NA, TRUE, TRUE)
+  expect_equal(which_first(x == TRUE), 2)
+  expect_equal(which_first(x == 1L), 2)
+  expect_equal(which_first(x == 1), 2)
+  expect_equal(which_first(x != 1), 0)
+})
 
 
 
