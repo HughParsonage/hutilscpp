@@ -174,6 +174,7 @@ test_that("which_first_int_int", {
   expect_identical(do_which_first_int_int(x, y, eq = FALSE), 0L)
   y <- c(2L, 1L)
   expect_identical(do_which_first_int_int(y, x, eq = TRUE, lt = TRUE), 2L)
+  expect_identical(do_which_first_int_int(y, x, eq = TRUE), 2L)
 })
 
 test_that(".which_first_logical all NA", {
@@ -232,7 +233,71 @@ test_that("unexpected o", {
   expect_equal(which_first(x == 1L), 2)
   expect_equal(which_first(x == 1), 2)
   expect_equal(which_first(x != 1), 0)
+
+  x.raw <- c(raw(5), charToRaw("A"))
+  expect_equal(which_first(x.raw == 0), 1L)
+  expect_equal(which_first(x.raw != 0), 6L)
+  expect_equal(which_first(x.raw < 0), 0L)
+  expect_equal(which_first(x.raw <= 0), 1L)
+  expect_equal(which_first(x.raw > 0), 6L)
+  expect_equal(which_first(x.raw >= 0), 1L)
+  expect_error(which_first(x.raw %in% 0),
+               regexp = "not supported")
+
 })
 
+test_that("LHS logical length-one", {
+  true <- TRUE
+  expect_equal(which_first(true == 1L), 1L)
+  expect_equal(which_first(true == 0L), 0L)
+  expect_equal(suppressWarnings(which_first(true == NA)), 0L)
+  false <- FALSE
+  expect_equal(which_first(false == 1), 0L)
+  expect_equal(which_first(false == 0), 1L)
+  expect_equal(suppressWarnings(which_first(false == NA)), 0L)
+  missy <- NA
+  expect_equal(which_first(missy == 1), 0L)
+  expect_equal(which_first(missy == 1), 0L)
+})
 
+test_that("RHS NA", {
+  x <- c(NA, NA)
+  expect_error(which_first(x > NA),
+               regexp = "This is not supported for operator '>'.",
+               fixed = TRUE)
+  expect_warning(wf_xisna <- which_first(x == NA),
+                 regexp = "`rhs` appears to be logical NA.",
+                 fixed = TRUE)
+  expect_equal(wf_xisna, 1L)
+  wf_xisfalse <- which_first(x == 0)
+  expect_equal(wf_xisfalse, 0L)
+
+  y <- c(TRUE, FALSE, NA)
+  expect_warning(wf_yisna <- which_first(y == NA),
+                 regexp = "which_first(is.na",
+                 fixed = TRUE)
+  expect_equal(wf_yisna, 3L)
+  expect_warning(wf_yisntna <- which_first(y != NA),
+                 regexp = "which_first(!is.na",
+                 fixed = TRUE)
+  expect_equal(wf_yisntna, 1L)
+
+  z <- c(NA, FALSE)
+  expect_warning(wf_zisntna <- which_first(z != NA),
+                 regexp = "`rhs` appears to be logical NA.",
+                 fixed = TRUE)
+  expect_equal(wf_zisntna, 2L)
+
+})
+
+test_that("lhs_eval length 0", {
+  x <- integer(0)
+  expect_equal(which_first(x == 0.5), 0L)
+  expect_equal(which_first(x != 0.5), 0L)
+  expect_equal(which_first(x >= 0.5), 0L)
+  expect_equal(which_first(x <= 0.5), 0L)
+  expect_equal(which_first(x < 0.5), 0L)
+  expect_equal(which_first(x > 0.5), 0L)
+  expect_equal(.which_first(c(NA, NA)), 0L)
+})
 
