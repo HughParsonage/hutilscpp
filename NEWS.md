@@ -8,7 +8,8 @@
 
 ## New functions:
 
-* `is_constant`, for testing atomic vectors
+* `is_constant`, for testing atomic vectors and `isntConstant` for the first
+  different value
 * `and3`, `or3` for ternary and/or enabling vectorized short-circuiting
 
 ## Enhancements
