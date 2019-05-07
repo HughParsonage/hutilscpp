@@ -35,3 +35,57 @@ test_that("is_constant with NA", {
   expect_true(is_constant(c(NA_integer_, NA_integer_)))
   expect_true(is_constant(c(NA_character_, NA_integer_)))
 })
+
+test_that("isntConstant works", {
+  expect_equal(isntConstant(c(1, 1, 1)), 0L)
+  expect_equal(isntConstant(rep(0L, 2L)), 0L)
+  expect_equal(isntConstant(c(1, 2, 1)), 2L)
+  expect_equal(isntConstant(c(1L, 1L, 1L, -3L)), 4L)
+  expect_equal(isntConstant(logical(4)), 0L)
+  expect_equal(isntConstant(c(logical(4), TRUE)), 5L)
+})
+
+test_that("isntConstant error handling", {
+  expect_error(isntConstant(list(list())),
+               regexp = "was not atomic")
+})
+
+test_that("isntConstant len-1", {
+  expect_equal(isntConstant(1), 0L)
+})
+
+test_that("isntConstant logical", {
+  expect_equal(isntConstant(c(NA, NA, TRUE)), 3L)
+  expect_equal(isntConstant(c(NA, NA, TRUE, FALSE)), 3L)
+  expect_equal(isntConstant(logical(3)), 0L)
+  expect_equal(isntConstant(!logical(3)), 0L)
+  expect_equal(isntConstant(c(logical(3), TRUE)), 4L)
+  expect_equal(isntConstant(!c(logical(3), TRUE)), 4L)
+})
+
+
+test_that("isntConstant NA", {
+  expect_equal(isntConstant(rep(NA, 5)), 0L)
+  expect_equal(isntConstant(rep(NA_integer_, 5)), 0L)
+  expect_equal(isntConstant(c(1, rep(NA, 5))), 2L)
+  expect_equal(isntConstant(c(rep(NA, 5), 1)), 6L)
+  expect_equal(isntConstant(c(rep(NA, 5), 1)), 6L)
+  expect_equal(isntConstant(c(1, 1, NA, 1)), 3L)
+})
+
+test_that("isntConstant character", {
+  expect_equal(isntConstant(character(5)), 0L)
+  expect_equal(isntConstant(c(NA_character_, character(4))), 2L)
+  expect_equal(isntConstant(c("", NA_character_, "")), 2L)
+  expect_equal(isntConstant(c("a", "a", "")), 3L)
+})
+
+test_that("isntConstant other type", {
+  x5 <- raw(5)
+  expect_equal(isntConstant(x5), 0L)
+  expect_equal(isntConstant(c(as.raw(1), x5)), 2L)
+  expect_equal(isntConstant(c(x5, as.raw(1))), 6L)
+})
+
+
+
