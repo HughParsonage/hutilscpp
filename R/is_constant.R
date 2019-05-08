@@ -33,7 +33,7 @@
 #' N <- 1e6  # to avoid long-running examples on CRAN
 #'
 #' ## Good-cases
-#' nonconst <- c(integer(1e5), 13L, integer(1e9))
+#' nonconst <- c(integer(1e5), 13L, integer(N))
 #' bench_system_time(uniqueN(nonconst) == 1L)
 #' #> process    real
 #' #> 15.734s  2.893s
