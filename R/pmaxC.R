@@ -65,8 +65,6 @@ pmaxC <- function(x, a, in_place = FALSE) {
   # but we need to be careful
   # pmaxC(<int>, 0.5) !=> 0
   if (is.integer(x)) {
-    # a must be double by now
-    if (!is.double(a)) stop("Internal error pmaxC:55")  # nocov
     ai <- as.integer(a)
     OR <- `||`
     if (OR(ai == a,
@@ -77,6 +75,10 @@ pmaxC <- function(x, a, in_place = FALSE) {
       return(do_pmaxC_dbl(as.double(x), a))
     }
   }
+  if (is.double(x) && is.integer(a)) {
+    return(do_pmaxC_dbl(x, as.double(a), in_place = in_place))
+  }
+
   stop("Internal error pmaxC:65") # nocov
 }
 

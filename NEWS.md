@@ -15,4 +15,5 @@
 ## Enhancements
 
 * `pminC` now handles integer inputs without coercing to double
+* `pmaxC(x, a)` now succeeds when `a` is an integer yet `x` is type double.
 

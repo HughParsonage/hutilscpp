@@ -59,6 +59,7 @@ test_that("Error handling", {
 test_that("pmaxC integer", {
   expect_identical(pmaxC(-5:5, 0L), pmax.int(-5:5, 0L))
   expect_identical(pmaxC(-5:5, 0), pmax.int(-5:5, 0L))
+  expect_identical(pmaxC(-5:5 + 0, 0L), pmax.int(-5:5 + 0, 0L))
 })
 
 test_that("pmaxC corners", {
