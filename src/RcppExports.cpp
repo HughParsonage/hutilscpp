@@ -397,6 +397,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// is_safe2int
+int is_safe2int(DoubleVector x, double int_max);
+RcppExport SEXP _hutilscpp_is_safe2int(SEXP xSEXP, SEXP int_maxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type int_max(int_maxSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_safe2int(x, int_max));
+    return rcpp_result_gen;
+END_RCPP
+}
+// force_as_integer
+IntegerVector force_as_integer(DoubleVector x);
+RcppExport SEXP _hutilscpp_force_as_integer(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(force_as_integer(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_or3
 LogicalVector do_or3(LogicalVector x, LogicalVector y, LogicalVector z);
 RcppExport SEXP _hutilscpp_do_or3(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
@@ -735,6 +758,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_theEmptiestQuarters", (DL_FUNC) &_hutilscpp_theEmptiestQuarters, 7},
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
     {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 11},
+    {"_hutilscpp_is_safe2int", (DL_FUNC) &_hutilscpp_is_safe2int, 2},
+    {"_hutilscpp_force_as_integer", (DL_FUNC) &_hutilscpp_force_as_integer, 1},
     {"_hutilscpp_do_or3", (DL_FUNC) &_hutilscpp_do_or3, 3},
     {"_hutilscpp_do_and3", (DL_FUNC) &_hutilscpp_do_and3, 3},
     {"_hutilscpp_na_and", (DL_FUNC) &_hutilscpp_na_and, 1},
@@ -759,7 +784,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_summary3_int", (DL_FUNC) &_hutilscpp_do_summary3_int, 5},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
-    {"do_c_pmax",               (DL_FUNC) &do_c_pmax,               3},
+    {"do_c_pmax",                              (DL_FUNC) &do_c_pmax,                               3},
     {NULL, NULL, 0}
 };
 

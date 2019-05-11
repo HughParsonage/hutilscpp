@@ -3,7 +3,7 @@ using namespace Rcpp;
 #include "cpphutils.h"
 
 
-IntegerVector do_range_int (IntegerVector x, int halt_if_min, int halt_if_max) {
+IntegerVector do_range_int(IntegerVector x, int halt_if_min, int halt_if_max) {
   int n = x.size();
   int maxi = x[n - 1];
   int which_max = n - 1;
@@ -17,6 +17,9 @@ IntegerVector do_range_int (IntegerVector x, int halt_if_min, int halt_if_max) {
 
   for (int i = 0; i < n; ++i) {
     int xi = x[i];
+    if (xi == NA_INTEGER) {
+      continue;
+    }
     if (xi < mini) {
       mini = xi;
       which_min = i;
@@ -47,7 +50,7 @@ IntegerVector do_range_int (IntegerVector x, int halt_if_min, int halt_if_max) {
 
 
 
-DoubleVector do_range_dbl (DoubleVector x, double halt_if_min, double halt_if_max) {
+DoubleVector do_range_dbl(DoubleVector x, double halt_if_min, double halt_if_max) {
   int n = x.size();
   double maxi = x[n - 1];
   double which_max = n - 1;
@@ -60,6 +63,9 @@ DoubleVector do_range_dbl (DoubleVector x, double halt_if_min, double halt_if_ma
   }
   for (int i = 0; i < n; ++i) {
     double xi = x[i];
+    if (xi == NA_REAL) {
+      continue;
+    }
     if (xi < mini) {
       mini = xi;
       which_min = i;
