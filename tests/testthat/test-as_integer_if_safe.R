@@ -12,5 +12,6 @@ test_that("as_integer_if_safe works", {
                    as.integer(c(-max_int, max_int)))
   expect_true(is.double(as_integer_if_safe(c(-max_int - 1, max_int))))
   expect_true(is.double(as_integer_if_safe(c(-max_int, max_int + 1))))
-
+  expect_true(is.double(as_integer_if_safe(c(-max_int, NA, max_int + 1))))
+  expect_equal(sum(is.na(as_integer_if_safe(c(-max_int, NA, max_int + 1)))), 1)
 })
