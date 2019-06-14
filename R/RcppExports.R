@@ -149,6 +149,10 @@ na_and <- function(x) {
     .Call(`_hutilscpp_na_and`, x)
 }
 
+which3 <- function(x, y, z) {
+    .Call(`_hutilscpp_which3`, x, y, z)
+}
+
 #' @name do_pmaxC
 #' @title Internal pmaxC helpers
 #' @description Internal functions used when the overheads of assertions
@@ -268,6 +272,10 @@ squishn <- function(x, a, b, in_place = FALSE) {
 
 squishi <- function(x, a, b, in_place = FALSE) {
     .Call(`_hutilscpp_squishi`, x, a, b, in_place)
+}
+
+sum_isna_int <- function(x) {
+    .Call(`_hutilscpp_sum_isna_int`, x)
 }
 
 do_summary3_dbl <- function(x, y, z, in_place = FALSE, do_max = TRUE) {
