@@ -695,6 +695,39 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sum_isna_dbl
+R_xlen_t sum_isna_dbl(DoubleVector x);
+RcppExport SEXP _hutilscpp_sum_isna_dbl(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(sum_isna_dbl(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sum_isna_complx
+R_xlen_t sum_isna_complx(ComplexVector x);
+RcppExport SEXP _hutilscpp_sum_isna_complx(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< ComplexVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(sum_isna_complx(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sum_isna_char
+R_xlen_t sum_isna_char(CharacterVector x);
+RcppExport SEXP _hutilscpp_sum_isna_char(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(sum_isna_char(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_summary3_dbl
 DoubleVector do_summary3_dbl(DoubleVector x, DoubleVector y, DoubleVector z, bool in_place, bool do_max);
 RcppExport SEXP _hutilscpp_do_summary3_dbl(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP in_placeSEXP, SEXP do_maxSEXP) {
@@ -806,6 +839,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_squishn", (DL_FUNC) &_hutilscpp_squishn, 4},
     {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 4},
     {"_hutilscpp_sum_isna_int", (DL_FUNC) &_hutilscpp_sum_isna_int, 1},
+    {"_hutilscpp_sum_isna_dbl", (DL_FUNC) &_hutilscpp_sum_isna_dbl, 1},
+    {"_hutilscpp_sum_isna_complx", (DL_FUNC) &_hutilscpp_sum_isna_complx, 1},
+    {"_hutilscpp_sum_isna_char", (DL_FUNC) &_hutilscpp_sum_isna_char, 1},
     {"_hutilscpp_do_summary3_dbl", (DL_FUNC) &_hutilscpp_do_summary3_dbl, 5},
     {"_hutilscpp_do_summary3_int", (DL_FUNC) &_hutilscpp_do_summary3_int, 5},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},
