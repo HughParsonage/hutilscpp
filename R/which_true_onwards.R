@@ -16,5 +16,9 @@ which_true_onwards <- function(x) {
     stop("`x` had missing values. This is not permitted.")
   }
 
-  do_which_true_onwards(x)
+  o <- do_which_true_onwards(x)
+  if (o < .Machine$integer.max) {
+    o <- as.integer(o)
+  }
+  o
 }
