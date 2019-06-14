@@ -70,17 +70,17 @@ double do_euclid_dist (double x1,
 
 // [[Rcpp::export]]
 NumericVector haversineDistance(NumericVector lat1, NumericVector lon1, NumericVector lat2, NumericVector lon2, bool unitless = false) {
-  int N = lat1.length();
+  R_xlen_t N = lat1.length();
   if (N != lon1.length() || N != lat2.length() || N != lon2.length()) {
     stop("Lengths of input vectors differ.");
   }
   NumericVector out(N);
   if (unitless) {
-    for (int i = 0; i < N; ++i) {
+    for (R_xlen_t i = 0; i < N; ++i) {
       out[i] = haversine_distance(lat1[i], lon1[i], lat2[i], lon2[i], true);
     }
   } else {
-    for (int i = 0; i < N; ++i) {
+    for (R_xlen_t i = 0; i < N; ++i) {
       out[i] = haversine_distance(lat1[i], lon1[i], lat2[i], lon2[i]);
     }
   }
@@ -97,7 +97,7 @@ NumericVector theEuclidDistance (NumericVector x1,
                                  NumericVector y1,
                                  NumericVector y2,
                                  bool unitless = false) {
-  unsigned int N = x1.size();
+  R_xlen_t N = x1.size();
   unsigned int y1N = y1.size();
   unsigned int x2N = x2.size();
   unsigned int y2N = y2.size();
@@ -109,7 +109,7 @@ NumericVector theEuclidDistance (NumericVector x1,
   double x2i = 0;
   double y1i = 0;
   double y2i = 0;
-  for (unsigned int i = 0; i < N; ++i) {
+  for (R_xlen_t i = 0; i < N; ++i) {
     x1i = x1[i];
     x2i = x2[i];
     y1i = y1[i];
@@ -122,9 +122,9 @@ NumericVector theEuclidDistance (NumericVector x1,
 // [[Rcpp::export]]
 double hausdorffEuclid (NumericVector x,
                         NumericVector y) {
-  int N = x.size();
+  R_xlen_t N = x.size();
   double maxmin_dist = 0;
-  for (int i = 0; i < N; ++i) {
+  for (R_xlen_t i = 0; i < N; ++i) {
     double xi = x[i];
     double yi = y[i];
     double min_dist_i = 0;
@@ -149,8 +149,8 @@ double hausdorffEuclid (NumericVector x,
 
 // [[Rcpp::export]]
 bool is_sorted_ascending (NumericVector x) {
-  unsigned int N = x.size();
-  for (unsigned int i = 1; i < N; ++i) {
+  R_xlen_t N = x.size();
+  for (R_xlen_t i = 1; i < N; ++i) {
     if (x[i] < x[i - 1]) {
       return false;
     }
@@ -187,7 +187,7 @@ IntegerVector EmptiestQuarter (NumericVector x,
 
   double xcentre = minx + (maxx - minx) / 2;
   double ycentre = miny + (maxy - miny) / 2;
-  int N = x.size();
+  R_xlen_t N = x.size();
   int q = -1;
   int o = -1;
 
@@ -222,7 +222,7 @@ IntegerVector EmptiestQuarter (NumericVector x,
       y1 = maxy;
       break;
     }
-    for (int i = 0; i < N; ++i) {
+    for (R_xlen_t i = 0; i < N; ++i) {
       double xi = x[i];
       double yi = y[i];
       if (xi > x0 && xi < x1 && yi > y0 && yi < y1) {
@@ -273,7 +273,7 @@ IntegerVector theEmptiestQuarters (NumericVector x,
   y1 += maxy;
   double dx, dy = 0;
   int o = EmptiestQuarter(x, y, minx, maxx, miny, maxy)[0];
-  for (int i = 0; i < depth; ++i) {
+  for (R_xlen_t i = 0; i < depth; ++i) {
     out[i] = o;
     dx = x1 - x0;
     dx /= 2;
@@ -330,7 +330,7 @@ int which_min_HaversineDistance (NumericVector lat1,
                                  double lat2,
                                  double lon2,
                                  double upperBound = 10) {
-  int N = lat1.length();
+  R_xlen_t N = lat1.length();
   if (N != lon1.length()) {
     stop("length(lat1) != length(lat2).");
   }
@@ -360,7 +360,7 @@ int which_min_HaversineDistance (NumericVector lat1,
   double delta_lon = 0;
   bool skip = false;
 
-  for (int i = 1; i < N; ++i) {
+  for (R_xlen_t i = 1; i < N; ++i) {
     // If the delta lat is greater than the upper bound, don't calculate haversine distance
     if (upperBound > 0) {
       delta_lat = lat1[i] - lat2;
@@ -430,7 +430,7 @@ List match_min_Haversine (NumericVector lat1,
 
   int k = 0;
 
-  for (int i = 0; i < N1; ++i) {
+  for (R_xlen_t i = 0; i < N1; ++i) {
     if (ncores == 1 && (i % 16) == 0) {
       Rcpp::checkUserInterrupt();
     }

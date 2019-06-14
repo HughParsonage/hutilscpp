@@ -60,10 +60,10 @@ using namespace Rcpp;
 //' @rdname do_pmaxC
 // [[Rcpp::export]]
 NumericVector do_pmaxC_dbl(NumericVector x, double a, bool in_place = false) {
-  int n = x.length();
+  R_xlen_t n = x.length();
   NumericVector out = in_place ? NumericVector(x) : NumericVector(clone(x));
 
-  for (int i = 0; i < n; ++i) {
+  for (R_xlen_t i = 0; i < n; ++i) {
     if (x[i] < a) {
       out[i] = a;
     }
@@ -74,10 +74,10 @@ NumericVector do_pmaxC_dbl(NumericVector x, double a, bool in_place = false) {
 //' @rdname do_pmaxC
 // [[Rcpp::export]]
 IntegerVector do_pmaxC_int(IntegerVector x, int a, bool in_place = false) {
-  int n = x.length();
+  R_xlen_t n = x.length();
   IntegerVector out = in_place ? IntegerVector(x) : IntegerVector(clone(x));
 
-  for (int i = 0; i < n; ++i) {
+  for (R_xlen_t i = 0; i < n; ++i) {
     if (x[i] < a) {
       out[i] = a;
     }
@@ -89,10 +89,10 @@ IntegerVector do_pmaxC_int(IntegerVector x, int a, bool in_place = false) {
 //' @rdname do_pmaxC
 // [[Rcpp::export]]
 NumericVector do_pmax0(NumericVector x, bool in_place = false) {
-  int n = x.length();
+  R_xlen_t n = x.length();
   NumericVector out = in_place ? NumericVector(x) : NumericVector(clone(x));
 
-  for (int i = 0; i < n; ++i) {
+  for (R_xlen_t i = 0; i < n; ++i) {
     if (x[i] < 0) {
       out[i] = 0;
     }
@@ -102,8 +102,8 @@ NumericVector do_pmax0(NumericVector x, bool in_place = false) {
 
 // [[Rcpp::export]]
 IntegerVector do_pmaxIP_int(IntegerVector x, int a) {
-  int n = x.length();
-  for (int i = 0; i < n; ++i) {
+  R_xlen_t n = x.length();
+  for (R_xlen_t i = 0; i < n; ++i) {
     if (x[i] < a) {
       x[i] = a;
     }
@@ -113,8 +113,8 @@ IntegerVector do_pmaxIP_int(IntegerVector x, int a) {
 
 // [[Rcpp::export]]
 DoubleVector do_pmaxIP_dbl(DoubleVector x, double a) {
-  int n = x.length();
-  for (int i = 0; i < n; ++i) {
+  R_xlen_t n = x.length();
+  for (R_xlen_t i = 0; i < n; ++i) {
     if (x[i] < a) {
       x[i] = a;
     }
@@ -125,9 +125,9 @@ DoubleVector do_pmaxIP_dbl(DoubleVector x, double a) {
 //' @rdname do_pmaxC
 // [[Rcpp::export]]
 NumericVector do_pmaxIPnum0(NumericVector x) {
-  int n = x.length();
+  R_xlen_t n = x.length();
 
-  for (int i = 0; i < n; ++i) {
+  for (R_xlen_t i = 0; i < n; ++i) {
     if (x[i] < 0) {
       x[i] = 0;
     }
@@ -138,9 +138,9 @@ NumericVector do_pmaxIPnum0(NumericVector x) {
 //' @rdname do_pmaxC
 // [[Rcpp::export]]
 IntegerVector do_pmaxIPint0(IntegerVector x) {
-  int n = x.length();
+  R_xlen_t n = x.length();
 
-  for (int i = 0; i < n; ++i) {
+  for (R_xlen_t i = 0; i < n; ++i) {
     if (x[i] < 0) {
       x[i] = 0;
     }

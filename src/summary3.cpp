@@ -5,7 +5,7 @@ using namespace Rcpp;
 DoubleVector do_summary3_dbl(DoubleVector x, DoubleVector y, DoubleVector z,
                              bool in_place = false,
                              bool do_max = true) {
-  const int n = x.length();
+  const R_xlen_t n = x.length();
   const int ny = y.length();
   const int nz = z.length();
   const bool y1 = ny == 1;
@@ -15,7 +15,7 @@ DoubleVector do_summary3_dbl(DoubleVector x, DoubleVector y, DoubleVector z,
   const double z0 = z[0];
 
   if (do_max) {
-    for (int i = 0; i < n; ++i) {
+    for (R_xlen_t i = 0; i < n; ++i) {
       double xi = x[i];
       double yi = y1 ? y0 : y[i];
       double zi = z1 ? z0 : z[i];
@@ -28,7 +28,7 @@ DoubleVector do_summary3_dbl(DoubleVector x, DoubleVector y, DoubleVector z,
       }
     }
   } else {
-    for (int i = 0; i < n; ++i) {
+    for (R_xlen_t i = 0; i < n; ++i) {
       double xi = x[i];
       double yi = y1 ? y0 : y[i];
       double zi = z1 ? z0 : z[i];
@@ -49,7 +49,7 @@ DoubleVector do_summary3_dbl(DoubleVector x, DoubleVector y, DoubleVector z,
 IntegerVector do_summary3_int(IntegerVector x, IntegerVector y, IntegerVector z,
                        bool in_place = false,
                        bool do_max = true) {
-  const int n = x.length();
+  const R_xlen_t n = x.length();
   const int ny = y.length();
   const int nz = z.length();
   const bool y1 = ny == 1;
@@ -59,7 +59,7 @@ IntegerVector do_summary3_int(IntegerVector x, IntegerVector y, IntegerVector z,
   const int z0 = z[0];
 
   if (do_max) {
-    for (int i = 0; i < n; ++i) {
+    for (R_xlen_t i = 0; i < n; ++i) {
       int xi = x[i];
       int yi = y1 ? y0 : y[i];
       int zi = z1 ? z0 : z[i];
@@ -72,7 +72,7 @@ IntegerVector do_summary3_int(IntegerVector x, IntegerVector y, IntegerVector z,
       }
     }
   } else {
-    for (int i = 0; i < n; ++i) {
+    for (R_xlen_t i = 0; i < n; ++i) {
       int xi = x[i];
       int yi = y1 ? y0 : y[i];
       int zi = z1 ? z0 : z[i];

@@ -11,7 +11,7 @@ int showValuea(const char* what, double x) {
 
 // [[Rcpp::export]]
 List extractMandatory (CharacterVector x, CharacterVector command, int nCommands) {
-  int N = x.length();
+  R_xlen_t N = x.length();
   int command_len = command.length();
   // const char *xp = x[0];
   // const char *cp = command[0];
@@ -29,7 +29,7 @@ List extractMandatory (CharacterVector x, CharacterVector command, int nCommands
   IntegerVector commandNo(nCommands);
   IntegerVector commandOpeners(nCommands);
   IntegerVector commandClosers(nCommands);
-  for (int i = 0; i < N; ++i) {
+  for (R_xlen_t i = 0; i < N; ++i) {
     int k = 0;
     if (x[i] == command[0]) {
       showValuea("k", k);

@@ -2,16 +2,16 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-LogicalVector Implies (LogicalVector x, LogicalVector y, bool anyNAx = true, bool anyNAy = true) {
-  unsigned int N = x.size();
-  unsigned int yN = y.size();
+LogicalVector Implies(LogicalVector x, LogicalVector y, bool anyNAx = true, bool anyNAy = true) {
+  R_xlen_t N = x.size();
+  R_xlen_t yN = y.size();
   if (N != yN) {
     stop("lengths of x and y differ.");
   }
 
   LogicalVector out(clone(y));
   if (!anyNAx && !anyNAy) {
-    for (unsigned int i = 0; i < N; ++i) {
+    for (R_xlen_t i = 0; i < N; ++i) {
       if (!x[i]) {
         out[i] = true;
       }
@@ -23,7 +23,7 @@ LogicalVector Implies (LogicalVector x, LogicalVector y, bool anyNAx = true, boo
   LogicalVector nay(N);
   nax = is_na(x);
   nay = is_na(y);
-  for (unsigned int i = 0; i < N; ++i) {
+  for (R_xlen_t i = 0; i < N; ++i) {
     if (nax[i]) {
       if (nay[i] || !y[i]) {
         out[i] = NA_LOGICAL;
@@ -38,7 +38,7 @@ LogicalVector Implies (LogicalVector x, LogicalVector y, bool anyNAx = true, boo
       }
       continue;
     }
-    // NO Nas
+    // No NAs
     if (!x[i]) {
       out[i] = true;
     }
