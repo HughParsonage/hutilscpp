@@ -125,6 +125,7 @@ test_that("is_sorted_ascending", {
 })
 
 test_that("Emptiest quadrants", {
+  skip_on_cran() # due sample
   library(data.table)
   x <- c(sample(0:49, size = 2000, replace = TRUE), sample(76:100, size = 1000, replace = TRUE))
   y <- seq(0, 100, length.out = length(x))
@@ -226,6 +227,27 @@ test_that("Emptiest quadrants", {
   expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 3L)
   expect_equal((DT_NE[, theEmptiestQuarters(x, y)])[1:2],
                c(3, 3))
+
+  DT <- data.table(x = runif(100000, -1, 1),
+                   y = runif(100000, -1, 1))
+  DT_NE <- DT[not2(x > 0,
+                   y > 0,
+                   {y - 1.9 * x} <= 0.2,
+                   {y - 0.9*x} >= -0.1)]
+  # Make sure we don't a gap in the wrong cell
+  i <- 0
+  while (i < 1e6 &&
+         OR(DT_NE[x %between% c(0.25, 0.5)][y %between% c(0.5, 0.75), .N] == 0L,
+            AND({DT_NE[, theEmptiestQuarters(x, y)]}[1] != 3,
+                {DT_NE[, theEmptiestQuarters(x, y)]}[2] != 3))) {
+    DT <- data.table(x = runif(100000, -1, 1),
+                     y = runif(100000, -1, 1))
+    DT_NE <- DT[not2(x > 0,
+                     y > 0,
+                     y - 1.9*x <= 0.2,
+                     y - 0.9*x >= -0.1)]
+    i <- i + 1
+  }
 
 
 
