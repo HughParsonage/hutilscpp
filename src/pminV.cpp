@@ -14,12 +14,12 @@ using namespace Rcpp;
 //' @rdname do_pminV
 // [[Rcpp::export]]
 NumericVector do_pminV_dbl(NumericVector x, NumericVector y, bool in_place = false) {
-  const int n = x.length();
+  const R_xlen_t n = x.length();
   if (n != y.length()){
     stop("x and y must be same length.");
   }
   NumericVector out = in_place ? NumericVector(x) : NumericVector(clone(x));
-  for (int i = 0; i < n; ++i) {
+  for (R_xlen_t i = 0; i < n; ++i) {
     double xi = x[i];
     double yi = y[i];
     if (yi < xi) {
@@ -32,12 +32,12 @@ NumericVector do_pminV_dbl(NumericVector x, NumericVector y, bool in_place = fal
 //' @rdname do_pminV
 // [[Rcpp::export]]
 IntegerVector do_pminV_int(IntegerVector x, IntegerVector y, bool in_place = false) {
-  const int n = x.length();
+  const R_xlen_t n = x.length();
   if (n != y.length()){
     stop("x and y must be same length.");
   }
   IntegerVector out = in_place ? IntegerVector(x) : IntegerVector(clone(x));
-  for (int i = 0; i < n; ++i) {
+  for (R_xlen_t i = 0; i < n; ++i) {
     int xi = x[i];
     int yi = y[i];
     if (yi < xi) {

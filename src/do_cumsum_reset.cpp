@@ -4,7 +4,7 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 IntegerVector do_cumsum_reset_logical(LogicalVector x) {
-  int N = x.size();
+  R_xlen_t N = x.size();
   IntegerVector out(N);
   // first element does not require loop
   if (x[0]) {
@@ -12,7 +12,7 @@ IntegerVector do_cumsum_reset_logical(LogicalVector x) {
   } else {
     out[0] = 0;
   }
-  for (int i = 1; i < N; ++i) {
+  for (R_xlen_t i = 1; i < N; ++i) {
     if (x[i]) {
       if (x[i - 1]) {
         out[i] = out[i - 1] + 1;
@@ -29,14 +29,14 @@ IntegerVector do_cumsum_reset_logical(LogicalVector x) {
 
 // [[Rcpp::export]]
 IntegerVector do_cumsum_reset_integer(LogicalVector x, IntegerVector y) {
-  int N = x.size();
+  R_xlen_t N = x.size();
   IntegerVector out(N);
   if (x[0]) {
     out[0] = y[0];
   } else {
     out[0] = 0;
   }
-  for (int i = 1; i < N; ++i) {
+  for (R_xlen_t i = 1; i < N; ++i) {
     if (x[i]) {
       if (x[i - 1]) {
         out[i] = out[i - 1] + y[i];
@@ -53,14 +53,14 @@ IntegerVector do_cumsum_reset_integer(LogicalVector x, IntegerVector y) {
 
 // [[Rcpp::export]]
 NumericVector do_cumsum_reset_double(LogicalVector x, NumericVector y) {
-  int N = x.size();
+  R_xlen_t N = x.size();
   NumericVector out(N);
   if (x[0]) {
     out[0] = y[0];
   } else {
     out[0] = 0;
   }
-  for (int i = 1; i < N; ++i) {
+  for (R_xlen_t i = 1; i < N; ++i) {
     if (x[i]) {
       if (x[i - 1]) {
         out[i] = out[i - 1] + y[i];

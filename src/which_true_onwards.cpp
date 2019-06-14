@@ -3,9 +3,9 @@ using namespace Rcpp;
 
 
 // [[Rcpp::export]]
-int do_which_true_onwards(LogicalVector x) {
-  int N = x.size();
-  int out = N - 1;
+R_xlen_t do_which_true_onwards(LogicalVector x) {
+  R_xlen_t N = x.size();
+  R_xlen_t out = N - 1;
   if (!x[out]) {
     return 0;
   }

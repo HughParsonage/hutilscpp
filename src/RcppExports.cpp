@@ -19,7 +19,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // AnyWhich_dbl
-int AnyWhich_dbl(NumericVector x, double a, bool gt, bool lt, bool eq);
+R_xlen_t AnyWhich_dbl(NumericVector x, double a, bool gt, bool lt, bool eq);
 RcppExport SEXP _hutilscpp_AnyWhich_dbl(SEXP xSEXP, SEXP aSEXP, SEXP gtSEXP, SEXP ltSEXP, SEXP eqSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -34,7 +34,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // AnyWhich_int
-int AnyWhich_int(IntegerVector x, int a, bool gt, bool lt, bool eq);
+R_xlen_t AnyWhich_int(IntegerVector x, int a, bool gt, bool lt, bool eq);
 RcppExport SEXP _hutilscpp_AnyWhich_int(SEXP xSEXP, SEXP aSEXP, SEXP gtSEXP, SEXP ltSEXP, SEXP eqSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -457,6 +457,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// which3
+List which3(LogicalVector x, LogicalVector y, LogicalVector z);
+RcppExport SEXP _hutilscpp_which3(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type z(zSEXP);
+    rcpp_result_gen = Rcpp::wrap(which3(x, y, z));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_pmaxC_dbl
 NumericVector do_pmaxC_dbl(NumericVector x, double a, bool in_place);
 RcppExport SEXP _hutilscpp_do_pmaxC_dbl(SEXP xSEXP, SEXP aSEXP, SEXP in_placeSEXP) {
@@ -671,6 +684,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sum_isna_int
+R_xlen_t sum_isna_int(IntegerVector x);
+RcppExport SEXP _hutilscpp_sum_isna_int(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(sum_isna_int(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_summary3_dbl
 DoubleVector do_summary3_dbl(DoubleVector x, DoubleVector y, DoubleVector z, bool in_place, bool do_max);
 RcppExport SEXP _hutilscpp_do_summary3_dbl(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP in_placeSEXP, SEXP do_maxSEXP) {
@@ -715,7 +739,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_which_true_onwards
-int do_which_true_onwards(LogicalVector x);
+R_xlen_t do_which_true_onwards(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_true_onwards(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -763,6 +787,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_or3", (DL_FUNC) &_hutilscpp_do_or3, 3},
     {"_hutilscpp_do_and3", (DL_FUNC) &_hutilscpp_do_and3, 3},
     {"_hutilscpp_na_and", (DL_FUNC) &_hutilscpp_na_and, 1},
+    {"_hutilscpp_which3", (DL_FUNC) &_hutilscpp_which3, 3},
     {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 3},
     {"_hutilscpp_do_pmaxC_int", (DL_FUNC) &_hutilscpp_do_pmaxC_int, 3},
     {"_hutilscpp_do_pmax0", (DL_FUNC) &_hutilscpp_do_pmax0, 2},
@@ -780,6 +805,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_pminV_int", (DL_FUNC) &_hutilscpp_do_pminV_int, 3},
     {"_hutilscpp_squishn", (DL_FUNC) &_hutilscpp_squishn, 4},
     {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 4},
+    {"_hutilscpp_sum_isna_int", (DL_FUNC) &_hutilscpp_sum_isna_int, 1},
     {"_hutilscpp_do_summary3_dbl", (DL_FUNC) &_hutilscpp_do_summary3_dbl, 5},
     {"_hutilscpp_do_summary3_int", (DL_FUNC) &_hutilscpp_do_summary3_int, 5},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},

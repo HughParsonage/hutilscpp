@@ -15,10 +15,10 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 NumericVector do_pminC(NumericVector x, double a, bool in_place = false) {
-  int n = x.length();
+  R_xlen_t n = x.length();
   NumericVector out = in_place ? NumericVector(x) : NumericVector(clone(x));
 
-  for (int i = 0; i < n; ++i) {
+  for (R_xlen_t i = 0; i < n; ++i) {
     double xi = x[i];
     if (xi > a) {
       out[i] = a;
@@ -30,10 +30,10 @@ NumericVector do_pminC(NumericVector x, double a, bool in_place = false) {
 
 // [[Rcpp::export]]
 IntegerVector do_pminC_int(IntegerVector x, double a, bool in_place = false) {
-  int n = x.length();
+  R_xlen_t n = x.length();
   IntegerVector out = in_place ? IntegerVector(x) : IntegerVector(clone(x));
 
-  for (int i = 0; i < n; ++i) {
+  for (R_xlen_t i = 0; i < n; ++i) {
     if (x[i] > a) {
       out[i] = a;
     }
@@ -43,10 +43,10 @@ IntegerVector do_pminC_int(IntegerVector x, double a, bool in_place = false) {
 
 // [[Rcpp::export]]
 NumericVector do_pmin0_dbl(NumericVector x, bool in_place = false) {
-  int n = x.length();
+  R_xlen_t n = x.length();
   NumericVector out = in_place ? NumericVector(x) : NumericVector(clone(x));
 
-  for (int i = 0; i < n; ++i) {
+  for (R_xlen_t i = 0; i < n; ++i) {
     double xi = x[i];
     if (xi > 0) {
       out[i] = 0;
@@ -58,10 +58,10 @@ NumericVector do_pmin0_dbl(NumericVector x, bool in_place = false) {
 
 // [[Rcpp::export]]
 IntegerVector do_pmin0_int(IntegerVector x, bool in_place = false) {
-  int n = x.length();
+  R_xlen_t n = x.length();
   IntegerVector out = in_place ? IntegerVector(x) : IntegerVector(clone(x));
 
-  for (int i = 0; i < n; ++i) {
+  for (R_xlen_t i = 0; i < n; ++i) {
     int xi = x[i];
     if (xi > 0) {
       out[i] = 0;

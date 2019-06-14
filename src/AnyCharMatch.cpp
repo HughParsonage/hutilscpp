@@ -7,8 +7,8 @@ int AnyCharMatch(CharacterVector x, CharacterVector a, bool opposite = false) {
   // const char ac = a[0];
   const char *acp = a[0];
   const bool a_is_na = R_IsNA(*acp);
-  const int n = x.size();
-  for (int i = 0; i < n; ++i) {
+  const R_xlen_t n = x.size();
+  for (R_xlen_t i = 0; i < n; ++i) {
     const char *xcp = x[i];
     if (opposite) {
       if (a_is_na) {
