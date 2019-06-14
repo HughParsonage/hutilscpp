@@ -67,8 +67,8 @@ pminC <- function(x, a = 0L, in_place = FALSE) {
     if (is.integer(x) && is.integer(a)) {
       return(.Call(`_hutilscpp_do_pminC_int`, x, a, in_place))
     }
-    if (is.double(x)) {
-      return(do_pminC(x, a, in_place = in_place))
+    if (is.double(x) && is.numeric(a)) {
+      return(do_pminC(x, as.double(a), in_place = in_place))
     }
   }
 
