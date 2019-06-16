@@ -81,15 +81,11 @@ LogicalVector na_and (LogicalVector x) {
 }
 
 // [[Rcpp::export]]
-List which3(LogicalVector x, LogicalVector y, LogicalVector z) {
+List do_which3(LogicalVector x, LogicalVector y, LogicalVector z, bool And = true) {
   R_xlen_t n = (x.length() > 1) ? x.length() : ((y.length() > 1) ? y.length() : z.length());
   const bool nx = x.length() == n;
   const bool ny = y.length() == n;
   const bool nz = z.length() == n;
-
-  if (!nx || !ny || !nz) {
-    stop("nx, ny, nz");
-  }
 
   IntegerVector out(n);
   int j = 0;
@@ -98,9 +94,27 @@ List which3(LogicalVector x, LogicalVector y, LogicalVector z) {
     int yi = ny ? y[i] : y[0];
     int zi = nz ? z[i] : z[0];
 
-    if (xi != NA_LOGICAL && xi && yi != NA_LOGICAL && yi && zi != NA_LOGICAL && zi) {
-      out[j] = ++i;
-      ++j;
+    if (And) {
+      if (xi != NA_LOGICAL && xi && yi != NA_LOGICAL && yi && zi != NA_LOGICAL && zi) {
+        out[j] = i + 1;
+        ++j;
+      }
+    } else {
+      if (xi != NA_LOGICAL && xi) {
+        out[j] = i + 1;
+        ++j;
+        continue;
+      }
+      if (yi != NA_LOGICAL && yi) {
+        out[j] = i + 1;
+        ++j;
+        continue;
+      }
+      if (zi != NA_LOGICAL && zi) {
+        out[j] = i + 1;
+        ++j;
+        continue;
+      }
     }
   }
   return List::create(j, out);

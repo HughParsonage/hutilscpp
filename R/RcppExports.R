@@ -149,8 +149,8 @@ na_and <- function(x) {
     .Call(`_hutilscpp_na_and`, x)
 }
 
-which3 <- function(x, y, z) {
-    .Call(`_hutilscpp_which3`, x, y, z)
+do_which3 <- function(x, y, z, And = TRUE) {
+    .Call(`_hutilscpp_do_which3`, x, y, z, And)
 }
 
 #' @name do_pmaxC
