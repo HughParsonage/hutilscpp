@@ -471,6 +471,58 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_which3_mem
+IntegerVector do_which3_mem(LogicalVector x, LogicalVector y, LogicalVector z, bool And);
+RcppExport SEXP _hutilscpp_do_which3_mem(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP AndSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type z(zSEXP);
+    Rcpp::traits::input_parameter< bool >::type And(AndSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which3_mem(x, y, z, And));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which3_prepare
+IntegerVector do_which3_prepare(IntegerVector wx, IntegerVector wy, IntegerVector wz);
+RcppExport SEXP _hutilscpp_do_which3_prepare(SEXP wxSEXP, SEXP wySEXP, SEXP wzSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type wx(wxSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type wy(wySEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type wz(wzSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which3_prepare(wx, wy, wz));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which3_prepare1
+IntegerVector do_which3_prepare1(IntegerVector wx, LogicalVector y, LogicalVector z);
+RcppExport SEXP _hutilscpp_do_which3_prepare1(SEXP wxSEXP, SEXP ySEXP, SEXP zSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type wx(wxSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type z(zSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which3_prepare1(wx, y, z));
+    return rcpp_result_gen;
+END_RCPP
+}
+// EraseTest
+IntegerVector EraseTest(IntegerVector x, LogicalVector y);
+RcppExport SEXP _hutilscpp_EraseTest(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(EraseTest(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_pmaxC_dbl
 NumericVector do_pmaxC_dbl(NumericVector x, double a, bool in_place);
 RcppExport SEXP _hutilscpp_do_pmaxC_dbl(SEXP xSEXP, SEXP aSEXP, SEXP in_placeSEXP) {
@@ -822,6 +874,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_and3", (DL_FUNC) &_hutilscpp_do_and3, 3},
     {"_hutilscpp_na_and", (DL_FUNC) &_hutilscpp_na_and, 1},
     {"_hutilscpp_do_which3", (DL_FUNC) &_hutilscpp_do_which3, 4},
+    {"_hutilscpp_do_which3_mem", (DL_FUNC) &_hutilscpp_do_which3_mem, 4},
+    {"_hutilscpp_do_which3_prepare", (DL_FUNC) &_hutilscpp_do_which3_prepare, 3},
+    {"_hutilscpp_do_which3_prepare1", (DL_FUNC) &_hutilscpp_do_which3_prepare1, 3},
+    {"_hutilscpp_EraseTest", (DL_FUNC) &_hutilscpp_EraseTest, 2},
     {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 3},
     {"_hutilscpp_do_pmaxC_int", (DL_FUNC) &_hutilscpp_do_pmaxC_int, 3},
     {"_hutilscpp_do_pmax0", (DL_FUNC) &_hutilscpp_do_pmax0, 2},

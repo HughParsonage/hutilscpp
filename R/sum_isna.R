@@ -24,7 +24,7 @@ sum_isna <- function(x) {
            sum_isna_dbl(x)
          },
          "complex" = {
-
+           sum_isna_complx(x)
          },
          "character" = {
            sum_isna_char(x)

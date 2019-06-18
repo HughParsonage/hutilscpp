@@ -153,6 +153,22 @@ do_which3 <- function(x, y, z, And = TRUE) {
     .Call(`_hutilscpp_do_which3`, x, y, z, And)
 }
 
+do_which3_mem <- function(x, y, z, And = TRUE) {
+    .Call(`_hutilscpp_do_which3_mem`, x, y, z, And)
+}
+
+do_which3_prepare <- function(wx, wy, wz) {
+    .Call(`_hutilscpp_do_which3_prepare`, wx, wy, wz)
+}
+
+do_which3_prepare1 <- function(wx, y, z) {
+    .Call(`_hutilscpp_do_which3_prepare1`, wx, y, z)
+}
+
+EraseTest <- function(x, y) {
+    .Call(`_hutilscpp_EraseTest`, x, y)
+}
+
 #' @name do_pmaxC
 #' @title Internal pmaxC helpers
 #' @description Internal functions used when the overheads of assertions
