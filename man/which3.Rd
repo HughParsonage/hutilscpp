@@ -4,7 +4,8 @@
 \alias{which3}
 \title{which of three vectors are the elements (all, any) true?}
 \usage{
-which3(x, y, z, And = TRUE, prepare = FALSE)
+which3(x, y, z, And = TRUE, anyNAx = anyNA(x), anyNAy = anyNA(y),
+  anyNAz = anyNA(z))
 }
 \arguments{
 \item{x, y, z}{Logical vectors. Either the same length or length-1}
@@ -12,6 +13,8 @@ which3(x, y, z, And = TRUE, prepare = FALSE)
 \item{And}{Boolean. If \code{TRUE}, only indices where all of x, y, z
 are TRUE are returned; if \code{FALSE}, any index where x, y, z
 are TRUE are returned.}
+
+\item{anyNAx, anyNAy, anyNAz}{Whether or not the inputs have \code{NA}.}
 
 \item{prepare}{(logical, default: \code{FALSE})
 Create \code{which(x)}, \code{which(y)}, \code{which(z)}

@@ -120,15 +120,19 @@ IntegerVector do_which3_mem(LogicalVector x, LogicalVector y, LogicalVector z, b
   const bool ny = y.length() == n;
   const bool nz = z.length() == n;
 
-
-
   R_xlen_t Count = 0;
   for (R_xlen_t i = 0; i < n; ++i) {
     int xi = nx ? x[i] : x[0];
     int yi = ny ? y[i] : y[0];
     int zi = nz ? z[i] : z[0];
-    if (xi && yi && zi) {
-      ++Count;
+    if (And) {
+      if (xi && yi && zi) {
+        ++Count;
+      }
+    } else {
+      if (xi || yi || zi) {
+        ++Count;
+      }
     }
   }
   IntegerVector out(Count);
@@ -137,119 +141,20 @@ IntegerVector do_which3_mem(LogicalVector x, LogicalVector y, LogicalVector z, b
     int xi = nx ? x[i] : x[0];
     int yi = ny ? y[i] : y[0];
     int zi = nz ? z[i] : z[0];
-    if (xi && yi && zi) {
-      out[j] = i + 1;
-      ++j;
-    }
-  }
-  return out;
-}
-
-void showValuei(const char* what, int x) {
-  Rcout << " " << what << " \t " << x << std::endl;
-  // return 0;
-}
-
-// [[Rcpp::export]]
-IntegerVector do_which3_prepare(IntegerVector wx, IntegerVector wy, IntegerVector wz) {
-  int wxn = wx.size();
-  int wyn = wy.size();
-  int wzn = wz.size();
-
-  const bool usex = wxn <= wyn && wxn <= wzn;
-  const bool usey = !usex && wyn <= wzn;
-  const bool usez = !usex && !usey;
-  if (usey) {
-    stop("y too long.");
-  }
-  if (usez) {
-    stop("z too long.");
-  }
-
-  // Choose the smallest of the w's (since we're only considering the intersection)
-  IntegerVector out(clone(wx));
-
-  int N = wx.size();
-
-  int i = N;
-  int j = wyn;
-  int k = wzn;
-
-
-  while (i >= 1) {
-    --i;
-    int oi = wx[i];
-    while (j >= 1) {
-      --j;
-      int wyj = wy[j];
-      if (oi == wyj) {
-        while (k >= 1) {
-          --k;
-          int wzk = wz[k];
-          if (oi == wzk) {
-            break;
-          } else {
-            if (oi > wzk || k == 0) {
-              out.erase(i);
-              break;
-            }
-          }
-        }
-        break;
-      } else {
-        if (oi > wyj || j == 0) {
-          out.erase(i);
-          break;
-        }
+    if (And) {
+      if (xi && yi && zi) {
+        out[j] = i + 1;
+        ++j;
       }
-
-    }
-  }
-
-  return out;
-
-}
-
-// [[Rcpp::export]]
-IntegerVector do_which3_prepare1(IntegerVector wx,
-                                 LogicalVector y,
-                                 LogicalVector z) {
-  int N = wx.size();
-  IntegerVector out(clone(wx));
-
-  int Ny = y.size();
-  int Nz = z.size();
-  if (Ny < wx[N - 1] || Nz < wx[N - 1]) {
-    stop("Unexpected length.");
-  }
-
-  int j = N - 1;
-  for (int i = N - 1; i >= 0; --i) {
-    // i is an index of an index
-    // j is the actual candidate index of y or z
-    j = wx[i] - 1;
-    if (y[j] != TRUE || z[j] != TRUE) {
-      out.erase(i);
+    } else {
+      if (xi || yi || zi) {
+        out[j] = i + 1;
+        ++j;
+      }
     }
   }
   return out;
 }
-
-
-// [[Rcpp::export]]
-IntegerVector EraseTest(IntegerVector x, LogicalVector y) {
-  int i = x.size();
-  IntegerVector out(clone(x));
-  while (i >= 1) {
-    --i;
-    if (y[i]) {
-      out.erase(i);
-    }
-
-  }
-  return out;
-}
-
 
 
 
