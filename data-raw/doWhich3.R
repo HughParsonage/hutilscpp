@@ -19,8 +19,6 @@ mark(length(which(and3(x, y, z))))
 mark(length(which3(x, y, z)))
 mark(length(which3(x, y, z, prepare = TRUE)))
 mark(length(hutilscpp:::do_which3_mem(x, y, z)))
-mark(length(hutilscpp:::do_which3_prepare1(which(z), y, x)))
-mark(length(hutilscpp:::do_which3_prepare(which(z), which(y), which(x))))
 
 N <- 1e8
 x <- rep_len(TRUE, N)
@@ -33,8 +31,6 @@ mark(length(which(and3(x, y, z))))
 mark(length(which3(x, y, z)))
 mark(length(which3(x, y, z, prepare = TRUE)))
 mark(length(hutilscpp:::do_which3_mem(x, y, z)))
-mark(length(hutilscpp:::do_which3_prepare1(which(z), y, x)))
-mark(length(hutilscpp:::do_which3_prepare(which(z), which(y), which(x))))
 
 N <- 1e8
 x <- rep_len(TRUE, N)
@@ -49,7 +45,5 @@ mark(length(which(and3(x, y, z))))
 mark(length(which3(x, y, z)))
 mark(length(which3(x, y, z, prepare = TRUE)))
 mark(length(hutilscpp:::do_which3_mem(x, y, z)))
-mark(length(hutilscpp:::do_which3_prepare1(which(z), y, x)))
-mark(length(hutilscpp:::do_which3_prepare(which(z), which(y), which(x))))
 
 

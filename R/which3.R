@@ -6,51 +6,22 @@
 #' @param prepare (logical, default: \code{FALSE})
 #' Create \code{which(x)}, \code{which(y)}, \code{which(z)}
 #' then determine the intersection.
+#' @param anyNAx,anyNAy,anyNAz Whether or not the inputs have \code{NA}.
 #' @export
 
-which3 <- function(x, y, z, And = TRUE, prepare = FALSE) {
+which3 <- function(x, y, z,
+                   And = TRUE,
+                   anyNAx = anyNA(x),
+                   anyNAy = anyNA(y),
+                   anyNAz = anyNA(z)) {
   stopifnot(is.logical(x), is.logical(y), is.logical(z))
-  if (isTRUE(prepare)) {
-    wx <- which(x)
-    wy <- which(y)
-    wz <- which(z)
-
-    o <-
-      switch(which.min(c(length(wx), length(wy), length(wz))),
-             # x is longest
-             if (length(wy) >= length(wz)) {
-               do_which3_prepare(wx, wy, wz)
-             } else {
-               do_which3_prepare(wx, wz, wy)
-             },
-
-             # y is longest
-             if (length(wx) >= length(wz)) {
-               do_which3_prepare(wy, wx, wz)
-             } else {
-               do_which3_prepare(wy, wz, wx)
-             },
-
-             # z is longest
-             if (length(wx) >= length(wy)) {
-               do_which3_prepare(wz, wx, wy)
-             } else {
-               do_which3_prepare(wz, wy, wx)
-             })
-    return(o)
-  }
-  # if (length(x) != length(y)) {
-  #   stop("`length(x) = ", length(x), ", yet ",
-  #        "`length(y) = ", length(y), ".")
-  # }
-  # if (length(x) != length(z)) {
-  #   stop("`length(x) = ", length(x), ", yet ",
-  #        "`length(z) = ", length(z), ".")
-  # }
   check_TF(And)
-  # List produces [[1]] = maximum [[2]] result
-  cpp_list <- do_which3(x, y, z, And)
-  {cpp_list[[2]]}[seq_len(cpp_list[[1]])]
+  if (anyNAx || anyNAy || anyNAz) {
+    cpp_list <- do_which3(x, y, z, And)
+    {cpp_list[[2]]}[seq_len(cpp_list[[1]])]
+  } else {
+    do_which3_mem(x, y, z, And)
+  }
 }
 
 
