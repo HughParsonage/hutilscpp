@@ -15,10 +15,6 @@ are TRUE are returned; if \code{FALSE}, any index where x, y, z
 are TRUE are returned.}
 
 \item{anyNAx, anyNAy, anyNAz}{Whether or not the inputs have \code{NA}.}
-
-\item{prepare}{(logical, default: \code{FALSE})
-Create \code{which(x)}, \code{which(y)}, \code{which(z)}
-then determine the intersection.}
 }
 \description{
 which of three vectors are the elements (all, any) true?
