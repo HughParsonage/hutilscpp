@@ -3,9 +3,6 @@
 #' @param And Boolean. If \code{TRUE}, only indices where all of x, y, z
 #' are TRUE are returned; if \code{FALSE}, any index where x, y, z
 #' are TRUE are returned.
-#' @param prepare (logical, default: \code{FALSE})
-#' Create \code{which(x)}, \code{which(y)}, \code{which(z)}
-#' then determine the intersection.
 #' @param anyNAx,anyNAy,anyNAz Whether or not the inputs have \code{NA}.
 #' @export
 
