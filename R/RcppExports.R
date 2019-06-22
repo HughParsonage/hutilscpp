@@ -149,7 +149,7 @@ na_and <- function(x) {
     .Call(`_hutilscpp_na_and`, x)
 }
 
-do_which3 <- function(x, y, z, And = TRUE, anyNAx = FALSE, anyNAy = FALSE, anyNAz = FALSE) {
+do_which3 <- function(x, y, z, And = TRUE, anyNAx = TRUE, anyNAy = TRUE, anyNAz = TRUE) {
     .Call(`_hutilscpp_do_which3`, x, y, z, And, anyNAx, anyNAy, anyNAz)
 }
 

@@ -83,9 +83,9 @@ LogicalVector na_and (LogicalVector x) {
 // [[Rcpp::export]]
 List do_which3(LogicalVector x, LogicalVector y, LogicalVector z,
                bool And = true,
-               bool anyNAx = false,
-               bool anyNAy = false,
-               bool anyNAz = false) {
+               bool anyNAx = true,
+               bool anyNAy = true,
+               bool anyNAz = true) {
   R_xlen_t n = (x.length() > 1) ? x.length() : ((y.length() > 1) ? y.length() : z.length());
   const bool nx = x.length() == n;
   const bool ny = y.length() == n;
