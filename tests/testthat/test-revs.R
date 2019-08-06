@@ -22,7 +22,7 @@ test_that("rev_int works", {
 
 test_that("rev_int long", {
   skip_on_cran()
-  # skip_on_travis()
+  skip_on_travis()
   x <- -2e9:2e9
   expect_true(do_rev_int(x)[1] > 0)
 })
