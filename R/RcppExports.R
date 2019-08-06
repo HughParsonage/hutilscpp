@@ -157,6 +157,26 @@ do_which3_mem <- function(x, y, z, And = TRUE) {
     .Call(`_hutilscpp_do_which3_mem`, x, y, z, And)
 }
 
+do_pmax0_abs_dbl <- function(x, in_place = FALSE, likely_nonnegative = FALSE) {
+    .Call(`_hutilscpp_do_pmax0_abs_dbl`, x, in_place, likely_nonnegative)
+}
+
+do_pmax0_abs_int <- function(x, in_place = FALSE, likely_nonnegative = FALSE) {
+    .Call(`_hutilscpp_do_pmax0_abs_int`, x, in_place, likely_nonnegative)
+}
+
+firstNonNegativeRadix <- function(x, mini = 0L, maxi = -1L, desc = FALSE, depth = 0L) {
+    .Call(`_hutilscpp_firstNonNegativeRadix`, x, mini, maxi, desc, depth)
+}
+
+do_pmax0_radix_sorted <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmax0_radix_sorted`, x, in_place)
+}
+
+do_rev_dbl <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_rev_dbl`, x, in_place)
+}
+
 #' @name do_pmaxC
 #' @title Internal pmaxC helpers
 #' @description Internal functions used when the overheads of assertions

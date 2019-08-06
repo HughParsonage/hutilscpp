@@ -8,6 +8,7 @@
 //' @export do_pmaxC_dbl do_pmaxC_int do_pmax0 do_pmaxIPint0 do_pmaxIPnum0
 
 #include <Rcpp.h>
+#include "cpphutils.h"
 using namespace Rcpp;
 // #include <RcppParallel.h>
 // using namespace Rcpp;

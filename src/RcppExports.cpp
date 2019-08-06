@@ -488,6 +488,71 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_pmax0_abs_dbl
+DoubleVector do_pmax0_abs_dbl(DoubleVector x, bool in_place, bool likely_nonnegative);
+RcppExport SEXP _hutilscpp_do_pmax0_abs_dbl(SEXP xSEXP, SEXP in_placeSEXP, SEXP likely_nonnegativeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    Rcpp::traits::input_parameter< bool >::type likely_nonnegative(likely_nonnegativeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmax0_abs_dbl(x, in_place, likely_nonnegative));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_pmax0_abs_int
+IntegerVector do_pmax0_abs_int(IntegerVector x, bool in_place, bool likely_nonnegative);
+RcppExport SEXP _hutilscpp_do_pmax0_abs_int(SEXP xSEXP, SEXP in_placeSEXP, SEXP likely_nonnegativeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    Rcpp::traits::input_parameter< bool >::type likely_nonnegative(likely_nonnegativeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmax0_abs_int(x, in_place, likely_nonnegative));
+    return rcpp_result_gen;
+END_RCPP
+}
+// firstNonNegativeRadix
+R_xlen_t firstNonNegativeRadix(DoubleVector x, R_xlen_t mini, R_xlen_t maxi, bool desc, int depth);
+RcppExport SEXP _hutilscpp_firstNonNegativeRadix(SEXP xSEXP, SEXP miniSEXP, SEXP maxiSEXP, SEXP descSEXP, SEXP depthSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< R_xlen_t >::type mini(miniSEXP);
+    Rcpp::traits::input_parameter< R_xlen_t >::type maxi(maxiSEXP);
+    Rcpp::traits::input_parameter< bool >::type desc(descSEXP);
+    Rcpp::traits::input_parameter< int >::type depth(depthSEXP);
+    rcpp_result_gen = Rcpp::wrap(firstNonNegativeRadix(x, mini, maxi, desc, depth));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_pmax0_radix_sorted
+DoubleVector do_pmax0_radix_sorted(DoubleVector x, bool in_place);
+RcppExport SEXP _hutilscpp_do_pmax0_radix_sorted(SEXP xSEXP, SEXP in_placeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmax0_radix_sorted(x, in_place));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_rev_dbl
+DoubleVector do_rev_dbl(DoubleVector x, bool in_place);
+RcppExport SEXP _hutilscpp_do_rev_dbl(SEXP xSEXP, SEXP in_placeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_rev_dbl(x, in_place));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_pmaxC_dbl
 NumericVector do_pmaxC_dbl(NumericVector x, double a, bool in_place);
 RcppExport SEXP _hutilscpp_do_pmaxC_dbl(SEXP xSEXP, SEXP aSEXP, SEXP in_placeSEXP) {
@@ -823,6 +888,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which_last", (DL_FUNC) &_hutilscpp_do_which_last, 1},
     {"_hutilscpp_do_which_first_false", (DL_FUNC) &_hutilscpp_do_which_first_false, 1},
     {"_hutilscpp_do_which_first_int_int", (DL_FUNC) &_hutilscpp_do_which_first_int_int, 5},
+    {"_hutilscpp_do_which_in", (DL_FUNC) &_hutilscpp_do_which_in, 2},
     {"_hutilscpp_showValue", (DL_FUNC) &_hutilscpp_showValue, 2},
     {"_hutilscpp_haversine_distance", (DL_FUNC) &_hutilscpp_haversine_distance, 5},
     {"_hutilscpp_haversineDistance", (DL_FUNC) &_hutilscpp_haversineDistance, 5},
@@ -840,6 +906,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_na_and", (DL_FUNC) &_hutilscpp_na_and, 1},
     {"_hutilscpp_do_which3", (DL_FUNC) &_hutilscpp_do_which3, 7},
     {"_hutilscpp_do_which3_mem", (DL_FUNC) &_hutilscpp_do_which3_mem, 4},
+    {"_hutilscpp_do_pmax0_abs_dbl", (DL_FUNC) &_hutilscpp_do_pmax0_abs_dbl, 3},
+    {"_hutilscpp_do_pmax0_abs_int", (DL_FUNC) &_hutilscpp_do_pmax0_abs_int, 3},
+    {"_hutilscpp_firstNonNegativeRadix", (DL_FUNC) &_hutilscpp_firstNonNegativeRadix, 5},
+    {"_hutilscpp_do_pmax0_radix_sorted", (DL_FUNC) &_hutilscpp_do_pmax0_radix_sorted, 2},
+    {"_hutilscpp_do_rev_dbl", (DL_FUNC) &_hutilscpp_do_rev_dbl, 2},
     {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 3},
     {"_hutilscpp_do_pmaxC_int", (DL_FUNC) &_hutilscpp_do_pmaxC_int, 3},
     {"_hutilscpp_do_pmax0", (DL_FUNC) &_hutilscpp_do_pmax0, 2},
