@@ -552,14 +552,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_rev_int
-IntegerVector do_rev_int(IntegerVector x, bool in_place);
-RcppExport SEXP _hutilscpp_do_rev_int(SEXP xSEXP, SEXP in_placeSEXP) {
+IntegerVector do_rev_int(IntegerVector x);
+RcppExport SEXP _hutilscpp_do_rev_int(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_rev_int(x, in_place));
+    rcpp_result_gen = Rcpp::wrap(do_rev_int(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -958,7 +957,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_pmax0_abs_int", (DL_FUNC) &_hutilscpp_do_pmax0_abs_int, 2},
     {"_hutilscpp_firstNonNegativeRadix", (DL_FUNC) &_hutilscpp_firstNonNegativeRadix, 5},
     {"_hutilscpp_do_pmax0_radix_sorted", (DL_FUNC) &_hutilscpp_do_pmax0_radix_sorted, 2},
-    {"_hutilscpp_do_rev_int", (DL_FUNC) &_hutilscpp_do_rev_int, 2},
+    {"_hutilscpp_do_rev_int", (DL_FUNC) &_hutilscpp_do_rev_int, 1},
     {"_hutilscpp_do_rev_dbl", (DL_FUNC) &_hutilscpp_do_rev_dbl, 2},
     {"_hutilscpp_do_sparse_int", (DL_FUNC) &_hutilscpp_do_sparse_int, 3},
     {"_hutilscpp_do_sparse_dbl", (DL_FUNC) &_hutilscpp_do_sparse_dbl, 3},

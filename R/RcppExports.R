@@ -177,8 +177,8 @@ do_pmax0_radix_sorted <- function(x, in_place = FALSE) {
     .Call(`_hutilscpp_do_pmax0_radix_sorted`, x, in_place)
 }
 
-do_rev_int <- function(x, in_place = FALSE) {
-    .Call(`_hutilscpp_do_rev_int`, x, in_place)
+do_rev_int <- function(x) {
+    .Call(`_hutilscpp_do_rev_int`, x)
 }
 
 do_rev_dbl <- function(x, in_place = FALSE) {

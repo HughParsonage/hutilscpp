@@ -125,21 +125,8 @@ DoubleVector do_pmax0_radix_sorted(DoubleVector x,
 }
 
 // [[Rcpp::export]]
-IntegerVector do_rev_int(IntegerVector x, bool in_place = false) {
-  if (!in_place) {
-    return Rcpp::rev(x);
-  }
-  R_xlen_t n = x.length();
-  IntegerVector out(x);
-  R_xlen_t M = n / 2;
-  for (R_xlen_t i = 0; i < M; ++i) {
-    R_xlen_t j = n - i - 1;
-    int xi = x[i];
-    int xj = x[j];
-    out[i] = xj;
-    out[j] = xi;
-  }
-  return out;
+IntegerVector do_rev_int(IntegerVector x) {
+  return Rcpp::rev(x);;
 }
 
 // [[Rcpp::export]]
@@ -159,8 +146,6 @@ DoubleVector do_rev_dbl(DoubleVector x, bool in_place = false) {
   }
   return out;
 }
-
-// purpose of these functions is to prove reverse works on long vectors
 
 // [[Rcpp::export]]
 IntegerVector do_sparse_int(R_xlen_t n, R_xlen_t pos, int val) {

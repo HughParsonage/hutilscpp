@@ -18,8 +18,10 @@ test_that("pmax0 radix extram", {
   x <- min_int:max_int
   res <- do_pmax0_radix_sorted(x)
   expect_equal(which_first(x > 0), which_first(res > 0))
-  x_rev <- do_pmax0
-  res_rev
+  res <- NULL
+  invisible(do_rev_int(x, in_place = TRUE))
+  res <- do_pmax0_radix_sorted(x)
+  expect_equal(which_first(x < 0), which_first(res < 0))
 })
 
 test_that("firstNonnegativeRadix", {
