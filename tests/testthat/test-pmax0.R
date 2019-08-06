@@ -12,7 +12,9 @@ test_that("pmax0 radix", {
   expect_identical(pmax0(x), do_pmax0_radix_sorted(x))
 })
 
-test_that("pmax0 radix extram", {
+test_that("pmax0 radix extrema", {
+  skip_on_cran()
+  skip_on_travis()
   skip_if_not(identical(.Platform$r_arch, "x64"))
   min_int <- -.Machine$integer.max
   max_int <- +.Machine$integer.max
