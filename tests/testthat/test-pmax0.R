@@ -13,15 +13,17 @@ test_that("pmax0 radix", {
 })
 
 test_that("pmax0 radix extram", {
+  skip_if_not(identical(.Platform$r_arch, "x64"))
   min_int <- -.Machine$integer.max
   max_int <- +.Machine$integer.max
   x <- min_int:max_int
   res <- do_pmax0_radix_sorted(x)
   expect_equal(which_first(x > 0), which_first(res > 0))
   res <- NULL
-  invisible(do_rev_int(x))
+  x <- NULL
+  x <- max_int:min_int
   res <- do_pmax0_radix_sorted(x)
-  expect_equal(which_first(x < 0), which_first(res < 0))
+  expect_equal(which_first(x == 0), which_first(res == 0))
 })
 
 test_that("firstNonnegativeRadix", {

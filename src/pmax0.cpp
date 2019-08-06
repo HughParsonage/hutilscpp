@@ -126,7 +126,7 @@ DoubleVector do_pmax0_radix_sorted(DoubleVector x,
 
 // [[Rcpp::export]]
 IntegerVector do_rev_int(IntegerVector x) {
-  return Rcpp::rev(x);;
+  return Rcpp::rev(x);
 }
 
 // [[Rcpp::export]]
