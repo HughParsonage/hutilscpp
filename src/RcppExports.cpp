@@ -249,6 +249,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_which_in
+IntegerVector do_which_in(IntegerVector x, IntegerVector y);
+RcppExport SEXP _hutilscpp_do_which_in(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_in(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
 // showValue
 void showValue(const char* what, double x);
 RcppExport SEXP _hutilscpp_showValue(SEXP whatSEXP, SEXP xSEXP) {
