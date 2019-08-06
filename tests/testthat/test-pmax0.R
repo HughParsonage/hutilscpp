@@ -19,7 +19,7 @@ test_that("pmax0 radix extram", {
   res <- do_pmax0_radix_sorted(x)
   expect_equal(which_first(x > 0), which_first(res > 0))
   res <- NULL
-  invisible(do_rev_int(x, in_place = TRUE))
+  invisible(do_rev_int(x))
   res <- do_pmax0_radix_sorted(x)
   expect_equal(which_first(x < 0), which_first(res < 0))
 })
@@ -40,8 +40,4 @@ test_that("Already nonnegative", {
   xd <- as.double(x)
   expect_equal(do_pmax0_abs_dbl(x), 1:100)
 })
-
-test_that()
-
-
 
