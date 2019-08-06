@@ -161,12 +161,12 @@ do_which3_mem <- function(x, y, z, And = TRUE) {
     .Call(`_hutilscpp_do_which3_mem`, x, y, z, And)
 }
 
-do_pmax0_abs_dbl <- function(x, in_place = FALSE, likely_nonnegative = FALSE) {
-    .Call(`_hutilscpp_do_pmax0_abs_dbl`, x, in_place, likely_nonnegative)
+do_pmax0_abs_dbl <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmax0_abs_dbl`, x, in_place)
 }
 
-do_pmax0_abs_int <- function(x, in_place = FALSE, likely_nonnegative = FALSE) {
-    .Call(`_hutilscpp_do_pmax0_abs_int`, x, in_place, likely_nonnegative)
+do_pmax0_abs_int <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmax0_abs_int`, x, in_place)
 }
 
 firstNonNegativeRadix <- function(x, mini = 0L, maxi = -1L, desc = FALSE, depth = 0L) {
@@ -177,8 +177,20 @@ do_pmax0_radix_sorted <- function(x, in_place = FALSE) {
     .Call(`_hutilscpp_do_pmax0_radix_sorted`, x, in_place)
 }
 
+do_rev_int <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_rev_int`, x, in_place)
+}
+
 do_rev_dbl <- function(x, in_place = FALSE) {
     .Call(`_hutilscpp_do_rev_dbl`, x, in_place)
+}
+
+do_sparse_int <- function(n, pos, val) {
+    .Call(`_hutilscpp_do_sparse_int`, n, pos, val)
+}
+
+do_sparse_dbl <- function(n, pos, val) {
+    .Call(`_hutilscpp_do_sparse_dbl`, n, pos, val)
 }
 
 #' @name do_pmaxC

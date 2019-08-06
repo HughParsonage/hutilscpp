@@ -5,11 +5,10 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 DoubleVector do_pmax0_abs_dbl(DoubleVector x,
-                              bool in_place = false,
-                              bool likely_nonnegative = false) {
+                              bool in_place = false) {
   R_xlen_t n = x.size();
   R_xlen_t j = 0;
-  while (likely_nonnegative && j < n && x[j] >= 0) {
+  while (j < n && x[j] >= 0) {
     ++j;
   }
   if (j == n) {
@@ -18,7 +17,10 @@ DoubleVector do_pmax0_abs_dbl(DoubleVector x,
 
   DoubleVector out(in_place ? x : clone(x));
   for (R_xlen_t i = 0; i < n; ++i) {
-    if (i < j) continue;
+    if (i < j) {
+      out[i] = x[i];
+      continue;
+    }
     out[i] += std::fabs(out[i]);
     out[i] /= 2;
   }
@@ -27,23 +29,29 @@ DoubleVector do_pmax0_abs_dbl(DoubleVector x,
 
 // [[Rcpp::export]]
 IntegerVector do_pmax0_abs_int(IntegerVector x,
-                               bool in_place = false,
-                               bool likely_nonnegative = false) {
+                               bool in_place = false) {
   R_xlen_t n = x.size();
   R_xlen_t j = 0;
-  while (likely_nonnegative && j < n) {
-    if (x[j] < 0) {
-      likely_nonnegative = false;
-    }
+
+  // First, is x already nonnegative?  We assume it is
+  // but verify.  Either we reach 'n' (in which case
+  // just return x or we just start from there when
+  // allocating result.
+  while (j < n && x[j] >= 0) {
     ++j;
   }
-  if (likely_nonnegative) {
+  if (j >= n) {
     return x;
   }
 
+  // At this point, x is known to be negative, so we
+  // have to allocate a new result:
   IntegerVector out = no_init(n);
   for (R_xlen_t i = 0; i < n; ++i) {
-    if (i < j) continue;
+    if (i < j) {
+      out[i] = x[i];
+      continue;
+    }
     int64_t oi = x[i];
     oi += std::abs(oi);
     out[i] = static_cast<int>(oi / 2);
@@ -117,9 +125,30 @@ DoubleVector do_pmax0_radix_sorted(DoubleVector x,
 }
 
 // [[Rcpp::export]]
-DoubleVector do_rev_dbl(DoubleVector x, bool in_place = false) {
+IntegerVector do_rev_int(IntegerVector x, bool in_place = false) {
+  if (!in_place) {
+    return Rcpp::rev(x);
+  }
   R_xlen_t n = x.length();
-  DoubleVector out(in_place ? x : clone(x));
+  IntegerVector out(x);
+  R_xlen_t M = n / 2;
+  for (R_xlen_t i = 0; i < M; ++i) {
+    R_xlen_t j = n - i - 1;
+    int xi = x[i];
+    int xj = x[j];
+    out[i] = xj;
+    out[j] = xi;
+  }
+  return out;
+}
+
+// [[Rcpp::export]]
+DoubleVector do_rev_dbl(DoubleVector x, bool in_place = false) {
+  if (!in_place) {
+    return Rcpp::rev(x);
+  }
+  R_xlen_t n = x.length();
+  DoubleVector out(x);
   R_xlen_t M = n / 2;
   for (R_xlen_t i = 0; i < M; ++i) {
     R_xlen_t j = n - i - 1;
@@ -131,7 +160,30 @@ DoubleVector do_rev_dbl(DoubleVector x, bool in_place = false) {
   return out;
 }
 
+// purpose of these functions is to prove reverse works on long vectors
 
+// [[Rcpp::export]]
+IntegerVector do_sparse_int(R_xlen_t n, R_xlen_t pos, int val) {
+  IntegerVector out = no_init(n);
+  for (R_xlen_t i = 0; i < n; ++i) {
+    out[i] = (i == pos) ? val : 0;
+  }
+  return out;
+}
+
+// [[Rcpp::export]]
+DoubleVector do_sparse_dbl(R_xlen_t n, DoubleVector pos, DoubleVector val) {
+  if (pos.length() != val.length()) {
+    stop("lengths of pos and val differ."); // nocov
+  }
+  DoubleVector out = DoubleVector(n);
+  for (R_xlen_t i = 0; i < pos.length(); ++i) {
+    R_xlen_t j = pos[i] - 1;
+    if (j < 0) continue;
+    out[j] += val[i];
+  }
+  return out;
+}
 
 
 
