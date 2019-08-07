@@ -124,52 +124,6 @@ DoubleVector do_pmax0_radix_sorted(DoubleVector x,
   return out;
 }
 
-// [[Rcpp::export]]
-IntegerVector do_rev_int(IntegerVector x) {
-  return Rcpp::rev(x);
-}
-
-// [[Rcpp::export]]
-DoubleVector do_rev_dbl(DoubleVector x, bool in_place = false) {
-  if (!in_place) {
-    return Rcpp::rev(x);
-  }
-  R_xlen_t n = x.length();
-  DoubleVector out(x);
-  R_xlen_t M = n / 2;
-  for (R_xlen_t i = 0; i < M; ++i) {
-    R_xlen_t j = n - i - 1;
-    double xi = x[i];
-    double xj = x[j];
-    out[i] = xj;
-    out[j] = xi;
-  }
-  return out;
-}
-
-// [[Rcpp::export]]
-IntegerVector do_sparse_int(R_xlen_t n, R_xlen_t pos, int val) {
-  IntegerVector out = no_init(n);
-  for (R_xlen_t i = 0; i < n; ++i) {
-    out[i] = (i == pos) ? val : 0;
-  }
-  return out;
-}
-
-// [[Rcpp::export]]
-DoubleVector do_sparse_dbl(R_xlen_t n, DoubleVector pos, DoubleVector val) {
-  if (pos.length() != val.length()) {
-    stop("lengths of pos and val differ."); // nocov
-  }
-  DoubleVector out = DoubleVector(n);
-  for (R_xlen_t i = 0; i < pos.length(); ++i) {
-    R_xlen_t j = pos[i] - 1;
-    if (j < 0) continue;
-    out[j] += val[i];
-  }
-  return out;
-}
-
 
 
 

@@ -177,22 +177,6 @@ do_pmax0_radix_sorted <- function(x, in_place = FALSE) {
     .Call(`_hutilscpp_do_pmax0_radix_sorted`, x, in_place)
 }
 
-do_rev_int <- function(x) {
-    .Call(`_hutilscpp_do_rev_int`, x)
-}
-
-do_rev_dbl <- function(x, in_place = FALSE) {
-    .Call(`_hutilscpp_do_rev_dbl`, x, in_place)
-}
-
-do_sparse_int <- function(n, pos, val) {
-    .Call(`_hutilscpp_do_sparse_int`, n, pos, val)
-}
-
-do_sparse_dbl <- function(n, pos, val) {
-    .Call(`_hutilscpp_do_sparse_dbl`, n, pos, val)
-}
-
 #' @name do_pmaxC
 #' @title Internal pmaxC helpers
 #' @description Internal functions used when the overheads of assertions
