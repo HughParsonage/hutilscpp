@@ -59,26 +59,34 @@ IntegerVector do_pmax0_abs_int(IntegerVector x,
   return out;
 }
 
+void showValuex(const char* what, double x) {
+  Rcout << " " << what << " \t " << x << std::endl;
+  // return 0;
+}
 
 // [[Rcpp::export]]
-R_xlen_t firstNonNegativeRadix(DoubleVector x,
-                               R_xlen_t mini = 0,
-                               R_xlen_t maxi = -1,
-                               bool desc = false,
-                               int depth = 0) {
-  if (maxi < 0) {
-    maxi = x.length();
+R_xlen_t do_firstNonNegativeRadix_int(IntegerVector x,
+                                      R_xlen_t mini = 0,
+                                      R_xlen_t maxi = -1,
+                                      bool desc = false,
+                                      int depth = 0) {
+
+  R_xlen_t xsize = x.length();
+  if (maxi < 0 || maxi > xsize) {
+    maxi = xsize;
   }
   if (mini < 0) {
     mini = 0;
   }
+  int lastx = x[maxi - 1];
+
   if (desc) {
-    if (x[mini] < 0 || x[maxi - 1] > 0) {
-      return 0;
+    if (x[mini] < 0 || lastx > 0) {
+      return mini;
     }
   } else {
-    if (x[mini] > 0 || x[maxi - 1] < 0) {
-      return 0;
+    if (x[mini] > 0 || lastx < 0) {
+      return mini;
     }
   }
 
@@ -100,17 +108,100 @@ R_xlen_t firstNonNegativeRadix(DoubleVector x,
   bool lhs = (x[medi] < 0) ? desc : !desc;
   R_xlen_t left = lhs ? mini : medi - 1;
   R_xlen_t right = lhs ? medi + 1 : maxi;
-  return firstNonNegativeRadix(x, left, right, desc, depth + 1);
+  return do_firstNonNegativeRadix_int(x, left, right, desc, depth + 1);
+}
+
+
+// [[Rcpp::export]]
+R_xlen_t do_firstNonNegativeRadix_dbl(DoubleVector x,
+                                      R_xlen_t mini = 0,
+                                      R_xlen_t maxi = -1,
+                                      bool desc = false,
+                                      int depth = 0) {
+
+  R_xlen_t xsize = x.length();
+  if (maxi < 0 || maxi > xsize) {
+    maxi = xsize;
+  }
+  if (mini < 0) {
+    mini = 0;
+  }
+  double lastx = x[maxi - 1];
+
+
+  if (desc) {
+    if (x[mini] < 0 || lastx > 0) {
+      return mini;
+    }
+  } else {
+    if (x[mini] > 0 || lastx < 0) {
+      return mini;
+    }
+  }
+
+  if (mini > maxi - 8) {
+    // showValuex("depth = ", depth);
+    for (R_xlen_t i = mini; i < maxi; ++i) {
+      if (desc) {
+        if (x[i] <= 0) {
+          return i;
+        }
+      } else {
+        if (x[i] >= 0) {
+          return i;
+        }
+      }
+    }
+    return maxi;
+  }
+  R_xlen_t medi = mini + (maxi - mini) / 2;
+  bool lhs = (x[medi] < 0) ? desc : !desc;
+  R_xlen_t left = lhs ? mini : medi - 1;
+  R_xlen_t right = lhs ? medi + 1 : maxi;
+  return do_firstNonNegativeRadix_dbl(x, left, right, desc, depth + 1);
 }
 
 // [[Rcpp::export]]
-DoubleVector do_pmax0_radix_sorted(DoubleVector x,
-                                   bool in_place = false) {
+DoubleVector do_pmax0_radix_sorted_dbl(DoubleVector x,
+                                       bool in_place = false) {
   R_xlen_t n = x.size();
+  bool x0_positive = x[0] > 0;
+  bool xn_positive = x[n - 1] > 0;
+  if ((x0_positive && xn_positive) ||
+      (!x0_positive && !xn_positive)) {
+    return x;
+  }
   bool desc = x[0] > 0;
-  R_xlen_t root = firstNonNegativeRadix(x, 0, n, desc);
+  R_xlen_t root = do_firstNonNegativeRadix_dbl(x, 0, n, desc);
 
   DoubleVector out(in_place ? x : clone(x));
+  if (desc) {
+    for (R_xlen_t i = root; i < n; ++i) {
+      out[i] = 0;
+    }
+  } else {
+    for (R_xlen_t i = 0; i < root; ++i) {
+      out[i] = 0;
+    }
+  }
+
+  return out;
+}
+
+// [[Rcpp::export]]
+IntegerVector do_pmax0_radix_sorted_int(IntegerVector x,
+                                       bool in_place = false) {
+  R_xlen_t n = x.size();
+  bool x0_positive = x[0] > 0;
+  bool xn_positive = x[n - 1] > 0;
+  if ((x0_positive && xn_positive) ||
+      (!x0_positive && !xn_positive)) {
+    return x;
+  }
+  bool desc = x0_positive;
+  R_xlen_t root = do_firstNonNegativeRadix_int(x, 0, n, desc);
+
+  IntegerVector out(in_place ? x : clone(x));
   if (desc) {
     for (R_xlen_t i = root; i < n; ++i) {
       out[i] = 0;

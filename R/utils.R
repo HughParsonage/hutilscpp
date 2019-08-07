@@ -80,3 +80,12 @@ which_isnt_integerish <- function(x, xi = as.integer(x)) {
 isFALSE <- function(x) {
   is.logical(x) && length(x) == 1L && !anyNA(x) && !x
 }
+
+
+firstNonNegativeRadix <- function(x, ...) {
+  if (is.double(x)) {
+    do_firstNonNegativeRadix_dbl(x, ...)
+  } else {
+    do_firstNonNegativeRadix_int(x, ...)
+  }
+}

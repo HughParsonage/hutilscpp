@@ -169,12 +169,20 @@ do_pmax0_abs_int <- function(x, in_place = FALSE) {
     .Call(`_hutilscpp_do_pmax0_abs_int`, x, in_place)
 }
 
-firstNonNegativeRadix <- function(x, mini = 0L, maxi = -1L, desc = FALSE, depth = 0L) {
-    .Call(`_hutilscpp_firstNonNegativeRadix`, x, mini, maxi, desc, depth)
+do_firstNonNegativeRadix_int <- function(x, mini = 0L, maxi = -1L, desc = FALSE, depth = 0L) {
+    .Call(`_hutilscpp_do_firstNonNegativeRadix_int`, x, mini, maxi, desc, depth)
 }
 
-do_pmax0_radix_sorted <- function(x, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pmax0_radix_sorted`, x, in_place)
+do_firstNonNegativeRadix_dbl <- function(x, mini = 0L, maxi = -1L, desc = FALSE, depth = 0L) {
+    .Call(`_hutilscpp_do_firstNonNegativeRadix_dbl`, x, mini, maxi, desc, depth)
+}
+
+do_pmax0_radix_sorted_dbl <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmax0_radix_sorted_dbl`, x, in_place)
+}
+
+do_pmax0_radix_sorted_int <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmax0_radix_sorted_int`, x, in_place)
 }
 
 #' @name do_pmaxC

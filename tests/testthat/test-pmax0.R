@@ -9,7 +9,9 @@ test_that("pmax0 abs", {
 
 test_that("pmax0 radix", {
   x <- as.double(seq(-1e6, 1e7, length.out = 3e3))
-  expect_identical(pmax0(x), do_pmax0_radix_sorted(x))
+  expect_identical(pmax0(x), do_pmax0_radix_sorted_dbl(x))
+  x <- as.integer(x)
+  expect_identical(pmax0(x), do_pmax0_radix_sorted_int(x))
 })
 
 test_that("pmax0 radix extrema", {
@@ -19,12 +21,12 @@ test_that("pmax0 radix extrema", {
   min_int <- -.Machine$integer.max
   max_int <- +.Machine$integer.max
   x <- min_int:max_int
-  res <- do_pmax0_radix_sorted(x)
+  res <- do_pmax0_radix_sorted_int(x)
   expect_equal(which_first(x > 0), which_first(res > 0))
   res <- NULL
   x <- NULL
   x <- max_int:min_int
-  res <- do_pmax0_radix_sorted(x)
+  res <- do_pmax0_radix_sorted_int(x)
   expect_equal(which_first(x == 0), which_first(res == 0))
 })
 
@@ -38,10 +40,20 @@ test_that("firstNonnegativeRadix", {
   expect_equal(which_first(big >= 0), firstNonNegativeRadix(big) + 1L)
 })
 
+test_that("firstNonnegativeRadix desc", {
+  x <- 10:-1
+  expect_equal(firstNonNegativeRadix(x, desc = TRUE) + 1L, which_first(x <= 0))
+})
+
 test_that("Already nonnegative", {
   x <- 1:100
   expect_equal(do_pmax0_abs_int(x), 1:100)
   xd <- as.double(x)
   expect_equal(do_pmax0_abs_dbl(x), 1:100)
+
+  x <- c(x, -1L, x)
+  expect_equal(do_pmax0_abs_int(x), pmax(x, 0L))
+  xd <- as.double(x)
+  expect_equal(do_pmax0_abs_dbl(x), pmax(xd, 0))
 })
 
