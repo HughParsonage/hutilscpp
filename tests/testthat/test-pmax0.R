@@ -10,7 +10,12 @@ test_that("pmax0 abs", {
 test_that("pmax0 radix", {
   x <- as.double(seq(-1e6, 1e7, length.out = 3e3))
   expect_identical(pmax0(x), do_pmax0_radix_sorted_dbl(x))
+  x <- rev(x)
+  expect_identical(pmax0(x), do_pmax0_radix_sorted_dbl(x))
+  x <- rev(x)
   x <- as.integer(x)
+  expect_identical(pmax0(x), do_pmax0_radix_sorted_int(x))
+  x <- rev(x)
   expect_identical(pmax0(x), do_pmax0_radix_sorted_int(x))
 })
 
@@ -43,6 +48,20 @@ test_that("firstNonnegativeRadix", {
 test_that("firstNonnegativeRadix desc", {
   x <- 10:-1
   expect_equal(firstNonNegativeRadix(x, desc = TRUE) + 1L, which_first(x <= 0))
+})
+
+test_that("firstNonnegativeRadix corners", {
+  x <- 1:10
+  expect_lte(firstNonNegativeRadix(x), 1)
+  expect_lte(firstNonNegativeRadix(x, mini = 2), 2)
+  expect_lte(firstNonNegativeRadix(-x, desc = TRUE), 1)
+  expect_lte(firstNonNegativeRadix(-x, desc = TRUE, maxi = 5), 5)
+  x <- as.double(x)
+  expect_lte(firstNonNegativeRadix(x), 1)
+  expect_lte(firstNonNegativeRadix(x, mini = 2), 2)
+  expect_lte(firstNonNegativeRadix(-x, desc = TRUE), 1)
+  expect_lte(firstNonNegativeRadix(-x, maxi = 5), 5)
+
 })
 
 test_that("Already nonnegative", {

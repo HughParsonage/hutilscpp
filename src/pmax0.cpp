@@ -167,8 +167,7 @@ DoubleVector do_pmax0_radix_sorted_dbl(DoubleVector x,
   R_xlen_t n = x.size();
   bool x0_positive = x[0] > 0;
   bool xn_positive = x[n - 1] > 0;
-  if ((x0_positive && xn_positive) ||
-      (!x0_positive && !xn_positive)) {
+  if (x0_positive && xn_positive) {
     return x;
   }
   bool desc = x[0] > 0;
@@ -194,8 +193,7 @@ IntegerVector do_pmax0_radix_sorted_int(IntegerVector x,
   R_xlen_t n = x.size();
   bool x0_positive = x[0] > 0;
   bool xn_positive = x[n - 1] > 0;
-  if ((x0_positive && xn_positive) ||
-      (!x0_positive && !xn_positive)) {
+  if (x0_positive && xn_positive) {
     return x;
   }
   bool desc = x0_positive;

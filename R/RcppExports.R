@@ -89,10 +89,6 @@ do_which_first_int_int <- function(x, y, eq = TRUE, gt = FALSE, lt = FALSE) {
     .Call(`_hutilscpp_do_which_first_int_int`, x, y, eq, gt, lt)
 }
 
-do_which_in <- function(x, y) {
-    .Call(`_hutilscpp_do_which_in`, x, y)
-}
-
 showValue <- function(what, x) {
     invisible(.Call(`_hutilscpp_showValue`, what, x))
 }
