@@ -20,7 +20,7 @@ sum_isna <- function(x, do_anyNA = TRUE) {
     return(0L)
   }
   switch(typeof(x),
-         "logical" = {length(x) - sum(x, na.rm = TRUE) - sum_isfalse(x)},
+         "logical" = sum_isna_logi(x),
 
          "integer" = sum_isna_int(x),
 
