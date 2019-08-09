@@ -9,7 +9,7 @@
 \usage{
 pmaxC(x, a, in_place = FALSE)
 
-pmax0(x, in_place = FALSE)
+pmax0(x, in_place = FALSE, sorted = FALSE)
 
 pmaxV(x, y, in_place = FALSE)
 
@@ -37,7 +37,11 @@ This function will always be faster than \code{pmax(x, a)} when \code{a} is
 a single value, but can be slower than \code{pmax.int(x, a)} when \code{x} is short.
 Use this function when comparing a numeric vector with a single value.
 
-Use \code{in_place = TRUE} within functions when you are sure it is safe.
+Use \code{in_place = TRUE} only within functions when you are sure it is safe, i.e. not a
+reference to something outside the environment.
+
+If \code{x} is nonnegative so \code{pmax0(x) = identity(x)} the function will be much faster
+still, as the \code{C++} code only starts allocating once a negative value is found.
 }
 \examples{
 pmaxC(-5:5, 2)

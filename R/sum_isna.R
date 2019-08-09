@@ -4,7 +4,8 @@
 #' @param x An atomic vector.
 #' @param do_anyNA Should \code{anyNA(x)} be executed before an attempt to
 #' count the \code{NA}'s in \code{x} one-by-one? By default, set to \code{TRUE},
-#' since it is generally quicker.
+#' since it is generally quicker. It will only be slower when \code{NA} is rare
+#' and occurs late in \code{x}.
 #' @examples
 #' sum_isna(c(1:5, NA))
 #' @export
@@ -19,25 +20,29 @@ sum_isna <- function(x, do_anyNA = TRUE) {
   if (do_anyNA && !anyNA(x)) {
     return(0L)
   }
-  switch(typeof(x),
-         "logical" = sum_isna_logi(x),
+  o <- switch(typeof(x),
+              "logical" = sum_isna_logi(x),
 
-         "integer" = sum_isna_int(x),
+              "integer" = sum_isna_int(x),
 
-         "double"  = sum_isna_dbl(x),
+              "double"  = sum_isna_dbl(x),
 
-         "complex" = sum_isna_complx(x),
+              "complex" = sum_isna_complx(x),
 
-         "character" = sum_isna_char(x),
+              "character" = sum_isna_char(x),
 
-         # nocov start
-         {
-           stop("Internal error: anyNA(x) was TRUE but typeof(x) is ",
-                typeof(x),
-                ", a contradiction.")
-         }
-         # nocov end
+              # nocov start
+              {
+                stop("Internal error: anyNA(x) was TRUE but typeof(x) is ",
+                     typeof(x),
+                     ", a contradiction.")
+              }
+              # nocov end
   )
+  if (o < .Machine$integer.max) {
+    o <- as.integer(o)
+  }
+  return(o)
 }
 
 

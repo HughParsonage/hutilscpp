@@ -5,7 +5,7 @@ library(hutils)
 
 euclid_distance <- function(x, y, w, z) sqrt((x - w)^2 + (y - z)^2)
 
-DT <- CJ(Lat = -89:89, Lon = 0:179)
+DT <- CJ(Lat = -89:89, Lat2 = seq(-80, 80, by = 0.5), Lon = 0:179, Lon2 = seq(178, 0, length.out = 150))
 DT[, haversine_lon1 := haversine_distance(Lat, Lon, Lat, Lon + 1)]
 DT[, euclid_lon1 := euclid_distance(Lat, Lon, Lat, Lon + 1)]
 
