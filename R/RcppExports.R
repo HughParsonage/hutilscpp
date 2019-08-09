@@ -318,6 +318,14 @@ sum_isna_char <- function(x) {
     .Call(`_hutilscpp_sum_isna_char`, x)
 }
 
+sum_isfalse <- function(x) {
+    .Call(`_hutilscpp_sum_isfalse`, x)
+}
+
+sum_isna_logi <- function(x) {
+    .Call(`_hutilscpp_sum_isna_logi`, x)
+}
+
 do_summary3_dbl <- function(x, y, z, in_place = FALSE, do_max = TRUE) {
     .Call(`_hutilscpp_do_summary3_dbl`, x, y, z, in_place, do_max)
 }

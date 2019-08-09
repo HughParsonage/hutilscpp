@@ -824,6 +824,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sum_isfalse
+R_xlen_t sum_isfalse(LogicalVector x);
+RcppExport SEXP _hutilscpp_sum_isfalse(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(sum_isfalse(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sum_isna_logi
+R_xlen_t sum_isna_logi(LogicalVector x);
+RcppExport SEXP _hutilscpp_sum_isna_logi(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(sum_isna_logi(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_summary3_dbl
 DoubleVector do_summary3_dbl(DoubleVector x, DoubleVector y, DoubleVector z, bool in_place, bool do_max);
 RcppExport SEXP _hutilscpp_do_summary3_dbl(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP in_placeSEXP, SEXP do_maxSEXP) {
@@ -945,6 +967,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_sum_isna_dbl", (DL_FUNC) &_hutilscpp_sum_isna_dbl, 1},
     {"_hutilscpp_sum_isna_complx", (DL_FUNC) &_hutilscpp_sum_isna_complx, 1},
     {"_hutilscpp_sum_isna_char", (DL_FUNC) &_hutilscpp_sum_isna_char, 1},
+    {"_hutilscpp_sum_isfalse", (DL_FUNC) &_hutilscpp_sum_isfalse, 1},
+    {"_hutilscpp_sum_isna_logi", (DL_FUNC) &_hutilscpp_sum_isna_logi, 1},
     {"_hutilscpp_do_summary3_dbl", (DL_FUNC) &_hutilscpp_do_summary3_dbl, 5},
     {"_hutilscpp_do_summary3_int", (DL_FUNC) &_hutilscpp_do_summary3_int, 5},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},

@@ -1,3 +1,10 @@
+test_that("Early returns", {
+  expect_error(sum_isna(list(1:4, 1)))
+  expect_equal(sum_isna(NULL), 0)
+  expect_equal(sum_isna(integer()), 0)
+  expect_equal(sum_isna(1:4, TRUE), 0)
+})
+
 test_that("sum_isna works", {
   x <- logical(0)
   expect_equal(sum(is.na(x)), sum_isna(x))
@@ -28,8 +35,16 @@ test_that("sum_isna long", {
   skip_on_cran()
   skip_on_travis()
   x <- logical(1e10)
-  expect_equal(sum_isna(x), sum(is.na(x)))
+  expect_equal(sum_isna(x), 0)
   x <- NULL
   x <- rep_len(c(TRUE, NA), 1e10)
-  expect_equal(sum_isna(x), sum(is.na(x)))
+  expect_equal(sum_isna(x), 5e9)
+})
+
+
+test_that("sum_isfalse", {
+  x <- logical(1e5)
+  expect_equal(sum_isfalse(x), 1e5)
+  x <- c(TRUE, FALSE, NA)
+  expect_equal(sum_isfalse(x), 1)
 })
