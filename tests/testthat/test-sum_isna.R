@@ -35,7 +35,8 @@ test_that("sum_isna long", {
   skip_on_cran()
   skip_on_travis()
   x <- logical(1e10)
-  expect_equal(sum_isna(x), 0)
+  expect_identical(sum_isna(x), 0L)
+
   x <- NULL
   x <- rep_len(c(TRUE, NA), 1e10)
   expect_equal(sum_isna(x), 5e9)
