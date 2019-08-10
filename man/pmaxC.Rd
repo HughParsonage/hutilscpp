@@ -23,6 +23,9 @@ pmax3(x, y, z, in_place = FALSE)
 \item{in_place}{(logical, default: \code{FALSE}) Should \code{x}
 be modified in-place.}
 
+\item{sorted}{If \code{TRUE}, \code{x} is assumed to be sorted. Thus the
+first zero determines whether the position at which zeroes start or end.}
+
 \item{y, z}{Other numeric vectors the same length as \code{x}}
 }
 \value{

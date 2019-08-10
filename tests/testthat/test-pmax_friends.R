@@ -154,6 +154,7 @@ test_that("pmaxV error", {
 test_that("benchmark", {
   skip_on_cran()
   skip_if_not(identical(Sys.getenv("LOGONSERVER"), "\\\\DESKTOP-D6TKKU5"))
+  skip_if_not(identical(.Platform$r_arch, "x64"))
   skip_if_not_installed("bench")
   y <- rnorm(5000, 1)
   y <- rep_len(y, 1e9)

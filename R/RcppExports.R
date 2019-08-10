@@ -161,8 +161,16 @@ do_pmax0_abs_dbl <- function(x, in_place = FALSE) {
     .Call(`_hutilscpp_do_pmax0_abs_dbl`, x, in_place)
 }
 
+do_pmin0_abs_dbl <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmin0_abs_dbl`, x, in_place)
+}
+
 do_pmax0_abs_int <- function(x, in_place = FALSE) {
     .Call(`_hutilscpp_do_pmax0_abs_int`, x, in_place)
+}
+
+do_pmin0_abs_int <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmin0_abs_int`, x, in_place)
 }
 
 do_firstNonNegativeRadix_int <- function(x, mini = 0L, maxi = -1L, desc = FALSE, depth = 0L) {
@@ -175,6 +183,14 @@ do_firstNonNegativeRadix_dbl <- function(x, mini = 0L, maxi = -1L, desc = FALSE,
 
 do_pmax0_radix_sorted_dbl <- function(x, in_place = FALSE) {
     .Call(`_hutilscpp_do_pmax0_radix_sorted_dbl`, x, in_place)
+}
+
+do_pmin0_radix_sorted_dbl <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmin0_radix_sorted_dbl`, x, in_place)
+}
+
+do_pmin0_radix_sorted_int <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmin0_radix_sorted_int`, x, in_place)
 }
 
 do_pmax0_radix_sorted_int <- function(x, in_place = FALSE) {

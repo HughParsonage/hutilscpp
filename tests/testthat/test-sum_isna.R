@@ -34,7 +34,16 @@ test_that("sum_isna works", {
 test_that("sum_isna long", {
   skip_on_cran()
   skip_on_travis()
-  x <- logical(1e10)
+  skip_if_not(identical(.Platform$r_arch, "x64"))
+  do_skip <- FALSE
+  tryCatch(x <- logical(1e10), error = function(e) {
+    if (grepl("allocate", e$m)) {
+      do_skip = TRUE
+    } else {
+      cat(e$m)
+    }
+  })
+  skip_if(do_skip)
   expect_identical(sum_isna(x), 0L)
 
   x <- NULL

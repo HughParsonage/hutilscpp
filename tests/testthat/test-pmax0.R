@@ -76,3 +76,10 @@ test_that("Already nonnegative", {
   expect_equal(do_pmax0_abs_dbl(x), pmax(xd, 0))
 })
 
+test_that("do_pmin0s", {
+  x <- sample(-4:10)
+  expect_equal(do_pmin0_abs_int(x), pmin(x, 0L))
+  x <- sort(x)
+  expect_equal(do_pmin0_radix_sorted_int(x), pmin(x, 0L))
+})
+

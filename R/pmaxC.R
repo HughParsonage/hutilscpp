@@ -8,6 +8,8 @@
 #'
 #' @param in_place (logical, default: \code{FALSE}) Should \code{x}
 #' be modified in-place.
+#' @param sorted If \code{TRUE}, \code{x} is assumed to be sorted. Thus the
+#'  first zero determines whether the position at which zeroes start or end.
 #' @return The parallel maximum/minimum of the input values. \code{pmax0(x)} is
 #'  shorthand for \code{pmaxC(x, 0)}, i.e. convert negative values in \code{x} to 0.
 #' @note This function will always be faster than \code{pmax(x, a)} when \code{a} is
