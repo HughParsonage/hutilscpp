@@ -15,9 +15,9 @@
 
 ## Enhancements
 
-* `pminC` now handles integer inputs without coercing to double
-* `pmaxC(x, a)` now succeeds when `a` is an integer yet `x` is type double.
-* `pmax0` performs much better, especially when `x` is known and marked as sorted, but also
+* `pminC` now handles integer inputs without coercing to double.
+* `pmaxC(x, a)` accepts integer `a` when `x` is type double.
+* `pmax0` and `pmin0` perform much better, especially when `x` is known and marked as sorted, but also
   due to a better algorithm using absolute value.
   
 ``` r
