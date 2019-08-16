@@ -62,13 +62,18 @@ test_that("firstNonnegativeRadix corners", {
   expect_lte(firstNonNegativeRadix(-x, desc = TRUE), 1)
   expect_lte(firstNonNegativeRadix(-x, maxi = 5), 5)
 
+  expect_equal(do_firstNonNegativeRadix_int(1:5, mini = -2L), 0)
+  expect_equal(do_firstNonNegativeRadix_dbl(1:5, mini = -2L), 0)
+
 })
 
 test_that("Already nonnegative", {
   x <- 1:100
   expect_equal(do_pmax0_abs_int(x), 1:100)
+  expect_equal(do_pmax0_radix_sorted_int(x), 1:100)
   xd <- as.double(x)
   expect_equal(do_pmax0_abs_dbl(x), 1:100)
+  expect_equal(do_pmax0_radix_sorted_int(x), 1:100)
 
   x <- c(x, -1L, x)
   expect_equal(do_pmax0_abs_int(x), pmax(x, 0L))
@@ -81,5 +86,34 @@ test_that("do_pmin0s", {
   expect_equal(do_pmin0_abs_int(x), pmin(x, 0L))
   x <- sort(x)
   expect_equal(do_pmin0_radix_sorted_int(x), pmin(x, 0L))
+
+  x <- as.double(x)
+  expect_equal(do_pmin0_abs_dbl(x), pmin(x, 0L))
+  x <- sort(x)
+  expect_equal(do_pmin0_radix_sorted_dbl(x), pmin(x, 0L))
+
+  x <- pmin0(x)
+
+  # Now check already nonpositive
+  x <- as.double(x)
+  expect_equal(do_pmin0_abs_dbl(x), pmin(x, 0L))
+  x <- sort(x)
+  expect_equal(do_pmin0_radix_sorted_dbl(x), pmin(x, 0L))
+
+  x <- as.integer(x)
+  expect_equal(do_pmin0_abs_int(x), pmin(x, 0L))
+  x <- sort(x)
+  expect_equal(do_pmin0_radix_sorted_int(x), pmin(x, 0L))
+
+  # Now strictly positive
+  x <- x - 1L
+  expect_equal(do_pmin0_abs_int(x), pmin(x, 0L))
+  x <- sort(x)
+  expect_equal(do_pmin0_radix_sorted_int(x), pmin(x, 0L))
+
+  x <- as.double(x)
+  expect_equal(do_pmin0_abs_dbl(x), pmin(x, 0L))
+  x <- sort(x)
+  expect_equal(do_pmin0_radix_sorted_dbl(x), pmin(x, 0L))
 })
 

@@ -2,6 +2,10 @@
 #include "cpphutils.h"
 using namespace Rcpp;
 
+inline double pmax0_dbl1(double xi) {
+  xi += std::fabs(xi);
+  return xi / 2;
+}
 
 // [[Rcpp::export]]
 DoubleVector do_pmax0_abs_dbl(DoubleVector x,
@@ -17,8 +21,7 @@ DoubleVector do_pmax0_abs_dbl(DoubleVector x,
 
   DoubleVector out(in_place ? x : clone(x));
   for (R_xlen_t i = j; i < n; ++i) {
-    out[i] += std::fabs(out[i]);
-    out[i] /= 2;
+    out[i] = pmax0_dbl1(x[i]);
   }
   return out;
 }
@@ -63,11 +66,11 @@ IntegerVector do_pmax0_abs_int(IntegerVector x,
   // At this point, x is known to be negative, so we
   // have to allocate a new result:
   IntegerVector out = no_init(n);
-  for (R_xlen_t i = 0; i < n; ++i) {
-    if (i < j) {
-      out[i] = x[i];
-      continue;
-    }
+  for (R_xlen_t i = 0; i < j; ++i) {
+    out[i] = x[i];
+  }
+
+  for (R_xlen_t i = j; i < n; ++i) {
     int64_t oi = x[i];
     oi += std::abs(oi);
     out[i] = static_cast<int>(oi / 2);
@@ -96,11 +99,6 @@ IntegerVector do_pmin0_abs_int(IntegerVector x,
     out[i] = static_cast<int>(oi / 2);
   }
   return out;
-}
-
-void showValuex(const char* what, double x) {
-  Rcout << " " << what << " \t " << x << std::endl;
-  // return 0;
 }
 
 // [[Rcpp::export]]
