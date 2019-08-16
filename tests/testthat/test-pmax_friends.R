@@ -247,6 +247,14 @@ test_that("pmax pure c error", {
   expect_error(.Call("do_c_pmax", 1:5 + 0, 1, 1:2 + 0), regexp = "b did not have length 1")
 })
 
+test_that("pmaxV x already dominates", {
+  w <- c(1L, 5L, 2L, .Machine$integer.max, 0L)
+  expect_equal(pmaxV(w, w - 1L), pmax(w, w - 1L))
+  expect_equal(pminV(w, w + 1L), pmin(w, w + 1L))
+  w <- as.double(w)
+  expect_equal(pmaxV(w, w - 1L), pmax(w, w - 1L))
+  expect_equal(pminV(w, w + 1L), pmin(w, w + 1L))
+})
 
 
 

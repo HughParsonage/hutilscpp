@@ -72,7 +72,7 @@ test_that("Already nonnegative", {
   expect_equal(pmax0(x, sorted = TRUE), pmax(x, 0))
   expect_equal(do_pmax0_abs_int(x), 1:100)
   expect_equal(do_pmax0_radix_sorted_int(x), 1:100)
-  xd <- as.double(x)
+  x <- as.double(x)
   expect_equal(pmax0(x, sorted = TRUE), 1:100)
   expect_equal(do_pmax0_abs_dbl(x), 1:100)
   expect_equal(do_pmax0_radix_sorted_dbl(x), 1:100)
@@ -88,6 +88,7 @@ test_that("Already nonnegative", {
   expect_equal(do_pmax0_abs_int(x), pmax(x, 0))
   expect_equal(do_pmax0_radix_sorted_int(x), pmax(x, 0))
   x <- as.double(x)
+  expect_equal(pmax0(x, sorted = TRUE), pmax(x, 0))
   expect_equal(do_pmax0_abs_dbl(x), pmax(x, 0))
   expect_equal(do_pmax0_radix_sorted_dbl(x), pmax(x, 0))
 
