@@ -149,5 +149,10 @@ test_that("do_pmin0s", {
   expect_equal(do_pmin0_abs_dbl(x), pmin(x, 0L))
   x <- sort(x)
   expect_equal(do_pmin0_radix_sorted_dbl(x), pmin(x, 0L))
+
+  x <- c(2, 1, 0, -1, -2)
+  expect_equal(do_pmin0_radix_sorted_dbl(x), pmin(x, 0))
+  x <- as.integer(x)
+  expect_equal(do_pmin0_radix_sorted_int(x), pmin(x, 0))
 })
 

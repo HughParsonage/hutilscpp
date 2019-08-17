@@ -139,7 +139,7 @@ R_xlen_t do_firstNonNegativeRadix_int(IntegerVector x,
         }
       }
     }
-    return maxi;
+    return maxi; // nocov
   }
   R_xlen_t medi = mini + (maxi - mini) / 2;
   bool lhs = (x[medi] < 0) ? desc : !desc;
@@ -189,7 +189,7 @@ R_xlen_t do_firstNonNegativeRadix_dbl(DoubleVector x,
         }
       }
     }
-    return maxi;
+    return maxi; // nocov
   }
   R_xlen_t medi = mini + (maxi - mini) / 2;
   bool lhs = (x[medi] < 0) ? desc : !desc;
