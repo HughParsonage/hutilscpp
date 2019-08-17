@@ -77,10 +77,6 @@ do_cumsum_reset_sorted_int <- function(x) {
     .Call(`_hutilscpp_do_cumsum_reset_sorted_int`, x)
 }
 
-do_N_by <- function(x) {
-    .Call(`_hutilscpp_do_N_by`, x)
-}
-
 do_are_even <- function(x, y) {
     .Call(`_hutilscpp_do_are_even`, x, y)
 }

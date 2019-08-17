@@ -210,17 +210,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_N_by
-IntegerVector do_N_by(IntegerVector x);
-RcppExport SEXP _hutilscpp_do_N_by(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_N_by(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_are_even
 LogicalVector do_are_even(IntegerVector x, DoubleVector y);
 RcppExport SEXP _hutilscpp_do_are_even(SEXP xSEXP, SEXP ySEXP) {
@@ -1089,7 +1078,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_duplicated_sorted_int", (DL_FUNC) &_hutilscpp_do_duplicated_sorted_int, 1},
     {"_hutilscpp_do_duplicated_sorted_dbl", (DL_FUNC) &_hutilscpp_do_duplicated_sorted_dbl, 1},
     {"_hutilscpp_do_cumsum_reset_sorted_int", (DL_FUNC) &_hutilscpp_do_cumsum_reset_sorted_int, 1},
-    {"_hutilscpp_do_N_by", (DL_FUNC) &_hutilscpp_do_N_by, 1},
     {"_hutilscpp_do_are_even", (DL_FUNC) &_hutilscpp_do_are_even, 2},
     {"_hutilscpp_do_which_even", (DL_FUNC) &_hutilscpp_do_which_even, 2},
     {"_hutilscpp_do_which_first", (DL_FUNC) &_hutilscpp_do_which_first, 1},
