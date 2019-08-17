@@ -65,6 +65,22 @@ do_cumsum_reset_double <- function(x, y) {
     .Call(`_hutilscpp_do_cumsum_reset_double`, x, y)
 }
 
+do_duplicated_sorted_int <- function(x) {
+    .Call(`_hutilscpp_do_duplicated_sorted_int`, x)
+}
+
+do_duplicated_sorted_dbl <- function(x) {
+    .Call(`_hutilscpp_do_duplicated_sorted_dbl`, x)
+}
+
+do_cumsum_reset_sorted_int <- function(x) {
+    .Call(`_hutilscpp_do_cumsum_reset_sorted_int`, x)
+}
+
+do_N_by <- function(x) {
+    .Call(`_hutilscpp_do_N_by`, x)
+}
+
 do_are_even <- function(x, y) {
     .Call(`_hutilscpp_do_are_even`, x, y)
 }
@@ -109,10 +125,6 @@ hausdorffEuclid <- function(x, y) {
     .Call(`_hutilscpp_hausdorffEuclid`, x, y)
 }
 
-is_sorted_ascending <- function(x) {
-    .Call(`_hutilscpp_is_sorted_ascending`, x)
-}
-
 EmptiestQuarter <- function(x, y, minx = 1, maxx = -1, miny = 1, maxy = -1) {
     .Call(`_hutilscpp_EmptiestQuarter`, x, y, minx, maxx, miny, maxy)
 }
@@ -135,6 +147,38 @@ is_safe2int <- function(x, int_max) {
 
 force_as_integer <- function(x) {
     .Call(`_hutilscpp_force_as_integer`, x)
+}
+
+is_sorted_ascending_dbl <- function(x) {
+    .Call(`_hutilscpp_is_sorted_ascending_dbl`, x)
+}
+
+is_sorted_descending_dbl <- function(x) {
+    .Call(`_hutilscpp_is_sorted_descending_dbl`, x)
+}
+
+is_sorted_ascending_int <- function(x) {
+    .Call(`_hutilscpp_is_sorted_ascending_int`, x)
+}
+
+is_sorted_descending_int <- function(x) {
+    .Call(`_hutilscpp_is_sorted_descending_int`, x)
+}
+
+is_sorted_int <- function(x) {
+    .Call(`_hutilscpp_is_sorted_int`, x)
+}
+
+do_isntSorted_int <- function(x) {
+    .Call(`_hutilscpp_do_isntSorted_int`, x)
+}
+
+is_sorted_dbl <- function(x) {
+    .Call(`_hutilscpp_is_sorted_dbl`, x)
+}
+
+do_isntSorted_dbl <- function(x) {
+    .Call(`_hutilscpp_do_isntSorted_dbl`, x)
 }
 
 do_or3 <- function(x, y, z) {
