@@ -151,17 +151,6 @@ double hausdorffEuclid (NumericVector x,
   return maxmin_dist;
 }
 
-// [[Rcpp::export]]
-bool is_sorted_ascending (NumericVector x) {
-  R_xlen_t N = x.size();
-  for (R_xlen_t i = 1; i < N; ++i) {
-    if (x[i] < x[i - 1]) {
-      return false;
-    }
-  }
-  return true;
-}
-
 // 00 -> bottom left
 // 01 -> top left
 // 10 -> bottom right

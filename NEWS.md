@@ -10,6 +10,7 @@
 
 * `is_constant`, for testing atomic vectors and `isntConstant` for the first
   different value
+* `is_sorted` and `isntSorted` (currently private), similarly.
 * `and3`, `or3` for ternary and/or enabling vectorized short-circuiting
 * `sum_isna` for counting `NA` values.
 
