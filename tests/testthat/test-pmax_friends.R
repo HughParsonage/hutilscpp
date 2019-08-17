@@ -248,7 +248,7 @@ test_that("pmax pure c error", {
 })
 
 test_that("pmaxV x already dominates", {
-  w <- c(1L, 5L, 2L, .Machine$integer.max, 0L)
+  w <- c(1L, 5L, 2L, .Machine$integer.max - 2L, 0L)
   expect_equal(pmaxV(w, w - 1L), pmax(w, w - 1L))
   expect_equal(pminV(w, w + 1L), pmin(w, w + 1L))
   w <- as.double(w)
