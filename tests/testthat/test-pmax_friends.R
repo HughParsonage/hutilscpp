@@ -154,6 +154,7 @@ test_that("pmaxV error", {
 test_that("benchmark", {
   skip_on_cran()
   skip_if_not(identical(Sys.getenv("LOGONSERVER"), "\\\\DESKTOP-D6TKKU5"))
+  skip_if_not(identical(.Platform$r_arch, "x64"))
   skip_if_not_installed("bench")
   y <- rnorm(5000, 1)
   y <- rep_len(y, 1e9)
@@ -246,6 +247,14 @@ test_that("pmax pure c error", {
   expect_error(.Call("do_c_pmax", 1:5 + 0, 1, 1:2 + 0), regexp = "b did not have length 1")
 })
 
+test_that("pmaxV x already dominates", {
+  w <- c(1L, 5L, 2L, .Machine$integer.max - 2L, 0L)
+  expect_equal(pmaxV(w, w - 1L), pmax(w, w - 1L))
+  expect_equal(pminV(w, w + 1L), pmin(w, w + 1L))
+  w <- as.double(w)
+  expect_equal(pmaxV(w, w - 1L), pmax(w, w - 1L))
+  expect_equal(pminV(w, w + 1L), pmin(w, w + 1L))
+})
 
 
 

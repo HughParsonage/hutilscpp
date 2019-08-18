@@ -65,6 +65,18 @@ do_cumsum_reset_double <- function(x, y) {
     .Call(`_hutilscpp_do_cumsum_reset_double`, x, y)
 }
 
+do_duplicated_sorted_int <- function(x) {
+    .Call(`_hutilscpp_do_duplicated_sorted_int`, x)
+}
+
+do_duplicated_sorted_dbl <- function(x) {
+    .Call(`_hutilscpp_do_duplicated_sorted_dbl`, x)
+}
+
+do_cumsum_reset_sorted_int <- function(x) {
+    .Call(`_hutilscpp_do_cumsum_reset_sorted_int`, x)
+}
+
 do_are_even <- function(x, y) {
     .Call(`_hutilscpp_do_are_even`, x, y)
 }
@@ -109,10 +121,6 @@ hausdorffEuclid <- function(x, y) {
     .Call(`_hutilscpp_hausdorffEuclid`, x, y)
 }
 
-is_sorted_ascending <- function(x) {
-    .Call(`_hutilscpp_is_sorted_ascending`, x)
-}
-
 EmptiestQuarter <- function(x, y, minx = 1, maxx = -1, miny = 1, maxy = -1) {
     .Call(`_hutilscpp_EmptiestQuarter`, x, y, minx, maxx, miny, maxy)
 }
@@ -137,6 +145,38 @@ force_as_integer <- function(x) {
     .Call(`_hutilscpp_force_as_integer`, x)
 }
 
+is_sorted_ascending_dbl <- function(x) {
+    .Call(`_hutilscpp_is_sorted_ascending_dbl`, x)
+}
+
+is_sorted_descending_dbl <- function(x) {
+    .Call(`_hutilscpp_is_sorted_descending_dbl`, x)
+}
+
+is_sorted_ascending_int <- function(x) {
+    .Call(`_hutilscpp_is_sorted_ascending_int`, x)
+}
+
+is_sorted_descending_int <- function(x) {
+    .Call(`_hutilscpp_is_sorted_descending_int`, x)
+}
+
+is_sorted_int <- function(x) {
+    .Call(`_hutilscpp_is_sorted_int`, x)
+}
+
+do_isntSorted_int <- function(x) {
+    .Call(`_hutilscpp_do_isntSorted_int`, x)
+}
+
+is_sorted_dbl <- function(x) {
+    .Call(`_hutilscpp_is_sorted_dbl`, x)
+}
+
+do_isntSorted_dbl <- function(x) {
+    .Call(`_hutilscpp_do_isntSorted_dbl`, x)
+}
+
 do_or3 <- function(x, y, z) {
     .Call(`_hutilscpp_do_or3`, x, y, z)
 }
@@ -155,6 +195,46 @@ do_which3 <- function(x, y, z, And = TRUE, anyNAx = TRUE, anyNAy = TRUE, anyNAz 
 
 do_which3_mem <- function(x, y, z, And = TRUE) {
     .Call(`_hutilscpp_do_which3_mem`, x, y, z, And)
+}
+
+do_pmax0_abs_dbl <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmax0_abs_dbl`, x, in_place)
+}
+
+do_pmin0_abs_dbl <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmin0_abs_dbl`, x, in_place)
+}
+
+do_pmax0_abs_int <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmax0_abs_int`, x, in_place)
+}
+
+do_pmin0_abs_int <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmin0_abs_int`, x, in_place)
+}
+
+do_firstNonNegativeRadix_int <- function(x, mini = 0L, maxi = -1L, desc = FALSE, depth = 0L) {
+    .Call(`_hutilscpp_do_firstNonNegativeRadix_int`, x, mini, maxi, desc, depth)
+}
+
+do_firstNonNegativeRadix_dbl <- function(x, mini = 0L, maxi = -1L, desc = FALSE, depth = 0L) {
+    .Call(`_hutilscpp_do_firstNonNegativeRadix_dbl`, x, mini, maxi, desc, depth)
+}
+
+do_pmax0_radix_sorted_dbl <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmax0_radix_sorted_dbl`, x, in_place)
+}
+
+do_pmin0_radix_sorted_dbl <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmin0_radix_sorted_dbl`, x, in_place)
+}
+
+do_pmin0_radix_sorted_int <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmin0_radix_sorted_int`, x, in_place)
+}
+
+do_pmax0_radix_sorted_int <- function(x, in_place = FALSE) {
+    .Call(`_hutilscpp_do_pmax0_radix_sorted_int`, x, in_place)
 }
 
 #' @name do_pmaxC
@@ -292,6 +372,14 @@ sum_isna_complx <- function(x) {
 
 sum_isna_char <- function(x) {
     .Call(`_hutilscpp_sum_isna_char`, x)
+}
+
+sum_isfalse <- function(x) {
+    .Call(`_hutilscpp_sum_isfalse`, x)
+}
+
+sum_isna_logi <- function(x) {
+    .Call(`_hutilscpp_sum_isna_logi`, x)
 }
 
 do_summary3_dbl <- function(x, y, z, in_place = FALSE, do_max = TRUE) {

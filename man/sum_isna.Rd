@@ -4,10 +4,15 @@
 \alias{sum_isna}
 \title{Number of missing values}
 \usage{
-sum_isna(x)
+sum_isna(x, do_anyNA = TRUE)
 }
 \arguments{
 \item{x}{An atomic vector.}
+
+\item{do_anyNA}{Should \code{anyNA(x)} be executed before an attempt to
+count the \code{NA}'s in \code{x} one-by-one? By default, set to \code{TRUE},
+since it is generally quicker. It will only be slower when \code{NA} is rare
+and occurs late in \code{x}.}
 }
 \description{
 The count of missing values in an atomic vector, equivalent to

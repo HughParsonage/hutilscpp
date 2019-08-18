@@ -177,6 +177,39 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_duplicated_sorted_int
+LogicalVector do_duplicated_sorted_int(IntegerVector x);
+RcppExport SEXP _hutilscpp_do_duplicated_sorted_int(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_duplicated_sorted_int(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_duplicated_sorted_dbl
+LogicalVector do_duplicated_sorted_dbl(DoubleVector x);
+RcppExport SEXP _hutilscpp_do_duplicated_sorted_dbl(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_duplicated_sorted_dbl(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_cumsum_reset_sorted_int
+IntegerVector do_cumsum_reset_sorted_int(IntegerVector x);
+RcppExport SEXP _hutilscpp_do_cumsum_reset_sorted_int(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_cumsum_reset_sorted_int(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_are_even
 LogicalVector do_are_even(IntegerVector x, DoubleVector y);
 RcppExport SEXP _hutilscpp_do_are_even(SEXP xSEXP, SEXP ySEXP) {
@@ -317,17 +350,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// is_sorted_ascending
-bool is_sorted_ascending(NumericVector x);
-RcppExport SEXP _hutilscpp_is_sorted_ascending(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(is_sorted_ascending(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // EmptiestQuarter
 IntegerVector EmptiestQuarter(NumericVector x, NumericVector y, double minx, double maxx, double miny, double maxy);
 RcppExport SEXP _hutilscpp_EmptiestQuarter(SEXP xSEXP, SEXP ySEXP, SEXP minxSEXP, SEXP maxxSEXP, SEXP minySEXP, SEXP maxySEXP) {
@@ -420,6 +442,94 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// is_sorted_ascending_dbl
+bool is_sorted_ascending_dbl(DoubleVector x);
+RcppExport SEXP _hutilscpp_is_sorted_ascending_dbl(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_sorted_ascending_dbl(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// is_sorted_descending_dbl
+bool is_sorted_descending_dbl(DoubleVector x);
+RcppExport SEXP _hutilscpp_is_sorted_descending_dbl(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_sorted_descending_dbl(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// is_sorted_ascending_int
+bool is_sorted_ascending_int(IntegerVector x);
+RcppExport SEXP _hutilscpp_is_sorted_ascending_int(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_sorted_ascending_int(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// is_sorted_descending_int
+bool is_sorted_descending_int(IntegerVector x);
+RcppExport SEXP _hutilscpp_is_sorted_descending_int(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_sorted_descending_int(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// is_sorted_int
+bool is_sorted_int(IntegerVector x);
+RcppExport SEXP _hutilscpp_is_sorted_int(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_sorted_int(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_isntSorted_int
+R_xlen_t do_isntSorted_int(IntegerVector x);
+RcppExport SEXP _hutilscpp_do_isntSorted_int(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_isntSorted_int(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// is_sorted_dbl
+bool is_sorted_dbl(DoubleVector x);
+RcppExport SEXP _hutilscpp_is_sorted_dbl(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_sorted_dbl(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_isntSorted_dbl
+R_xlen_t do_isntSorted_dbl(DoubleVector x);
+RcppExport SEXP _hutilscpp_do_isntSorted_dbl(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_isntSorted_dbl(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_or3
 LogicalVector do_or3(LogicalVector x, LogicalVector y, LogicalVector z);
 RcppExport SEXP _hutilscpp_do_or3(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
@@ -485,6 +595,132 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< LogicalVector >::type z(zSEXP);
     Rcpp::traits::input_parameter< bool >::type And(AndSEXP);
     rcpp_result_gen = Rcpp::wrap(do_which3_mem(x, y, z, And));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_pmax0_abs_dbl
+DoubleVector do_pmax0_abs_dbl(DoubleVector x, bool in_place);
+RcppExport SEXP _hutilscpp_do_pmax0_abs_dbl(SEXP xSEXP, SEXP in_placeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmax0_abs_dbl(x, in_place));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_pmin0_abs_dbl
+DoubleVector do_pmin0_abs_dbl(DoubleVector x, bool in_place);
+RcppExport SEXP _hutilscpp_do_pmin0_abs_dbl(SEXP xSEXP, SEXP in_placeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmin0_abs_dbl(x, in_place));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_pmax0_abs_int
+IntegerVector do_pmax0_abs_int(IntegerVector x, bool in_place);
+RcppExport SEXP _hutilscpp_do_pmax0_abs_int(SEXP xSEXP, SEXP in_placeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmax0_abs_int(x, in_place));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_pmin0_abs_int
+IntegerVector do_pmin0_abs_int(IntegerVector x, bool in_place);
+RcppExport SEXP _hutilscpp_do_pmin0_abs_int(SEXP xSEXP, SEXP in_placeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmin0_abs_int(x, in_place));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_firstNonNegativeRadix_int
+R_xlen_t do_firstNonNegativeRadix_int(IntegerVector x, R_xlen_t mini, R_xlen_t maxi, bool desc, int depth);
+RcppExport SEXP _hutilscpp_do_firstNonNegativeRadix_int(SEXP xSEXP, SEXP miniSEXP, SEXP maxiSEXP, SEXP descSEXP, SEXP depthSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< R_xlen_t >::type mini(miniSEXP);
+    Rcpp::traits::input_parameter< R_xlen_t >::type maxi(maxiSEXP);
+    Rcpp::traits::input_parameter< bool >::type desc(descSEXP);
+    Rcpp::traits::input_parameter< int >::type depth(depthSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_firstNonNegativeRadix_int(x, mini, maxi, desc, depth));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_firstNonNegativeRadix_dbl
+R_xlen_t do_firstNonNegativeRadix_dbl(DoubleVector x, R_xlen_t mini, R_xlen_t maxi, bool desc, int depth);
+RcppExport SEXP _hutilscpp_do_firstNonNegativeRadix_dbl(SEXP xSEXP, SEXP miniSEXP, SEXP maxiSEXP, SEXP descSEXP, SEXP depthSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< R_xlen_t >::type mini(miniSEXP);
+    Rcpp::traits::input_parameter< R_xlen_t >::type maxi(maxiSEXP);
+    Rcpp::traits::input_parameter< bool >::type desc(descSEXP);
+    Rcpp::traits::input_parameter< int >::type depth(depthSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_firstNonNegativeRadix_dbl(x, mini, maxi, desc, depth));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_pmax0_radix_sorted_dbl
+DoubleVector do_pmax0_radix_sorted_dbl(DoubleVector x, bool in_place);
+RcppExport SEXP _hutilscpp_do_pmax0_radix_sorted_dbl(SEXP xSEXP, SEXP in_placeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmax0_radix_sorted_dbl(x, in_place));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_pmin0_radix_sorted_dbl
+DoubleVector do_pmin0_radix_sorted_dbl(DoubleVector x, bool in_place);
+RcppExport SEXP _hutilscpp_do_pmin0_radix_sorted_dbl(SEXP xSEXP, SEXP in_placeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmin0_radix_sorted_dbl(x, in_place));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_pmin0_radix_sorted_int
+IntegerVector do_pmin0_radix_sorted_int(IntegerVector x, bool in_place);
+RcppExport SEXP _hutilscpp_do_pmin0_radix_sorted_int(SEXP xSEXP, SEXP in_placeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmin0_radix_sorted_int(x, in_place));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_pmax0_radix_sorted_int
+IntegerVector do_pmax0_radix_sorted_int(IntegerVector x, bool in_place);
+RcppExport SEXP _hutilscpp_do_pmax0_radix_sorted_int(SEXP xSEXP, SEXP in_placeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmax0_radix_sorted_int(x, in_place));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -746,6 +982,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sum_isfalse
+R_xlen_t sum_isfalse(LogicalVector x);
+RcppExport SEXP _hutilscpp_sum_isfalse(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(sum_isfalse(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sum_isna_logi
+R_xlen_t sum_isna_logi(LogicalVector x);
+RcppExport SEXP _hutilscpp_sum_isna_logi(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(sum_isna_logi(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_summary3_dbl
 DoubleVector do_summary3_dbl(DoubleVector x, DoubleVector y, DoubleVector z, bool in_place, bool do_max);
 RcppExport SEXP _hutilscpp_do_summary3_dbl(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP in_placeSEXP, SEXP do_maxSEXP) {
@@ -817,6 +1075,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_cumsum_reset_logical", (DL_FUNC) &_hutilscpp_do_cumsum_reset_logical, 1},
     {"_hutilscpp_do_cumsum_reset_integer", (DL_FUNC) &_hutilscpp_do_cumsum_reset_integer, 2},
     {"_hutilscpp_do_cumsum_reset_double", (DL_FUNC) &_hutilscpp_do_cumsum_reset_double, 2},
+    {"_hutilscpp_do_duplicated_sorted_int", (DL_FUNC) &_hutilscpp_do_duplicated_sorted_int, 1},
+    {"_hutilscpp_do_duplicated_sorted_dbl", (DL_FUNC) &_hutilscpp_do_duplicated_sorted_dbl, 1},
+    {"_hutilscpp_do_cumsum_reset_sorted_int", (DL_FUNC) &_hutilscpp_do_cumsum_reset_sorted_int, 1},
     {"_hutilscpp_do_are_even", (DL_FUNC) &_hutilscpp_do_are_even, 2},
     {"_hutilscpp_do_which_even", (DL_FUNC) &_hutilscpp_do_which_even, 2},
     {"_hutilscpp_do_which_first", (DL_FUNC) &_hutilscpp_do_which_first, 1},
@@ -828,18 +1089,35 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_haversineDistance", (DL_FUNC) &_hutilscpp_haversineDistance, 5},
     {"_hutilscpp_theEuclidDistance", (DL_FUNC) &_hutilscpp_theEuclidDistance, 5},
     {"_hutilscpp_hausdorffEuclid", (DL_FUNC) &_hutilscpp_hausdorffEuclid, 2},
-    {"_hutilscpp_is_sorted_ascending", (DL_FUNC) &_hutilscpp_is_sorted_ascending, 1},
     {"_hutilscpp_EmptiestQuarter", (DL_FUNC) &_hutilscpp_EmptiestQuarter, 6},
     {"_hutilscpp_theEmptiestQuarters", (DL_FUNC) &_hutilscpp_theEmptiestQuarters, 7},
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
     {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 11},
     {"_hutilscpp_is_safe2int", (DL_FUNC) &_hutilscpp_is_safe2int, 2},
     {"_hutilscpp_force_as_integer", (DL_FUNC) &_hutilscpp_force_as_integer, 1},
+    {"_hutilscpp_is_sorted_ascending_dbl", (DL_FUNC) &_hutilscpp_is_sorted_ascending_dbl, 1},
+    {"_hutilscpp_is_sorted_descending_dbl", (DL_FUNC) &_hutilscpp_is_sorted_descending_dbl, 1},
+    {"_hutilscpp_is_sorted_ascending_int", (DL_FUNC) &_hutilscpp_is_sorted_ascending_int, 1},
+    {"_hutilscpp_is_sorted_descending_int", (DL_FUNC) &_hutilscpp_is_sorted_descending_int, 1},
+    {"_hutilscpp_is_sorted_int", (DL_FUNC) &_hutilscpp_is_sorted_int, 1},
+    {"_hutilscpp_do_isntSorted_int", (DL_FUNC) &_hutilscpp_do_isntSorted_int, 1},
+    {"_hutilscpp_is_sorted_dbl", (DL_FUNC) &_hutilscpp_is_sorted_dbl, 1},
+    {"_hutilscpp_do_isntSorted_dbl", (DL_FUNC) &_hutilscpp_do_isntSorted_dbl, 1},
     {"_hutilscpp_do_or3", (DL_FUNC) &_hutilscpp_do_or3, 3},
     {"_hutilscpp_do_and3", (DL_FUNC) &_hutilscpp_do_and3, 3},
     {"_hutilscpp_na_and", (DL_FUNC) &_hutilscpp_na_and, 1},
     {"_hutilscpp_do_which3", (DL_FUNC) &_hutilscpp_do_which3, 7},
     {"_hutilscpp_do_which3_mem", (DL_FUNC) &_hutilscpp_do_which3_mem, 4},
+    {"_hutilscpp_do_pmax0_abs_dbl", (DL_FUNC) &_hutilscpp_do_pmax0_abs_dbl, 2},
+    {"_hutilscpp_do_pmin0_abs_dbl", (DL_FUNC) &_hutilscpp_do_pmin0_abs_dbl, 2},
+    {"_hutilscpp_do_pmax0_abs_int", (DL_FUNC) &_hutilscpp_do_pmax0_abs_int, 2},
+    {"_hutilscpp_do_pmin0_abs_int", (DL_FUNC) &_hutilscpp_do_pmin0_abs_int, 2},
+    {"_hutilscpp_do_firstNonNegativeRadix_int", (DL_FUNC) &_hutilscpp_do_firstNonNegativeRadix_int, 5},
+    {"_hutilscpp_do_firstNonNegativeRadix_dbl", (DL_FUNC) &_hutilscpp_do_firstNonNegativeRadix_dbl, 5},
+    {"_hutilscpp_do_pmax0_radix_sorted_dbl", (DL_FUNC) &_hutilscpp_do_pmax0_radix_sorted_dbl, 2},
+    {"_hutilscpp_do_pmin0_radix_sorted_dbl", (DL_FUNC) &_hutilscpp_do_pmin0_radix_sorted_dbl, 2},
+    {"_hutilscpp_do_pmin0_radix_sorted_int", (DL_FUNC) &_hutilscpp_do_pmin0_radix_sorted_int, 2},
+    {"_hutilscpp_do_pmax0_radix_sorted_int", (DL_FUNC) &_hutilscpp_do_pmax0_radix_sorted_int, 2},
     {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 3},
     {"_hutilscpp_do_pmaxC_int", (DL_FUNC) &_hutilscpp_do_pmaxC_int, 3},
     {"_hutilscpp_do_pmax0", (DL_FUNC) &_hutilscpp_do_pmax0, 2},
@@ -861,6 +1139,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_sum_isna_dbl", (DL_FUNC) &_hutilscpp_sum_isna_dbl, 1},
     {"_hutilscpp_sum_isna_complx", (DL_FUNC) &_hutilscpp_sum_isna_complx, 1},
     {"_hutilscpp_sum_isna_char", (DL_FUNC) &_hutilscpp_sum_isna_char, 1},
+    {"_hutilscpp_sum_isfalse", (DL_FUNC) &_hutilscpp_sum_isfalse, 1},
+    {"_hutilscpp_sum_isna_logi", (DL_FUNC) &_hutilscpp_sum_isna_logi, 1},
     {"_hutilscpp_do_summary3_dbl", (DL_FUNC) &_hutilscpp_do_summary3_dbl, 5},
     {"_hutilscpp_do_summary3_int", (DL_FUNC) &_hutilscpp_do_summary3_int, 5},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},

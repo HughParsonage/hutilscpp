@@ -22,7 +22,8 @@ double sinhalfsq (double x) {
 }
 
 // [[Rcpp::export]]
-double haversine_distance (double olat1, double olon1, double olat2, double olon2, bool unitless = false) {
+double haversine_distance (double olat1, double olon1, double olat2, double olon2,
+                           bool unitless = false) {
   // double pi = 3.1415926535897;
   const double lat1 = olat1 * (M_PI / 180) ;
   const double lat2 = olat2 * (M_PI / 180) ;
@@ -30,8 +31,11 @@ double haversine_distance (double olat1, double olon1, double olat2, double olon
   const double lon2 = olon2 * (M_PI / 180) ;
   // std::abs doesn't work with the precision req
 
-  const double delta_lat = (lat1 > lat2) ? (lat1 - lat2) : (lat2 - lat1) ;
-  const double delta_lon = (lon1 > lon2) ? (lon1 - lon2) : (lon2 - lon1) ;
+
+  // const double delta_lat = (lat1 > lat2) ? (lat1 - lat2) : (lat2 - lat1) ;
+  const double delta_lat = std::fabs(lat1 - lat2);
+  // const double delta_lon = (lon1 > lon2) ? (lon1 - lon2) : (lon2 - lon1) ;
+  const double delta_lon = std::fabs(lon1 - lon2);
 
   // 6371 * 2 * asin(sqrt(sin(d_lat / 2)^2 + cos(lat1) * cos(lat2) * sin(d_lon / 2)^2))
   double out = 0;
@@ -145,17 +149,6 @@ double hausdorffEuclid (NumericVector x,
     }
   }
   return maxmin_dist;
-}
-
-// [[Rcpp::export]]
-bool is_sorted_ascending (NumericVector x) {
-  R_xlen_t N = x.size();
-  for (R_xlen_t i = 1; i < N; ++i) {
-    if (x[i] < x[i - 1]) {
-      return false;
-    }
-  }
-  return true;
 }
 
 // 00 -> bottom left

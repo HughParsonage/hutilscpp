@@ -120,8 +120,8 @@ test_that("hausdorff distance", {
 })
 
 test_that("is_sorted_ascending", {
-  expect_true(is_sorted_ascending(c(0, 1.5, 3)))
-  expect_false(is_sorted_ascending(c(0, 1.5, 3, 1)))
+  expect_true(is_sorted_ascending_dbl(c(0, 1.5, 3)))
+  expect_false(is_sorted_ascending_dbl(c(0, 1.5, 3, 1)))
 })
 
 test_that("Emptiest quadrants", {

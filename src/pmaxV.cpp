@@ -14,13 +14,23 @@ using namespace Rcpp;
 
 //' @rdname do_pmaxV
 // [[Rcpp::export]]
-NumericVector do_pmaxNumNum(NumericVector x, NumericVector y, bool in_place = false) {
+NumericVector do_pmaxNumNum(NumericVector x, NumericVector y,
+                            bool in_place = false) {
   const R_xlen_t n = x.length();
   if (n != y.length()){
     stop("x and y must be same length.");
   }
+  R_xlen_t i = 0;
+    while (i < n && x[i] > y[i]) {
+      ++i;
+    }
+
+  if (i == n) {
+    return x;
+  }
+
   NumericVector out = in_place ? NumericVector(x) : NumericVector(clone(x));
-  for (R_xlen_t i = 0; i < n; ++i) {
+  for (; i < n; ++i) {
     double xi = x[i];
     double yi = y[i];
     if (xi < yi) {
@@ -32,11 +42,21 @@ NumericVector do_pmaxNumNum(NumericVector x, NumericVector y, bool in_place = fa
 
 //' @rdname do_pmaxV
 // [[Rcpp::export]]
-IntegerVector do_pmaxIntInt(IntegerVector x, IntegerVector y, bool in_place = false) {
+IntegerVector do_pmaxIntInt(IntegerVector x, IntegerVector y,
+                            bool in_place = false) {
   const R_xlen_t n = x.length();
   if (n != y.length()){
     stop("x and y must be same length.");
   }
+  R_xlen_t i = 0;
+  while (i < n && x[i] >= y[i]) {
+    ++i;
+  }
+
+  if (i == n) {
+    return x;
+  }
+
   IntegerVector out = in_place ? IntegerVector(x) : IntegerVector(clone(x));
   for (R_xlen_t i = 0; i < n; ++i) {
     int xi = x[i];
