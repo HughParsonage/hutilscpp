@@ -316,7 +316,82 @@ test_that("which_first logical", {
   y <- c(2L, 0L, NA)
   expect_equal(which_first(x != y), 1)
 
+
 })
+
+test_that("which_first_logical %in%", {
+  x <- c(TRUE, FALSE, TRUE, FALSE)
+  y <- c(TRUE, FALSE)
+  expect_equal(which_first(x %in% y), 1)
+
+  x <- rev(x)
+  expect_equal(which_first(x %in% y), 1)
+
+  xx <- logical(10)
+  yy <- logical(4)
+  expect_equal(which_first(xx %in% yy), 1)
+  yy <- !yy
+  expect_equal(which_first(xx %in% yy), 0)
+
+  yy <- c(TRUE, NA)
+  expect_equal(which_first(xx %in% yy), 0)
+  xx[3] <- TRUE
+  expect_equal(which_first(xx %in% yy), 3)
+  xx[3] <- NA
+  expect_equal(which_first(xx %in% yy), 3)
+
+
+
+  yyy <- TRUE
+  expect_equal(which_first(xx %in% yyy), 0)
+  yyy <- FALSE
+  expect_equal(which_first(xx %in% yyy), 1)
+  yyy <- NA
+  expect_equal(which_first(xx %in% yyy), 3)
+
+  xxx <- c(TRUE, FALSE)
+  yyy <- NA
+  expect_equal(which_first(xxx %in% yyy), 0)
+  xxx <- c(TRUE, FALSE)
+  yyy <- TRUE
+  expect_equal(which_first(xxx %in% yyy), 1)
+  yyy <- FALSE
+  expect_equal(which_first(xxx %in% yyy), 2)
+
+  yyy <- c(TRUE, FALSE, NA)
+  expect_equal(which_first(xx %in% yyy), 1)
+
+
+  a <- c(rep(TRUE, 100), NA)
+  b <- c(TRUE, FALSE, TRUE)
+  expect_equal(which_first(a %in% b), 1)
+  a <- c(rep(FALSE, 100), NA)
+  expect_equal(which_first(a %in% b), 1)
+  b <- c(TRUE, TRUE)
+  expect_equal(which_first(a %in% b), 0)
+  b <- c(TRUE, FALSE)
+  expect_equal(which_first(a %in% b), 1)
+  b <- c(TRUE, NA)
+  expect_equal(which_first(a %in% b), 101)
+
+  a <- c(TRUE, TRUE, rep(NA, 100), FALSE, TRUE)
+  b <- c(FALSE, NA)
+  expect_equal(which_first(a %in% b), 3)
+  b <- c(TRUE, NA)
+  expect_equal(which_first(a %in% b), 1)
+
+})
+
+
+
+
+test_that("Error handling", {
+  x <- c(TRUE, FALSE)
+  y <- c(TRUE, FALSE, TRUE)
+  expect_error(which_first(x == y), "length")
+})
+
+
 
 
 
