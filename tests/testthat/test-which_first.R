@@ -301,3 +301,11 @@ test_that("lhs_eval length 0", {
   expect_equal(.which_first(c(NA, NA)), 0L)
 })
 
+
+test_that("which_first logical", {
+  #10
+  x <- y <- c(TRUE, FALSE, NA)
+  expect_equal(which_first(x != y), 0)
+})
+
+
