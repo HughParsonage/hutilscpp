@@ -101,6 +101,10 @@ do_which_first_int_int <- function(x, y, eq = TRUE, gt = FALSE, lt = FALSE) {
     .Call(`_hutilscpp_do_which_first_int_int`, x, y, eq, gt, lt)
 }
 
+do_which_first_lgl_lgl <- function(x, y, eq, lt, gt) {
+    .Call(`_hutilscpp_do_which_first_lgl_lgl`, x, y, eq, lt, gt)
+}
+
 showValue <- function(what, x) {
     invisible(.Call(`_hutilscpp_showValue`, what, x))
 }

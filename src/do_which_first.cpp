@@ -101,4 +101,70 @@ int do_which_first_int_int (IntegerVector x,
 
 }
 
+// [[Rcpp::export]]
+R_xlen_t do_which_first_lgl_lgl(LogicalVector x, LogicalVector y, bool eq, bool lt, bool gt) {
+  const R_xlen_t n = x.size();
+  const R_xlen_t m = y.size();
+  if (n != m) {
+    stop("lengths x and y differ.");
+  }
+  // != == >= <=  >  <
+  //  0  1  2  3  4  5
+  const int op = !(eq || gt || lt) ? 0 : (eq ? (gt ? 2 : (lt ? 3 : 1)) : (gt ? 4 : 5));
+  for (R_xlen_t i = 0; i < n; ++i) {
+    if (x[i] == NA_LOGICAL) {
+      if (eq && y[i] == NA_LOGICAL) {
+        return ++i;
+      }
+      if (!eq && y[i] != NA_LOGICAL) {
+        return ++i;
+      }
+      continue;
+    }
+    if (y[i] == NA_LOGICAL) {
+      if (!eq) {
+        return ++i;
+      }
+      continue;
+    }
+    bool xi = x[i];
+    bool yi = y[i];
+    switch(op) {
+    case 0:
+      if (xi xor yi) {
+        return ++i;
+      }
+      continue;
+    case 1:
+      if (xi xor yi) {
+        continue;
+      } else {
+        return ++i;
+      }
+      continue;
+    case 2:
+      if (xi || !yi) {
+        return ++i;
+      }
+      continue;
+    case 3:
+      if (yi || !xi) {
+        return ++i;
+      }
+      continue;
+    case 4:
+      if (yi && !xi) {
+        return ++i;
+      }
+      continue;
+    case 5:
+      if (xi && !yi) {
+        return ++i;
+      }
+      continue;
+    }
+  }
+  return 0;
+}
+
 

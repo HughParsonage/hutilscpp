@@ -282,6 +282,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_which_first_lgl_lgl
+R_xlen_t do_which_first_lgl_lgl(LogicalVector x, LogicalVector y, bool eq, bool lt, bool gt);
+RcppExport SEXP _hutilscpp_do_which_first_lgl_lgl(SEXP xSEXP, SEXP ySEXP, SEXP eqSEXP, SEXP ltSEXP, SEXP gtSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< bool >::type eq(eqSEXP);
+    Rcpp::traits::input_parameter< bool >::type lt(ltSEXP);
+    Rcpp::traits::input_parameter< bool >::type gt(gtSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_first_lgl_lgl(x, y, eq, lt, gt));
+    return rcpp_result_gen;
+END_RCPP
+}
 // showValue
 void showValue(const char* what, double x);
 RcppExport SEXP _hutilscpp_showValue(SEXP whatSEXP, SEXP xSEXP) {
@@ -1084,6 +1099,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which_last", (DL_FUNC) &_hutilscpp_do_which_last, 1},
     {"_hutilscpp_do_which_first_false", (DL_FUNC) &_hutilscpp_do_which_first_false, 1},
     {"_hutilscpp_do_which_first_int_int", (DL_FUNC) &_hutilscpp_do_which_first_int_int, 5},
+    {"_hutilscpp_do_which_first_lgl_lgl", (DL_FUNC) &_hutilscpp_do_which_first_lgl_lgl, 5},
     {"_hutilscpp_showValue", (DL_FUNC) &_hutilscpp_showValue, 2},
     {"_hutilscpp_haversine_distance", (DL_FUNC) &_hutilscpp_haversine_distance, 5},
     {"_hutilscpp_haversineDistance", (DL_FUNC) &_hutilscpp_haversineDistance, 5},

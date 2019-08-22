@@ -306,6 +306,17 @@ test_that("which_first logical", {
   #10
   x <- y <- c(TRUE, FALSE, NA)
   expect_equal(which_first(x != y), 0)
+  expect_equal(which_first(x == y), 1)
+  expect_equal(which_first(x > y), 0)
+  expect_equal(which_first(x < y), 0)
+
+  y <- as.integer(x)
+  expect_equal(which_first(x != y), 0)
+
+  y <- c(2L, 0L, NA)
+  expect_equal(which_first(x != y), 1)
+
 })
+
 
 
