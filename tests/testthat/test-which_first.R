@@ -391,6 +391,49 @@ test_that("Error handling", {
   expect_error(which_first(x == y), "length")
 })
 
+test_that("do_which_first_lgl_lgl", {
+  skip_if_not_installed("data.table")
+  library(data.table)
+
+  f <- do_which_first_lgl_lgl
+
+  expect_error(f(c(TRUE, FALSE), c(NA), FALSE, FALSE, FALSE), "lengths")
+                                                         # eq   # lt   # gt
+  expect_equal(f(c(NA, TRUE, FALSE), c(TRUE, FALSE, NA), FALSE, FALSE, FALSE), 1)
+  expect_equal(f(c(NA, TRUE, FALSE), c(TRUE, FALSE, NA), FALSE, FALSE, TRUE ), 2)
+  expect_equal(f(c(NA, TRUE, FALSE), c(TRUE, FALSE, NA), FALSE, TRUE , FALSE), 0)
+  expect_equal(f(c(NA, TRUE, FALSE), c(TRUE, FALSE, NA), TRUE , FALSE, FALSE), 0)
+  expect_equal(f(c(NA, TRUE, FALSE), c(TRUE, FALSE, NA), TRUE , FALSE, TRUE ), 1)
+  expect_equal(f(c(NA, TRUE, FALSE), c(TRUE, FALSE, NA), TRUE , TRUE , FALSE), 1)
+
+  x <- c(logical(5), TRUE, NA, FALSE)
+  y <- c(logical(4), TRUE, TRUE, FALSE, FALSE)
+                      # eq   # lt   # gt
+  expect_equal(f(x, y, FALSE, FALSE, FALSE), 5)
+  expect_equal(f(x, y, TRUE , FALSE, FALSE), 1)
+  expect_equal(f(x, y, TRUE , TRUE , FALSE), 1)
+  expect_equal(f(x, y, FALSE, TRUE , FALSE), 5)
+  expect_equal(f(NA, NA, FALSE, FALSE, FALSE), 0)
+  expect_equal(f(NA, NA, TRUE, FALSE, TRUE , skip_na = FALSE), 1)
+  expect_equal(f(NA, NA, TRUE, TRUE , FALSE, skip_na = FALSE), 1)
+  expect_equal(f(FALSE, NA, TRUE, TRUE, FALSE, skip_na = FALSE), 1)
+  expect_equal(f(FALSE, NA, TRUE, FALSE, TRUE, skip_na = FALSE), 0)
+  expect_equal(f(FALSE, NA, TRUE, FALSE, TRUE, skip_na = TRUE), 0)
+  expect_equal(f(FALSE, FALSE, TRUE, FALSE, TRUE), 1)
+
+})
+
+test_that("do_which_first_lgl_lgl skip_na", {
+  x <- c(NA, NA, TRUE, TRUE, FALSE, FALSE)
+  y <- c(NA, TRUE, NA, FALSE, NA, TRUE)
+  f <- do_which_first_lgl_lgl
+  expect_equal(f(x, y, FALSE, FALSE, FALSE, skip_na = TRUE), 4)
+  expect_equal(f(x, y, TRUE , FALSE, FALSE, skip_na = TRUE), 0)
+  expect_equal(f(x, y, FALSE, FALSE, TRUE , skip_na = TRUE), 4)
+  expect_equal(f(x, y, FALSE, TRUE , FALSE, skip_na = TRUE), 6)
+  expect_equal(f(x, y, TRUE , TRUE , FALSE, skip_na = TRUE), 6)
+  expect_equal(f(x, y, TRUE , TRUE , TRUE, skip_na = TRUE), 4)
+})
 
 
 
