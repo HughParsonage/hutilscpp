@@ -1,0 +1,10 @@
+test_that("xor2 works", {
+  x <- c(TRUE, FALSE)
+  y <- c(FALSE, TRUE)
+  u <- c(TRUE, TRUE, FALSE, FALSE, NA, NA)
+  w <- c(TRUE, FALSE, NA, TRUE, FALSE, NA)
+  expect_equal(xor(x, y), xor2(x, y))
+  expect_equal(xor(x, y), xor2(x, y, FALSE))
+  expect_equal(xor(x, y), xor2(x, y, FALSE, FALSE))
+  expect_equal(xor(u, w), xor2(u, w))
+})

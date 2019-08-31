@@ -1,3 +1,64 @@
+# hutilscpp 0.3.0
+
+## Bug fixes:
+* `which_first(x == y)` now works properly when `length(y) == length(x)`.
+
+## New functions:
+* `xor2` a faster version of `xor`. 
+
+``` r
+set.seed(1)
+library(hutils)
+library(hutilscpp)
+
+bench__mark <- function(...) {
+  dplyr::select(bench::mark(..., min_iterations = 12),
+                expression, median, `itr/sec`, mem_alloc, n_gc)
+}
+x <- y <- logical(1e9)
+bench__mark(xor(x, y), xor2(x, y))
+#> Warning: Some expressions had a GC in every iteration; so filtering is
+#> disabled.
+#> # A tibble: 2 x 5
+#>   expression   median `itr/sec` mem_alloc  n_gc
+#>   <chr>      <bch:tm>     <dbl> <bch:byt> <dbl>
+#> 1 xor(x, y)    7.956s     0.126  14.901GB    16
+#> 2 xor2(x, y)   1.652s     0.530   3.725GB     3
+x <- !y
+bench__mark(xor(x, y), xor2(x, y))
+#> Warning: Some expressions had a GC in every iteration; so filtering is
+#> disabled.
+#> # A tibble: 2 x 5
+#>   expression   median `itr/sec` mem_alloc  n_gc
+#>   <chr>      <bch:tm>     <dbl> <bch:byt> <dbl>
+#> 1 xor(x, y)    8.227s     0.121  14.901GB    13
+#> 2 xor2(x, y)   1.983s     0.460   3.725GB     3
+
+x <- samp(c(TRUE, FALSE), 1e9)
+y <- samp(c(TRUE, FALSE), 1e9)
+
+bench__mark(xor(x, y), xor2(x, y))
+#> # A tibble: 2 x 5
+#>   expression   median `itr/sec` mem_alloc  n_gc
+#>   <chr>      <bch:tm>     <dbl> <bch:byt> <dbl>
+#> 1 xor(x, y)   20.276s    0.0493  14.901GB    11
+#> 2 xor2(x, y)   1.971s    0.506    3.725GB     3
+
+x <- samp(c(TRUE, FALSE, NA), 1e9)
+y <- samp(c(TRUE, FALSE), 1e9)
+
+benc__mark(xor(x, y), xor2(x, y))
+#> # A tibble: 2 x 5
+#>   expression   median `itr/sec` mem_alloc  n_gc
+#>   <chr>      <bch:tm>     <dbl> <bch:byt> <dbl>
+#> 1 xor(x, y)   25.063s    0.0399  14.901GB     2
+#> 2 xor2(x, y)   4.524s    0.221    3.725GB     3
+```
+
+<sup>Created on 2019-08-25 by the [reprex package](https://reprex.tidyverse.org) (v0.3.0)</sup>
+
+
+
 # hutilscpp 0.2.0
 
 * Added a `NEWS.md` file to track changes to the package.
