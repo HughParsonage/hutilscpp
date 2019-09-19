@@ -96,7 +96,89 @@ which_first <- function(expr, verbose = FALSE) {
   }
   rhs_eval <- eval.parent(rhs)
 
+  if (operator != "%in%" && length(lhs_eval) != length(rhs_eval) && length(rhs_eval) != 1L) {
+    stop("In `which_first(<lhs> ", operator, " <rhs>)`, the length of <rhs> was neither ",
+         "`length(<lhs>) = ", length(lhs_eval), "` nor 1. Such recycling is not supported")
+  }
+
   if (is.logical(lhs_eval)) {
+    if (operator == "%in%") {
+      # miniaturize rhs to be subset of c(TRUE, FALSE, NA)
+      rhs_eval_mini <- c(if (anyNA(rhs_eval)) NA,
+                         if (any(rhs_eval, na.rm = TRUE)) TRUE,
+                         if (!all(rhs_eval, na.rm = TRUE)) FALSE)
+      if (length(rhs_eval_mini) == 3L) {
+        return(1L) # all must be present
+      }
+      if (length(rhs_eval_mini) == 1L) {
+        if (anyNA(rhs_eval_mini)) {
+          if (anyNA(lhs_eval)) {
+            return(which.max(is.na(lhs_eval)))
+          } else {
+            return(0L)
+          }
+        }
+        return(.which_first_logical(lhs_eval, rhs_eval_mini))
+      }
+      # must be length 2
+      if (!anyNA(rhs_eval_mini)) {
+        o1 <- .which_first_logical(lhs_eval, TRUE)
+        if (o1 == 0) {
+          return(.which_first_logical(lhs_eval, FALSE))
+        }
+        o2 <- .which_first_logical(lhs_eval[seq_len(o1)], FALSE)
+        if (o2 == 0) {
+          return(o1)
+        }
+        return(min(o1, o2))
+      } else {
+        if (any(rhs_eval_mini, na.rm = TRUE)) {
+          # TRUE and NA
+          o1 <- .which_first_logical(lhs_eval, TRUE)
+        } else {
+          o1 <- .which_first_logical(lhs_eval, FALSE)
+        }
+        if (o1 == 0L) {
+          if (anyNA(lhs_eval)) {
+            return(which.max(is.na(lhs_eval)))
+          } else {
+            return(0L)
+          }
+        }
+        if (anyNA(lhs_eval_1 <- lhs_eval[seq_len(o1)])) {
+          return(which.max(is.na(lhs_eval_1)))
+        } else {
+          return(o1)
+        }
+      }
+      stop("Internal error: which_first_logical:165:20190823. Please report") # nocov
+    }
+
+    if (length(rhs_eval) == length(lhs_eval)) {
+      if (is.logical(rhs_eval)) {
+        # is.logical(rhs_eval)  necessary to ensure integers don't falsely resemble TRUE
+        # e.g. which_first(c(TRUE, TRUE) != c(1L, 2L)) should be 2 not 0.
+        # Quicker to do this, apparently.
+        if (identical(as.logical(lhs_eval),
+                      as.logical(rhs_eval))) {
+          if (operator == "==" || operator == "<=" || operator == ">=" || operator == "%in%") {
+            return(1L)
+          } else {
+            return(0L)
+          }
+        } else {
+          eq <- operator == "==" || operator == "<=" || operator == ">="
+          lt <- operator == "<=" || operator == "<"
+          gt <- operator == ">=" || operator == ">"
+          return(do_which_first_lgl_lgl(lhs_eval, rhs_eval, eq = eq, lt = lt, gt = gt))
+        }
+      }
+
+
+
+
+    }
+
     if (anyNA(rhs_eval)) {
       switch(operator,
              "==" = {
