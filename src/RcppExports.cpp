@@ -462,13 +462,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // force_as_integer
-IntegerVector force_as_integer(DoubleVector x);
-RcppExport SEXP _hutilscpp_force_as_integer(SEXP xSEXP) {
+IntegerVector force_as_integer(DoubleVector x, int na_code);
+RcppExport SEXP _hutilscpp_force_as_integer(SEXP xSEXP, SEXP na_codeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(force_as_integer(x));
+    Rcpp::traits::input_parameter< int >::type na_code(na_codeSEXP);
+    rcpp_result_gen = Rcpp::wrap(force_as_integer(x, na_code));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1126,7 +1127,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
     {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 11},
     {"_hutilscpp_is_safe2int", (DL_FUNC) &_hutilscpp_is_safe2int, 2},
-    {"_hutilscpp_force_as_integer", (DL_FUNC) &_hutilscpp_force_as_integer, 1},
+    {"_hutilscpp_force_as_integer", (DL_FUNC) &_hutilscpp_force_as_integer, 2},
     {"_hutilscpp_is_sorted_ascending_dbl", (DL_FUNC) &_hutilscpp_is_sorted_ascending_dbl, 1},
     {"_hutilscpp_is_sorted_descending_dbl", (DL_FUNC) &_hutilscpp_is_sorted_descending_dbl, 1},
     {"_hutilscpp_is_sorted_ascending_int", (DL_FUNC) &_hutilscpp_is_sorted_ascending_int, 1},
