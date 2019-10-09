@@ -149,8 +149,8 @@ is_safe2int <- function(x, int_max) {
     .Call(`_hutilscpp_is_safe2int`, x, int_max)
 }
 
-force_as_integer <- function(x) {
-    .Call(`_hutilscpp_force_as_integer`, x)
+force_as_integer <- function(x, na_code) {
+    .Call(`_hutilscpp_force_as_integer`, x, na_code)
 }
 
 is_sorted_ascending_dbl <- function(x) {

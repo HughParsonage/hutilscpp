@@ -1,7 +1,11 @@
 # hutilscpp 0.3.0
 
+## Critical bug fixes:
+* `is_safe2int(x)` now tolerates `NaN` input. Thanks to CRAN clang-UBSAN.
+
 ## Bug fixes:
 * `which_first(x == y)` now works properly when `length(y) == length(x)`.
+
 
 ## New functions:
 * `xor2` a faster version of `xor`. 

@@ -19,3 +19,9 @@ test_that("as_integer_if_safe works", {
 test_that("utils", {
   expect_equal(is_safe2int(1:10 + 0, 9), 0)
 })
+
+test_that("ubsan warning", {
+  # NaN not naturally coercible to int
+  expect_true(is.integer(as_integer_if_safe(NaN)))
+  expect_true(is.integer(as_integer_if_safe(NA_real_)))
+})
