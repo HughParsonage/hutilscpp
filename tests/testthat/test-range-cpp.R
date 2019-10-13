@@ -65,3 +65,24 @@ test_that("range on logical", {
   expect_equal(range_rcpp(c(logical(100), TRUE, NA)), c(0L, 1L, 1L, 101L))
   expect_equal(range_rcpp(c(NA, NA, NA)), as.integer(c(NA, NA, NA, NA)))
 })
+
+test_that("range with NA", {
+  r1 <- range_rcpp(c(NA, 1L, 2L, 3L))
+  expect_equal(r1, c(1, 3, 2, 4))
+
+  r1d <- range_rcpp(as.double(c(NA, 1L, 2L, 3L)))
+  expect_equal(r1d, c(1, 3, 2, 4))
+
+  r2 <- range_rcpp(c(NA, NA, 1L, 2L, 3L))
+  expect_equal(r2, c(1, 3, 3, 5))
+
+  r2d <- range_rcpp(as.double(c(NA, NA, 1L, 2L, 3L)))
+  expect_equal(r2d, c(1, 3, 3, 5))
+
+  r3 <- range_rcpp(c(1L, 9L, -1L, NA, NA))
+  expect_equal(r3, c(-1, 9, 3, 2))
+
+  r3d <- range_rcpp(as.double(c(1L, 9L, -1L, NA, NA)))
+  expect_equal(r3d, c(-1, 9, 3, 2))
+
+})

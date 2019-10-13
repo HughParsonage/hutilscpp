@@ -28,4 +28,23 @@ test_that("error handling", {
   expect_error(which_are_even("a"),
                "`x` was not an integer or double.",
                fixed = TRUE)
+
 })
+
+test_that("long vectors", {
+  skip_on_cran()
+  skip_on_appveyor()
+  skip_on_travis()
+  expect_error(which_are_even(integer(1e10)),
+               regexp = "long")
+})
+
+test_that("non-finite values", {
+  expect_error(are_even(c(NA, 1)))
+  expect_error(are_even(c(NaN, 1)))
+  expect_error(are_even(c(Inf, 1)))
+  expect_error(are_even(c(-Inf, 1)))
+
+
+})
+

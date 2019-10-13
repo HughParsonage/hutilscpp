@@ -234,6 +234,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_range_dbl_simple
+DoubleVector do_range_dbl_simple(DoubleVector x);
+RcppExport SEXP _hutilscpp_do_range_dbl_simple(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_range_dbl_simple(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_anyNonfinite
+R_xlen_t do_anyNonfinite(DoubleVector x);
+RcppExport SEXP _hutilscpp_do_anyNonfinite(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_anyNonfinite(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_which_first
 int do_which_first(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_first(SEXP xSEXP) {
@@ -1111,6 +1133,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_cumsum_reset_sorted_int", (DL_FUNC) &_hutilscpp_do_cumsum_reset_sorted_int, 1},
     {"_hutilscpp_do_are_even", (DL_FUNC) &_hutilscpp_do_are_even, 2},
     {"_hutilscpp_do_which_even", (DL_FUNC) &_hutilscpp_do_which_even, 2},
+    {"_hutilscpp_do_range_dbl_simple", (DL_FUNC) &_hutilscpp_do_range_dbl_simple, 1},
+    {"_hutilscpp_do_anyNonfinite", (DL_FUNC) &_hutilscpp_do_anyNonfinite, 1},
     {"_hutilscpp_do_which_first", (DL_FUNC) &_hutilscpp_do_which_first, 1},
     {"_hutilscpp_do_which_last", (DL_FUNC) &_hutilscpp_do_which_last, 1},
     {"_hutilscpp_do_which_first_false", (DL_FUNC) &_hutilscpp_do_which_first_false, 1},

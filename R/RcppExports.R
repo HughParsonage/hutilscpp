@@ -85,6 +85,14 @@ do_which_even <- function(x, y) {
     .Call(`_hutilscpp_do_which_even`, x, y)
 }
 
+do_range_dbl_simple <- function(x) {
+    .Call(`_hutilscpp_do_range_dbl_simple`, x)
+}
+
+do_anyNonfinite <- function(x) {
+    .Call(`_hutilscpp_do_anyNonfinite`, x)
+}
+
 do_which_first <- function(x) {
     .Call(`_hutilscpp_do_which_first`, x)
 }

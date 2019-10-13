@@ -24,4 +24,10 @@ test_that("ubsan warning", {
   # NaN not naturally coercible to int
   expect_true(is.integer(as_integer_if_safe(NaN)))
   expect_true(is.integer(as_integer_if_safe(NA_real_)))
+  expect_false(is.integer(as_integer_if_safe(Inf)))
+  expect_false(is.integer(as_integer_if_safe(-Inf)))
+  expect_error(force_as_integer(double(10), 0L),
+               regexp = "Internal error")
 })
+
+

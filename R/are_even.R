@@ -6,10 +6,15 @@
 #' and values are found to be non-integer a warning is emitted.
 #'
 #'
+#'
 #' @return For \code{are_even}, a logical vector the same length as \code{x},
 #' \code{TRUE} whenever \code{x} is even.
 #'
 #' For \code{which_are_even} the integer positions of even values in \code{x}.
+#'
+#'
+#'
+#'
 #'
 #' @export are_even which_are_even
 
@@ -32,6 +37,9 @@ are_even <- function(x, check_integerish = TRUE) {
 
 #' @rdname are_even
 which_are_even <- function(x, check_integerish = TRUE) {
+  if (length(x) >= .Machine$integer.max) {
+    stop("`which_are_even() not implemented for long `x`.")
+  }
   if (is.integer(x)) {
     return(do_which_even(x, double(0)))
   }

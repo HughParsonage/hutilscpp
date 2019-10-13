@@ -4,11 +4,15 @@
 \alias{range_rcpp}
 \title{Range C++}
 \usage{
-range_rcpp(x, warn_empty = TRUE, integer0_range_is_integer = FALSE)
+range_rcpp(x, anyNAx = anyNA(x), warn_empty = TRUE,
+  integer0_range_is_integer = FALSE)
 }
 \arguments{
 \item{x}{A vector for which the range is desired. Vectors with missing values
 are not supported and have no definite behaviour.}
+
+\item{anyNAx}{(logical, default: \code{anyNA(x)} lazily). Set to \code{TRUE}
+only if \code{x} is known to contain no missing values (including \code{NaN}).}
 
 \item{warn_empty}{(logical, default: \code{TRUE}) If \code{x} is
 empty (i.e. has no length), should a warning be emitted (like \code{\link[base]{range}})?}

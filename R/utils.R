@@ -55,11 +55,19 @@ epsilon <- function() {
 }
 
 #' @noRd
+#' @param x A vector, likely to be double.
 #' @param xi integer version of \code{x}. May be cheaper if already known
-which_isnt_integerish <- function(x, xi = as.integer(x)) {
+#' @param anyNAs Does `x` contain any NA or NaN values?
+which_isnt_integerish <- function(x, xi = as.integer(x), check_finite = TRUE) {
   if (is.integer(x)) {
     return(0L)
   }
+  if (!isFALSE(check_finite) && {nfx <- do_anyNonfinite(x)}) {
+    stop("`x` contained non-finite value ", x[nfx],
+         " at position ", nfx, ". Missing or non-finite doubles",
+         " are not permitted.")
+  }
+
   e <- epsilon()
   # slower to use -e, e when *validating* data,
   # which should be the benchmark, since it

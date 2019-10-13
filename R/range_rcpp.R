@@ -2,6 +2,8 @@
 #' @description Range of a vector using Rcpp.
 #' @param x A vector for which the range is desired. Vectors with missing values
 #' are not supported and have no definite behaviour.
+#' @param anyNAx (logical, default: \code{anyNA(x)} lazily). Set to \code{TRUE}
+#' only if \code{x} is known to contain no missing values (including \code{NaN}).
 #'
 #' @param warn_empty (logical, default: \code{TRUE}) If \code{x} is
 #' empty (i.e. has no length), should a warning be emitted (like \code{\link[base]{range}})?
@@ -32,6 +34,7 @@
 #' @export range_rcpp
 
 range_rcpp <- function(x,
+                       anyNAx = anyNA(x),
                        warn_empty = TRUE,
                        integer0_range_is_integer = FALSE) {
   if (!length(x)) {
@@ -49,10 +52,14 @@ range_rcpp <- function(x,
     return(out)
   }
   if (is.integer(x)) {
-    return(do_range_int(x))
+    return(do_range_int(x))  # not worth it to do _simple(x)
   }
   if (is.double(x)) {
-    return(do_range_dbl(x))
+    if (anyNAx) {
+      return(do_range_dbl(x))
+    } else {
+      return(do_range_dbl_simple(x))
+    }
   }
   if (is.logical(x)) {
     if (any(x, na.rm = TRUE)) {
