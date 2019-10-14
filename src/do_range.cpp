@@ -3,18 +3,18 @@ using namespace Rcpp;
 #include "cpphutils.h"
 
 
-IntegerVector do_range_int(IntegerVector x, int halt_if_min, int halt_if_max) {
-  int n = x.size();
-  int which_max = n - 1;
-  int maxi = x[n - 1];
+DoubleVector do_range_int(IntegerVector x, int halt_if_min, int halt_if_max) {
+  R_xlen_t n = x.size();
 
+  R_xlen_t which_max = n - 1;
+  int maxi = x[n - 1];
   while (maxi == NA_INTEGER) {
     --which_max;
     maxi = x[which_max];
   }
 
   int mini = x[0];
-  int which_min = 0;
+  R_xlen_t which_min = 0;
   while (mini == NA_INTEGER) {
     ++which_min;
     mini = x[which_min];
@@ -26,7 +26,7 @@ IntegerVector do_range_int(IntegerVector x, int halt_if_min, int halt_if_max) {
     which_max = which_min + 0;
   }
 
-  for (int i = 0; i < n; ++i) {
+  for (R_xlen_t i = 0; i < n; ++i) {
     int xi = x[i];
     if (xi == NA_INTEGER) {
       continue;
@@ -47,16 +47,16 @@ IntegerVector do_range_int(IntegerVector x, int halt_if_min, int halt_if_max) {
       }
     }
   }
-  IntegerVector out(4);
+  DoubleVector out(4); // need to use double in case x is long
   ++which_min;
   ++which_max;
+
   out[0] = mini;
   out[1] = maxi;
   out[2] = which_min;
   out[3] = which_max;
 
   return out;
-
 }
 
 

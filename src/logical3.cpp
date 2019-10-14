@@ -166,4 +166,3 @@ IntegerVector do_which3_mem(LogicalVector x, LogicalVector y, LogicalVector z, b
 }
 
 
-

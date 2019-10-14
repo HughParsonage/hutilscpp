@@ -130,7 +130,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_range_int
-IntegerVector do_range_int(IntegerVector x, int halt_if_min, int halt_if_max);
+DoubleVector do_range_int(IntegerVector x, int halt_if_min, int halt_if_max);
 RcppExport SEXP _hutilscpp_do_range_int(SEXP xSEXP, SEXP halt_if_minSEXP, SEXP halt_if_maxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

@@ -8,6 +8,6 @@ using namespace Rcpp;
 DoubleVector do_range_dbl(NumericVector x, double halt_if_min = 1, double halt_if_max = -1);
 
 // [[Rcpp::export]]
-IntegerVector do_range_int(IntegerVector x, int halt_if_min = 1, int halt_if_max = -1);
+DoubleVector do_range_int(IntegerVector x, int halt_if_min = 1, int halt_if_max = -1);
 
 #endif

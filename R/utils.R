@@ -65,7 +65,7 @@ which_isnt_integerish <- function(x, xi = as.integer(x), check_finite = TRUE) {
   if (!isFALSE(check_finite) && {nfx <- do_anyNonfinite(x)}) {
     stop("`x` contained non-finite value ", x[nfx],
          " at position ", nfx, ". Missing or non-finite doubles",
-         " are not permitted.")
+         " are not permitted.", )
   }
 
   e <- epsilon()

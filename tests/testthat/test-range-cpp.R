@@ -86,3 +86,12 @@ test_that("range with NA", {
   expect_equal(r3d, c(-1, 9, 3, 2))
 
 })
+
+test_that("long range", {
+  skip_on_cran()
+  skip_on_travis()
+  x <- integer(.Machine$integer.max + 5)
+  R <- range_rcpp(x)
+  expect_equal(R[1], 0)
+  expect_equal(R[2], 0)
+})
