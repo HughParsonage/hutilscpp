@@ -14,6 +14,13 @@ test_that("as_integer_if_safe works", {
   expect_true(is.double(as_integer_if_safe(c(-max_int, max_int + 1))))
   expect_true(is.double(as_integer_if_safe(c(-max_int, NA, max_int + 1))))
   expect_equal(sum(is.na(as_integer_if_safe(c(-max_int, NA, max_int + 1)))), 1)
+
+  expect_false(is.integer(as_integer_if_safe(-max_int + 0.5)))
+  expect_false(is.integer(as_integer_if_safe(-max_int - 0.5)))
+  expect_false(is.integer(as_integer_if_safe(c(-max_int, max_int, Inf, 0, 1, 2))))
+  expect_equal(as_integer_if_safe(c(NA, NaN, 1, 2, 3)),
+               as.integer(c(NA, NaN, 1, 2, 3)))
+
 })
 
 test_that("utils", {
@@ -26,8 +33,7 @@ test_that("ubsan warning", {
   expect_true(is.integer(as_integer_if_safe(NA_real_)))
   expect_false(is.integer(as_integer_if_safe(Inf)))
   expect_false(is.integer(as_integer_if_safe(-Inf)))
-  expect_error(force_as_integer(double(10), 0L),
-               regexp = "Internal error")
+  expect_error(force_as_integer(double(10), na_code = 0L), regexp = "Internal error")
 })
 
 

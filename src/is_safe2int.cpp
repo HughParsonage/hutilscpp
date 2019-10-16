@@ -12,7 +12,7 @@ int is_safe2int(DoubleVector x, double int_max) {
     double xi = x[i];
     // (int)NaN is UBD
 
-    if (R_finite(xi) && xi <= int_max && xi > int_min) {
+    if (R_finite(xi) && xi <= int_max && xi >= int_min) {
       int xint = (int)xi;
       if (xint != xi) {
         return 0;
