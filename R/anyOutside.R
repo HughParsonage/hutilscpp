@@ -36,7 +36,7 @@
 #' ##
 #' # N <- 500e6
 #' N <- 500e3
-#' x <- rep_len(samp(-5:6, size = 23), N)
+#' x <- rep_len(sample(-5:6, size = 23), N)
 #' bench_system_time(anyOutside(x, -5L, 6L))
 #' #    process      real
 #' #  453.125ms 459.758ms
