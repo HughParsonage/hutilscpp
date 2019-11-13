@@ -1,3 +1,9 @@
+# hutilscpp 0.4.0
+
+## New functions:
+* `which_last` for the first index from the last index.
+
+
 # hutilscpp 0.3.0
 
 ## Critical bug fixes:

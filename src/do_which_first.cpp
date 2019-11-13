@@ -251,4 +251,40 @@ R_xlen_t do_which_first_lgl_lgl(LogicalVector x, LogicalVector y,
   return 0;
 }
 
+// [[Rcpp::export]]
+R_xlen_t do_which_1st_uneq_dbl_dbl(DoubleVector x, DoubleVector y, double tol) {
+  R_xlen_t n = x.length();
+  if (n != y.length()) {
+    stop("Internal error: lengths differ.");
+  }
+
+  double min_tol = -tol;
+
+  for (R_xlen_t i = 0; i < n; ++i) {
+    double xi = x[i];
+    double yi = y[i];
+    if (xi != yi && (xi > tol || xi < min_tol)) {
+      return i + 1;
+    }
+  }
+  return 0;
+}
+
+// [[Rcpp::export]]
+R_xlen_t do_which_1st_uneq_int_int(IntegerVector x, IntegerVector y) {
+  R_xlen_t n = x.length();
+  if (n != y.length()) {
+    stop("Internal error: lengths differ.");
+  }
+
+  for (R_xlen_t i = 0; i < n; ++i) {
+    if (x[i] != y[i]) {
+      return i + 1;
+    }
+  }
+  return 0;
+}
+
+
+
 

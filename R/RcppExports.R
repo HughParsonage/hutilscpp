@@ -21,8 +21,8 @@ AnyWhich_dbl <- function(x, a, gt, lt, eq) {
     .Call(`_hutilscpp_AnyWhich_dbl`, x, a, gt, lt, eq)
 }
 
-AnyWhich_int <- function(x, a, gt, lt, eq) {
-    .Call(`_hutilscpp_AnyWhich_int`, x, a, gt, lt, eq)
+AnyWhich_int <- function(x, a, gt, lt, eq, rev = FALSE) {
+    .Call(`_hutilscpp_AnyWhich_int`, x, a, gt, lt, eq, rev)
 }
 
 AnyWhichInDbl <- function(x, Table) {
@@ -111,6 +111,14 @@ do_which_first_int_int <- function(x, y, eq = TRUE, gt = FALSE, lt = FALSE) {
 
 do_which_first_lgl_lgl <- function(x, y, eq, lt, gt, skip_na = FALSE) {
     .Call(`_hutilscpp_do_which_first_lgl_lgl`, x, y, eq, lt, gt, skip_na)
+}
+
+do_which_1st_uneq_dbl_dbl <- function(x, y, tol) {
+    .Call(`_hutilscpp_do_which_1st_uneq_dbl_dbl`, x, y, tol)
+}
+
+do_which_1st_uneq_int_int <- function(x, y) {
+    .Call(`_hutilscpp_do_which_1st_uneq_int_int`, x, y)
 }
 
 do_xor2 <- function(x, y, anyNAx = TRUE, anyNAy = TRUE) {

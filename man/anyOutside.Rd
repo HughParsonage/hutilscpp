@@ -48,4 +48,12 @@ anyOutside(c(NA, 1:10, NA), 1L, 7L) # NA since it occurred first
 anyOutside(c(1:7, NA), 1L, 7L, na_is_outside = FALSE)
 anyOutside(c(1:7, NA), 1L, 7L, na_is_outside = TRUE)
 
+##
+# N <- 500e6
+N <- 500e3
+x <- rep_len(samp(-5:6, size = 23), N)
+bench_system_time(anyOutside(x, -5L, 6L))
+#    process      real
+#  453.125ms 459.758ms
+
 }

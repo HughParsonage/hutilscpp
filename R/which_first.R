@@ -34,8 +34,14 @@
 #'  alternatives for most \code{x}.
 #'
 #'
-#' @param verbose (logical, default: \code{FALSE}) If \code{TRUE} a message is emitted
-#' if \code{expr} could not be handled in the advertised way.
+#' @param verbose \describe{
+#' \item{\code{logical(1)}, default: \code{FALSE}}{If \code{TRUE} a message is emitted
+#' if \code{expr} could not be handled in the advertised way.}
+#' }
+#'
+#' @param reverse \describe{
+#'   \item{\code{logical(1)}, default: \code{FALSE}}{Scan \code{expr} in reverse.}
+#' }
 #'
 #'
 #'
@@ -66,10 +72,10 @@
 #' bench_system_time(which.max(x == 5))   # 1.6
 #' bench_system_time(which_first(x == 5)) # 1.3
 #'
-#' @export
+#' @export which_first
 
 
-which_first <- function(expr, verbose = FALSE) {
+which_first <- function(expr, verbose = FALSE, reverse = FALSE) {
   rhs <- NULL
   sexpr <- substitute(expr)
   if (!is.call(sexpr) ||
@@ -86,7 +92,7 @@ which_first <- function(expr, verbose = FALSE) {
              AND(operator == "%in%",             # numeric vectors with %in%
                  # c(0, 1, 2) is not numeric but it is when evaluated
                  is.numeric(eval.parent(rhs)))))) {
-    o <- .which_first(expr, verbose = verbose)
+    o <- .which_first(expr, verbose = verbose, reverse = reverse)
     return(o)
   }
   lhs_eval <- eval.parent(lhs)
@@ -227,16 +233,16 @@ which_first <- function(expr, verbose = FALSE) {
                         return(0L)
                       }
                       rhs_eval <- as.integer(rhs_eval)
-                      AnyWhich_int(lhs_eval, rhs_eval, gt = FALSE, lt = FALSE, eq = TRUE)
+                      AnyWhich_int(lhs_eval, rhs_eval, gt = FALSE, lt = FALSE, eq = TRUE, rev = reverse)
                     },
                     # else
-                    .which_first(expr, verbose = verbose))
+                    .which_first(expr, verbose = verbose, reverse = reverse))
            },
            "!=" = {
              switch(typeof(lhs_eval),
                     "double" = {
                       rhs_eval <- as.double(rhs_eval)
-                      AnyWhich_dbl(lhs_eval, rhs_eval, gt = FALSE, lt = FALSE, eq = FALSE)
+                      AnyWhich_dbl(lhs_eval, rhs_eval, gt = FALSE, lt = FALSE, eq = FALSE, rev = reverse)
                     },
                     "integer" = {
                       if (is.double(rhs_eval) && as.integer(rhs_eval) != rhs_eval) {
@@ -247,7 +253,7 @@ which_first <- function(expr, verbose = FALSE) {
                         return(1L)
                       }
                       rhs_eval <- as.integer(rhs_eval)
-                      AnyWhich_int(lhs_eval, rhs_eval, gt = FALSE, lt = FALSE, eq = FALSE)
+                      AnyWhich_int(lhs_eval, rhs_eval, gt = FALSE, lt = FALSE, eq = FALSE, rev = reverse)
                     },
                     # else
                     .which_first(expr))
@@ -256,7 +262,7 @@ which_first <- function(expr, verbose = FALSE) {
              switch(typeof(lhs_eval),
                     "double" = {
                       rhs_eval <- as.double(rhs_eval)
-                      AnyWhich_dbl(lhs_eval, rhs_eval, gt = FALSE, lt = TRUE, eq = TRUE)
+                      AnyWhich_dbl(lhs_eval, rhs_eval, gt = FALSE, lt = TRUE, eq = TRUE, rev = reverse)
                     },
                     "integer" = {
                       if (!is.integer(rhs_eval)) {
@@ -269,7 +275,7 @@ which_first <- function(expr, verbose = FALSE) {
                           rhs_eval <- as.integer(rhs_eval)
                         }
                       }
-                      AnyWhich_int(lhs_eval, rhs_eval, gt = FALSE, lt = TRUE, eq = TRUE)
+                      AnyWhich_int(lhs_eval, rhs_eval, gt = FALSE, lt = TRUE, eq = TRUE, rev = reverse)
                     },
                     # else
                     .which_first(expr))
@@ -277,7 +283,7 @@ which_first <- function(expr, verbose = FALSE) {
            "<" = {
              switch(typeof(lhs_eval),
                     "double" = {
-                      AnyWhich_dbl(lhs_eval, rhs_eval, gt = FALSE, lt = TRUE, eq = FALSE)
+                      AnyWhich_dbl(lhs_eval, rhs_eval, gt = FALSE, lt = TRUE, eq = FALSE, rev = reverse)
                     },
                     "integer" = {
                       if (!is.integer(rhs_eval)) {
@@ -289,7 +295,7 @@ which_first <- function(expr, verbose = FALSE) {
                           rhs_eval <- as.integer(rhs_eval)
                         }
                       }
-                      AnyWhich_int(lhs_eval, rhs_eval, gt = FALSE, lt = TRUE, eq = FALSE)
+                      AnyWhich_int(lhs_eval, rhs_eval, gt = FALSE, lt = TRUE, eq = FALSE, rev = reverse)
                     },
                     # else
                     .which_first(expr))
@@ -298,7 +304,7 @@ which_first <- function(expr, verbose = FALSE) {
              switch(typeof(lhs_eval),
                     "double" =  {
                       rhs_eval <- as.double(rhs_eval)
-                      AnyWhich_dbl(lhs_eval, rhs_eval, gt = TRUE, lt = FALSE, eq = TRUE)
+                      AnyWhich_dbl(lhs_eval, rhs_eval, gt = TRUE, lt = FALSE, eq = TRUE, rev = reverse)
                     },
                     "integer" = {
                       if (!is.integer(rhs_eval)) {
@@ -310,7 +316,7 @@ which_first <- function(expr, verbose = FALSE) {
                           rhs_eval <- as.integer(rhs_eval)
                         }
                       }
-                      AnyWhich_int(lhs_eval, rhs_eval, gt = TRUE, lt = FALSE, eq = TRUE)
+                      AnyWhich_int(lhs_eval, rhs_eval, gt = TRUE, lt = FALSE, eq = TRUE, rev = reverse)
                     },
                     .which_first(expr))
            },
@@ -318,7 +324,7 @@ which_first <- function(expr, verbose = FALSE) {
              switch(typeof(lhs_eval),
                     "double" = {
                       rhs_eval <- as.double(rhs_eval)
-                      o <- AnyWhich_dbl(lhs_eval, rhs_eval, gt = TRUE, lt = FALSE, eq = FALSE)
+                      AnyWhich_dbl(lhs_eval, rhs_eval, gt = TRUE, lt = FALSE, eq = FALSE, rev = reverse)
                     },
                     "integer" = {
                       if (!is.integer(rhs_eval)) {
@@ -330,7 +336,7 @@ which_first <- function(expr, verbose = FALSE) {
                           rhs_eval <- as.integer(rhs_eval)
                         }
                       }
-                      AnyWhich_int(lhs_eval, rhs_eval, gt = TRUE, lt = FALSE, eq = FALSE)
+                      AnyWhich_int(lhs_eval, rhs_eval, gt = TRUE, lt = FALSE, eq = FALSE, rev = reverse)
                     },
                     .which_first(expr))
            },
@@ -349,6 +355,9 @@ which_first <- function(expr, verbose = FALSE) {
            # Still proceed using base R
            {
              warning("Internal error: which_first:95")
+             if (isTRUE(reverse)) {
+               return(do_which_last(expr))
+             }
              o <- which.max(expr)
 
              if (o == 1L && !expr[1L]) {
@@ -364,9 +373,12 @@ which_first <- function(expr, verbose = FALSE) {
   o
 }
 
-.which_first <- function(expr, verbose = FALSE) {
+.which_first <- function(expr, verbose = FALSE, reverse = FALSE) {
   if (verbose) {
     message("Falling back to `which.max(expr)`.")
+  }
+  if (reverse) {
+    return(do_which_last(expr))
   }
   o <- which.max(expr)
   if (length(o) == 0L) {
@@ -380,20 +392,34 @@ which_first <- function(expr, verbose = FALSE) {
   o
 }
 
-.which_first_logical <- function(lhs, rhs, operator = "==", verbose = FALSE) {
+.which_first_logical <- function(lhs, rhs, operator = "==", verbose = FALSE, rev = FALSE) {
   stopifnot(length(lhs) >= 1L,
             is.logical(rhs), length(rhs) == 1L, !anyNA(rhs),
             is.logical(verbose))
   rhs <-
-    switch(operator,
-           "==" = rhs,
-           "!=" = !rhs,
-           "<"  = if (rhs) rhs else return(0L),
-           "<=" = if (rhs) return(1L) else rhs,
-           ">"  = if (rhs) return(0L) else rhs,
-           ">=" = if (rhs) rhs else return(1L),
-           stop("Internal error 260:20190505."))
+    if (rev) {
+      switch(operator,
+             "==" = rhs,
+             "!=" = !rhs,
+             "<"  = if (rhs) rhs else return(0L),
+             "<=" = if (rhs) return(length(lhs)) else rhs,
+             ">"  = if (rhs) return(0L) else rhs,
+             ">=" = if (rhs) rhs else return(length(lhs)),
+             stop("Internal error 260:20191114."))
+    } else {
+      switch(operator,
+             "==" = rhs,
+             "!=" = !rhs,
+             "<"  = if (rhs) rhs else return(0L),
+             "<=" = if (rhs) return(1L) else rhs,
+             ">"  = if (rhs) return(0L) else rhs,
+             ">=" = if (rhs) rhs else return(1L),
+             stop("Internal error 260:20190505."))
+    }
   if (rhs) {
+    if (rev) {
+      return(do_which_last(lhs))
+    }
     o <- which.max(lhs)
     if (length(o) == 0L) {
       # LHS must be all NA
@@ -414,6 +440,16 @@ which_first <- function(expr, verbose = FALSE) {
   }
   o
 }
+
+
+#' @rdname which_first
+#' @export which_last
+which_last <- function(expr, verbose = FALSE, reverse = FALSE) {
+    eval.parent(which_first(expr,
+                          verbose = verbose,
+                          reverse = isFALSE(reverse)))
+}
+
 
 
 
