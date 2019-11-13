@@ -16,48 +16,41 @@ using namespace Rcpp;
 R_xlen_t AnyWhich_dbl(NumericVector x, double a, bool gt, bool lt, bool eq) {
   R_xlen_t N = x.size();
 
-  if (gt) {
-    if (lt) {
-      stop("gt and lt were both TRUE.");
-    }
-    if (eq) {
-      for (R_xlen_t i = 0; i < N; ++i) {
+  if (gt && lt) {
+    stop("gt and lt were both TRUE.");
+  }
+
+  for (R_xlen_t i = 0; i < N; ++i) {
+    if (gt) {
+      if (eq) {
         if (x[i] >= a) {
           return ++i; // 0 vs 1 indexing
         }
-      }
-    } else {
-      for (R_xlen_t i = 0; i < N; ++i) {
+      } else {
         if (x[i] > a) {
           return ++i;
         }
       }
-    }
-  } else if (lt) {
-    if (eq) {
-      for (R_xlen_t i = 0; i < N; ++i) {
+    } else if (lt) {
+      if (eq) {
         if (x[i] <= a) {
           return ++i;
         }
-      }
-    } else {
-      for (R_xlen_t i = 0; i < N; ++i) {
+
+      } else {
         if (x[i] < a) {
           return ++i;
         }
+
       }
-    }
-  } else {
-    if (eq) {
-      // Just equality
-      for (R_xlen_t i = 0; i < N; ++i) {
+    } else {
+      if (eq) {
+        // Just equality
         if (x[i] == a) {
           return ++i;
         }
-      }
-    } else {
-      // Just inequality
-      for (R_xlen_t i = 0; i < N; ++i) {
+      } else {
+        // Just inequality
         if (x[i] != a) {
           return ++i;
         }
@@ -69,58 +62,53 @@ R_xlen_t AnyWhich_dbl(NumericVector x, double a, bool gt, bool lt, bool eq) {
 }
 
 // [[Rcpp::export]]
-R_xlen_t AnyWhich_int(IntegerVector x, int a, bool gt, bool lt, bool eq) {
+R_xlen_t AnyWhich_int(IntegerVector x, int a, bool gt, bool lt, bool eq, bool rev = false) {
   R_xlen_t N = x.size();
+  if (gt && lt) {
+    stop("gt and lt were both TRUE.");
+  }
 
-  if (gt) {
-    if (lt) {
-      stop("gt and lt were both TRUE.");
+  for (R_xlen_t j = 0; j < N; ++j) {
+    R_xlen_t i = j;
+    if (rev) {
+      i = N - 1 - j;
     }
-    if (eq) {
-      for (R_xlen_t i = 0; i < N; ++i) {
+    if (gt) {
+      if (eq) {
         if (x[i] >= a) {
           return ++i; // 0 vs 1 indexing
         }
-      }
-    } else {
-      for (R_xlen_t i = 0; i < N; ++i) {
+      } else {
         if (x[i] > a) {
           return ++i;
         }
       }
-    }
-  } else if (lt) {
-    if (eq) {
-      for (R_xlen_t i = 0; i < N; ++i) {
+    } else if (lt) {
+      if (eq) {
         if (x[i] <= a) {
           return ++i;
         }
-      }
-    } else {
-      for (R_xlen_t i = 0; i < N; ++i) {
+
+      } else {
         if (x[i] < a) {
           return ++i;
         }
+
       }
-    }
-  } else {
-    if (eq) {
-      // Just equality
-      for (R_xlen_t i = 0; i < N; ++i) {
+    } else {
+      if (eq) {
+        // Just equality
         if (x[i] == a) {
           return ++i;
         }
-      }
-    } else {
-      // Just inequality
-      for (R_xlen_t i = 0; i < N; ++i) {
+      } else {
+        // Just inequality
         if (x[i] != a) {
           return ++i;
         }
       }
     }
   }
-
   return 0;
 }
 

@@ -2,15 +2,24 @@
 % Please edit documentation in R/which_first.R
 \name{which_first}
 \alias{which_first}
+\alias{which_last}
 \title{Where does a logical expression first return \code{TRUE}?}
 \usage{
-which_first(expr, verbose = FALSE)
+which_first(expr, verbose = FALSE, reverse = FALSE)
+
+which_last(expr, verbose = FALSE, reverse = FALSE)
 }
 \arguments{
 \item{expr}{An expression, such as \code{x == 2}.}
 
-\item{verbose}{(logical, default: \code{FALSE}) If \code{TRUE} a message is emitted
+\item{verbose}{\describe{
+\item{\code{logical(1)}, default: \code{FALSE}}{If \code{TRUE} a message is emitted
 if \code{expr} could not be handled in the advertised way.}
+}}
+
+\item{reverse}{\describe{
+\item{\code{logical(1)}, default: \code{FALSE}}{Scan \code{expr} in reverse.}
+}}
 }
 \value{
 The same as \code{which.max(expr)} or \code{which(expr)[1]} but returns \code{0L}
