@@ -13,14 +13,17 @@ using namespace Rcpp;
 //' @noRd
 
 // [[Rcpp::export]]
-R_xlen_t AnyWhich_dbl(NumericVector x, double a, bool gt, bool lt, bool eq) {
+R_xlen_t AnyWhich_dbl(DoubleVector x, double a, bool gt, bool lt, bool eq, bool rev = false) {
   R_xlen_t N = x.size();
-
   if (gt && lt) {
     stop("gt and lt were both TRUE.");
   }
 
-  for (R_xlen_t i = 0; i < N; ++i) {
+  for (R_xlen_t j = 0; j < N; ++j) {
+    R_xlen_t i = j;
+    if (rev) {
+      i = N - 1 - j;
+    }
     if (gt) {
       if (eq) {
         if (x[i] >= a) {
@@ -57,7 +60,6 @@ R_xlen_t AnyWhich_dbl(NumericVector x, double a, bool gt, bool lt, bool eq) {
       }
     }
   }
-
   return 0;
 }
 

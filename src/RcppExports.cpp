@@ -19,17 +19,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // AnyWhich_dbl
-R_xlen_t AnyWhich_dbl(NumericVector x, double a, bool gt, bool lt, bool eq);
-RcppExport SEXP _hutilscpp_AnyWhich_dbl(SEXP xSEXP, SEXP aSEXP, SEXP gtSEXP, SEXP ltSEXP, SEXP eqSEXP) {
+R_xlen_t AnyWhich_dbl(DoubleVector x, double a, bool gt, bool lt, bool eq, bool rev);
+RcppExport SEXP _hutilscpp_AnyWhich_dbl(SEXP xSEXP, SEXP aSEXP, SEXP gtSEXP, SEXP ltSEXP, SEXP eqSEXP, SEXP revSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< double >::type a(aSEXP);
     Rcpp::traits::input_parameter< bool >::type gt(gtSEXP);
     Rcpp::traits::input_parameter< bool >::type lt(ltSEXP);
     Rcpp::traits::input_parameter< bool >::type eq(eqSEXP);
-    rcpp_result_gen = Rcpp::wrap(AnyWhich_dbl(x, a, gt, lt, eq));
+    Rcpp::traits::input_parameter< bool >::type rev(revSEXP);
+    rcpp_result_gen = Rcpp::wrap(AnyWhich_dbl(x, a, gt, lt, eq, rev));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1142,7 +1143,7 @@ RcppExport SEXP do_c_pmax(SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_AnyCharMatch", (DL_FUNC) &_hutilscpp_AnyCharMatch, 3},
-    {"_hutilscpp_AnyWhich_dbl", (DL_FUNC) &_hutilscpp_AnyWhich_dbl, 5},
+    {"_hutilscpp_AnyWhich_dbl", (DL_FUNC) &_hutilscpp_AnyWhich_dbl, 6},
     {"_hutilscpp_AnyWhich_int", (DL_FUNC) &_hutilscpp_AnyWhich_int, 6},
     {"_hutilscpp_AnyWhichInDbl", (DL_FUNC) &_hutilscpp_AnyWhichInDbl, 2},
     {"_hutilscpp_AnyWhichInInt", (DL_FUNC) &_hutilscpp_AnyWhichInInt, 2},
