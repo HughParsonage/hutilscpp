@@ -222,7 +222,7 @@ which_first <- function(expr, verbose = FALSE, reverse = FALSE) {
              switch(typeof(lhs_eval),
                     "double" = {
                       rhs_eval <- as.double(rhs_eval)
-                      AnyWhich_dbl(lhs_eval, rhs_eval, gt = FALSE, lt = FALSE, eq = TRUE)
+                      AnyWhich_dbl(lhs_eval, rhs_eval, gt = FALSE, lt = FALSE, eq = TRUE, rev = reverse)
                     },
                     "integer" = {
                       # Need to pass int to Rcpp, but 2 != 2.5
