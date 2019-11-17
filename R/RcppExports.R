@@ -105,6 +105,18 @@ do_which_first_false <- function(x) {
     .Call(`_hutilscpp_do_which_first_false`, x)
 }
 
+do_which_last_false <- function(x) {
+    .Call(`_hutilscpp_do_which_last_false`, x)
+}
+
+do_which_last_notTRUE <- function(x) {
+    .Call(`_hutilscpp_do_which_last_notTRUE`, x)
+}
+
+do_which_last_notFALSE <- function(x) {
+    .Call(`_hutilscpp_do_which_last_notFALSE`, x)
+}
+
 do_which_first_int_int <- function(x, y, eq = TRUE, gt = FALSE, lt = FALSE) {
     .Call(`_hutilscpp_do_which_first_int_int`, x, y, eq, gt, lt)
 }

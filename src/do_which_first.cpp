@@ -5,7 +5,7 @@ using namespace Rcpp;
 int do_which_first(LogicalVector x) {
   R_xlen_t N = x.size();
   for (R_xlen_t i = 0; i < N; ++i) {
-    if (x[i]) {
+    if (x[i] == TRUE) {
       return ++i;
     }
   }
@@ -17,11 +17,10 @@ int do_which_first(LogicalVector x) {
 int do_which_last(LogicalVector x) {
   R_xlen_t N = x.size();
   for (R_xlen_t i = N - 1; i >= 0; --i) {
-    if (x[i]) {
+    if (x[i] == TRUE) {
       return ++i;
     }
   }
-
   return 0;
 }
 
@@ -29,7 +28,40 @@ int do_which_last(LogicalVector x) {
 int do_which_first_false (LogicalVector x) {
   R_xlen_t N = x.size();
   for (R_xlen_t i = 0; i < N; ++i) {
-    if (!x[i]) {
+    if (x[i] == FALSE) {
+      return ++i;
+    }
+  }
+  return 0;
+}
+
+// [[Rcpp::export]]
+int do_which_last_false (LogicalVector x) {
+  R_xlen_t N = x.size();
+  for (R_xlen_t i = N - 1; i >= 0; --i) {
+    if (x[i] == FALSE) {
+      return ++i;
+    }
+  }
+  return 0;
+}
+
+// [[Rcpp::export]]
+int do_which_last_notTRUE(LogicalVector x) {
+  R_xlen_t N = x.size();
+  for (R_xlen_t i = N - 1; i >= 0; --i) {
+    if (x[i] != TRUE) {
+      return ++i;
+    }
+  }
+  return 0;
+}
+
+// [[Rcpp::export]]
+int do_which_last_notFALSE(LogicalVector x) {
+  R_xlen_t N = x.size();
+  for (R_xlen_t i = N - 1; i >= 0; --i) {
+    if (x[i] != FALSE) {
       return ++i;
     }
   }

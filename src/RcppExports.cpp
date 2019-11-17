@@ -291,6 +291,39 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_which_last_false
+int do_which_last_false(LogicalVector x);
+RcppExport SEXP _hutilscpp_do_which_last_false(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_last_false(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_last_notTRUE
+int do_which_last_notTRUE(LogicalVector x);
+RcppExport SEXP _hutilscpp_do_which_last_notTRUE(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_last_notTRUE(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_last_notFALSE
+int do_which_last_notFALSE(LogicalVector x);
+RcppExport SEXP _hutilscpp_do_which_last_notFALSE(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_last_notFALSE(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_which_first_int_int
 int do_which_first_int_int(IntegerVector x, IntegerVector y, bool eq, bool gt, bool lt);
 RcppExport SEXP _hutilscpp_do_which_first_int_int(SEXP xSEXP, SEXP ySEXP, SEXP eqSEXP, SEXP gtSEXP, SEXP ltSEXP) {
@@ -1165,6 +1198,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which_first", (DL_FUNC) &_hutilscpp_do_which_first, 1},
     {"_hutilscpp_do_which_last", (DL_FUNC) &_hutilscpp_do_which_last, 1},
     {"_hutilscpp_do_which_first_false", (DL_FUNC) &_hutilscpp_do_which_first_false, 1},
+    {"_hutilscpp_do_which_last_false", (DL_FUNC) &_hutilscpp_do_which_last_false, 1},
+    {"_hutilscpp_do_which_last_notTRUE", (DL_FUNC) &_hutilscpp_do_which_last_notTRUE, 1},
+    {"_hutilscpp_do_which_last_notFALSE", (DL_FUNC) &_hutilscpp_do_which_last_notFALSE, 1},
     {"_hutilscpp_do_which_first_int_int", (DL_FUNC) &_hutilscpp_do_which_first_int_int, 5},
     {"_hutilscpp_do_which_first_lgl_lgl", (DL_FUNC) &_hutilscpp_do_which_first_lgl_lgl, 6},
     {"_hutilscpp_do_which_1st_uneq_dbl_dbl", (DL_FUNC) &_hutilscpp_do_which_1st_uneq_dbl_dbl, 3},
