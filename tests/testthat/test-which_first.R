@@ -436,5 +436,36 @@ test_that("do_which_first_lgl_lgl skip_na", {
 })
 
 
+test_that("which_first fall through when no name", {
+  expect_message(which_first(1 == 1, verbose = TRUE),
+                 regexp = "which.max")
+})
+
+test_that("which_first(<lgl> <operator> <TRUE/FALSE>", {
+  lhs <- (c(1:10) %% 2L) | (c(1:10) == 7L)
+
+  expect_equal(which_first(lhs < TRUE), 2L)
+  expect_equal(which_first(lhs <= TRUE), 1L)
+  expect_equal(which_first(lhs > TRUE), 0L)
+  expect_equal(which_first(lhs >= TRUE), 1L)
+
+  expect_equal(which_first(lhs < FALSE), 0L)
+  expect_equal(which_first(lhs <= FALSE), 2L)
+  expect_equal(which_first(lhs > FALSE), 1L)
+  expect_equal(which_first(lhs >= FALSE), 1L)
+
+  expect_equal(which_last(lhs < TRUE), 10L)
+  expect_equal(which_last(lhs <= TRUE), 10L)
+  expect_equal(which_last(lhs > TRUE), 0L)
+  expect_equal(which_last(lhs >= TRUE), 9L)
+
+  expect_equal(which_last(lhs < FALSE), 0L)
+  expect_equal(which_last(lhs <= FALSE), 10L)
+  expect_equal(which_last(lhs > FALSE), 9L)
+  expect_equal(which_last(lhs >= FALSE), 10L)
+
+
+})
+
 
 
