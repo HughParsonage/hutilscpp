@@ -302,6 +302,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_which_first_notTRUE
+int do_which_first_notTRUE(LogicalVector x);
+RcppExport SEXP _hutilscpp_do_which_first_notTRUE(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_first_notTRUE(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_which_last_notTRUE
 int do_which_last_notTRUE(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_last_notTRUE(SEXP xSEXP) {
@@ -1199,6 +1210,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which_last", (DL_FUNC) &_hutilscpp_do_which_last, 1},
     {"_hutilscpp_do_which_first_false", (DL_FUNC) &_hutilscpp_do_which_first_false, 1},
     {"_hutilscpp_do_which_last_false", (DL_FUNC) &_hutilscpp_do_which_last_false, 1},
+    {"_hutilscpp_do_which_first_notTRUE", (DL_FUNC) &_hutilscpp_do_which_first_notTRUE, 1},
     {"_hutilscpp_do_which_last_notTRUE", (DL_FUNC) &_hutilscpp_do_which_last_notTRUE, 1},
     {"_hutilscpp_do_which_last_notFALSE", (DL_FUNC) &_hutilscpp_do_which_last_notFALSE, 1},
     {"_hutilscpp_do_which_first_int_int", (DL_FUNC) &_hutilscpp_do_which_first_int_int, 5},

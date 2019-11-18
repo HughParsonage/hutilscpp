@@ -36,7 +36,8 @@ test_that("long vectors", {
   skip_on_appveyor()
   skip_on_travis()
   expect_error(which_are_even(integer(1e10)),
-               regexp = "long")
+               # long for 64 bit, large for 32bit
+               regexp = "long|large")
 })
 
 test_that("non-finite values", {

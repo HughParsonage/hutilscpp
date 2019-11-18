@@ -30,4 +30,5 @@ Suggests:
     bench,
     testthat (>= 2.1.0),
     TeXCheckR,
+    withr,
     covr

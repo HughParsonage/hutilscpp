@@ -441,7 +441,7 @@ test_that("which_first fall through when no name", {
                  regexp = "which.max")
 })
 
-test_that("which_first(<lgl> <operator> <TRUE/FALSE>", {
+test_that("which_first(<lgl> <operator> <TRUE/FALSE>)", {
   lhs <- (c(1:10) %% 2L) | (c(1:10) == 7L)
 
   expect_equal(which_first(lhs < TRUE), 2L)
