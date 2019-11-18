@@ -552,8 +552,10 @@ which_first <- function(expr,
       }
     }
   })
+  # nocov start
   print(ls.str())
   stop("Internal error: 559:2019:11:18. ")
+  # nocov end
 }
 
 

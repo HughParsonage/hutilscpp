@@ -66,5 +66,7 @@ test_that("which_last is.na(lhs_eval)", {
   expect_equal(which_last(xna != NA, suppressWarning = TRUE), length(xna) - 1L)
   expect_equal(which_last(xna != TRUE), length(xna) - 1L)
   expect_equal(which_last(xna == TRUE), 4L)
+  expect_equal(which_last(xna %in% NA), length(xna))
+  expect_equal(which_last(xna != FALSE, reverse = TRUE), 1L)
 })
 
