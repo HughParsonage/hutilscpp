@@ -64,7 +64,7 @@ test_that("which_last is.na(lhs_eval)", {
   xna <- c(TRUE, FALSE, NA, TRUE, FALSE, NA)
   expect_equal(which_last(xna == NA, suppressWarning = TRUE), length(xna))
   expect_equal(which_last(xna != NA, suppressWarning = TRUE), length(xna) - 1L)
-  expect_equal(which_last(xna != TRUE), length(xna))
+  expect_equal(which_last(xna != TRUE), length(xna) - 1L)
   expect_equal(which_last(xna == TRUE), 4L)
 })
 

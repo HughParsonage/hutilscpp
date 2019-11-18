@@ -109,6 +109,10 @@ do_which_last_false <- function(x) {
     .Call(`_hutilscpp_do_which_last_false`, x)
 }
 
+do_which_first_notTRUE <- function(x) {
+    .Call(`_hutilscpp_do_which_first_notTRUE`, x)
+}
+
 do_which_last_notTRUE <- function(x) {
     .Call(`_hutilscpp_do_which_last_notTRUE`, x)
 }

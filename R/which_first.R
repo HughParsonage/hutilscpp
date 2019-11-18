@@ -43,6 +43,14 @@
 #'   \item{\code{logical(1)}, default: \code{FALSE}}{Scan \code{expr} in reverse.}
 #' }
 #'
+#' @param sexpr Equivalent to \code{substitute(expr)}. For internal use.
+#' @param eval_parent_n Passed to \code{eval.parent}, the environment in which
+#' \code{expr} is evaluated.
+#'
+#' @param suppressWarning Either a \code{FALSE} or \code{TRUE}, whether or not
+#' warnings should be suppressed. Also supports a string input which suppresses a
+#' warning if it matches as a regular expression.
+#'
 #'
 #'
 #' @examples
@@ -446,52 +454,106 @@ which_first <- function(expr,
             is.logical(rhs), length(rhs) == 1L, !anyNA(rhs),
             is.logical(verbose))
 
-  rhs <-
-    if (rev) {
-      switch(operator,
-             "==" = rhs,
-             "!=" = !rhs,
-             "<"  = if (rhs) !rhs else return(0L),
-             "<=" = if (rhs) return(length(rhs)) else rhs,
-             ">"  = if (rhs) return(0L) else !rhs,
-             ">=" = if (rhs) rhs else return(length(rhs)),
-             stop("Internal error 260:20191114-rev."))
+  #    operator   rhs   first/last
+  # 1:       != FALSE   notFALSE
+  # 2:       !=  TRUE   notTRUE
+  switch({
+    operator
+  },
+  "!=" = {
+    if (rhs) {
+      if (rev) {
+        return(do_which_last_false(lhs))
+      } else {
+        return(do_which_first_false(lhs))
+      }
     } else {
-      switch(operator,
-             "==" = rhs,
-             "!=" = !rhs,
-             "<"  = if (rhs) !rhs else return(0L),
-             "<=" = if (rhs) return(1L) else rhs,
-             ">"  = if (rhs) return(0L) else !rhs,
-             ">=" = if (rhs) rhs else return(1L),
-             stop("Internal error 260:20190505."))
+      if (rev) {
+        return(do_which_last(lhs))
+      } else {
+        return(do_which_first(lhs))
+      }
     }
-  if (rhs) {
-    if (rev) {
-      return(do_which_last_notFALSE(lhs))
+  },
+  "==" = {
+    # 0:       ==  TRUE   TRUE
+    # 9:       == FALSE   FALSE
+    if (rhs) {
+      if (rev) {
+        return(do_which_last(lhs))
+      } else {
+        return(do_which_first(lhs))
+      }
+    } else {
+      if (rev) {
+        return(do_which_last_false(lhs))
+      } else {
+        return(do_which_first_false(lhs))
+      }
     }
-    o <- which.max(lhs)
-    if (length(o) == 0L) {
-      # LHS must be all NA
+  },
+  "<" = {
+    # 5:        < FALSE   0L
+    # 6:        <  TRUE   FALSE
+    if (rhs) {
+      if (rev) {
+        return(do_which_last_false(lhs))
+      } else {
+        return(do_which_first_false(lhs))
+      }
+    } else {
       return(0L)
     }
-    # can't just test o == 1 because it may be NA
-    if (!lhs[o]) {
-      o <- 0L
+  },
+  "<=" = {
+    # 8:       <=  TRUE   1L/length
+    # 7:       <= FALSE   FALSE
+    if (rhs) {
+      if (rev) {
+        return(length(lhs))
+      } else {
+        return(1L)
+      }
+    } else {
+      if (rev) {
+        return(do_which_last_false(lhs))
+      } else {
+        return(do_which_first_false(lhs))
+      }
     }
-  } else {
-    if (rev) {
-      return(do_which_last_notTRUE(lhs))
-    }
-    o <- which.min(lhs)
-    if (length(o) == 0L) {
+  },
+  ">" = {
+    # 2:        >  TRUE   0L
+    # 1:        > FALSE   TRUE
+    if (rhs) {
       return(0L)
+    } else {
+      if (rev) {
+        return(do_which_last(lhs))
+      } else {
+        return(do_which_first(lhs))
+      }
     }
-    if (lhs[o]) {
-      o <- 0L
+  },
+  ">=" = {
+    # 4:       >=  TRUE   TRUE
+    # 3:       >= FALSE   TRUE/FALSE
+    if (rhs) {
+      if (rev) {
+        return(do_which_last(lhs))
+      } else {
+        return(do_which_first(lhs))
+      }
+    } else {
+      if (rev) {
+        return(length(lhs))
+      } else {
+        return(1L)
+      }
     }
-  }
-  o
+  })
+  print(ls.str())
+  stop("Internal error: 559:2019:11:18. ")
 }
 
 

@@ -47,6 +47,17 @@ int do_which_last_false (LogicalVector x) {
 }
 
 // [[Rcpp::export]]
+int do_which_first_notTRUE(LogicalVector x) {
+  R_xlen_t N = x.size();
+  for (R_xlen_t i = 0; i < N; ++i) {
+    if (x[i] != TRUE) {
+      return ++i;
+    }
+  }
+  return 0;
+}
+
+// [[Rcpp::export]]
 int do_which_last_notTRUE(LogicalVector x) {
   R_xlen_t N = x.size();
   for (R_xlen_t i = N - 1; i >= 0; --i) {
