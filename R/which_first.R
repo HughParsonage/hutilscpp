@@ -118,12 +118,24 @@ which_first <- function(expr,
 
     # c(0, 1, 2) is not numeric but it is when evaluated
     AND(operator == "%in%",
-        is.numeric(rhs_eval))
+        is.numeric(rhs_eval)) ||
+
+    # x != y  or  x == y
+
+    AND(is.symbol(rhs),
+        all(is.numeric(rhs_eval),
+            is.numeric(lhs_eval <- eval.parent(lhs, n = eval_parent_n)),
+            OR(length(lhs_eval) == length(rhs_eval),
+               length(lhs_eval) == 1L),
+            operator == "!=" || operator == "==",
+            na.rm = TRUE))
+
 
   if (!isValidExpr) {
     o <- .which_first(expr, verbose = verbose, reverse = reverse)
     return(o)
   }
+
   lhs_eval <- eval.parent(lhs, n = eval_parent_n)
 
   if (length(lhs_eval) == 0L) {
@@ -255,6 +267,63 @@ which_first <- function(expr,
              stop("`rhs` appears to be logical NA. This is not supported for operator '", operator, "'."))
     } else {
       o <- .which_first_logical(lhs_eval, as.logical(rhs_eval), operator = operator, rev = reverse)
+    }
+    return(o)
+  }
+
+  if (is.integer(lhs_eval) &&
+      is.integer(rhs_eval) &&
+      length(lhs_eval) == length(rhs_eval)) {
+    o <-
+      switch(operator,
+             "!=" = {
+               if (reverse) {
+                 do_which_last_uneq_int_int(lhs_eval, rhs_eval)
+               } else {
+                 do_which_1st_uneq_int_int(lhs_eval, rhs_eval)
+               }
+             },
+             "==" = {
+               if (reverse) {
+                 do_which_last_eq_int_int(lhs_eval, rhs_eval)
+               } else {
+                 do_which_1st_eq_int_int(lhs_eval, rhs_eval)
+               }
+             },
+             # nocov start
+             stop("Internal error: 2019-11-26:L294"))
+    # nocov end
+    if (o <= .Machine$integer.max) {
+      o <- as.integer(o)
+    }
+    return(o)
+  }
+
+  if (is.double(lhs_eval) &&
+      is.double(rhs_eval) &&
+      length(lhs_eval) == length(rhs_eval)) {
+    dbl_tol <- sqrt(.Machine$double.eps)
+    o <-
+      switch(operator,
+             "!=" = {
+               if (reverse) {
+                 do_which_last_uneq_dbl_dbl(lhs_eval, rhs_eval, dbl_tol)
+               } else {
+                 do_which_1st_uneq_dbl_dbl(lhs_eval, rhs_eval, dbl_tol)
+               }
+             },
+             "==" = {
+               if (reverse) {
+                 do_which_last_eq_dbl_dbl(lhs_eval, rhs_eval, dbl_tol)
+               } else {
+                 do_which_1st_eq_dbl_dbl(lhs_eval, rhs_eval, dbl_tol)
+               }
+             },
+             # nocov start
+             stop("Internal error: 2019-11-26:L319"))
+    # nocov end
+    if (o <= .Machine$integer.max) {
+      o <- as.integer(o)
     }
     return(o)
   }
@@ -573,6 +642,9 @@ which_last <- function(expr,
               eval_parent_n = 2L,
               suppressWarning = suppressWarning)
 }
+
+
+
 
 
 

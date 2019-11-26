@@ -133,8 +133,32 @@ do_which_1st_uneq_dbl_dbl <- function(x, y, tol) {
     .Call(`_hutilscpp_do_which_1st_uneq_dbl_dbl`, x, y, tol)
 }
 
+do_which_last_uneq_dbl_dbl <- function(x, y, tol) {
+    .Call(`_hutilscpp_do_which_last_uneq_dbl_dbl`, x, y, tol)
+}
+
 do_which_1st_uneq_int_int <- function(x, y) {
     .Call(`_hutilscpp_do_which_1st_uneq_int_int`, x, y)
+}
+
+do_which_last_uneq_int_int <- function(x, y) {
+    .Call(`_hutilscpp_do_which_last_uneq_int_int`, x, y)
+}
+
+do_which_1st_eq_dbl_dbl <- function(x, y, tol) {
+    .Call(`_hutilscpp_do_which_1st_eq_dbl_dbl`, x, y, tol)
+}
+
+do_which_last_eq_dbl_dbl <- function(x, y, tol) {
+    .Call(`_hutilscpp_do_which_last_eq_dbl_dbl`, x, y, tol)
+}
+
+do_which_1st_eq_int_int <- function(x, y) {
+    .Call(`_hutilscpp_do_which_1st_eq_int_int`, x, y)
+}
+
+do_which_last_eq_int_int <- function(x, y) {
+    .Call(`_hutilscpp_do_which_last_eq_int_int`, x, y)
 }
 
 do_xor2 <- function(x, y, anyNAx = TRUE, anyNAy = TRUE) {

@@ -298,15 +298,31 @@ R_xlen_t do_which_first_lgl_lgl(LogicalVector x, LogicalVector y,
 R_xlen_t do_which_1st_uneq_dbl_dbl(DoubleVector x, DoubleVector y, double tol) {
   R_xlen_t n = x.length();
   if (n != y.length()) {
-    stop("Internal error: lengths differ.");
+    stop("Internal error: lengths differ.");  // nocov
   }
 
   double min_tol = -tol;
 
   for (R_xlen_t i = 0; i < n; ++i) {
-    double xi = x[i];
-    double yi = y[i];
-    if (xi != yi && (xi > tol || xi < min_tol)) {
+    double di = x[i] - y[i];
+    if (di > tol || di < min_tol) {
+      return i + 1;
+    }
+  }
+  return 0;
+}
+
+// [[Rcpp::export]]
+R_xlen_t do_which_last_uneq_dbl_dbl(DoubleVector x, DoubleVector y, double tol) {
+  R_xlen_t n = x.length();
+  if (n != y.length()) {
+    stop("Internal error: lengths differ.");  // nocov
+  }
+  double min_tol = -tol;
+
+  for (R_xlen_t i = n - 1; i >= 0; --i) {
+    double di = x[i] - y[i];
+    if (di > tol || di < min_tol) {
       return i + 1;
     }
   }
@@ -317,9 +333,8 @@ R_xlen_t do_which_1st_uneq_dbl_dbl(DoubleVector x, DoubleVector y, double tol) {
 R_xlen_t do_which_1st_uneq_int_int(IntegerVector x, IntegerVector y) {
   R_xlen_t n = x.length();
   if (n != y.length()) {
-    stop("Internal error: lengths differ.");
+    stop("Internal error: lengths differ.");  // nocov
   }
-
   for (R_xlen_t i = 0; i < n; ++i) {
     if (x[i] != y[i]) {
       return i + 1;
@@ -328,6 +343,78 @@ R_xlen_t do_which_1st_uneq_int_int(IntegerVector x, IntegerVector y) {
   return 0;
 }
 
+// [[Rcpp::export]]
+R_xlen_t do_which_last_uneq_int_int(IntegerVector x, IntegerVector y) {
+  R_xlen_t n = x.length();
+  if (n != y.length()) {
+    stop("Internal error: lengths differ.");  // nocov
+  }
+  for (R_xlen_t i = n - 1; i >= 0; --i) {
+    if (x[i] != y[i]) {
+      return i + 1;
+    }
+  }
+  return 0;
+}
 
+// [[Rcpp::export]]
+R_xlen_t do_which_1st_eq_dbl_dbl(DoubleVector x, DoubleVector y, double tol) {
+  R_xlen_t n = x.length();
+  if (n != y.length()) {
+    stop("Internal error: lengths differ.");  // nocov
+  }
+  double min_tol = -tol;
+  for (R_xlen_t i = 0; i < n; ++i) {
+    double di = x[i] - y[i];
+    if (di == 0 || (di < tol && di > min_tol)) {
+      return i + 1;
+    }
+  }
+  return 0;
+}
 
+// [[Rcpp::export]]
+R_xlen_t do_which_last_eq_dbl_dbl(DoubleVector x, DoubleVector y, double tol) {
+  R_xlen_t n = x.length();
+  if (n != y.length()) {
+    stop("Internal error: lengths differ.");  // nocov
+  }
+  double min_tol = -tol;
+
+  for (R_xlen_t i = n - 1; i >= 0; --i) {
+    double di = x[i] - y[i];
+    if (di == 0 || (di < tol && di > min_tol)) {
+      return i + 1;
+    }
+  }
+  return 0;
+}
+
+// [[Rcpp::export]]
+R_xlen_t do_which_1st_eq_int_int(IntegerVector x, IntegerVector y) {
+  R_xlen_t n = x.length();
+  if (n != y.length()) {
+    stop("Internal error: lengths differ.");  // nocov
+  }
+  for (R_xlen_t i = 0; i < n; ++i) {
+    if (x[i] == y[i]) {
+      return i + 1;
+    }
+  }
+  return 0;
+}
+
+// [[Rcpp::export]]
+R_xlen_t do_which_last_eq_int_int(IntegerVector x, IntegerVector y) {
+  R_xlen_t n = x.length();
+  if (n != y.length()) {
+    stop("Internal error: lengths differ.");  // nocov
+  }
+  for (R_xlen_t i = n - 1; i >= 0; --i) {
+    if (x[i] == y[i]) {
+      return i + 1;
+    }
+  }
+  return 0;
+}
 

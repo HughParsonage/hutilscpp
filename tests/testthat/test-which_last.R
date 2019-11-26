@@ -70,3 +70,19 @@ test_that("which_last is.na(lhs_eval)", {
   expect_equal(which_last(xna != FALSE, reverse = TRUE), 1L)
 })
 
+test_that("which_last(x == y)", {
+  x <- c(5:1, 0:4)
+  y <- c(5:1, 0:4)
+  expect_equal(which_last(x == y), length(x))
+  expect_equal(which_last(x != y), 0L)
+  z <- c(5:2, 0:5)
+  expect_equal(which_last(x == z), 4L)
+  expect_equal(which_last(x > z), 5L)
+
+  i <- c(0.5, 0.4, 0.3, 0.5)
+  j <- c(0.5, 0.4, 0.2 + 0.1, 0)
+  expect_equal(which_last(i == j), 3)
+})
+
+
+

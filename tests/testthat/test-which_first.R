@@ -467,5 +467,23 @@ test_that("which_first(<lgl> <operator> <TRUE/FALSE>)", {
 
 })
 
+test_that("which_first() N == N, N != N", {
+  skip_if_not_installed("data.table")
+  library(data.table)
+  o <- c(-4:4, 4:0)
+  x <- c(-4:4, 5:1)
+  expect_equal(which_first(o == x), 1L)
+  expect_equal(which_first(o != x), first(which(o != x)))
+  expect_equal(which_first(o == x, reverse = TRUE), last(which(o == x)))
+  expect_equal(which_first(o != x, reverse = TRUE), last(which(o != x)))
+
+  od <- as.double(o)
+  xd <- as.double(x)
+  expect_equal(which_first(od == xd), 1L)
+  expect_equal(which_first(od != xd), first(which(od != xd)))
+  expect_equal(which_first(od == xd, reverse = TRUE), last(which(od == xd)))
+  expect_equal(which_first(od != xd, reverse = TRUE), last(which(od != xd)))
+})
+
 
 
