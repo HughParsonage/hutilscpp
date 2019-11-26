@@ -123,11 +123,16 @@ which_first <- function(expr,
     # x != y  or  x == y
 
     AND(is.symbol(rhs),
-        all(is.numeric(rhs_eval),
-            is.numeric(lhs_eval <- eval.parent(lhs, n = eval_parent_n)),
+        # Must be both integers or both doubles otherwise will fall through too late.
+        # Too expensive to check or coerce to doubles in case.
+        all(OR(AND(is.double(lhs_eval <- eval.parent(lhs, n = eval_parent_n)),
+                   is.double(rhs_eval)),
+               AND(is.integer(lhs_eval),
+                   is.integer(rhs_eval))),
             OR(length(lhs_eval) == length(rhs_eval),
                length(lhs_eval) == 1L),
-            operator == "!=" || operator == "==",
+            OR(operator == "!=",
+               operator == "=="),
             na.rm = TRUE))
 
 
