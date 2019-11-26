@@ -77,11 +77,29 @@ test_that("which_last(x == y)", {
   expect_equal(which_last(x != y), 0L)
   z <- c(5:2, 0:5)
   expect_equal(which_last(x == z), 4L)
+  expect_equal(which_last(x != z), length(x))
   expect_equal(which_last(x > z), 5L)
+
+  xd <- as.double(x)
+  yd <- as.double(y)
+  expect_equal(which_last(xd == yd), length(x))
+  expect_equal(which_last(xd != yd), 0L)
+  zd <- as.double(z)
+  expect_equal(which_last(xd == zd), 4L)
+  expect_equal(which_last(xd != zd), length(x))
+  expect_equal(which_last(xd > zd), 5L)
 
   i <- c(0.5, 0.4, 0.3, 0.5)
   j <- c(0.5, 0.4, 0.2 + 0.1, 0)
   expect_equal(which_last(i == j), 3)
+})
+
+test_that("which_last(all FALSE)", {
+  x <- logical(10)
+  expect_equal(which_last(x), 0L)
+  expect_equal(which_last(x != FALSE), 0L)
+  allTRUE <- rep(TRUE, 8)
+  expect_equal(which_last(allTRUE != TRUE), 0L)
 })
 
 
