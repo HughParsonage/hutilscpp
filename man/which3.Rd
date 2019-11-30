@@ -4,8 +4,15 @@
 \alias{which3}
 \title{which of three vectors are the elements (all, any) true?}
 \usage{
-which3(x, y, z, And = TRUE, anyNAx = anyNA(x), anyNAy = anyNA(y),
-  anyNAz = anyNA(z))
+which3(
+  x,
+  y,
+  z,
+  And = TRUE,
+  anyNAx = anyNA(x),
+  anyNAy = anyNA(y),
+  anyNAz = anyNA(z)
+)
 }
 \arguments{
 \item{x, y, z}{Logical vectors. Either the same length or length-1}

@@ -5,12 +5,21 @@
 \alias{which_last}
 \title{Where does a logical expression first return \code{TRUE}?}
 \usage{
-which_first(expr, verbose = FALSE, reverse = FALSE, sexpr,
+which_first(
+  expr,
+  verbose = FALSE,
+  reverse = FALSE,
+  sexpr,
   eval_parent_n = 1L,
-  suppressWarning = getOption("hutilscpp_suppressWarning", FALSE))
+  suppressWarning = getOption("hutilscpp_suppressWarning", FALSE)
+)
 
-which_last(expr, verbose = FALSE, reverse = FALSE,
-  suppressWarning = getOption("hutilscpp_suppressWarning", FALSE))
+which_last(
+  expr,
+  verbose = FALSE,
+  reverse = FALSE,
+  suppressWarning = getOption("hutilscpp_suppressWarning", FALSE)
+)
 }
 \arguments{
 \item{expr}{An expression, such as \code{x == 2}.}

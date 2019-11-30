@@ -6,11 +6,24 @@
 \alias{poleInaccessibility3}
 \title{Find a binary pole of inaccessibility}
 \usage{
-poleInaccessibility2(x = NULL, y = NULL, DT = NULL, x_range = NULL,
-  y_range = NULL, copy_DT = TRUE)
+poleInaccessibility2(
+  x = NULL,
+  y = NULL,
+  DT = NULL,
+  x_range = NULL,
+  y_range = NULL,
+  copy_DT = TRUE
+)
 
-poleInaccessibility3(x = NULL, y = NULL, DT = NULL, x_range = NULL,
-  y_range = NULL, copy_DT = TRUE, test_both = TRUE)
+poleInaccessibility3(
+  x = NULL,
+  y = NULL,
+  DT = NULL,
+  x_range = NULL,
+  y_range = NULL,
+  copy_DT = TRUE,
+  test_both = TRUE
+)
 }
 \arguments{
 \item{x, y}{Coordinates.}
