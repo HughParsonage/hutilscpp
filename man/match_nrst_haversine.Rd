@@ -4,10 +4,18 @@
 \alias{match_nrst_haversine}
 \title{Match coordinates to nearest coordinates}
 \usage{
-match_nrst_haversine(lat, lon, addresses_lat, addresses_lon,
-  Index = seq_along(addresses_lat), cartesian_R = NULL,
-  close_enough = 10, excl_self = FALSE, as.data.table = TRUE,
-  .verify_box = TRUE)
+match_nrst_haversine(
+  lat,
+  lon,
+  addresses_lat,
+  addresses_lon,
+  Index = seq_along(addresses_lat),
+  cartesian_R = NULL,
+  close_enough = 10,
+  excl_self = FALSE,
+  as.data.table = TRUE,
+  .verify_box = TRUE
+)
 }
 \arguments{
 \item{lat, lon}{Coordinates to be geocoded. Numeric vectors of equal length.}

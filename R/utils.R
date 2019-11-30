@@ -65,24 +65,11 @@ which_isnt_integerish <- function(x, xi = as.integer(x), check_finite = TRUE) {
   if (!isFALSE(check_finite) && {nfx <- do_anyNonfinite(x)}) {
     stop("`x` contained non-finite value ", x[nfx],
          " at position ", nfx, ". Missing or non-finite doubles",
-         " are not permitted.", )
+         " are not permitted.")
   }
 
-  e <- epsilon()
-  # slower to use -e, e when *validating* data,
-  # which should be the benchmark, since it
-  # doesn't matter how fast you are when you
-  # are about to error.
-  d_r <- do_range_dbl(x - xi)
-
-
-  if (d_r[2L] > e) {
-    return(as.integer(d_r[4L]))
-  }
-  if (d_r[1L] < -e) {
-    return(as.integer(d_r[3L]))
-  }
-  0L
+  storage.mode(xi) <- "double"
+  which_first(x != xi)
 }
 
 isFALSE <- function(x) {

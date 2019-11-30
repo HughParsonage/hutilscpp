@@ -4,8 +4,12 @@
 \alias{range_rcpp}
 \title{Range C++}
 \usage{
-range_rcpp(x, anyNAx = anyNA(x), warn_empty = TRUE,
-  integer0_range_is_integer = FALSE)
+range_rcpp(
+  x,
+  anyNAx = anyNA(x),
+  warn_empty = TRUE,
+  integer0_range_is_integer = FALSE
+)
 }
 \arguments{
 \item{x}{A vector for which the range is desired. Vectors with missing values
