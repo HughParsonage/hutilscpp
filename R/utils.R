@@ -50,10 +50,6 @@ isnt_number <- function(a, na.bad = TRUE, infinite.bad = TRUE) {
 AND <- `&&`
 OR <- `||`
 
-epsilon <- function() {
-  sqrt(.Machine$double.eps)
-}
-
 #' @noRd
 #' @param x A vector, likely to be double.
 #' @param xi integer version of \code{x}. May be cheaper if already known

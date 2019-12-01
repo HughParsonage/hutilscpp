@@ -68,13 +68,20 @@ test_that("which_last is.na(lhs_eval)", {
   expect_equal(which_last(xna == TRUE), 4L)
   expect_equal(which_last(xna %in% NA), length(xna))
   expect_equal(which_last(xna != FALSE, reverse = TRUE), 1L)
+
+
+  noTRUES <- logical(10)
+  expect_equal(which_last(noTRUES == TRUE), 0L)
 })
 
 test_that("which_last(x == y)", {
   x <- c(5:1, 0:4)
   y <- c(5:1, 0:4)
+  w <- y + 1L
   expect_equal(which_last(x == y), length(x))
+  expect_equal(which_last(x == w), 0L)
   expect_equal(which_last(x != y), 0L)
+  expect_equal(which_last(x != w), length(x))
   z <- c(5:2, 0:5)
   expect_equal(which_last(x == z), 4L)
   expect_equal(which_last(x != z), length(x))
@@ -82,8 +89,11 @@ test_that("which_last(x == y)", {
 
   xd <- as.double(x)
   yd <- as.double(y)
+  wd <- as.double(w)
   expect_equal(which_last(xd == yd), length(x))
+  expect_equal(which_last(xd == wd), 0L)
   expect_equal(which_last(xd != yd), 0L)
+  expect_equal(which_last(xd != wd), length(x))
   zd <- as.double(z)
   expect_equal(which_last(xd == zd), 4L)
   expect_equal(which_last(xd != zd), length(x))
