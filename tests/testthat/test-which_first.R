@@ -467,11 +467,20 @@ test_that("which_first(<lgl> <operator> <TRUE/FALSE>)", {
 
 })
 
+test_that("which_first() == notTRUE", {
+  allTRUE3 <- rep(TRUE, 3)
+  expect_equal(which_first(allTRUE3 != TRUE), 0L)
+  allFALSE3 <- logical(3)
+  expect_equal(which_first(allFALSE3 != FALSE), 0L)
+})
+
 test_that("which_first() N == N, N != N", {
   skip_if_not_installed("data.table")
   library(data.table)
   o <- c(-4:4, 4:0)
   x <- c(-4:4, 5:1)
+  y <- o + 1L
+  expect_equal(which_first(o == y), 0L)
   expect_equal(which_first(o == x), 1L)
   expect_equal(which_first(o != x), first(which(o != x)))
   expect_equal(which_first(o == x, reverse = TRUE), last(which(o == x)))
@@ -479,6 +488,8 @@ test_that("which_first() N == N, N != N", {
 
   od <- as.double(o)
   xd <- as.double(x)
+  yd <- as.double(y)
+  expect_equal(which_first(od == yd), 0L)
   expect_equal(which_first(od == xd), 1L)
   expect_equal(which_first(od != xd), first(which(od != xd)))
   expect_equal(which_first(od == xd, reverse = TRUE), last(which(od == xd)))
