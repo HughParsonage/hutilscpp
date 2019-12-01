@@ -204,8 +204,9 @@ which_first <- function(expr,
           # NA and FALSE
           if (reverse) {
             return(do_which_last_notTRUE(lhs_eval))
+          } else {
+            return(do_which_first_notTRUE(lhs_eval))
           }
-          o1 <- .which_first_logical(lhs_eval, FALSE, rev = reverse)
         }
         if (o1 == 0L) {
           if (anyNA(lhs_eval)) {

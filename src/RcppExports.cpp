@@ -259,7 +259,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_which_first
-int do_which_first(LogicalVector x);
+R_xlen_t do_which_first(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_first(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -270,7 +270,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_which_last
-int do_which_last(LogicalVector x);
+R_xlen_t do_which_last(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_last(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -281,7 +281,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_which_first_false
-int do_which_first_false(LogicalVector x);
+R_xlen_t do_which_first_false(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_first_false(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -292,7 +292,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_which_last_false
-int do_which_last_false(LogicalVector x);
+R_xlen_t do_which_last_false(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_last_false(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -303,7 +303,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_which_first_notTRUE
-int do_which_first_notTRUE(LogicalVector x);
+R_xlen_t do_which_first_notTRUE(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_first_notTRUE(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -314,7 +314,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_which_last_notTRUE
-int do_which_last_notTRUE(LogicalVector x);
+R_xlen_t do_which_last_notTRUE(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_last_notTRUE(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -325,7 +325,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_which_last_notFALSE
-int do_which_last_notFALSE(LogicalVector x);
+R_xlen_t do_which_last_notFALSE(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_last_notFALSE(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -336,7 +336,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_which_first_int_int
-int do_which_first_int_int(IntegerVector x, IntegerVector y, bool eq, bool gt, bool lt);
+R_xlen_t do_which_first_int_int(IntegerVector x, IntegerVector y, bool eq, bool gt, bool lt);
 RcppExport SEXP _hutilscpp_do_which_first_int_int(SEXP xSEXP, SEXP ySEXP, SEXP eqSEXP, SEXP gtSEXP, SEXP ltSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

@@ -2,7 +2,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-int do_which_first(LogicalVector x) {
+R_xlen_t do_which_first(LogicalVector x) {
   R_xlen_t N = x.size();
   for (R_xlen_t i = 0; i < N; ++i) {
     if (x[i] == TRUE) {
@@ -14,7 +14,7 @@ int do_which_first(LogicalVector x) {
 }
 
 // [[Rcpp::export]]
-int do_which_last(LogicalVector x) {
+R_xlen_t do_which_last(LogicalVector x) {
   R_xlen_t N = x.size();
   for (R_xlen_t i = N - 1; i >= 0; --i) {
     if (x[i] == TRUE) {
@@ -25,7 +25,7 @@ int do_which_last(LogicalVector x) {
 }
 
 // [[Rcpp::export]]
-int do_which_first_false (LogicalVector x) {
+R_xlen_t do_which_first_false (LogicalVector x) {
   R_xlen_t N = x.size();
   for (R_xlen_t i = 0; i < N; ++i) {
     if (x[i] == FALSE) {
@@ -36,7 +36,7 @@ int do_which_first_false (LogicalVector x) {
 }
 
 // [[Rcpp::export]]
-int do_which_last_false (LogicalVector x) {
+R_xlen_t do_which_last_false (LogicalVector x) {
   R_xlen_t N = x.size();
   for (R_xlen_t i = N - 1; i >= 0; --i) {
     if (x[i] == FALSE) {
@@ -47,7 +47,7 @@ int do_which_last_false (LogicalVector x) {
 }
 
 // [[Rcpp::export]]
-int do_which_first_notTRUE(LogicalVector x) {
+R_xlen_t do_which_first_notTRUE(LogicalVector x) {
   R_xlen_t N = x.size();
   for (R_xlen_t i = 0; i < N; ++i) {
     if (x[i] != TRUE) {
@@ -58,7 +58,7 @@ int do_which_first_notTRUE(LogicalVector x) {
 }
 
 // [[Rcpp::export]]
-int do_which_last_notTRUE(LogicalVector x) {
+R_xlen_t do_which_last_notTRUE(LogicalVector x) {
   R_xlen_t N = x.size();
   for (R_xlen_t i = N - 1; i >= 0; --i) {
     if (x[i] != TRUE) {
@@ -69,7 +69,7 @@ int do_which_last_notTRUE(LogicalVector x) {
 }
 
 // [[Rcpp::export]]
-int do_which_last_notFALSE(LogicalVector x) {
+R_xlen_t do_which_last_notFALSE(LogicalVector x) {
   R_xlen_t N = x.size();
   for (R_xlen_t i = N - 1; i >= 0; --i) {
     if (x[i] != FALSE) {
@@ -80,7 +80,7 @@ int do_which_last_notFALSE(LogicalVector x) {
 }
 
 // [[Rcpp::export]]
-int do_which_first_int_int (IntegerVector x,
+R_xlen_t do_which_first_int_int (IntegerVector x,
                             IntegerVector y,
                             bool eq = true,
                             bool gt = false,
