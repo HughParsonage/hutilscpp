@@ -156,3 +156,12 @@ test_that("do_pmin0s", {
   expect_equal(do_pmin0_radix_sorted_int(x), pmin(x, 0))
 })
 
+
+test_that("in-place", {
+  abc <- -1:5
+  def <- -1:5
+  expect_equal(pmax0(abc, in_place = TRUE), pmax.int(def, 0L))
+  expect_equal(abc, pmax.int(def, 0L))
+})
+
+

@@ -98,9 +98,9 @@ pmax0 <- function(x, in_place = FALSE, sorted = FALSE) {
   }
   if (isTRUE(sorted)) {
     if (is.integer(x)) {
-      do_pmax0_radix_sorted_int(x, in_place = TRUE)
+     return(do_pmax0_radix_sorted_int(x, in_place = TRUE))
     } else {
-      do_pmax0_radix_sorted_dbl(x, in_place = TRUE)
+      return(do_pmax0_radix_sorted_dbl(x, in_place = TRUE))
     }
   }
 

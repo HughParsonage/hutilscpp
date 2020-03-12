@@ -1,5 +1,8 @@
 # hutilscpp 0.4.0
 
+## Bug fixes:
+* `pmax0(x, in_place = TRUE)` now returns early, rather than checking the vector twice.
+
 ## New functions:
 * `which_last` for the first index from the last index.
 
