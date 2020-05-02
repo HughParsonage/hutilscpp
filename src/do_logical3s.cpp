@@ -3,10 +3,10 @@
 using namespace Rcpp;
 
 // [[Rcpp::export(rng = false)]]
-LogicalVector do_and3(LogicalVector x, LogicalVector y, LogicalVector z,
-                      int nThread = 1,
-                      int na_value = 0,
-                      int maxCall = 3) {
+LogicalVector do_and3_na(LogicalVector x, LogicalVector y, LogicalVector z,
+                         int nThread = 1,
+                         int na_value = 0,
+                         int maxCall = 3) {
   if (maxCall < 0) {
     stop("Internal error: maxCall exceeded.");
   }
@@ -58,13 +58,13 @@ LogicalVector do_and3(LogicalVector x, LogicalVector y, LogicalVector z,
   // ensure lengths are non-increasing
   if (n > nx) {
     if (ny >= nz) {
-      return do_and3(y, x, z, nThread, --maxCall);
+      return do_and3_na(y, x, z, nThread, --maxCall);
     } else {
-      return do_and3(z, y, x, nThread, --maxCall);
+      return do_and3_na(z, y, x, nThread, --maxCall);
     }
   }
   if (nx > ny) {
-    return do_and3(x, z, y, nThread, --maxCall);
+    return do_and3_na(x, z, y, nThread, --maxCall);
   }
 
   // so they must all have 0, 1, n lengths
@@ -74,7 +74,7 @@ LogicalVector do_and3(LogicalVector x, LogicalVector y, LogicalVector z,
   }
   if (nz == 0) {
     // ignore nz
-    return do_and3(x, y, y, nThread, --maxCall);
+    return do_and3_na(x, y, y, nThread, --maxCall);
   }
 
   if (ny == 1 && nz == 1) {
@@ -124,7 +124,7 @@ LogicalVector do_and3(LogicalVector x, LogicalVector y, LogicalVector z,
 
   if (nz == 1) {
     if (z[0] == TRUE || na_becomes_true) {
-      return do_and3(x, y, y, nThread, --maxCall);
+      return do_and3_na(x, y, y, nThread, --maxCall);
     }
     if (z[0] == FALSE || na_becomes_false) {
       return LogicalVector(n);

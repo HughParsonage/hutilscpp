@@ -53,6 +53,10 @@ do_range_int <- function(x, halt_if_min = 1L, halt_if_max = -1L) {
     .Call(`_hutilscpp_do_range_int`, x, halt_if_min, halt_if_max)
 }
 
+do_and3_par <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread = 1L) {
+    .Call(`_hutilscpp_do_and3_par`, x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread)
+}
+
 do_cumsum_reset_logical <- function(x) {
     .Call(`_hutilscpp_do_cumsum_reset_logical`, x)
 }
@@ -77,12 +81,52 @@ do_cumsum_reset_sorted_int <- function(x) {
     .Call(`_hutilscpp_do_cumsum_reset_sorted_int`, x)
 }
 
-do_are_even <- function(x, y) {
-    .Call(`_hutilscpp_do_are_even`, x, y)
+do_are_even <- function(x, y, wb = 0L) {
+    .Call(`_hutilscpp_do_are_even`, x, y, wb)
 }
 
-do_which_even <- function(x, y) {
-    .Call(`_hutilscpp_do_which_even`, x, y)
+do_which_even <- function(x, y, wb = 0L) {
+    .Call(`_hutilscpp_do_which_even`, x, y, wb)
+}
+
+do_and3_na <- function(x, y, z, nThread = 1L, na_value = 0L, maxCall = 3L) {
+    .Call(`_hutilscpp_do_and3_na`, x, y, z, nThread, na_value, maxCall)
+}
+
+do_which2_yr <- function(Year, yr, consider_yr, x, xa, eqx, gtx, ltx, y, ya, eqy, gty, lty) {
+    .Call(`_hutilscpp_do_which2_yr`, Year, yr, consider_yr, x, xa, eqx, gtx, ltx, y, ya, eqy, gty, lty)
+}
+
+do_which_in <- function(x, tbl) {
+    .Call(`_hutilscpp_do_which_in`, x, tbl)
+}
+
+count_logical <- function(x) {
+    .Call(`_hutilscpp_count_logical`, x)
+}
+
+do_in_int <- function(x, table) {
+    .Call(`_hutilscpp_do_in_int`, x, table)
+}
+
+do_par_in <- function(x, table, nThread = 1L) {
+    .Call(`_hutilscpp_do_par_in`, x, table, nThread)
+}
+
+do_and3_x_op <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, X3, Y3, Z3, A, B, C, nThread = 1L) {
+    .Call(`_hutilscpp_do_and3_x_op`, x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, X3, Y3, Z3, A, B, C, nThread)
+}
+
+do_op_along <- function(x, op, y, nThread = 1L) {
+    .Call(`_hutilscpp_do_op_along`, x, op, y, nThread)
+}
+
+do_or3_par <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread = 1L) {
+    .Call(`_hutilscpp_do_or3_par`, x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread)
+}
+
+sum_or3s_par <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C) {
+    .Call(`_hutilscpp_sum_or3s_par`, x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C)
 }
 
 do_range_dbl_simple <- function(x) {
@@ -259,6 +303,10 @@ do_which3 <- function(x, y, z, And = TRUE, anyNAx = TRUE, anyNAy = TRUE, anyNAz 
 
 do_which3_mem <- function(x, y, z, And = TRUE) {
     .Call(`_hutilscpp_do_which3_mem`, x, y, z, And)
+}
+
+diagnose_omp <- function(threads_requested, msg_no_openmp, msg_threads_neg, msg_unknown_issues, msg_too_many_threads) {
+    .Call(`_hutilscpp_diagnose_omp`, threads_requested, msg_no_openmp, msg_threads_neg, msg_unknown_issues, msg_too_many_threads)
 }
 
 do_pmax0_abs_dbl <- function(x, in_place = FALSE) {
