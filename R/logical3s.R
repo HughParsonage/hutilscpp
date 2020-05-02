@@ -234,7 +234,7 @@ and3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
   and3s(ans, ..., .parent_nframes = .parent_nframes + 1L, nThread = nThread)
 }
 
-#' @rdname logical3
+#' @rdname logical3s
 #' @export
 
 or3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
