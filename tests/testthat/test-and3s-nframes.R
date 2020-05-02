@@ -8,10 +8,10 @@ test_that("Proper frame for eval.parent(sexpr[[2]])", {
   and4b <- function(a, b, c, d) a & b & c & d
    or4b <- function(a, b, c, d) a | b | c | d
 
-  expect_equal(and3s(y > 0, y > 0, y > 0, y > oy)
+  expect_equal(and3s(y > 0, y > 0, y > 0, y > oy),
                and4b(y > 0, y > 0, y > 0, y > oy))
 
-  expect_equal( or3s(y < 0, y < 0, y < 0, y < oy)
+  expect_equal( or3s(y < 0, y < 0, y < 0, y < oy),
                 or4b(y < 0, y < 0, y < 0, y < oy))
 
 })
