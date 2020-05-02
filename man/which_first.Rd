@@ -42,6 +42,10 @@ if \code{expr} could not be handled in the advertised way.}
 \item{suppressWarning}{Either a \code{FALSE} or \code{TRUE}, whether or not
 warnings should be suppressed. Also supports a string input which suppresses a
 warning if it matches as a regular expression.}
+
+\item{use.which.max}{If \code{TRUE}, \code{which.max} is dispatched immediately,
+even if \code{expr} would be amenable to separation. Useful when evaluating
+many small \code{expr}'s when these are known in advance.}
 }
 \value{
 The same as \code{which.max(expr)} or \code{which(expr)[1]} but returns \code{0L}
