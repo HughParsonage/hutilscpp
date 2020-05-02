@@ -1,15 +1,15 @@
 test_that("and3s works", {
   x <- 1:100
-  expect_true(all(and3s(x != 0L, 
+  expect_true(all(and3s(x != 0L,
                         x >= 1L,
                         x < 101L)))
   expect_true(all(and3s(x > 0L,
-                        x != 0L, 
+                        x != 0L,
                         x <= 101L)))
   expect_true(all(and3s(x > 0L,
                         x <= 101L,
                         x != 0L)))
-  
+
   y <- integer(5)
   expect_equal(and3s(y > -1L, y >= 0L, y <= 0L),
                y > -1L & y >= 0L & y <= 0L)
@@ -19,7 +19,7 @@ test_that("and3s works", {
                y != -1L & y >= 0L & y < 1L)
   expect_equal(and3s(y != -1L, y == 0L, y < -1L),
                y != -1L & y >= 0L & y < -1L)
-  
+
 })
 
 test_that("and3s works for %in%", {
@@ -27,7 +27,7 @@ test_that("and3s works for %in%", {
   i <- rep_len(1:15, 1e7)
   j <- rep_len(1:16, 1e7)
   k <- rep_len(1:17, 1e7)
-  
+
   expect_equal(and3s(i %in% c(5:8), j > 3L, k %in% c(1L, 3L, 4L)),
                and3(i %in% c(5:8), j > 3L, k %in% c(1L, 3L, 4L)))
   # %in% 1:9 -> %between% c(1, 9)
@@ -35,8 +35,8 @@ test_that("and3s works for %in%", {
                and3(i %in% c(5:8), j > 3L, k %in% c(1:9)))
   expect_equal(and3s(i %in% c(5:8), k %in% c(1:9), j > 3L),
                and3(i %in% c(5:8), j > 3L, k %in% c(1:9)))
-  
-  
+
+
   expect_equal(and3s(i %in% c(5:8), j > 3L, k == 9L),
                 and3(i %in% c(5:8), j > 3L, k == 9L))
   expect_equal(and3s(j > 3L, k == 9L, i %in% c(5:8)),
@@ -49,7 +49,7 @@ test_that("and3s works for %in%", {
                and3(i %between% c(9L, 11L), j != 4L, k >= 9L))
   expect_equal(and3s(i %in% c(9L, 11L), j != 4L, k >= 9L),
                 and3(i %in% c(9L, 11L), j != 4L, k >= 9L))
-  
+
   abc <- 1:5
   expect_equal(and3s(abc %in% c(2L, 1L), abc != 3L, abc != 1L),
                and3(abc %in% c(2L, 1L), abc != 3L, abc != 1L))
@@ -84,10 +84,10 @@ test_that("do_and3", {
   DT1[, the_do_and5 := and3s(m, n)]
   DT1[, base_and3 := m & n & o]
   DT1[, base_and2 := m & n]
-  
-  expect_equal(DT1[["the_do_and3"]], 
+
+  expect_equal(DT1[["the_do_and3"]],
                DT1[["base_and3"]])
-  expect_equal(DT1[["the_do_and4"]], 
+  expect_equal(DT1[["the_do_and4"]],
                DT1[["base_and3"]])
   expect_equal(DT1[["the_do_and2"]],
                DT1[["base_and2"]])
@@ -104,19 +104,19 @@ test_that("and3 mixture of symbols and calls", {
   A <- x > 1L
   B <- y > 2L
   C <- z > 3L
-  
-  
-  expect_equal(and3s(x > 1L, 
+
+
+  expect_equal(and3s(x > 1L,
                      y > 2L,
                      z > 3L),
                and3(x > 1L,
                     y > 2L,
                     z > 3L))
-  expect_equal(and3s(x > 1L, 
+  expect_equal(and3s(x > 1L,
                      y > 2L),
                and3(x > 1L,
                     y > 2L))
-  expect_equal(and3s(A, 
+  expect_equal(and3s(A,
                      y > 2L,
                      z > 3L),
                and3(A,
@@ -134,19 +134,19 @@ test_that("and3 mixture of symbols and calls", {
                and3(A,
                     y > 2L,
                     z > 3L))
-  expect_equal(and3s(A, 
+  expect_equal(and3s(A,
                      B,
                      C),
                and3(A,
                     B,
                     z > 3L))
-  expect_equal(and3s(A, 
+  expect_equal(and3s(A,
                      B,
                      z > 3L),
                and3(A,
                     B,
                     C))
-  expect_equal(and3s(x %in% c(4L, 2L), 
+  expect_equal(and3s(x %in% c(4L, 2L),
                      B,
                      C),
                and3(x %in% c(4L, 2L),
@@ -154,15 +154,15 @@ test_that("and3 mixture of symbols and calls", {
                     C))
   XX <- rep(x, 50)
   for (i in XX) {
-  expect_equal(and3s(x %in% c(4L, 2L, 8L), 
+  expect_equal(and3s(x %in% c(4L, 2L, 8L),
                      B,
                      C),
                and3(x %in% c(4L, 2L, 8L),
                     B,
                     C))
   }
-  
-  
+
+
 })
 
 test_that("Some UBSAN", {
@@ -176,7 +176,7 @@ test_that("Some UBSAN", {
   error = function(e) {
     skip(e$m)
   })
-  expect_equal(and3s(x %in% c(4L, 2L), 
+  expect_equal(and3s(x %in% c(4L, 2L),
                      B,
                      C),
                and3(x %in% c(4L, 2L),
@@ -222,33 +222,51 @@ test_that("big and3s", {
 })
 
 test_that("and3s ... and parent frames", {
-  
-  # Confusing names in parent environment
+
+  # Create pathologically confusing names in parent environment
+  # This should pick up if we have not eval.parent'd correctly
   x <- integer(0)
   y <- integer(0)
-  
+
   exprA <- c(1:10)
   exprB <- 1:10 + 5L
   exprC <- 1:10 + 1L
-  
+
   and <- `&`
   and3 <- function(i, j, k) and(and(i, j), k)
-  
+
   A <- 1L
   sexprA <- 1L
   sexprB <- 10L
-  
-  expect_equal(and3s(exprA >= A, exprB >= sexprA, exprC >= 1L, 
+
+  expect_equal(and3s(exprA >= A, exprB >= sexprA, exprC >= 1L,
                      exprA <= 6L, exprB <= 7L, exprC <= sexprB),
-               and(and3(exprA >= 1L, exprB >= 1L, exprC >= 1L), 
+               and(and3(exprA >= 1L, exprB >= 1L, exprC >= 1L),
                    and3(exprA <= 6L, exprB <= 7L, exprC <= 10L)))
-  
-  expect_equal(and3s(exprA >= A, exprB >= sexprA, exprC >= 1L, 
+
+  expect_equal(and3s(exprA >= A, exprB >= sexprA, exprC >= 1L,
                      exprA <= 6L, exprB <= 7L, exprC <= sexprB,
                      exprA <= 6L, exprB <= 7L, exprC <= sexprB),
-               and(and3(exprA >= 1L, exprB >= 1L, exprC >= 1L), 
+               and(and3(exprA >= 1L, exprB >= 1L, exprC >= 1L),
                    and3(exprA <= 6L, exprB <= 7L, exprC <= 10L)))
-  
+
+  some_function_with_an_env <- function() {
+    exprB <- 1:10 + 4L
+    all_eq <- function(a, b) isTRUE(all.equal(a, b))
+
+    `&&`(all_eq(and3s(exprA >= A, exprB >= sexprA, exprC >= 1L,
+                      exprA <= 6L, exprB <= 7L, exprC <= sexprB),
+                and(and3(exprA >= 1L, exprB >= 1L, exprC >= 1L),
+                    and3(exprA <= 6L, exprB <= 7L, exprC <= 10L))),
+
+         all_eq(and3s(exprA >= A, exprB >= sexprA, exprC >= 1L,
+                      exprA <= 6L, exprB <= 7L, exprC <= sexprB,
+                      exprA <= 6L, exprB <= 7L, exprC <= sexprB),
+                and(and3(exprA >= 1L, exprB >= 1L, exprC >= 1L),
+                    and3(exprA <= 6L, exprB <= 7L, exprC <= 10L))))
+  }
+  expect_true(some_function_with_an_env())
+
 })
 
 

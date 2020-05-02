@@ -27,6 +27,8 @@
 #' it is considered \code{TRUE} for \code{and3s} and \code{FALSE} for \code{or3s};
 #' in other words only the results of the other expressions count towards the result.
 #'
+#'
+#'
 NULL
 
 
@@ -58,7 +60,7 @@ is_binary_sexp <- function(sexprA, .parent_nframes = 2L) {
     attr(isBinary, "M") <- M
     attr(isBinary, "lhs") <- lhs
     attr(isBinary, "rhs") <- rhs
-    attr(isBinary, "rhs_eval") <- rhs_eval <- eval.parent(rhs, n = .parent_nframes + 1L)
+    attr(isBinary, "rhs_eval") <- rhs_eval <- eval.parent(rhs, n = .parent_nframes)
 
     if (OR(is.numeric(rhs),
            AND(is.numeric(rhs_eval),
@@ -106,7 +108,7 @@ and3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
     identical(A, seq.int(A[1L], along.with = A))
   }
 
-  isBinaryA <- is_binary_sexp(sexprA)
+  isBinaryA <- is_binary_sexp(sexprA, .parent_nframes = .parent_nframes + 1L)
   if (isBinaryA) {
     x <- eval.parent(sexprA[[2]], n = .parent_nframes)
     ox <- attr(isBinaryA, "M")
@@ -142,7 +144,7 @@ and3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
     A <- exprA
   }
   if (!missing(exprB)) {
-    isBinaryB <- is_binary_sexp(sexprB)
+    isBinaryB <- is_binary_sexp(sexprB, .parent_nframes = .parent_nframes + 1L)
     if (isBinaryB) {
       y <- eval.parent(sexprB[[2]], n = .parent_nframes)
       oy <- attr(isBinaryB, "M")
@@ -182,7 +184,7 @@ and3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
 
 
   if (!missing(exprC)) {
-    isBinaryC <- is_binary_sexp(sexprC)
+    isBinaryC <- is_binary_sexp(sexprC, .parent_nframes = .parent_nframes + 1L)
 
     if (isBinaryC) {
       z <- eval.parent(sexprC[[2]], n = .parent_nframes)
