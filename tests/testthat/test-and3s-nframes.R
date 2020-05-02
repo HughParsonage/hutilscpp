@@ -5,7 +5,8 @@ test_that("Proper frame for eval.parent(sexpr[[2]])", {
 
   ox <- oy <- oz <- 2L  # name of symbol conflicts with op2M(">") internally
   y <- 1:5
-  A <- B <- C <- D <- (y > 3L)
+  B <- C <- D <- (y > 3L)
+  A <- !B
 
 
 
@@ -33,4 +34,16 @@ test_that("Proper frame for eval.parent(sexpr[[2]])", {
   expect_equal( or3s(y < 0, y < 0, A, !B),
                 or4b(y < 0, y < 0, A, !B))
 
+  test_multi <-
+    vapply(0:9, function(i) {
+      ox <- i %% 5L
+      oy <- i %/% 5L
+      oz <- 3L
+      A <- 1:5
+      !identical(and3s(y >= 0, y >= 0, y >= 0, y >= oy),
+                 and4b(y >= 0, y >= 0, y >= 0, y >= oy))
+    },
+    logical(1))
+
+  expect_equal(which_first(test_multi), 0L)
 })
