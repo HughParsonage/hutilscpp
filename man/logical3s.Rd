@@ -3,9 +3,19 @@
 \name{logical3s}
 \alias{logical3s}
 \alias{and3s}
+\alias{or3s}
 \title{Complex logical expressions}
 \usage{
 and3s(
+  exprA,
+  exprB,
+  exprC,
+  ...,
+  .parent_nframes = 1L,
+  nThread = getOption("hutilscpp.nThread", 1L)
+)
+
+or3s(
   exprA,
   exprB,
   exprC,
