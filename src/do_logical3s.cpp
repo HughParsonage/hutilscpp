@@ -1,26 +1,142 @@
+#include "cpphutils.h"
 #include <Rcpp.h>
 using namespace Rcpp;
 
 // [[Rcpp::export(rng = false)]]
-LogicalVector do_and3(LogicalVector x, LogicalVector y, LogicalVector z, int nthreads = 10) {
-  R_xlen_t n = x.length();
-  const bool use_z = z.length() == n;
-  LogicalVector out = no_init(n);
-  int mThreads = 0;
-  if (nthreads > 0) {
-    mThreads += nthreads;
-  } else {
-    mThreads = 1;
+LogicalVector do_and3(LogicalVector x, LogicalVector y, LogicalVector z,
+                      int nThread = 1,
+                      int na_value = 0,
+                      int maxCall = 3) {
+  if (maxCall < 0) {
+    stop("Internal error: maxCall exceeded.");
   }
-  
-#pragma omp parallel for num_threads(mThreads)
-  for (R_xlen_t i = 0; i < n; ++i) {
-    if (use_z) {
-      out[i] = x[i] && y[i] && z[i];
+
+  // length-0 = ignore
+  // length-1 = treat as if it were recycled: TRUE => ignore; FALSE => all FALSE; NA => NA.
+  R_xlen_t nx = x.length();
+  R_xlen_t ny = y.length();
+  R_xlen_t nz = z.length();
+
+  R_xlen_t n = (nx >= ny && nx >= nz) ? nx : ((ny >= nz) ? ny : nz);
+  if (n == 0) {
+    return x;
+  }
+  LogicalVector out = no_init(n);
+
+  bool na_becomes_false = na_value == 0;
+  bool na_becomes_true  = na_value > 0;
+  bool na_becomes_na    = na_value < 0;
+
+
+  if (nx == n && ny == n && nz == n) {
+#pragma omp parallel for num_threads(nThread)
+    for (R_xlen_t i = 0; i < n; ++i) {
+      if (na_becomes_false) {
+        out[i] = (x[i] == TRUE) && (y[i] == TRUE) && (z[i] == TRUE);
+      }
+      if (na_becomes_true) {
+        out[i] = !(x[i] == FALSE || y[i] == FALSE || z[i] == FALSE);
+      }
+      if (na_becomes_na) {
+        if (x[i] == NA_LOGICAL || y[i] == NA_LOGICAL || z[i] == NA_LOGICAL) {
+          out[i] = NA_LOGICAL;
+        } else {
+          out[i] = x[i] && y[i] && z[i];
+        }
+      }
+    }
+    return out;
+  }
+  // at this point one of the values is not n (and not zero)
+  // error if any not a good value
+  if ((nx > 1 && nx < n) ||
+      (ny > 1 && ny < n) ||
+      (nz > 1 && ny < n)) {
+    stop("Internal error nx, ny, nz have incompatible/wrong lengths.");
+  }
+
+  // ensure lengths are non-increasing
+  if (n > nx) {
+    if (ny >= nz) {
+      return do_and3(y, x, z, nThread, --maxCall);
     } else {
-      out[i] = x[i] && y[i];
+      return do_and3(z, y, x, nThread, --maxCall);
     }
   }
+  if (nx > ny) {
+    return do_and3(x, z, y, nThread, --maxCall);
+  }
+
+  // so they must all have 0, 1, n lengths
+  // we know that nx is maximal so it can be ignored
+  if (ny == 0 && nz == 0) {
+    return x;
+  }
+  if (nz == 0) {
+    // ignore nz
+    return do_and3(x, y, y, nThread, --maxCall);
+  }
+
+  if (ny == 1 && nz == 1) {
+    // y or z must be FALSE or NA
+    if (y[0] == FALSE || z[0] == FALSE) {
+      return LogicalVector(n);
+    }
+    if (y[0] == TRUE && z[0] == TRUE) {
+      return x;
+    }
+    if (na_becomes_true) {
+      return x;
+    }
+    if (y[0] == NA_LOGICAL || z[0] == NA_LOGICAL) {
+      for (R_xlen_t i = 0; i < n; ++i) {
+        if (na_becomes_false) {
+          out[i] = FALSE;
+        }
+        if (na_becomes_na) {
+          out[i] = NA_LOGICAL;
+        }
+      }
+      return out;
+    }
+  }
+  if (ny == 1) {
+    if (y[0] == FALSE) {
+      return LogicalVector(n);
+    }
+    if (y[0] == TRUE || na_becomes_true) {
+      return x;
+    }
+    if (y[0] == NA_LOGICAL) {
+      for (R_xlen_t i = 0; i < n; ++i) {
+        if (na_becomes_false) {
+          out[i] = FALSE;
+        }
+        if (na_becomes_na) {
+          out[i] = NA_LOGICAL;
+        }
+      }
+      return out;
+    }
+  }
+
+  // nx = ny
+
+  if (nz == 1) {
+    if (z[0] == TRUE || na_becomes_true) {
+      return do_and3(x, y, y, nThread, --maxCall);
+    }
+    if (z[0] == FALSE || na_becomes_false) {
+      return LogicalVector(n);
+    }
+    for (R_xlen_t i = 0; i < n; ++i) {
+      out[i] = NA_LOGICAL;
+    }
+    return out;
+  }
+
+
+  stop("Internal error: Should be unreachable.");
   return out;
 }
 
@@ -35,7 +151,7 @@ inline int opn(bool eq, bool gt, bool lt) {
 IntegerVector do_which2_yr(IntegerVector Year,
                            int yr,
                            bool consider_yr,
-                           IntegerVector x, 
+                           IntegerVector x,
                            int xa,
                            bool eqx,
                            bool gtx,
@@ -61,7 +177,7 @@ IntegerVector do_which2_yr(IntegerVector Year,
   if (consider_yr && Year.size() != nx) {
     stop("Internal error: lengths differ (Year).");
   }
-  
+
   for (int i = 0; i < nx; i++) {
     bool yr_bool = true;
     if (consider_yr) {
@@ -69,7 +185,7 @@ IntegerVector do_which2_yr(IntegerVector Year,
     }
     switch (opxy) {
     case 0:
-      if (yr_bool && x[i] != xa && y[i] != ya) o.push_back(i + 1); 
+      if (yr_bool && x[i] != xa && y[i] != ya) o.push_back(i + 1);
       continue;
     case 1:
       if (yr_bool && x[i] == xa && y[i] != ya) o.push_back(i + 1);
@@ -86,7 +202,7 @@ IntegerVector do_which2_yr(IntegerVector Year,
     case 5:
       if (yr_bool && x[i] <  xa && y[i] != ya) o.push_back(i + 1);
       continue;
-      
+
     case 10:
       if (yr_bool && x[i] != xa && y[i] == ya) o.push_back(i + 1);
       continue;
@@ -105,7 +221,7 @@ IntegerVector do_which2_yr(IntegerVector Year,
     case 15:
       if (yr_bool && x[i] <  xa && y[i] == ya) o.push_back(i + 1);
       continue;
-      
+
     case 20:
       if (yr_bool && x[i] != xa && y[i] >= ya) o.push_back(i + 1);
       continue;
@@ -124,7 +240,7 @@ IntegerVector do_which2_yr(IntegerVector Year,
     case 25:
       if (yr_bool && x[i] <  xa && y[i] >= ya) o.push_back(i + 1);
       continue;
-      
+
     case 30:
       if (yr_bool && x[i] != xa && y[i] <= ya) o.push_back(i + 1);
       continue;
@@ -143,7 +259,7 @@ IntegerVector do_which2_yr(IntegerVector Year,
     case 35:
       if (yr_bool && x[i] <  xa && y[i] <= ya) o.push_back(i + 1);
       continue;
-      
+
     case 40:
       if (yr_bool && x[i] != xa && y[i] > ya) o.push_back(i + 1);
       continue;
@@ -162,7 +278,7 @@ IntegerVector do_which2_yr(IntegerVector Year,
     case 45:
       if (yr_bool && x[i] <  xa && y[i] > ya) o.push_back(i + 1);
       continue;
-      
+
     case 50:
       if (yr_bool && x[i] != xa && y[i] < ya) o.push_back(i + 1);
       continue;
@@ -193,7 +309,7 @@ IntegerVector do_which_in(IntegerVector x, IntegerVector tbl) {
   if (n >= INT_MAX) {
     stop("Length exceeds integer max.");
   }
-  
+
   int m = (int)n;
   int tbln = tbl.size();
   std::vector<int> o;
@@ -220,12 +336,12 @@ std::vector<int> do_intersect3_stdint(std::vector<int> x,
   int nx = x.size();
   int ny = y.size();
   int nz = z.size();
-  
+
   std::vector<int> o;
   o.reserve(nx);
-  
-  
-  int j = 0; 
+
+
+  int j = 0;
   int k = 0;
   for (int i = 0; i < nx; ++i) {
     int xi = x[i];
@@ -259,7 +375,7 @@ IntegerVector count_logical(LogicalVector x) {
   int n = x.length();
   int trues = 0;
   int nas = 0;
-#pragma omp parallel for reduction(+:trues,nas) 
+#pragma omp parallel for reduction(+:trues,nas)
   for (int i = 0; i < n; ++i) {
     if (x[i] == NA_LOGICAL) {
       nas += 1;
@@ -268,7 +384,7 @@ IntegerVector count_logical(LogicalVector x) {
     }
   }
   int falses = n - trues - nas;
-  
+
   IntegerVector o(3);
   o[0] = falses;
   o[1] = trues;
@@ -299,7 +415,7 @@ bool single_ox_x1_x2(int x, int oix, int x1, int x2) {
     return x >= x1 && x <= x2;
   case 9:
     return x >  x1 && x <  x2;
-  case 10: 
+  case 10:
     return x <= x1 && x <= x2;
   case 0:
     return true;
@@ -319,7 +435,7 @@ bool do_in_int(int x, IntegerVector table) {
 }
 
 // [[Rcpp::export(rng = false)]]
-LogicalVector do_par_in(IntegerVector x, IntegerVector table) {
+LogicalVector do_par_in(IntegerVector x, IntegerVector table, int nThread = 1) {
   R_xlen_t n = x.length();
   int tn = table.length();
   std::vector<int> tango;
@@ -327,10 +443,10 @@ LogicalVector do_par_in(IntegerVector x, IntegerVector table) {
   for (int ti = 0; ti < tn; ++ti) {
     tango.push_back(table[ti]);
   }
-  
+
   LogicalVector out = no_init(n);
-  
-#pragma omp parallel for shared(out, tango)
+
+#pragma omp parallel for num_threads(nThread) shared(out, tango)
   for (R_xlen_t i = 0; i < n; ++i) {
     bool oi = false;
     for (int j = 0; j < tn; ++j) {
@@ -348,79 +464,80 @@ LogicalVector do_par_in(IntegerVector x, IntegerVector table) {
 // [[Rcpp::export(rng = false)]]
 LogicalVector do_and3_x_op(IntegerVector x, int ox, int x1, int x2,
                            IntegerVector y, int oy, int y1, int y2,
-                           IntegerVector z, int oz, int z1, int z2, 
-                           IntegerVector X3, 
+                           IntegerVector z, int oz, int z1, int z2,
+                           IntegerVector X3,
                            IntegerVector Y3,
                            IntegerVector Z3,
                            LogicalVector A,
                            LogicalVector B,
-                           LogicalVector C) {
+                           LogicalVector C,
+                           int nThread = 1) {
   R_xlen_t xn = x.length();
   R_xlen_t An = A.length();
   if (An > 1 && xn > 1) {
     stop("Internal error: length(A) != length(x).");
   }
   R_xlen_t n = (An > 1) ? An : xn;
-  
+
   bool ignore_z = z.length() <= 1 && C.length() <= 1;
   if ((n != y.length() && n != B.length()) ||
       (!ignore_z && n != z.length() && n != C.length())) {
     stop("Internal error: lengths differ.");
   }
   LogicalVector out = no_init(n);
-  
+
   const int x3n = X3.length();
   const int y3n = Y3.length();
   const int z3n = Z3.length();
-  
+
   // Which variables are lhs %in% rhs
   const bool x_in = x3n > 1 && ox == 7;
   const bool y_in = y3n > 1 && oy == 7;
   const bool z_in = z3n > 1 && oz == 7;
-  
+
   // Which variables are bare logicals
   const bool A_lgl = A.length() == n;
   const bool B_lgl = B.length() == n;
   const bool C_lgl = C.length() == n;
-  
+
   if (x3n == 2 && !y_in && !z_in && !ignore_z) {
     int X30 = X3[0];
     int X31 = X3[1];
-    
+
 #pragma omp parallel for num_threads(nThread)
     for (R_xlen_t i = 0; i < n; ++i) {
       int xi = x[i];
       bool oi =
         (xi == X30 || xi == X31) &&
         (B_lgl ? B[i] : single_ox_x1_x2(y[i], oy, y1, y2)) &&
-        (ignore_z || 
+        (ignore_z ||
         (C_lgl ? C[i] : single_ox_x1_x2(z[i], oz, z1, z2)));
       out[i] = oi;
     }
     return out;
-    
+
   } else if (x3n == 3 && !y_in && !z_in) {
     int X30 = X3[0];
     int X31 = X3[1];
     int X32 = X3[2];
-    
+
 #pragma omp parallel for num_threads(nThread)
     for (R_xlen_t i = 0; i < n; ++i) {
       int xi = x[i];
       bool oi =
         (xi == X30 || xi == X31 || xi == X32) &&
         (B_lgl ? B[i] : single_ox_x1_x2(y[i], oy, y1, y2)) &&
-        (ignore_z || 
+        (ignore_z ||
         (C_lgl ? C[i] : single_ox_x1_x2(z[i], oz, z1, z2)));
       out[i] = oi;
     }
     return out;
-    
+
   } else if ((x_in || y_in || z_in) && !ignore_z) {
-    
+
 // do in int not thread-safe
     for (R_xlen_t i = 0; i < n; ++i) {
-      bool oi = 
+      bool oi =
         ((x_in) ? do_in_int(x[i], X3) : (A_lgl ? A[i] : single_ox_x1_x2(x[i], ox, x1, x2))) &&
         ((y_in) ? do_in_int(y[i], Y3) : (B_lgl ? B[i] : single_ox_x1_x2(y[i], oy, y1, y2))) &&
         ((z_in) ? do_in_int(z[i], Z3) : (C_lgl ? C[i] : single_ox_x1_x2(z[i], oz, z1, z2)));
@@ -429,27 +546,26 @@ LogicalVector do_and3_x_op(IntegerVector x, int ox, int x1, int x2,
   } else {
 #pragma omp parallel for num_threads(nThread)
     for (R_xlen_t i = 0; i < n; ++i) {
-      bool oi = 
+      bool oi =
         (A_lgl ? A[i] : single_ox_x1_x2(x[i], ox, x1, x2)) &&
         (B_lgl ? B[i] : single_ox_x1_x2(y[i], oy, y1, y2)) &&
-        (ignore_z || 
+        (ignore_z ||
         (C_lgl ? C[i] : single_ox_x1_x2(z[i], oz, z1, z2)));
       out[i] = oi;
     }
   }
-  
+
   return out;
 }
 
 // [[Rcpp::export]]
-LogicalVector do_op_along(IntegerVector x, int op, IntegerVector y, int num_threads = 1) {
+LogicalVector do_op_along(IntegerVector x, int op, IntegerVector y, int nThread = 1) {
   R_xlen_t N = x.length();
   if (y.length() != N) {
     stop("Internal error: do_op_along() lengths differ.");
   }
   LogicalVector out = no_init(N);
-  int nrThreads = (num_threads > 1) ? num_threads : 1;
-#pragma omp parallel for num_threads(nrThreads)
+#pragma omp parallel for num_threads(nThread)
   for (R_xlen_t i = 0; i < N; ++i) {
     out[i] = single_ox_x1_x2(x[i], op, y[i], 0);
   }
