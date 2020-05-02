@@ -4,8 +4,19 @@
 #' Performance is high when the expressions are long (i.e. over 10M elements)
 #' and in particular when they are of the form \code{lhs <op> rhs} for binary
 #' \code{<op>}.
-#' @param exprA,exprB,exprC Expressions of the form \code{x <op> y}.
+#' @param exprA,exprB,exprC,... Expressions of the form \code{x <op> y}.
 #' with \code{<op>} one of the standard binary operators.
+#'
+#' Only \code{exprA} is required, all following expressions are optional.
+#'
+#' @param .parent_nframes \describe{
+#' \item{\code{integer(1)}}{For internal use. Passed to \code{eval.parent}.}
+#' }
+#' @param nThread \describe{
+#' \item{\code{integer(1)}}{Number of threads to use.}
+#' }
+#'
+#'
 #'
 #'
 #'
@@ -16,7 +27,8 @@
 #' it is considered \code{TRUE} for \code{and3s} and \code{FALSE} for \code{or3s};
 #' in other words only the results of the other expressions count towards the result.
 #'
-#' @export
+NULL
+
 
 op2M <- function(operator) {
   match(operator,
@@ -46,7 +58,7 @@ is_binary_sexp <- function(sexprA, .parent_nframes = 2L) {
     attr(isBinary, "M") <- M
     attr(isBinary, "lhs") <- lhs
     attr(isBinary, "rhs") <- rhs
-    attr(isBinary, "rhs_eval") <- rhs_eval <- eval.parent(rhs, n = .parent_nframes)
+    attr(isBinary, "rhs_eval") <- rhs_eval <- eval.parent(rhs, n = .parent_nframes + 1L)
 
     if (OR(is.numeric(rhs),
            AND(is.numeric(rhs_eval),
@@ -73,18 +85,12 @@ is_lgl_negation <- function(sexpr, expr) {
     is.symbol(sexpr[[2]])
 }
 
-#' @rdname logical3
-#' @param exprA,exprB,exprC Expressions which would be logical expressions
-#' if evaluated.
-#' @param ... Further expressions.
-#' @param .parent_nframes \describe{
-#' \item{\code{integer(1)}}{For internal use. Passed to \code{eval.parent}.}
-#' }
-#' @return Logical vector same length as \code{exprA}. Equivalent to
-#' \code{exprA & exprB & exprC}.
+#' @rdname logical3s
 #' @export
 and3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
-                  nThreads = getOption("hutilscpp.nThreads", 1L)) {
+                  nThread = getOption("hutilscpp.nThread", 1L)) {
+  nThread <- check_omp(nThread)
+
   sexprA <- substitute(exprA)
   sexprB <- substitute(exprB)
   sexprC <- substitute(exprC)
@@ -119,7 +125,7 @@ and3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
         if (length(X3) > 100L) {
           A <- x %in% X3
         } else {
-          A <- do_par_in(x, X3)
+          A <- do_par_in(x, X3, nThread = nThread)
         }
         x <- integer(0)
         ox <- -1L
@@ -130,7 +136,7 @@ and3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
     }
 
   } else if (is_lgl_negation(sexprA, exprA)) {
-    A <- eval.parent(sexprA[[2]])
+    A <- eval.parent(sexprA[[2]], n = .parent_nframes)
     ox <- 1L
   } else {
     A <- exprA
@@ -167,7 +173,7 @@ and3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
       }
 
     } else if (is_lgl_negation(sexprB, exprB)) {
-      B <- eval.parent(sexprB[[2]])
+      B <- eval.parent(sexprB[[2]], n = .parent_nframes)
       oy <- 1L
     } else {
       B <- exprB
@@ -219,7 +225,7 @@ and3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
                 z, oz, z1, z2,
                 A, B, C,
                 deparse(sexprA),
-                nThread)
+                nThread = nThread)
 
   if (missing(..1)) {
     return(ans)
@@ -233,6 +239,8 @@ and3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
 
 or3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
                  nThread = getOption("hutilscpp.nThread", 1L)) {
+  nThread <- check_omp(nThread)
+
   sexprA <- substitute(exprA)
   sexprB <- substitute(exprB)
   sexprC <- substitute(exprC)
@@ -267,7 +275,7 @@ or3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
         if (length(X3) > 100L) {
           A <- x %in% X3
         } else {
-          A <- do_par_in(x, X3)
+          A <- do_par_in(x, X3, nThread = nThread)
         }
         x <- integer(0)
         ox <- -1L
@@ -278,7 +286,7 @@ or3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
     }
 
   } else if (is_lgl_negation(sexprA, exprA)) {
-    A <- eval.parent(sexprA[[2]])
+    A <- eval.parent(sexprA[[2]], n = .parent_nframes)
     ox <- 1L
   } else {
     A <- exprA
@@ -304,7 +312,7 @@ or3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
           if (length(Y3) > 100L) {
             B <- y %in% Y3
           } else {
-            B <- do_par_in(y, Y3)
+            B <- do_par_in(y, Y3, nThread = nThread)
           }
           y <- integer(0)
           oy <- -1L
@@ -316,7 +324,7 @@ or3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
 
     } else if (is_lgl_negation(sexprB, exprB)) {
       # Make coverage explicit
-      if (.parent_frame > 1L) {
+      if (.parent_nframes > 1L) {
         B <- eval.parent(sexprB[[2]], n = .parent_nframes)
       } else {
         B <- eval.parent(sexprB[[2]], n = .parent_nframes)
@@ -349,7 +357,7 @@ or3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
           if (length(Z3) > 100L) {
             C <- z %in% Z3
           } else {
-            C <- do_par_in(z, Z3)
+            C <- do_par_in(z, Z3, nThread = nThread)
           }
           z <- integer(0L)
           oz <- -1L
