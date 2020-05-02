@@ -213,6 +213,9 @@ test_that("do_par_in", {
 })
 
 test_that("big and3s", {
+  skip_on_cran()
+  skip_on_travis()
+  skip_on_appveyor()
   x <-
     tryCatch(integer(1e9),
              error = function(e) {
