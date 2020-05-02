@@ -387,7 +387,7 @@ LogicalVector do_and3_x_op(IntegerVector x, int ox, int x1, int x2,
     int X30 = X3[0];
     int X31 = X3[1];
     
-#pragma omp parallel for
+#pragma omp parallel for num_threads(nThread)
     for (R_xlen_t i = 0; i < n; ++i) {
       int xi = x[i];
       bool oi =
@@ -404,7 +404,7 @@ LogicalVector do_and3_x_op(IntegerVector x, int ox, int x1, int x2,
     int X31 = X3[1];
     int X32 = X3[2];
     
-#pragma omp parallel for
+#pragma omp parallel for num_threads(nThread)
     for (R_xlen_t i = 0; i < n; ++i) {
       int xi = x[i];
       bool oi =
@@ -427,7 +427,7 @@ LogicalVector do_and3_x_op(IntegerVector x, int ox, int x1, int x2,
       out[i] = oi;
     }
   } else {
-#pragma omp parallel for
+#pragma omp parallel for num_threads(nThread)
     for (R_xlen_t i = 0; i < n; ++i) {
       bool oi = 
         (A_lgl ? A[i] : single_ox_x1_x2(x[i], ox, x1, x2)) &&
