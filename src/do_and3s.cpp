@@ -1,4 +1,4 @@
-#include "cppdiffuprating.h"
+#include "cpphutils.h"
 #include <Rcpp.h>
 using namespace Rcpp;
 

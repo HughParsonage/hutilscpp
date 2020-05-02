@@ -58,10 +58,11 @@ which_isnt_integerish <- function(x, xi = as.integer(x), check_finite = TRUE) {
   if (is.integer(x)) {
     return(0L)
   }
+  if (!is.double(x)) {
+    return(1L)
+  }
   if (!isFALSE(check_finite) && {nfx <- do_anyNonfinite(x)}) {
-    stop("`x` contained non-finite value ", x[nfx],
-         " at position ", nfx, ". Missing or non-finite doubles",
-         " are not permitted.")
+    return(nfx)
   }
 
   storage.mode(xi) <- "double"
