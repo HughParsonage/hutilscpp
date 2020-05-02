@@ -41,10 +41,18 @@ test_that("long vectors", {
 })
 
 test_that("non-finite values", {
-  expect_error(are_even(c(NA, 1)))
-  expect_error(are_even(c(NaN, 1)))
-  expect_error(are_even(c(Inf, 1)))
-  expect_error(are_even(c(-Inf, 1)))
+  expect_warning(are_even(c(NA, 1)))
+  expect_warning(are_even(c(NaN, 1)))
+  expect_warning(are_even(c(Inf, 1)))
+  expect_warning(are_even(c(-Inf, 1)))
+
+  expect_warning(which_are_even(c(NA, 1)))
+  expect_warning(which_are_even(c(NaN, 1)))
+  expect_warning(which_are_even(c(Inf, 1)))
+  expect_warning(which_are_even(c(-Inf, 1)))
+
+  expect_warning(wh <- which_are_even(c(NA, 1, 2, Inf, -Inf, 7, 8, 8)))
+  expect_equal(wh, which((c(NA, 1, 2, Inf, -Inf, 7, 8, 8) %% 2) == 0))
 
 
 })
