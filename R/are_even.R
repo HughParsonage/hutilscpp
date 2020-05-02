@@ -19,8 +19,9 @@
 #' @export are_even which_are_even
 
 are_even <- function(x, check_integerish = TRUE) {
+  wb <- 0L
   if (is.integer(x)) {
-    return(do_are_even(x, double(0)))
+    return(do_are_even(x, double(0), wb))
   }
   if (is.double(x)) {
     if (AND(check_integerish,
@@ -29,7 +30,7 @@ are_even <- function(x, check_integerish = TRUE) {
               wb, " = ", x[wb], " was not an integer value. ",
               "Will be coerced to integer: ", as.integer(x[wb]), ".")
     }
-    do_are_even(integer(0), x)
+    do_are_even(integer(0), x, wb)
   } else {
     stop("`x` was not an integer or double.")
   }
@@ -40,8 +41,9 @@ which_are_even <- function(x, check_integerish = TRUE) {
   if (length(x) >= .Machine$integer.max) {
     stop("`which_are_even() not implemented for long `x`.")
   }
+  wb <- 0L
   if (is.integer(x)) {
-    return(do_which_even(x, double(0)))
+    return(do_which_even(x, double(0), wb))
   }
   if (is.double(x)) {
     if (AND(check_integerish,
@@ -50,7 +52,7 @@ which_are_even <- function(x, check_integerish = TRUE) {
               wb, " = ", x[wb], " was not an integer value. ",
               "Will be coerced to integer: ", as.integer(x[wb]), ".")
     }
-    return(do_which_even(integer(0), x))
+    return(do_which_even(integer(0), x, wb))
   } else {
     stop("`x` was not an integer or double.")
   }
