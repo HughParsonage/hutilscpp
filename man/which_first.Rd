@@ -11,7 +11,8 @@ which_first(
   reverse = FALSE,
   sexpr,
   eval_parent_n = 1L,
-  suppressWarning = getOption("hutilscpp_suppressWarning", FALSE)
+  suppressWarning = getOption("hutilscpp_suppressWarning", FALSE),
+  use.which.max = FALSE
 )
 
 which_last(

@@ -51,6 +51,10 @@
 #' warnings should be suppressed. Also supports a string input which suppresses a
 #' warning if it matches as a regular expression.
 #'
+#' @param use.which.max If \code{TRUE}, \code{which.max} is dispatched immediately,
+#' even if \code{expr} would be amenable to separation. Useful when evaluating
+#' many small \code{expr}'s when these are known in advance.
+#'
 #'
 #'
 #' @examples
@@ -88,7 +92,11 @@ which_first <- function(expr,
                         reverse = FALSE,
                         sexpr,
                         eval_parent_n = 1L,
-                        suppressWarning = getOption("hutilscpp_suppressWarning", FALSE)) {
+                        suppressWarning = getOption("hutilscpp_suppressWarning", FALSE),
+                        use.which.max = FALSE) {
+  if (use.which.max) {
+    return(.which_first(expr, verbose = verbose, reverse = reverse))
+  }
   rhs <- NULL
   if (missing(sexpr)) {
     sexpr <- substitute(expr)
