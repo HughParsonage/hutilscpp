@@ -23,9 +23,15 @@ List diagnose_omp(int threads_requested,
   return List::create(False, False, out);
 #endif
 
+  int n_procs = 1;
+#ifdef _OPENMP
+n_procs = omp_get_num_procs();
+#endif
 
 
-  if (threads_requested > 0 && threads_requested < omp_get_num_procs()) {
+
+
+  if (threads_requested > 0 && threads_requested < n_procs) {
     out[0] = msg_threads_neg;
     return List::create(False, False, out);
   }
@@ -34,7 +40,7 @@ List diagnose_omp(int threads_requested,
     out[0] = msg_threads_neg;
     return List::create(True, False, out);
   }
-  if (threads_requested > omp_get_num_procs()) {
+  if (threads_requested > n_procs) {
     out[0] = msg_too_many_threads;
     return List::create(True, False, out);
   }
