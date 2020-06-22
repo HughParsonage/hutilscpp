@@ -81,3 +81,6 @@ firstNonNegativeRadix <- function(x, ...) {
     do_firstNonNegativeRadix_int(x, ...)
   }
 }
+
+g <- glue::glue
+

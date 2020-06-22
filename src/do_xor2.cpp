@@ -49,3 +49,6 @@ LogicalVector do_xor2(LogicalVector x, LogicalVector y, bool anyNAx = true, bool
   return out;
 }
 
+
+
+
