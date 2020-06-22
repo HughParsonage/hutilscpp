@@ -1,6 +1,6 @@
 Package: hutilscpp
 Title: Miscellaneous Functions in C++
-Version: 0.4.0
+Version: 0.4.1
 Authors@R: 
     person(given = "Hugh",
            family = "Parsonage",
@@ -22,6 +22,7 @@ LinkingTo:
 Imports: 
     Rcpp, 
     data.table, 
+    glue,
     hutils,
     utils
 Roxygen: list(markdown = TRUE)
