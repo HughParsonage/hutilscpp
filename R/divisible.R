@@ -8,13 +8,14 @@
 #'
 #' \code{divisible16} is short for (and quicker than) \code{divisble(x, 16)}.
 #'
-#' @export divisible divisible16
-
+#' @export
 
 divisible <- function(x, d, nThread = getOption("hutilscpp.nThread", 1L)) {
   do_divisible(x, d, nThread)
 }
 
+#' @rdname divisible
+#' @export
 divisible16 <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
   do_divisible16(x, nThread)
 }
