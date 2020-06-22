@@ -57,6 +57,14 @@ do_and3_par <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, no
     .Call(`_hutilscpp_do_and3_par`, x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread)
 }
 
+do_sum3s_par <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nThread = 1L) {
+    .Call(`_hutilscpp_do_sum3s_par`, x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nThread)
+}
+
+simd_sum <- function(x, a, y, b) {
+    .Call(`_hutilscpp_simd_sum`, x, a, y, b)
+}
+
 do_cumsum_reset_logical <- function(x) {
     .Call(`_hutilscpp_do_cumsum_reset_logical`, x)
 }
@@ -79,6 +87,14 @@ do_duplicated_sorted_dbl <- function(x) {
 
 do_cumsum_reset_sorted_int <- function(x) {
     .Call(`_hutilscpp_do_cumsum_reset_sorted_int`, x)
+}
+
+do_divisible <- function(x, d, nThread = 1L) {
+    .Call(`_hutilscpp_do_divisible`, x, d, nThread)
+}
+
+do_divisible16 <- function(x, nThread = 1L) {
+    .Call(`_hutilscpp_do_divisible16`, x, nThread)
 }
 
 do_are_even <- function(x, y, wb = 0L) {
@@ -309,6 +325,22 @@ diagnose_omp <- function(threads_requested, msg_no_openmp, msg_threads_neg, msg_
     .Call(`_hutilscpp_diagnose_omp`, threads_requested, msg_no_openmp, msg_threads_neg, msg_unknown_issues, msg_too_many_threads)
 }
 
+n_casi1 <- function(x, y) {
+    .Call(`_hutilscpp_n_casi1`, x, y)
+}
+
+n_casi2 <- function(x, y) {
+    .Call(`_hutilscpp_n_casi2`, x, y)
+}
+
+n_casi3 <- function(x, y) {
+    .Call(`_hutilscpp_n_casi3`, x, y)
+}
+
+n_casi4 <- function(x, y) {
+    .Call(`_hutilscpp_n_casi4`, x, y)
+}
+
 do_pmax0_abs_dbl <- function(x, in_place = FALSE) {
     .Call(`_hutilscpp_do_pmax0_abs_dbl`, x, in_place)
 }
@@ -347,6 +379,10 @@ do_pmin0_radix_sorted_int <- function(x, in_place = FALSE) {
 
 do_pmax0_radix_sorted_int <- function(x, in_place = FALSE) {
     .Call(`_hutilscpp_do_pmax0_radix_sorted_int`, x, in_place)
+}
+
+do_pmax0_bitwise <- function(x, nThread = 1L) {
+    .Call(`_hutilscpp_do_pmax0_bitwise`, x, nThread)
 }
 
 #' @name do_pmaxC
@@ -460,6 +496,10 @@ do_pminV_dbl <- function(x, y, in_place = FALSE) {
 #' @rdname do_pminV
 do_pminV_int <- function(x, y, in_place = FALSE) {
     .Call(`_hutilscpp_do_pminV_int`, x, y, in_place)
+}
+
+seqN <- function(x, y, m = 1L) {
+    .Call(`_hutilscpp_seqN`, x, y, m)
 }
 
 squishn <- function(x, a, b, in_place = FALSE) {
