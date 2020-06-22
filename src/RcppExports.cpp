@@ -170,6 +170,46 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_sum3s_par
+R_xlen_t do_sum3s_par(IntegerVector x, int ox, int x1, int x2, IntegerVector y, int oy, int y1, int y2, IntegerVector z, int oz, int z1, int z2, LogicalVector A, LogicalVector B, LogicalVector C, int nThread);
+RcppExport SEXP _hutilscpp_do_sum3s_par(SEXP xSEXP, SEXP oxSEXP, SEXP x1SEXP, SEXP x2SEXP, SEXP ySEXP, SEXP oySEXP, SEXP y1SEXP, SEXP y2SEXP, SEXP zSEXP, SEXP ozSEXP, SEXP z1SEXP, SEXP z2SEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP nThreadSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type ox(oxSEXP);
+    Rcpp::traits::input_parameter< int >::type x1(x1SEXP);
+    Rcpp::traits::input_parameter< int >::type x2(x2SEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type oy(oySEXP);
+    Rcpp::traits::input_parameter< int >::type y1(y1SEXP);
+    Rcpp::traits::input_parameter< int >::type y2(y2SEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type z(zSEXP);
+    Rcpp::traits::input_parameter< int >::type oz(ozSEXP);
+    Rcpp::traits::input_parameter< int >::type z1(z1SEXP);
+    Rcpp::traits::input_parameter< int >::type z2(z2SEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type A(ASEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type B(BSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type C(CSEXP);
+    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_sum3s_par(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nThread));
+    return rcpp_result_gen;
+END_RCPP
+}
+// simd_sum
+int simd_sum(IntegerVector x, int a, IntegerVector y, int b);
+RcppExport SEXP _hutilscpp_simd_sum(SEXP xSEXP, SEXP aSEXP, SEXP ySEXP, SEXP bSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type a(aSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(simd_sum(x, a, y, b));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_cumsum_reset_logical
 IntegerVector do_cumsum_reset_logical(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_cumsum_reset_logical(SEXP xSEXP) {
@@ -235,6 +275,31 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(do_cumsum_reset_sorted_int(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_divisible
+LogicalVector do_divisible(IntegerVector x, int d, int nThread);
+RcppExport SEXP _hutilscpp_do_divisible(SEXP xSEXP, SEXP dSEXP, SEXP nThreadSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type d(dSEXP);
+    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_divisible(x, d, nThread));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_divisible16
+LogicalVector do_divisible16(IntegerVector x, int nThread);
+RcppExport SEXP _hutilscpp_do_divisible16(SEXP xSEXP, SEXP nThreadSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_divisible16(x, nThread));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1013,6 +1078,54 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// n_casi1
+int n_casi1(IntegerVector x, IntegerVector y);
+RcppExport SEXP _hutilscpp_n_casi1(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(n_casi1(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// n_casi2
+int n_casi2(IntegerVector x, IntegerVector y);
+RcppExport SEXP _hutilscpp_n_casi2(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(n_casi2(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// n_casi3
+int n_casi3(IntegerVector x, IntegerVector y);
+RcppExport SEXP _hutilscpp_n_casi3(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(n_casi3(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// n_casi4
+int n_casi4(IntegerVector x, IntegerVector y);
+RcppExport SEXP _hutilscpp_n_casi4(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(n_casi4(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_pmax0_abs_dbl
 DoubleVector do_pmax0_abs_dbl(DoubleVector x, bool in_place);
 RcppExport SEXP _hutilscpp_do_pmax0_abs_dbl(SEXP xSEXP, SEXP in_placeSEXP) {
@@ -1136,6 +1249,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
     rcpp_result_gen = Rcpp::wrap(do_pmax0_radix_sorted_int(x, in_place));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_pmax0_bitwise
+IntegerVector do_pmax0_bitwise(IntegerVector x, int nThread);
+RcppExport SEXP _hutilscpp_do_pmax0_bitwise(SEXP xSEXP, SEXP nThreadSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_pmax0_bitwise(x, nThread));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1325,6 +1450,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// seqN
+IntegerVector seqN(IntegerVector x, IntegerVector y, int m);
+RcppExport SEXP _hutilscpp_seqN(SEXP xSEXP, SEXP ySEXP, SEXP mSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type m(mSEXP);
+    rcpp_result_gen = Rcpp::wrap(seqN(x, y, m));
+    return rcpp_result_gen;
+END_RCPP
+}
 // squishn
 NumericVector squishn(NumericVector x, double a, double b, bool in_place);
 RcppExport SEXP _hutilscpp_squishn(SEXP xSEXP, SEXP aSEXP, SEXP bSEXP, SEXP in_placeSEXP) {
@@ -1488,12 +1625,16 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_range_dbl", (DL_FUNC) &_hutilscpp_do_range_dbl, 3},
     {"_hutilscpp_do_range_int", (DL_FUNC) &_hutilscpp_do_range_int, 3},
     {"_hutilscpp_do_and3_par", (DL_FUNC) &_hutilscpp_do_and3_par, 17},
+    {"_hutilscpp_do_sum3s_par", (DL_FUNC) &_hutilscpp_do_sum3s_par, 16},
+    {"_hutilscpp_simd_sum", (DL_FUNC) &_hutilscpp_simd_sum, 4},
     {"_hutilscpp_do_cumsum_reset_logical", (DL_FUNC) &_hutilscpp_do_cumsum_reset_logical, 1},
     {"_hutilscpp_do_cumsum_reset_integer", (DL_FUNC) &_hutilscpp_do_cumsum_reset_integer, 2},
     {"_hutilscpp_do_cumsum_reset_double", (DL_FUNC) &_hutilscpp_do_cumsum_reset_double, 2},
     {"_hutilscpp_do_duplicated_sorted_int", (DL_FUNC) &_hutilscpp_do_duplicated_sorted_int, 1},
     {"_hutilscpp_do_duplicated_sorted_dbl", (DL_FUNC) &_hutilscpp_do_duplicated_sorted_dbl, 1},
     {"_hutilscpp_do_cumsum_reset_sorted_int", (DL_FUNC) &_hutilscpp_do_cumsum_reset_sorted_int, 1},
+    {"_hutilscpp_do_divisible", (DL_FUNC) &_hutilscpp_do_divisible, 3},
+    {"_hutilscpp_do_divisible16", (DL_FUNC) &_hutilscpp_do_divisible16, 2},
     {"_hutilscpp_do_are_even", (DL_FUNC) &_hutilscpp_do_are_even, 3},
     {"_hutilscpp_do_which_even", (DL_FUNC) &_hutilscpp_do_which_even, 3},
     {"_hutilscpp_do_and3_na", (DL_FUNC) &_hutilscpp_do_and3_na, 6},
@@ -1551,6 +1692,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which3", (DL_FUNC) &_hutilscpp_do_which3, 7},
     {"_hutilscpp_do_which3_mem", (DL_FUNC) &_hutilscpp_do_which3_mem, 4},
     {"_hutilscpp_diagnose_omp", (DL_FUNC) &_hutilscpp_diagnose_omp, 5},
+    {"_hutilscpp_n_casi1", (DL_FUNC) &_hutilscpp_n_casi1, 2},
+    {"_hutilscpp_n_casi2", (DL_FUNC) &_hutilscpp_n_casi2, 2},
+    {"_hutilscpp_n_casi3", (DL_FUNC) &_hutilscpp_n_casi3, 2},
+    {"_hutilscpp_n_casi4", (DL_FUNC) &_hutilscpp_n_casi4, 2},
     {"_hutilscpp_do_pmax0_abs_dbl", (DL_FUNC) &_hutilscpp_do_pmax0_abs_dbl, 2},
     {"_hutilscpp_do_pmin0_abs_dbl", (DL_FUNC) &_hutilscpp_do_pmin0_abs_dbl, 2},
     {"_hutilscpp_do_pmax0_abs_int", (DL_FUNC) &_hutilscpp_do_pmax0_abs_int, 2},
@@ -1561,6 +1706,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_pmin0_radix_sorted_dbl", (DL_FUNC) &_hutilscpp_do_pmin0_radix_sorted_dbl, 2},
     {"_hutilscpp_do_pmin0_radix_sorted_int", (DL_FUNC) &_hutilscpp_do_pmin0_radix_sorted_int, 2},
     {"_hutilscpp_do_pmax0_radix_sorted_int", (DL_FUNC) &_hutilscpp_do_pmax0_radix_sorted_int, 2},
+    {"_hutilscpp_do_pmax0_bitwise", (DL_FUNC) &_hutilscpp_do_pmax0_bitwise, 2},
     {"_hutilscpp_do_pmaxC_dbl", (DL_FUNC) &_hutilscpp_do_pmaxC_dbl, 3},
     {"_hutilscpp_do_pmaxC_int", (DL_FUNC) &_hutilscpp_do_pmaxC_int, 3},
     {"_hutilscpp_do_pmax0", (DL_FUNC) &_hutilscpp_do_pmax0, 2},
@@ -1576,6 +1722,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_pmin0_int", (DL_FUNC) &_hutilscpp_do_pmin0_int, 2},
     {"_hutilscpp_do_pminV_dbl", (DL_FUNC) &_hutilscpp_do_pminV_dbl, 3},
     {"_hutilscpp_do_pminV_int", (DL_FUNC) &_hutilscpp_do_pminV_int, 3},
+    {"_hutilscpp_seqN", (DL_FUNC) &_hutilscpp_seqN, 3},
     {"_hutilscpp_squishn", (DL_FUNC) &_hutilscpp_squishn, 4},
     {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 4},
     {"_hutilscpp_sum_isna_int", (DL_FUNC) &_hutilscpp_sum_isna_int, 1},

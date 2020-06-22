@@ -302,7 +302,19 @@ IntegerVector do_pmax0_radix_sorted_int(IntegerVector x,
   return out;
 }
 
-
+// [[Rcpp::export]]
+IntegerVector do_pmax0_bitwise(IntegerVector x, int nThread = 1) {
+  R_xlen_t N = x.size();
+  IntegerVector out = no_init(N);
+#pragma omp parallel for num_threads(nThread)
+  for (R_xlen_t i = 0; i < N; ++i) {
+    // https://graphics.stanford.edu/~seander/bithacks.html#IntegerMinOrMax
+    int xi = x[i];
+    int r = xi - (xi & (xi >> (sizeof(int) * CHAR_BIT - 1)));
+    out[i] = r;
+  }
+  return out;
+}
 
 
 
