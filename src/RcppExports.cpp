@@ -410,6 +410,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_par_in_hash_int
+LogicalVector do_par_in_hash_int(IntegerVector x, IntegerVector table, int nThread);
+RcppExport SEXP _hutilscpp_do_par_in_hash_int(SEXP xSEXP, SEXP tableSEXP, SEXP nThreadSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type table(tableSEXP);
+    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_par_in_hash_int(x, table, nThread));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_and3_x_op
 LogicalVector do_and3_x_op(IntegerVector x, int ox, int x1, int x2, IntegerVector y, int oy, int y1, int y2, IntegerVector z, int oz, int z1, int z2, IntegerVector X3, IntegerVector Y3, IntegerVector Z3, LogicalVector A, LogicalVector B, LogicalVector C, int nThread);
 RcppExport SEXP _hutilscpp_do_and3_x_op(SEXP xSEXP, SEXP oxSEXP, SEXP x1SEXP, SEXP x2SEXP, SEXP ySEXP, SEXP oySEXP, SEXP y1SEXP, SEXP y2SEXP, SEXP zSEXP, SEXP ozSEXP, SEXP z1SEXP, SEXP z2SEXP, SEXP X3SEXP, SEXP Y3SEXP, SEXP Z3SEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP nThreadSEXP) {
@@ -1643,6 +1655,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_count_logical", (DL_FUNC) &_hutilscpp_count_logical, 1},
     {"_hutilscpp_do_in_int", (DL_FUNC) &_hutilscpp_do_in_int, 2},
     {"_hutilscpp_do_par_in", (DL_FUNC) &_hutilscpp_do_par_in, 3},
+    {"_hutilscpp_do_par_in_hash_int", (DL_FUNC) &_hutilscpp_do_par_in_hash_int, 3},
     {"_hutilscpp_do_and3_x_op", (DL_FUNC) &_hutilscpp_do_and3_x_op, 19},
     {"_hutilscpp_do_op_along", (DL_FUNC) &_hutilscpp_do_op_along, 4},
     {"_hutilscpp_do_or3_par", (DL_FUNC) &_hutilscpp_do_or3_par, 17},

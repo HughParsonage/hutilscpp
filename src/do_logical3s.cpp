@@ -443,23 +443,50 @@ LogicalVector do_par_in(IntegerVector x, IntegerVector table, int nThread = 1) {
   for (int ti = 0; ti < tn; ++ti) {
     tango.push_back(table[ti]);
   }
+  sort(tango.begin(), tango.end());
+  int a = tango[0];
+  int b = tango[tn - 1];
 
   LogicalVector out = no_init(n);
 
 #pragma omp parallel for num_threads(nThread) shared(out, tango)
   for (R_xlen_t i = 0; i < n; ++i) {
     bool oi = false;
-    for (int j = 0; j < tn; ++j) {
-      int tj = tango[j];
-      if (x[i] == tj) {
-        oi = true;
-        break;
+    int xi = x[i];
+    if (xi >= a && xi <= b) {
+      for (int j = 0; j < tn; ++j) {
+        int tj = tango[j];
+        if (x[i] == tj) {
+          oi = true;
+          break;
+        }
       }
     }
     out[i] = oi;
   }
   return out;
 }
+
+// [[Rcpp::export(rng = false)]]
+LogicalVector do_par_in_hash_int(IntegerVector x, IntegerVector table, int nThread = 1) {
+  std::unordered_set<int> H;
+  int tn = table.length();
+  for (int t = 0; t < tn; ++t) {
+    H.insert(table[t]);
+  }
+
+  R_xlen_t N = x.length();
+  LogicalVector out = no_init(N);
+#pragma omp parallel for num_threads(nThread)
+  for (R_xlen_t i = 0; i < N; ++i) {
+    int xi = x[i];
+    bool oi = H.count(xi);
+    out[i] = oi;
+  }
+  return out;
+
+}
+
 
 // [[Rcpp::export(rng = false)]]
 LogicalVector do_and3_x_op(IntegerVector x, int ox, int x1, int x2,
