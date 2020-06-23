@@ -2,9 +2,12 @@
 % Please edit documentation in R/divisible.R
 \name{divisible}
 \alias{divisible}
+\alias{divisible16}
 \title{Divisible}
 \usage{
 divisible(x, d, nThread = getOption("hutilscpp.nThread", 1L))
+
+divisible16(x, nThread = getOption("hutilscpp.nThread", 1L))
 }
 \arguments{
 \item{x}{An integer vector}
