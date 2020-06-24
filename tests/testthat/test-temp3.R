@@ -50,4 +50,42 @@ test_that("temp3 works", {
 
   expect_true(all(do_op_along(1:10, 0, 1:10)))
   expect_false(any(do_op_along(1:10, -1, 1:10)))
+
+  expect_error(do_op_along(1:10, 0L, 1:11), "lengths differ")
+  expect_error(do_and3_x_op(integer(2), 10L, 1L, 2L,
+                            integer(1), 10L, 1L, 2L,
+                            integer(0), 10L, 1L, 2L,
+                            integer(0),
+                            integer(0),
+                            integer(0),
+                            c(TRUE, FALSE),
+                            c(TRUE, FALSE),
+                            c(TRUE, FALSE)),
+               regexp = "length",
+               fixed = TRUE)
+  expect_error(do_and3_x_op(integer(3), 10L, 1L, 2L,
+                            integer(1), 10L, 1L, 2L,
+                            integer(2), 10L, 1L, 2L,
+                            integer(0),
+                            integer(0),
+                            integer(0),
+                            c(TRUE, FALSE),
+                            c(TRUE, FALSE),
+                            c(TRUE, FALSE)),
+               regexp = "length",
+               fixed = TRUE)
+  expect_error(do_and3_x_op(integer(3), 10L, 1L, 2L,
+                            integer(1), 10L, 1L, 2L,
+                            integer(2), 10L, 1L, 2L,
+                            integer(7),
+                            integer(0),
+                            integer(0),
+                            c(TRUE, FALSE),
+                            c(TRUE, FALSE),
+                            c(TRUE, FALSE)),
+               regexp = "length",
+               fixed = TRUE)
+  expect_true(test_intersect3_stdint())
+  expect_true(test_intersect3_stdint(4))
+  expect_true(test_intersect3_stdint(5))
 })

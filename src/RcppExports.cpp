@@ -377,6 +377,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// test_intersect3_stdint
+bool test_intersect3_stdint(int M);
+RcppExport SEXP _hutilscpp_test_intersect3_stdint(SEXP MSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< int >::type M(MSEXP);
+    rcpp_result_gen = Rcpp::wrap(test_intersect3_stdint(M));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_count_logical
 IntegerVector do_count_logical(LogicalVector x, int nThread);
 RcppExport SEXP _hutilscpp_do_count_logical(SEXP xSEXP, SEXP nThreadSEXP) {
@@ -1664,6 +1674,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_and3_na", (DL_FUNC) &_hutilscpp_do_and3_na, 6},
     {"_hutilscpp_do_which2_yr", (DL_FUNC) &_hutilscpp_do_which2_yr, 13},
     {"_hutilscpp_do_which_in", (DL_FUNC) &_hutilscpp_do_which_in, 2},
+    {"_hutilscpp_test_intersect3_stdint", (DL_FUNC) &_hutilscpp_test_intersect3_stdint, 1},
     {"_hutilscpp_do_count_logical", (DL_FUNC) &_hutilscpp_do_count_logical, 2},
     {"_hutilscpp_do_count_logical_long", (DL_FUNC) &_hutilscpp_do_count_logical_long, 2},
     {"_hutilscpp_do_in_int", (DL_FUNC) &_hutilscpp_do_in_int, 2},

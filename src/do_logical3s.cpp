@@ -44,8 +44,6 @@ LogicalVector do_and3_na(LogicalVector x, LogicalVector y, LogicalVector z,
   bool na_becomes_true  = na_value > 0;
   bool na_becomes_false = na_value < 0;
 
-
-
   for (R_xlen_t i = 0; i < n; ++i) {
     R_xlen_t jx = (nx == n) ? i : 0;
     R_xlen_t jy = (ny == n) ? i : 0;
@@ -292,6 +290,31 @@ std::vector<int> do_intersect3_stdint(std::vector<int> x,
     }
   }
   return o;
+}
+
+// [[Rcpp::export(rng = false)]]
+bool test_intersect3_stdint(int M = 0) {
+
+  std::vector<int> a = {1, 2, 3};
+  std::vector<int> b = {1, 2, 3};
+  std::vector<int> c = {1, 2, 3};
+  if (M == 4) {
+    a.push_back(M);
+  }
+  if (M == 5) {
+    a.push_back(5);
+    a.push_back(7);
+    b.push_back(4);
+    c.push_back(6);
+  }
+
+  std::vector<int> d = do_intersect3_stdint(a, b, c);
+  for (int i = 0; i < 3; ++i) {
+    if (d[i] != a[i]) {
+      return false;
+    }
+  }
+  return true;
 }
 
 
