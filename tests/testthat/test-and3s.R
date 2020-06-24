@@ -272,4 +272,24 @@ test_that("and3s ... and parent frames", {
 
 })
 
+test_that("logical symbol", {
+  A <- logical(2)
+  B <- logical(2)
+  C <- c(TRUE, TRUE)
+  expect_equal(and3s(A, B, C), c(FALSE, FALSE))
+  expect_equal(or3s(A, B, C), c(TRUE, TRUE))
+})
+
+test_that("%in%", {
+  xx <- 1:10
+  bb <- 5:200
+
+  xx <- rep_len(xx, length(bb))
+  expect_equal(and3s(xx %in% bb, xx == 2, bb >= 5), ((xx %in% bb) & (xx == 2 & bb >= 5)))
+  expect_equal(and3s(xx == 2, xx %in% bb, bb >= 5), ((xx %in% bb) & (xx == 2 & bb >= 5)))
+  expect_equal(and3s(xx == 2, bb >= 5, xx %in% bb), ((xx %in% bb) & (xx == 2 & bb >= 5)))
+  expect_equal( or3s(xx %in% bb, xx == 2, bb >= 5), ((xx %in% bb) | (xx == 2 | bb >= 5)))
+  expect_equal( or3s(xx == 2, xx %in% bb, bb >= 5), ((xx %in% bb) | (xx == 2 | bb >= 5)))
+  expect_equal( or3s(xx == 2, bb >= 5, xx %in% bb), ((xx %in% bb) | (xx == 2 | bb >= 5)))
+})
 

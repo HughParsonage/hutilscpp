@@ -30,6 +30,7 @@ RoxygenNote: 7.1.0
 Suggests: 
     bench,
     magrittr,
+    parallel,
     testthat (>= 2.1.0),
     TeXCheckR,
     withr,

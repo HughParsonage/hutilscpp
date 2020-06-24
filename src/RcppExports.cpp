@@ -390,22 +390,24 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_count_logical
-IntegerVector do_count_logical(LogicalVector x);
-RcppExport SEXP _hutilscpp_do_count_logical(SEXP xSEXP) {
+IntegerVector do_count_logical(LogicalVector x, int nThread);
+RcppExport SEXP _hutilscpp_do_count_logical(SEXP xSEXP, SEXP nThreadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_count_logical(x));
+    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_count_logical(x, nThread));
     return rcpp_result_gen;
 END_RCPP
 }
 // do_count_logical_long
-DoubleVector do_count_logical_long(LogicalVector x);
-RcppExport SEXP _hutilscpp_do_count_logical_long(SEXP xSEXP) {
+DoubleVector do_count_logical_long(LogicalVector x, int nThread);
+RcppExport SEXP _hutilscpp_do_count_logical_long(SEXP xSEXP, SEXP nThreadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_count_logical_long(x));
+    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_count_logical_long(x, nThread));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1675,8 +1677,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_and3_na", (DL_FUNC) &_hutilscpp_do_and3_na, 6},
     {"_hutilscpp_do_which2_yr", (DL_FUNC) &_hutilscpp_do_which2_yr, 13},
     {"_hutilscpp_do_which_in", (DL_FUNC) &_hutilscpp_do_which_in, 2},
-    {"_hutilscpp_do_count_logical", (DL_FUNC) &_hutilscpp_do_count_logical, 1},
-    {"_hutilscpp_do_count_logical_long", (DL_FUNC) &_hutilscpp_do_count_logical_long, 1},
+    {"_hutilscpp_do_count_logical", (DL_FUNC) &_hutilscpp_do_count_logical, 2},
+    {"_hutilscpp_do_count_logical_long", (DL_FUNC) &_hutilscpp_do_count_logical_long, 2},
     {"_hutilscpp_do_in_int", (DL_FUNC) &_hutilscpp_do_in_int, 2},
     {"_hutilscpp_do_par_in", (DL_FUNC) &_hutilscpp_do_par_in, 3},
     {"_hutilscpp_do_par_in_hash_int", (DL_FUNC) &_hutilscpp_do_par_in_hash_int, 3},

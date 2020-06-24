@@ -4,10 +4,12 @@
 \alias{count_logical}
 \title{Count logicals}
 \usage{
-count_logical(x)
+count_logical(x, nThread = getOption("hutilscpp.nThread", 1L))
 }
 \arguments{
 \item{x}{A logical vector.}
+
+\item{nThread}{Number of threads to use.}
 }
 \value{
 A vector of 3 elements: the number of \code{FALSE}, \code{TRUE}, and

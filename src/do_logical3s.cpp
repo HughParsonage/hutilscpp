@@ -371,11 +371,11 @@ std::vector<int> do_intersect3_stdint(std::vector<int> x,
 
 
 // [[Rcpp::export(rng = false)]]
-IntegerVector do_count_logical(LogicalVector x) {
+IntegerVector do_count_logical(LogicalVector x, int nThread = 1) {
   int n = x.length();
   int trues = 0;
   int nas = 0;
-#pragma omp parallel for reduction(+:trues,nas)
+#pragma omp parallel for num_threads(nThread) reduction(+:trues,nas)
   for (int i = 0; i < n; ++i) {
     if (x[i] == NA_LOGICAL) {
       nas += 1;
@@ -393,11 +393,11 @@ IntegerVector do_count_logical(LogicalVector x) {
 }
 
 // [[Rcpp::export(rng = false)]]
-DoubleVector do_count_logical_long(LogicalVector x) {
+DoubleVector do_count_logical_long(LogicalVector x, int nThread = 1) {
   R_xlen_t n = x.length();
   R_xlen_t trues = 0;
   R_xlen_t nas = 0;
-#pragma omp parallel for reduction(+:trues,nas)
+#pragma omp parallel for num_threads(nThread) reduction(+:trues,nas)
   for (R_xlen_t i = 0; i < n; ++i) {
     if (x[i] == NA_LOGICAL) {
       nas += 1;
