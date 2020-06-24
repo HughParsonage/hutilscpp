@@ -496,5 +496,19 @@ test_that("which_first() N == N, N != N", {
   expect_equal(which_first(od != xd, reverse = TRUE), last(which(od != xd)))
 })
 
+test_that("which_first(NA . NA)", {
+  x <- c(NA, "a", "abc", "Def")
+  y <- "abc"
+  z <- NA_character_
+  n <- ""
+  expect_equal(which_first(x == y), 3L)
+  expect_equal(which_first(x == z), 1L)
+  expect_equal(which_first(x == ""), 0L)
+  expect_equal(which_first(x == n), 0L)
+  expect_equal(which_first(x != y), 1L)
+  expect_equal(which_first(x != z), 2L)
+  expect_equal(which_first(x != ""), 1L)
+})
+
 
 

@@ -4,36 +4,24 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 int AnyCharMatch(CharacterVector x, CharacterVector a, bool opposite = false) {
-  // const char ac = a[0];
-  const char *acp = a[0];
-  const bool a_is_na = R_IsNA(*acp);
   const R_xlen_t n = x.size();
   for (R_xlen_t i = 0; i < n; ++i) {
-    const char *xcp = x[i];
+    R_xlen_t j = (a.length() == x.length()) ? i : 0;
     if (opposite) {
-      if (a_is_na) {
-        if (!R_IsNA(*xcp)) {
-          return ++i;
-        }
-      } else {
-        if (xcp != acp) {
-          return ++i;
-        }
+      if (x[i] != a[j]) {
+        return ++i;
       }
     } else {
-      if (a_is_na) {
-        if (R_IsNA(*xcp)) {
-          return ++i;
-        }
-      } else {
-        if (xcp == acp) {
-          return ++i;
-        }
+      if (x[i] == a[j]) {
+        return ++i;
       }
     }
   }
   return 0;
 }
 
-
+// [[Rcpp::export]]
+int bothNaCharacter(CharacterVector x, CharacterVector a) {
+  return x[0] == a[0];
+}
 

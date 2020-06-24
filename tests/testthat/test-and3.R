@@ -96,3 +96,32 @@ test_that("C++", {
                regexp = "wrong length")
 })
 
+test_that("do_and3_na", {
+  skip_if_not_installed("data.table")
+  skip_if_not_installed("hutils")
+  library(data.table)
+  library(hutils)
+  DT <- CJ(x = c(TRUE, FALSE, NA), y = c(TRUE, FALSE, NA), z = c(TRUE, FALSE, NA))
+  DT[, xf := coalesce(x, FALSE)]
+  DT[, xt := coalesce(x, TRUE)]
+  DT[, yf := coalesce(y, FALSE)]
+  DT[, yt := coalesce(y, TRUE)]
+  DT[, zf := coalesce(z, FALSE)]
+  DT[, zt := coalesce(z, TRUE)]
+  DT[, ans0 := do_and3_na(x, y, z)]
+  DT[, ans1 := do_and3_na(x, y, z, na_value = -1L)]
+  DT[, ans2 := do_and3_na(x, y, z, na_value = +1L)]
+
+  # default is any NA => FALSE
+  DT[seq_len(.N - 1L), expect_false(any(ans0))]
+  DT[, expect_true(all(implies(is.na(x), is.na(ans1))))]
+  DT[, expect_true(all(implies(is.na(y), is.na(ans1))))]
+  DT[, expect_true(all(implies(is.na(z), is.na(ans1))))]
+  DT[, expect_identical(ans0, xf & yf & zf)]
+  DT[, expect_identical(ans2, xt & yt & zt)]
+
+})
+
+
+
+
