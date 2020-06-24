@@ -117,6 +117,10 @@ do_which_in <- function(x, tbl) {
     .Call(`_hutilscpp_do_which_in`, x, tbl)
 }
 
+test_intersect3_stdint <- function(M = 0L) {
+    .Call(`_hutilscpp_test_intersect3_stdint`, M)
+}
+
 do_count_logical <- function(x, nThread = 1L) {
     .Call(`_hutilscpp_do_count_logical`, x, nThread)
 }
