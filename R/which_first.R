@@ -141,7 +141,18 @@ which_first <- function(expr,
                length(lhs_eval) == 1L),
             OR(operator == "!=",
                operator == "=="),
+            na.rm = TRUE)) ||
+
+    AND(is.character(rhs_eval),
+        # Must be both integers or both doubles otherwise will fall through too late.
+        # Too expensive to check or coerce to doubles in case.
+        all(is.character(lhs_eval <- eval.parent(lhs, n = eval_parent_n)),
+            OR(length(lhs_eval) == length(rhs_eval),
+               length(rhs_eval) == 1L),
+            OR(operator == "!=",
+               operator == "=="),
             na.rm = TRUE))
+
 
 
   if (!isValidExpr) {
@@ -346,6 +357,7 @@ which_first <- function(expr,
     oc <-
       switch(operator,
              "==" = AnyCharMatch(lhs_eval, as.character(rhs_eval)),
+             "!=" = AnyCharMatch(lhs_eval, as.character(rhs_eval), opposite = TRUE),
              {
                o <- .which_first(expr, verbose = verbose, reverse = reverse)
              })

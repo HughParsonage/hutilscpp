@@ -1,9 +1,10 @@
 #' @keywords internal
-#' @import Rcpp
+#' @importFrom Rcpp evalCpp
 #' @import data.table
 #' @importFrom utils hasName
 #' @importFrom utils head
 #' @importFrom utils ls.str
+#' @importFrom glue glue
 #' @importFrom hutils NOR
 #' @importFrom hutils XOR
 #' @importFrom hutils AND

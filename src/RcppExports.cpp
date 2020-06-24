@@ -18,6 +18,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// bothNaCharacter
+int bothNaCharacter(CharacterVector x, CharacterVector a);
+RcppExport SEXP _hutilscpp_bothNaCharacter(SEXP xSEXP, SEXP aSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type a(aSEXP);
+    rcpp_result_gen = Rcpp::wrap(bothNaCharacter(x, a));
+    return rcpp_result_gen;
+END_RCPP
+}
 // AnyWhich_dbl
 R_xlen_t AnyWhich_dbl(DoubleVector x, double a, bool gt, bool lt, bool eq, bool rev);
 RcppExport SEXP _hutilscpp_AnyWhich_dbl(SEXP xSEXP, SEXP aSEXP, SEXP gtSEXP, SEXP ltSEXP, SEXP eqSEXP, SEXP revSEXP) {
@@ -377,13 +389,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// count_logical
-IntegerVector count_logical(LogicalVector x);
-RcppExport SEXP _hutilscpp_count_logical(SEXP xSEXP) {
+// do_count_logical
+IntegerVector do_count_logical(LogicalVector x);
+RcppExport SEXP _hutilscpp_do_count_logical(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_logical(x));
+    rcpp_result_gen = Rcpp::wrap(do_count_logical(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_count_logical_long
+DoubleVector do_count_logical_long(LogicalVector x);
+RcppExport SEXP _hutilscpp_do_count_logical_long(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_count_logical_long(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1627,6 +1649,7 @@ RcppExport SEXP do_c_pmax(SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_AnyCharMatch", (DL_FUNC) &_hutilscpp_AnyCharMatch, 3},
+    {"_hutilscpp_bothNaCharacter", (DL_FUNC) &_hutilscpp_bothNaCharacter, 2},
     {"_hutilscpp_AnyWhich_dbl", (DL_FUNC) &_hutilscpp_AnyWhich_dbl, 6},
     {"_hutilscpp_AnyWhich_int", (DL_FUNC) &_hutilscpp_AnyWhich_int, 6},
     {"_hutilscpp_AnyWhichInDbl", (DL_FUNC) &_hutilscpp_AnyWhichInDbl, 2},
@@ -1652,7 +1675,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_and3_na", (DL_FUNC) &_hutilscpp_do_and3_na, 6},
     {"_hutilscpp_do_which2_yr", (DL_FUNC) &_hutilscpp_do_which2_yr, 13},
     {"_hutilscpp_do_which_in", (DL_FUNC) &_hutilscpp_do_which_in, 2},
-    {"_hutilscpp_count_logical", (DL_FUNC) &_hutilscpp_count_logical, 1},
+    {"_hutilscpp_do_count_logical", (DL_FUNC) &_hutilscpp_do_count_logical, 1},
+    {"_hutilscpp_do_count_logical_long", (DL_FUNC) &_hutilscpp_do_count_logical_long, 1},
     {"_hutilscpp_do_in_int", (DL_FUNC) &_hutilscpp_do_in_int, 2},
     {"_hutilscpp_do_par_in", (DL_FUNC) &_hutilscpp_do_par_in, 3},
     {"_hutilscpp_do_par_in_hash_int", (DL_FUNC) &_hutilscpp_do_par_in_hash_int, 3},

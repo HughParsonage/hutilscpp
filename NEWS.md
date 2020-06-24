@@ -6,6 +6,7 @@
 ## New functions:
 * `which_last` for the first index from the last index.
 * `divisible` and `divisible16` for returning divisibility
+* `count_logical` fast tabulation of logical vectors
 
 ## Enhancements:
 * `which_first` accepts argument `use.which.max` for better performance on known short inputs
