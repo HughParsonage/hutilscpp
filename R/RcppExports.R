@@ -121,12 +121,12 @@ do_which_in <- function(x, tbl) {
     .Call(`_hutilscpp_do_which_in`, x, tbl)
 }
 
-do_count_logical <- function(x) {
-    .Call(`_hutilscpp_do_count_logical`, x)
+do_count_logical <- function(x, nThread = 1L) {
+    .Call(`_hutilscpp_do_count_logical`, x, nThread)
 }
 
-do_count_logical_long <- function(x) {
-    .Call(`_hutilscpp_do_count_logical_long`, x)
+do_count_logical_long <- function(x, nThread = 1L) {
+    .Call(`_hutilscpp_do_count_logical_long`, x, nThread)
 }
 
 do_in_int <- function(x, table) {
