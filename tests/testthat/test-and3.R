@@ -145,5 +145,16 @@ test_that("prev segfault", {
   expect_true(all(a))
 })
 
+test_that("and3_na errors", {
+  expect_error(do_and3_na(TRUE, TRUE, FALSE, maxCall = -1), "maxCall")
+  expect_error(do_and3_na(TRUE, c(TRUE, FALSE), c(TRUE, FALSE, NA), maxCall = 1), "lengths")
+})
+
+
+
+
+
+
+
 
 
