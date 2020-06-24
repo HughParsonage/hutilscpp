@@ -21,122 +21,47 @@ LogicalVector do_and3_na(LogicalVector x, LogicalVector y, LogicalVector z,
   if (n == 0) {
     return x;
   }
-  LogicalVector out = no_init(n);
-
-  bool na_becomes_false = na_value == 0;
-  bool na_becomes_true  = na_value > 0;
-  bool na_becomes_na    = na_value < 0;
-
-
-  if (nx == n && ny == n && nz == n) {
-#pragma omp parallel for num_threads(nThread)
-    for (R_xlen_t i = 0; i < n; ++i) {
-      if (na_becomes_false) {
-        out[i] = (x[i] == TRUE) && (y[i] == TRUE) && (z[i] == TRUE);
-      }
-      if (na_becomes_true) {
-        out[i] = !(x[i] == FALSE || y[i] == FALSE || z[i] == FALSE);
-      }
-      if (na_becomes_na) {
-        if (x[i] == NA_LOGICAL || y[i] == NA_LOGICAL || z[i] == NA_LOGICAL) {
-          out[i] = NA_LOGICAL;
-        } else {
-          out[i] = x[i] && y[i] && z[i];
-        }
-      }
+  if (n > nx) {
+    if (ny >= nz) {
+      return do_and3_na(y, x, z, nThread, na_value, --maxCall);
+    } else {
+      return do_and3_na(z, y, x, nThread, na_value, --maxCall);
     }
-    return out;
   }
-  // at this point one of the values is not n (and not zero)
-  // error if any not a good value
+  if (nz > ny) {
+    return do_and3_na(x, z, y, nThread, na_value, --maxCall);
+  }
+
   if ((nx > 1 && nx < n) ||
       (ny > 1 && ny < n) ||
       (nz > 1 && ny < n)) {
     stop("Internal error nx, ny, nz have incompatible/wrong lengths.");
   }
 
-  // ensure lengths are non-increasing
-  if (n > nx) {
-    if (ny >= nz) {
-      return do_and3_na(y, x, z, nThread, --maxCall);
-    } else {
-      return do_and3_na(z, y, x, nThread, --maxCall);
-    }
-  }
-  if (nx > ny) {
-    return do_and3_na(x, z, y, nThread, --maxCall);
-  }
+  LogicalVector out = no_init(n);
 
-  // so they must all have 0, 1, n lengths
-  // we know that nx is maximal so it can be ignored
-  if (ny == 0 && nz == 0) {
-    return x;
-  }
-  if (nz == 0) {
-    // ignore nz
-    return do_and3_na(x, y, y, nThread, --maxCall);
-  }
-
-  if (ny == 1 && nz == 1) {
-    // y or z must be FALSE or NA
-    if (y[0] == FALSE || z[0] == FALSE) {
-      return LogicalVector(n);
-    }
-    if (y[0] == TRUE && z[0] == TRUE) {
-      return x;
-    }
-    if (na_becomes_true) {
-      return x;
-    }
-    if (y[0] == NA_LOGICAL || z[0] == NA_LOGICAL) {
-      for (R_xlen_t i = 0; i < n; ++i) {
-        if (na_becomes_false) {
-          out[i] = FALSE;
-        }
-        if (na_becomes_na) {
-          out[i] = NA_LOGICAL;
-        }
-      }
-      return out;
-    }
-  }
-  if (ny == 1) {
-    if (y[0] == FALSE) {
-      return LogicalVector(n);
-    }
-    if (y[0] == TRUE || na_becomes_true) {
-      return x;
-    }
-    if (y[0] == NA_LOGICAL) {
-      for (R_xlen_t i = 0; i < n; ++i) {
-        if (na_becomes_false) {
-          out[i] = FALSE;
-        }
-        if (na_becomes_na) {
-          out[i] = NA_LOGICAL;
-        }
-      }
-      return out;
-    }
-  }
-
-  // nx = ny
-
-  if (nz == 1) {
-    if (z[0] == TRUE || na_becomes_true) {
-      return do_and3_na(x, y, y, nThread, --maxCall);
-    }
-    if (z[0] == FALSE || na_becomes_false) {
-      return LogicalVector(n);
-    }
-    for (R_xlen_t i = 0; i < n; ++i) {
-      out[i] = NA_LOGICAL;
-    }
-    return out;
-  }
+  bool na_becomes_na    = na_value == 0;
+  bool na_becomes_true  = na_value > 0;
+  bool na_becomes_false = na_value < 0;
 
 
-  stop("Internal error: Should be unreachable.");
+
+  for (R_xlen_t i = 0; i < n; ++i) {
+    R_xlen_t jx = (nx == n) ? i : 0;
+    R_xlen_t jy = (ny == n) ? i : 0;
+    R_xlen_t jz = (nz == n) ? i : 0;
+
+    if (x[jx] == FALSE || y[jy] == FALSE || z[jz] == FALSE) {
+      out[i] = FALSE;
+      continue;
+    }
+    if (x[jx] == TRUE && y[jy] == TRUE && z[jz] == TRUE) {
+      out[i] = TRUE;
+      continue;
+    }
+
+    out[i] = (na_becomes_false) ? FALSE : (na_becomes_true ? TRUE : NA_LOGICAL);
+  }
   return out;
 }
 
