@@ -20,8 +20,3 @@ int AnyCharMatch(CharacterVector x, CharacterVector a, bool opposite = false) {
   return 0;
 }
 
-// [[Rcpp::export]]
-int bothNaCharacter(CharacterVector x, CharacterVector a) {
-  return x[0] == a[0];
-}
-

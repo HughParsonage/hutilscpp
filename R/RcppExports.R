@@ -5,10 +5,6 @@ AnyCharMatch <- function(x, a, opposite = FALSE) {
     .Call(`_hutilscpp_AnyCharMatch`, x, a, opposite)
 }
 
-bothNaCharacter <- function(x, a) {
-    .Call(`_hutilscpp_bothNaCharacter`, x, a)
-}
-
 #' @title Quickly verify (and locate) the existence of a breach.
 #' @name AnyWhich
 #' @description Used when a single instance is likely to occur and be important to detect quickly
