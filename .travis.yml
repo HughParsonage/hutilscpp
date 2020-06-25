@@ -4,6 +4,10 @@ language: R
 sudo: false
 cache: packages
 
+packages:
+  - devtools
+  - covr
+
 after_success:
   - Rscript -e 'devtools::test()'
   - Rscript -e 'covr::codecov()'
