@@ -134,5 +134,23 @@ test_that("Warnings errors", {
                fixed = TRUE)
   expect_error(which2_Year(bc <= 10L, ab >= 3L, Year = 1:10, yr = 0L),
                regexp = "evaluates to")
+
+  expect_error(do_which2_yr(Year = integer(10), yr = 0L, consider_yr = FALSE,
+                            x = integer(7), xa = 1L, eqx = FALSE, gtx = FALSE, ltx = FALSE,
+                            y = integer(11), ya = 2L, eqy = FALSE, gty = FALSE, lty = FALSE),
+               "lengths differ")
+  expect_error(do_which2_yr(Year = integer(11), yr = 0L, consider_yr = FALSE,
+                            x = integer(11), xa = 1L, eqx = FALSE, gtx = TRUE, ltx = TRUE,
+                            y = integer(11), ya = 2L, eqy = FALSE, gty = FALSE, lty = FALSE),
+               "both > and < requested")
+  expect_error(do_which2_yr(Year = integer(11), yr = 0L, consider_yr = FALSE,
+                            x = integer(11), xa = 1L, eqx = FALSE, gtx = FALSE, ltx = FALSE,
+                            y = integer(11), ya = 2L, eqy = FALSE, gty = TRUE, lty = TRUE),
+               "both > and < requested")
+  expect_error(do_which2_yr(Year = integer(10), yr = 0L, consider_yr = TRUE,
+                            x = integer(11), xa = 1L, eqx = FALSE, gtx = FALSE, ltx = FALSE,
+                            y = integer(11), ya = 2L, eqy = FALSE, gty = FALSE, lty = FALSE),
+               "lengths differ (Year)",
+               fixed = TRUE)
 })
 
