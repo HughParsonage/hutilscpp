@@ -9,5 +9,6 @@ packages:
   - covr
 
 after_success:
+  - Rscript -e "install.packages('devtools')"
   - Rscript -e 'devtools::test()'
   - Rscript -e 'covr::codecov()'
