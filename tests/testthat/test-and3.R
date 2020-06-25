@@ -138,6 +138,8 @@ test_that("do_and3_na", {
 
   # default is any NA => FALSE
   DT[seq_len(.N - 1L), expect_false(any(ans1))]
+
+  expect_equal(do_and3_na(logical(0), logical(0), logical(0)), logical(0))
 })
 
 test_that("prev segfault", {

@@ -294,7 +294,6 @@ std::vector<int> do_intersect3_stdint(std::vector<int> x,
 
 // [[Rcpp::export(rng = false)]]
 bool test_intersect3_stdint(int M = 0) {
-
   std::vector<int> a = {1, 2, 3};
   std::vector<int> b = {1, 2, 3};
   std::vector<int> c = {1, 2, 3};
@@ -309,11 +308,13 @@ bool test_intersect3_stdint(int M = 0) {
   }
 
   std::vector<int> d = do_intersect3_stdint(a, b, c);
+  // # nocov start
   for (int i = 0; i < 3; ++i) {
     if (d[i] != a[i]) {
       return false;
     }
   }
+  // # nocov end
   return true;
 }
 
@@ -477,10 +478,12 @@ LogicalVector do_and3_x_op(IntegerVector x, int ox, int x1, int x2,
   R_xlen_t n = (An > 1) ? An : xn;
 
   bool ignore_z = z.length() <= 1 && C.length() <= 1;
+  // # nocov start
   if ((n != y.length() && n != B.length()) ||
       (!ignore_z && n != z.length() && n != C.length())) {
     stop("Internal error: lengths differ.");
   }
+  // # nocov end
   LogicalVector out = no_init(n);
 
   const int x3n = X3.length();
