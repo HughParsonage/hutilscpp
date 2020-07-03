@@ -518,9 +518,9 @@ R_xlen_t do_sum3s_par(IntegerVector x, int ox, int x1, int x2,
                       LogicalVector B,
                       LogicalVector C,
                       int nThread = 1) {
-  int nx = x.length();
-  int nA = A.length();
-  int n = (nx > nA) ? nx : nA;
+  R_xlen_t nx = x.length();
+  R_xlen_t nA = A.length();
+  R_xlen_t n = (nx > nA) ? nx : nA;
   bool useX = x.length() == n;
   bool useY = y.length() == n;
   bool useZ = z.length() == n;
@@ -553,7 +553,7 @@ R_xlen_t do_sum3s_par(IntegerVector x, int ox, int x1, int x2,
   R_xlen_t out = 0;
 
 #pragma omp parallel for num_threads(nThread) reduction(+ : out)
-  for (int i = 0; i < n; ++i) {
+  for (R_xlen_t i = 0; i < n; ++i) {
     bool oi = false;
 
     // 1st expression

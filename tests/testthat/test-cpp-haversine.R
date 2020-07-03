@@ -125,7 +125,12 @@ test_that("is_sorted_ascending", {
 })
 
 test_that("Emptiest quadrants", {
-  skip_on_cran() # due sample
+  skip_if_not_installed("covr")
+  on_cran_not_covr <-
+    !identical(Sys.getenv("NOT_CRAN"), "true") &&
+    !covr::in_covr()
+
+  skip_if(on_cran_not_covr, message = "On CRAN but not COVR")
   library(data.table)
   x <- c(sample(0:49, size = 2000, replace = TRUE), sample(76:100, size = 1000, replace = TRUE))
   y <- seq(0, 100, length.out = length(x))
@@ -271,7 +276,12 @@ test_that("poleInaccessibility error handling", {
 })
 
 test_that("poleInaccessibility3 infinite xmin_new's", {
-  skip_on_cran() # My fault but too sporadic for CRAN
+  skip_if_not_installed("covr")
+  on_cran_not_covr <-
+    !identical(Sys.getenv("NOT_CRAN"), "true") &&
+    !covr::in_covr()
+
+  skip_if(on_cran_not_covr, message = "On CRAN but not COVR") # My fault but too sporadic for CRAN
   # Essentially need to test when a box occurs at the edges
   library(data.table)
   library(hutils) # for implies
