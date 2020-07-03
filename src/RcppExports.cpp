@@ -1112,54 +1112,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// n_casi1
-int n_casi1(IntegerVector x, IntegerVector y);
-RcppExport SEXP _hutilscpp_n_casi1(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(n_casi1(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// n_casi2
-int n_casi2(IntegerVector x, IntegerVector y);
-RcppExport SEXP _hutilscpp_n_casi2(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(n_casi2(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// n_casi3
-int n_casi3(IntegerVector x, IntegerVector y);
-RcppExport SEXP _hutilscpp_n_casi3(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(n_casi3(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// n_casi4
-int n_casi4(IntegerVector x, IntegerVector y);
-RcppExport SEXP _hutilscpp_n_casi4(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(n_casi4(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_pmax0_abs_dbl
 DoubleVector do_pmax0_abs_dbl(DoubleVector x, bool in_place);
 RcppExport SEXP _hutilscpp_do_pmax0_abs_dbl(SEXP xSEXP, SEXP in_placeSEXP) {
@@ -1484,18 +1436,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// seqN
-IntegerVector seqN(IntegerVector x, IntegerVector y, int m);
-RcppExport SEXP _hutilscpp_seqN(SEXP xSEXP, SEXP ySEXP, SEXP mSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type m(mSEXP);
-    rcpp_result_gen = Rcpp::wrap(seqN(x, y, m));
-    return rcpp_result_gen;
-END_RCPP
-}
 // squishn
 NumericVector squishn(NumericVector x, double a, double b, bool in_place);
 RcppExport SEXP _hutilscpp_squishn(SEXP xSEXP, SEXP aSEXP, SEXP bSEXP, SEXP in_placeSEXP) {
@@ -1729,10 +1669,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which3", (DL_FUNC) &_hutilscpp_do_which3, 7},
     {"_hutilscpp_do_which3_mem", (DL_FUNC) &_hutilscpp_do_which3_mem, 4},
     {"_hutilscpp_diagnose_omp", (DL_FUNC) &_hutilscpp_diagnose_omp, 5},
-    {"_hutilscpp_n_casi1", (DL_FUNC) &_hutilscpp_n_casi1, 2},
-    {"_hutilscpp_n_casi2", (DL_FUNC) &_hutilscpp_n_casi2, 2},
-    {"_hutilscpp_n_casi3", (DL_FUNC) &_hutilscpp_n_casi3, 2},
-    {"_hutilscpp_n_casi4", (DL_FUNC) &_hutilscpp_n_casi4, 2},
     {"_hutilscpp_do_pmax0_abs_dbl", (DL_FUNC) &_hutilscpp_do_pmax0_abs_dbl, 2},
     {"_hutilscpp_do_pmin0_abs_dbl", (DL_FUNC) &_hutilscpp_do_pmin0_abs_dbl, 2},
     {"_hutilscpp_do_pmax0_abs_int", (DL_FUNC) &_hutilscpp_do_pmax0_abs_int, 2},
@@ -1759,7 +1695,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_pmin0_int", (DL_FUNC) &_hutilscpp_do_pmin0_int, 2},
     {"_hutilscpp_do_pminV_dbl", (DL_FUNC) &_hutilscpp_do_pminV_dbl, 3},
     {"_hutilscpp_do_pminV_int", (DL_FUNC) &_hutilscpp_do_pminV_int, 3},
-    {"_hutilscpp_seqN", (DL_FUNC) &_hutilscpp_seqN, 3},
     {"_hutilscpp_squishn", (DL_FUNC) &_hutilscpp_squishn, 4},
     {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 4},
     {"_hutilscpp_sum_isna_int", (DL_FUNC) &_hutilscpp_sum_isna_int, 1},

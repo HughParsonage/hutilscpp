@@ -1,21 +1,28 @@
-test_that("or3s works", {
-  expect_equal(2 * 2, 4)
+test_that("A in len>100 ", {
+  A <-
+    c(-945028649L, -705457251L, 807204080L, 1708708214L, -885957403L,
+      1862209884L, 1740762002L, 1546012157L, -1233491410L, 1256036667L,
+      1009745233L, -815497191L, 137228285L, 2012907335L, -314954938L,
+      -1234120580L, 2138414482L, 2089828880L, -1494606089L, 1669541061L,
+      -1635694586L, 913293496L, 657757461L)
+  A <- rep_len(A, 101)
+  B <- c(-705457251L, 1:1000)
+  D <- rep(TRUE, length(B))
+  E <- rep(TRUE, length(B))
+
+  bor3 <- function(x, y, z, ...) if (missing(..1)) ((x | y) | z) else bor3(x | y, z, ...)
+  expect_equal(or3s(B %in% A, D, E),
+               bor3(B %in% A, D, E))
+  expect_equal(or3s(D, B %in% A, D, E),
+               bor3(D, B %in% A, D, E))
+  expect_equal(or3s(D, E, B %in% A, D, E),
+               bor3(D, E, B %in% A, D, E))
+  expect_equal(or3s(D, E, E, B %in% A, D, E),
+               bor3(D, E, E, B %in% A, D, E))
+  expect_equal(or3s(D, E, E, B %in% A, !D, !E),
+               bor3(D, E, E, B %in% A, !D, !E))
+
 })
-
-
-# 
-# all_vars <- unique(c(DT[["lhss"]], letters))
-# for (i in seq_along(all_vars)) {
-#   cat(all_vars[i], "\t<- generate_int()\n", sep = "")
-# }
-# for (i in seq_along(all_vars)) {
-#   # Want a small sample for logical to enable all TRUE and all FALSE to take place
-#   cat(paste0("logi_", all_vars[i]), "\t<- generate_lgl()\n", sep = "")
-# }
-# 
-# for (i in seq_len(nrow(DT))) {
-#   cat("\n", DT[["the_expr"]][i], "\n", file = "temp.R", append = TRUE, sep = "")
-# }
 
 
 test_that("or3s works", {
@@ -36,7 +43,7 @@ test_that("or3s works", {
     }
     (exprA | exprB) | exprC
   }
-  
+
 
   library(magrittr)
   #
@@ -57,8 +64,8 @@ test_that("or3s works", {
                           }),
            paste(lhs, op, val))
   }
-  
-  
+
+
   DT <-
     CJ(Op1 = c("", "!", "!=", "==", ">=", "<=", ">", "<", "%in%", "%between%"),
        Op2 = c("", "!", "!=", "==", ">=", "<=", ">", "<", "%in%", "%between%"),
@@ -68,12 +75,12 @@ test_that("or3s works", {
        e3 = c(FALSE, TRUE),
        val = c("0L", "1L", "9L")) %>%
     .[implies(In_As_Between, Op1 == "%in%" | Op2 == "%in%" | Op3 == "%in%")]
-  
+
   i2letters <- function(I) {
     out <- character(length(I))
-    
+
     M <- matrix(0L, byrow = FALSE, ncol = ceiling(log(length(I), 26L)), nrow = length(I))
-    
+
     M[, 1] <- rep_len(1:26, length(I))
     for (j in 2:ncol(M)) {
       eachj <- 26 ^ (j - 1L)
@@ -82,20 +89,20 @@ test_that("or3s works", {
       }
       M[, j] <- rep_len(rep(0:25, each = eachj), length(I))
     }
-    
+
     M2 <- matrix("", ncol = ncol(M), nrow = nrow(M))
-    
+
     for (j in 1:ncol(M2)) {
       M2[, ncol(M2) - j + 1] <- hutils::if_else(M[, j] > 0L, c("", letters)[M[, j] + 1L], "")
     }
-    
+
     for (i in seq_along(out)) {
       out[i] <- paste0(M2[i, ], collapse = "")
     }
     out
-    
+
   }
-  
+
   DT[, ii := .I]
   DT[, lhs1 := i2letters(ii)]
   DT[lhs1 %in% c("for", "if", "else", "repeat", "in", "next", "break"), lhs1 := toupper(lhs1)]
@@ -106,7 +113,7 @@ test_that("or3s works", {
   DT[, expr_one   := gen_one_expr(lhs1, Op1, val = val, In_As_Between = In_As_Between), by = "ii"]
   DT[, expr_two   := gen_one_expr(lhs2, Op2, val = val, In_As_Between = In_As_Between), by = "ii"]
   DT[, expr_three := gen_one_expr(lhs3, Op3, val = val, In_As_Between = In_As_Between), by = "ii"]
-  
+
   DT[, the_expr := paste0("exp_eq(",
                           paste0("or3s(",
                                  expr_one, ", ",
@@ -118,19 +125,19 @@ test_that("or3s works", {
                                  if_else(e2, expr_two, ""), ", ",
                                  if_else(e3, expr_three, ""), ")"),
                           ")")]
-  
+
   generate_int <- function() rep_len(samp(-15:101, size = 99), 231)
   generate_lgl <- function() rep_len(hutils::samp(c(TRUE, FALSE), size = 20, loud = FALSE), 231)
-  
+
   for (tmp__0 in unique(c(DT[["lhs1"]], DT[["lhs2"]], DT[["lhs3"]], letters))) {
       assign(paste0("logi_", tmp__0), value = generate_lgl())
       assign(tmp__0, value = generate_int())
   }
-  
+
   # cat(DT[["the_expr"]], sep = "\n", file = "temp.R")
-  
+
   exp_eq <- testthat::expect_equal
-  
+
   exp_eq(or3s(logi_a, , ),
          bor3(logi_a, , ))
   exp_eq(or3s(logi_b, , ),
@@ -30635,34 +30642,34 @@ test_that("or3s works", {
          bor3(vno >= 1L, y >= 1L, t >= 1L))
   exp_eq(or3s(vnp >= 9L, d >= 9L, v >= 9L),
          bor3(vnp >= 9L, d >= 9L, v >= 9L))
-  
+
 })
 
 
 test_that("or3s ... and parent frames", {
-  
+
   # Confusing names in parent environment
   x <- integer(0)
   y <- integer(0)
-  
+
   exprA <- c(1:10)
   exprB <- 1:10 + 5L
   exprC <- 1:10 + 1L
-  
+
   or <- `|`
   or3 <- function(i, j, k) i | j | k
-  
+
   sexprA <- 10L
-  
-  expect_equal(or3s(exprA >= 1L, exprB >= 1L, exprC >= 1L, 
+
+  expect_equal(or3s(exprA >= 1L, exprB >= 1L, exprC >= 1L,
                     exprA <= 6L, exprB <= 7L, exprC <= sexprA),
-               or(or3(exprA >= 1L, exprB >= 1L, exprC >= 1L), 
+               or(or3(exprA >= 1L, exprB >= 1L, exprC >= 1L),
                   or3(exprA <= 6L, exprB <= 7L, exprC <= 10L)))
-  
-  expect_equal(or3s(exprA >= 1L, exprB >= 1L, exprC >= 1L, 
+
+  expect_equal(or3s(exprA >= 1L, exprB >= 1L, exprC >= 1L,
                     exprA <= 6L, exprB <= 7L, exprC <= sexprA,
                     exprA <= 6L, exprB <= 7L, exprC <= sexprA),
-               or(or3(exprA >= 1L, exprB >= 1L, exprC >= 1L), 
+               or(or3(exprA >= 1L, exprB >= 1L, exprC >= 1L),
                   or3(exprA <= 6L, exprB <= 7L, exprC <= 10L)))
-  
+
 })

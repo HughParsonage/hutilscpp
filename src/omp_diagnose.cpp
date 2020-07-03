@@ -8,6 +8,8 @@ using namespace Rcpp;
 // whether to warn
 // messages
 
+// # nocov start
+
 // [[Rcpp::export(rng = false)]]
 List diagnose_omp(int threads_requested,
                   String msg_no_openmp,
@@ -49,48 +51,5 @@ n_procs = omp_get_num_procs();
   return List::create(True, True, out);
 }
 
-// [[Rcpp::export]]
-int n_casi1(IntegerVector x, IntegerVector y) {
-  int N = x.length();
-  int n_cases = 0;
-  for (int i = 0; i < N; ++i) {
-    n_cases += y[i] == 129 && x[i] > 0;
-  }
-  return n_cases;
-}
+// # nocov end
 
-// [[Rcpp::export]]
-int n_casi2(IntegerVector x, IntegerVector y) {
-  int N = x.length();
-  int n_cases = 0;
-  for (int i = 0; i < N; ++i) {
-    n_cases += (x[i] > 0) & (y[i] == 129);
-  }
-  return n_cases;
-}
-
-// [[Rcpp::export]]
-int n_casi3(IntegerVector x, IntegerVector y) {
-  int N = x.length();
-  int n_cases = 0;
-  for (int i = 0; i < N; ++i) {
-    if (y[i] == 129 && x[i] > 0) {
-      n_cases += 1;
-    }
-  }
-  return n_cases;
-}
-
-// [[Rcpp::export]]
-int n_casi4(IntegerVector x, IntegerVector y) {
-  int N = x.length();
-  int n_cases = 0;
-  for (int i = 0; i < N; ++i) {
-    bool xa = x[i] > 0;
-    bool xb = y[i] == 129;
-    if (xa & xb) {
-      n_cases += 1;
-    }
-  }
-  return n_cases;
-}

@@ -34,17 +34,17 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   bool C_opposite = C_lgl && oz == 1;
 
   if (useX && A_lgl) {
-    stop("Internal error: useX && A_lgl");
+    stop("Internal error: useX && A_lgl"); // # nocov
   }
   if (useY && B_lgl) {
-    stop("Internal error: useY && B_lgl");
+    stop("Internal error: useY && B_lgl"); // # nocov
   }
   if (useZ && C_lgl) {
-    stop("Internal error: useZ && C_lgl");
+    stop("Internal error: useZ && C_lgl"); // # nocov
   }
 
   if (!e1 && !e2 && !e3) {
-    return LogicalVector(n);
+    return LogicalVector(n); // # nocov
   }
 
   LogicalVector out = no_init(n);
@@ -542,13 +542,13 @@ int sum_or3s_par(IntegerVector x, int ox, int x1, int x2,
   bool C_opposite = C_lgl && oz == 1;
 
   if (useX && A_lgl) {
-    stop("Internal error: useX && A_lgl");
+    stop("Internal error: useX && A_lgl"); // # nocov
   }
   if (useY && B_lgl) {
-    stop("Internal error: useY && B_lgl");
+    stop("Internal error: useY && B_lgl"); // # nocov
   }
   if (useZ && C_lgl) {
-    stop("Internal error: useZ && C_lgl");
+    stop("Internal error: useZ && C_lgl"); // # nocov
   }
 
 

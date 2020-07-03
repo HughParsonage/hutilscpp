@@ -337,22 +337,6 @@ diagnose_omp <- function(threads_requested, msg_no_openmp, msg_threads_neg, msg_
     .Call(`_hutilscpp_diagnose_omp`, threads_requested, msg_no_openmp, msg_threads_neg, msg_unknown_issues, msg_too_many_threads)
 }
 
-n_casi1 <- function(x, y) {
-    .Call(`_hutilscpp_n_casi1`, x, y)
-}
-
-n_casi2 <- function(x, y) {
-    .Call(`_hutilscpp_n_casi2`, x, y)
-}
-
-n_casi3 <- function(x, y) {
-    .Call(`_hutilscpp_n_casi3`, x, y)
-}
-
-n_casi4 <- function(x, y) {
-    .Call(`_hutilscpp_n_casi4`, x, y)
-}
-
 do_pmax0_abs_dbl <- function(x, in_place = FALSE) {
     .Call(`_hutilscpp_do_pmax0_abs_dbl`, x, in_place)
 }
@@ -508,10 +492,6 @@ do_pminV_dbl <- function(x, y, in_place = FALSE) {
 #' @rdname do_pminV
 do_pminV_int <- function(x, y, in_place = FALSE) {
     .Call(`_hutilscpp_do_pminV_int`, x, y, in_place)
-}
-
-seqN <- function(x, y, m = 1L) {
-    .Call(`_hutilscpp_seqN`, x, y, m)
 }
 
 squishn <- function(x, a, b, in_place = FALSE) {
