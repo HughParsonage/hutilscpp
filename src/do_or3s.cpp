@@ -511,12 +511,13 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 }
 
 // [[Rcpp::export]]
-int sum_or3s_par(IntegerVector x, int ox, int x1, int x2,
-                 IntegerVector y, int oy, int y1, int y2,
-                 IntegerVector z, int oz, int z1, int z2,
-                 LogicalVector A,
-                 LogicalVector B,
-                 LogicalVector C)  {
+int do_sum_or3s_par(IntegerVector x, int ox, int x1, int x2,
+                    IntegerVector y, int oy, int y1, int y2,
+                    IntegerVector z, int oz, int z1, int z2,
+                    LogicalVector A,
+                    LogicalVector B,
+                    LogicalVector C,
+                    int nThread)  {
   int o = 0;
 
   int nx = x.length();
@@ -552,7 +553,7 @@ int sum_or3s_par(IntegerVector x, int ox, int x1, int x2,
   }
 
 
-#pragma omp parallel for reduction(+:o)
+#pragma omp parallel for num_threads(nThread) reduction(+:o)
   for (int i = 0; i < n; ++i) {
     bool oi = false;
     // 1st expression
