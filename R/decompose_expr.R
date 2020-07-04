@@ -1,8 +1,7 @@
 
-decompose_expr <- function(exprA, exprB, exprC,
-                           sexprA = substitute(exprA),
-                           sexprB = substitute(exprB),
-                           sexprC = substitute(exprC),
+decompose_expr <- function(sexprA,
+                           sexprB,
+                           sexprC,
                            .parent_nframes = 1L) {
   X3 <- Y3 <- Z3 <- integer(0)
   A <- B <- C <- logical(0)
@@ -44,13 +43,13 @@ decompose_expr <- function(exprA, exprB, exprC,
       x1 <- x2 <- attr(isBinaryA, "rhs_eval")
     }
 
-  } else if (is_lgl_negation(sexprA, exprA)) {
+  } else if (is_lgl_negation(sexprA)) {
     A <- eval.parent(sexprA[[2]], n = .parent_nframes)
     ox <- 1L
   } else {
-    A <- exprA
+    A <- eval.parent(sexprA, n = .parent_nframes)
   }
-  if (!missing(exprB)) {
+  if (!missing(sexprB)) {
     isBinaryB <- is_binary_sexp(sexprB, .parent_nframes = .parent_nframes + 1L)
     if (isBinaryB) {
       y <- eval.parent(sexprB[[2]], n = .parent_nframes)
@@ -81,16 +80,16 @@ decompose_expr <- function(exprA, exprB, exprC,
         y1 <- y2 <- rhs_eval
       }
 
-    } else if (is_lgl_negation(sexprB, exprB)) {
+    } else if (is_lgl_negation(sexprB)) {
       B <- eval.parent(sexprB[[2]], n = .parent_nframes)
       oy <- 1L
     } else {
-      B <- exprB
+      B <- eval.parent(sexprB, n = .parent_nframes)
     }
   }
 
 
-  if (!missing(exprC)) {
+  if (!missing(sexprC)) {
     isBinaryC <- is_binary_sexp(sexprC, .parent_nframes = .parent_nframes + 1L)
 
     if (isBinaryC) {
@@ -120,11 +119,11 @@ decompose_expr <- function(exprA, exprB, exprC,
         z1 <- z2 <- rhs_eval
       }
 
-    } else if (is_lgl_negation(sexprC, exprC)) {
+    } else if (is_lgl_negation(sexprC)) {
       C <- eval.parent(sexprC[[2]], n = .parent_nframes)
       oz <- 1L
     } else {
-      C <- exprC
+      C <- eval.parent(sexprC, n = .parent_nframes)
     }
   }
   list(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C)
