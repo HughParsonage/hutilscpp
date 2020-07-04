@@ -153,8 +153,8 @@ do_or3_par <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom
     .Call(`_hutilscpp_do_or3_par`, x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread)
 }
 
-sum_or3s_par <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C) {
-    .Call(`_hutilscpp_sum_or3s_par`, x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C)
+do_sum_or3s_par <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nThread) {
+    .Call(`_hutilscpp_do_sum_or3s_par`, x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nThread)
 }
 
 do_range_dbl_simple <- function(x) {

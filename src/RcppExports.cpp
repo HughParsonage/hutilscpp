@@ -512,9 +512,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// sum_or3s_par
-int sum_or3s_par(IntegerVector x, int ox, int x1, int x2, IntegerVector y, int oy, int y1, int y2, IntegerVector z, int oz, int z1, int z2, LogicalVector A, LogicalVector B, LogicalVector C);
-RcppExport SEXP _hutilscpp_sum_or3s_par(SEXP xSEXP, SEXP oxSEXP, SEXP x1SEXP, SEXP x2SEXP, SEXP ySEXP, SEXP oySEXP, SEXP y1SEXP, SEXP y2SEXP, SEXP zSEXP, SEXP ozSEXP, SEXP z1SEXP, SEXP z2SEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP) {
+// do_sum_or3s_par
+int do_sum_or3s_par(IntegerVector x, int ox, int x1, int x2, IntegerVector y, int oy, int y1, int y2, IntegerVector z, int oz, int z1, int z2, LogicalVector A, LogicalVector B, LogicalVector C, int nThread);
+RcppExport SEXP _hutilscpp_do_sum_or3s_par(SEXP xSEXP, SEXP oxSEXP, SEXP x1SEXP, SEXP x2SEXP, SEXP ySEXP, SEXP oySEXP, SEXP y1SEXP, SEXP y2SEXP, SEXP zSEXP, SEXP ozSEXP, SEXP z1SEXP, SEXP z2SEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP nThreadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -533,7 +533,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< LogicalVector >::type A(ASEXP);
     Rcpp::traits::input_parameter< LogicalVector >::type B(BSEXP);
     Rcpp::traits::input_parameter< LogicalVector >::type C(CSEXP);
-    rcpp_result_gen = Rcpp::wrap(sum_or3s_par(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C));
+    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_sum_or3s_par(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nThread));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1623,7 +1624,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_and3_x_op", (DL_FUNC) &_hutilscpp_do_and3_x_op, 19},
     {"_hutilscpp_do_op_along", (DL_FUNC) &_hutilscpp_do_op_along, 4},
     {"_hutilscpp_do_or3_par", (DL_FUNC) &_hutilscpp_do_or3_par, 17},
-    {"_hutilscpp_sum_or3s_par", (DL_FUNC) &_hutilscpp_sum_or3s_par, 15},
+    {"_hutilscpp_do_sum_or3s_par", (DL_FUNC) &_hutilscpp_do_sum_or3s_par, 16},
     {"_hutilscpp_do_range_dbl_simple", (DL_FUNC) &_hutilscpp_do_range_dbl_simple, 1},
     {"_hutilscpp_do_anyNonfinite", (DL_FUNC) &_hutilscpp_do_anyNonfinite, 1},
     {"_hutilscpp_do_which_first", (DL_FUNC) &_hutilscpp_do_which_first, 1},
