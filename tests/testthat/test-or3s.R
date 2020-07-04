@@ -21,6 +21,8 @@ test_that("A in len>100 ", {
                bor3(D, E, E, B %in% A, D, E))
   expect_equal(or3s(D, E, E, B %in% A, !D, !E),
                bor3(D, E, E, B %in% A, !D, !E))
+  z <- function() or3s(D, E, B %in% A)
+  expect_equal(z(), bor3(D, E, B %in% A))
 
 })
 
