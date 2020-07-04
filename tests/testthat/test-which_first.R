@@ -510,5 +510,8 @@ test_that("which_first(NA . NA)", {
   expect_equal(which_first(x != ""), 1L)
 })
 
-
+test_that("which_first not trues", {
+  expect_equal(which_first(c(NA, NA)), 0L)
+  expect_equal(which_last(c(NA, NA)), 0L)
+})
 
