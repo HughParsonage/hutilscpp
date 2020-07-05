@@ -2,8 +2,12 @@
 decompose_expr <- function(sexprA,
                            sexprB,
                            sexprC,
-                           .parent_nframes = 1L) {
-  eval.parent(substitute({
+                           missingA,
+                           missingB,
+                           missingC,
+                           .parent_nframes = 1L,
+                           .env,
+                           nThread = 1L) {
   X3 <- Y3 <- Z3 <- integer(0)
   A <- B <- C <- logical(0)
   x <- y <- z <- integer(0)
@@ -11,13 +15,48 @@ decompose_expr <- function(sexprA,
   x1 <- y1 <- z1 <- 0L
   x2 <- y2 <- z2 <- 0L
 
+  is_binary_sexp <- function(sexprA, .env) {
+    # e.g.
+    #      x > -1L
+    isBinary <-
+      is.call(sexprA) &&
+      length(sexprA) == 3L &&
+      (M <- op2M(as.character(sexprA[[1L]]))) &&
+      is.name(lhs <- sexprA[[2L]])
+
+
+    if (isBinary) {
+      # c(1, 2)  gives rhs a language object, but rhs_eval is length-2 numeric
+      # lhs <- sexprA[[2]]
+      rhs <- sexprA[[3]]
+
+      # lhs_eval <- eval.parent(lhs)
+
+
+      attr(isBinary, "M") <- M
+      attr(isBinary, "lhs") <- lhs
+      attr(isBinary, "rhs") <- rhs
+      attr(isBinary, "rhs_eval") <- rhs_eval <- eval(rhs, envir = .env)
+
+      if (OR(is.numeric(rhs),
+             AND(is.numeric(rhs_eval),
+                 OR(length(rhs_eval) == 1L,
+                    OR(M == op2M("%between%") && length(rhs_eval) == 2L,
+                       M == op2M("%in%")))))) {
+        attr(isBinary, "rhs_eval") <- rhs_eval
+        return(isBinary)
+      }
+    }
+    FALSE
+  }
+
   is_seq <- function(A) {
     identical(A, seq.int(A[1L], along.with = A))
   }
 
-  isBinaryA <- is_binary_sexp(substitute(sexprA), .parent_nframes = .parent_nframes + 1L)
+  isBinaryA <- is_binary_sexp(sexprA, .env)
   if (isBinaryA) {
-    x <- eval.parent(sexprA[[2]], n = .parent_nframes)
+    x <- eval(sexprA[[2]], envir = .env)
     ox <- attr(isBinaryA, "M")
     rhs_eval <- attr(isBinaryA, "rhs_eval")
     if (ox == op2M("%between%")) { # between so two elements
@@ -45,15 +84,15 @@ decompose_expr <- function(sexprA,
     }
 
   } else if (is_lgl_negation(sexprA)) {
-    A <- eval.parent(sexprA[[2]], n = .parent_nframes)
+    A <- eval(sexprA[[2]], envir = .env)
     ox <- 1L
   } else {
-    A <- eval.parent(sexprA, n = .parent_nframes)
+    A <- eval(sexprA, envir = .env)
   }
-  if (!missing(sexprB)) {
-    isBinaryB <- is_binary_sexp(sexprB, .parent_nframes = .parent_nframes + 1L)
+  if (!missingB) {
+    isBinaryB <- is_binary_sexp(sexprB, .env)
     if (isBinaryB) {
-      y <- eval.parent(sexprB[[2]], n = .parent_nframes)
+      y <- eval(sexprB[[2]], envir = .env)
       oy <- attr(isBinaryB, "M")
       rhs_eval <- attr(isBinaryB, "rhs_eval")
       if (oy == op2M("%between%")) { # between so two elements
@@ -82,19 +121,19 @@ decompose_expr <- function(sexprA,
       }
 
     } else if (is_lgl_negation(sexprB)) {
-      B <- eval.parent(sexprB[[2]], n = .parent_nframes)
+      B <- eval(sexprB[[2]], envir = .env)
       oy <- 1L
     } else {
-      B <- eval.parent(sexprB, n = .parent_nframes)
+      B <- eval(sexprB, envir = .env)
     }
   }
 
 
-  if (!missing(sexprC)) {
-    isBinaryC <- is_binary_sexp(sexprC, .parent_nframes = .parent_nframes + 1L)
+  if (!missingC) {
+    isBinaryC <- is_binary_sexp(sexprC, .env)
 
     if (isBinaryC) {
-      z <- eval.parent(sexprC[[2]], n = .parent_nframes)
+      z <- eval(sexprC[[2]], envir = .env)
       oz <- attr(isBinaryC, "M")
       rhs_eval <- attr(isBinaryC, "rhs_eval")
       if (oz == op2M("%between%")) { # between so two elements
@@ -121,15 +160,18 @@ decompose_expr <- function(sexprA,
       }
 
     } else if (is_lgl_negation(sexprC)) {
-      C <- eval.parent(sexprC[[2]], n = .parent_nframes)
+      C <- eval(sexprC[[2]], envir = .env)
       oz <- 1L
     } else {
-      C <- eval.parent(sexprC, n = .parent_nframes)
+      C <- eval(sexprC, envir = .env)
     }
   }
   list(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C)
-  }))
 }
+
+
+
+
 
 
 
