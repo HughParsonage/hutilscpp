@@ -2,13 +2,19 @@
 
 
 sum_and3s <- function(exprA, exprB, exprC, ...,
-                      .parent_nframes = 1L,
-                      nThread = getOption("hutilscpp.nThread", 1L)) {
-
+                      nThread = getOption("hutilscpp.nThread", 1L),
+                      .env = parent.frame()) {
   sexprA <- substitute(exprA)
   sexprB <- substitute(exprB)
   sexprC <- substitute(exprC)
-  d <- decompose_expr(sexprA, sexprB, sexprC, .parent_nframes = .parent_nframes)
+  missingA <- missing(exprA)
+  missingB <- missing(exprB)
+  missingC <- missing(exprC)
+
+  d <- decompose_expr(sexprA, sexprB, sexprC,
+                      missingA, missingB, missingC,
+                      .env = .env,
+                      nThread = nThread)
 
   do_sum3s_par(
     d[[1]],
@@ -31,17 +37,20 @@ sum_and3s <- function(exprA, exprB, exprC, ...,
 }
 
 sum_or3s <- function(exprA, exprB, exprC, ...,
-                     .parent_nframes = 1L,
+                     .env = parent.frame(),
                      nThread = getOption("hutilscpp.nThread", 1L)) {
+  sexprA <- substitute(exprA)
+  sexprB <- substitute(exprB)
+  sexprC <- substitute(exprC)
+  missingA <- missing(exprA)
+  missingB <- missing(exprB)
+  missingC <- missing(exprC)
 
+  d <- decompose_expr(sexprA, sexprB, sexprC,
+                      missingA, missingB, missingC,
+                      .env = .env,
+                      nThread = nThread)
 
-  d <-
-    eval.parent(substitute({
-      sexprA <- substitute(exprA)
-      sexprB <- substitute(exprB)
-      sexprC <- substitute(exprC)
-      decompose_expr(sexprA, sexprB, sexprC, .parent_nframes = .parent_nframes)
-    }))
   do_sum_or3s_par(
     d[[1]],
     d[[2]],

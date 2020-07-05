@@ -20,5 +20,4 @@ test_that("sum_and3s works", {
                DT[, sum_band3(A %in% c(5L, 5L, 6L), B == 2L, Z >= 1L)])
 
 
-
 })
