@@ -3,6 +3,7 @@ decompose_expr <- function(sexprA,
                            sexprB,
                            sexprC,
                            .parent_nframes = 1L) {
+  eval.parent(substitute({
   X3 <- Y3 <- Z3 <- integer(0)
   A <- B <- C <- logical(0)
   x <- y <- z <- integer(0)
@@ -14,7 +15,7 @@ decompose_expr <- function(sexprA,
     identical(A, seq.int(A[1L], along.with = A))
   }
 
-  isBinaryA <- is_binary_sexp(sexprA, .parent_nframes = .parent_nframes + 1L)
+  isBinaryA <- is_binary_sexp(substitute(sexprA), .parent_nframes = .parent_nframes + 1L)
   if (isBinaryA) {
     x <- eval.parent(sexprA[[2]], n = .parent_nframes)
     ox <- attr(isBinaryA, "M")
@@ -127,6 +128,7 @@ decompose_expr <- function(sexprA,
     }
   }
   list(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C)
+  }))
 }
 
 

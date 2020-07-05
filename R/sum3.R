@@ -5,14 +5,10 @@ sum_and3s <- function(exprA, exprB, exprC, ...,
                       .parent_nframes = 1L,
                       nThread = getOption("hutilscpp.nThread", 1L)) {
 
-
-  d <-
-    eval.parent(substitute({
-      sexprA <- substitute(exprA)
-      sexprB <- substitute(exprB)
-      sexprC <- substitute(exprC)
-      decompose_expr(sexprA, sexprB, sexprC, .parent_nframes = .parent_nframes)
-    }))
+  sexprA <- substitute(exprA)
+  sexprB <- substitute(exprB)
+  sexprC <- substitute(exprC)
+  d <- decompose_expr(sexprA, sexprB, sexprC, .parent_nframes = .parent_nframes)
 
   do_sum3s_par(
     d[[1]],
