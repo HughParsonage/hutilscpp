@@ -3,32 +3,28 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 LogicalVector do_are_even(IntegerVector x, DoubleVector y, int wb = 0) {
-  R_xlen_t N = x.size();
+  int N = x.size();
   int M = y.size();
   const bool is_int = N > 0;
-  LogicalVector out(is_int ? N : M);
+  LogicalVector out = no_init(is_int ? N : M);
   int wc = (wb > 1) ? (wb - 1) : N;
 
   if (is_int) {
-    for (R_xlen_t i = 0; i < N; ++i) {
-      if (i >= wc && !R_finite(x[i])) {
+    for (int i = 0; i < N; ++i) {
+      if (x[i] == NA_INTEGER) {
         out[i] = NA_LOGICAL;
         continue;
       }
-      if ((x[i] % 2) == 0) {
-        out[i] = true;
-      }
+      out[i] = !(x[i] % 2);
     }
   } else {
-    for (R_xlen_t i = 0; i < M; ++i) {
-      int yi = y[i];
-      if (i >= wc && !R_finite(yi)) {
+    for (int i = 0; i < M; ++i) {
+      if (i >= wc && !R_finite(y[i])) {
         out[i] = NA_LOGICAL;
         continue;
       }
-      if ((yi % 2) == 0) {
-        out[i] = true;
-      }
+      int yi = y[i];
+      out[i] = !(yi % 2);
     }
   }
   return out;

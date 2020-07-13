@@ -10,7 +10,8 @@ are_even(x, check_integerish = TRUE)
 which_are_even(x, check_integerish = TRUE)
 }
 \arguments{
-\item{x}{An integer vector. Double vectors may also be used.}
+\item{x}{An integer vector. Double vectors may also be used. Long vectors are
+not supported.}
 
 \item{check_integerish}{(logical, default: \code{TRUE}) Should the
 values in \code{x} be checked for non-integer values
