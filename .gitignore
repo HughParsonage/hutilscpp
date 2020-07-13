@@ -6,3 +6,4 @@ data-raw/y.rds
 .RData
 .Ruserdata
 data-raw/
+.Renviron
