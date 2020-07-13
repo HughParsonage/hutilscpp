@@ -18,4 +18,6 @@ test_that("sum_or3s works", {
   DT <- data.table(A = 1:100, B = 2L, Z = 3L)
   expect_equal(DT[, sum_or3s(A %in% c(5L, 5L, 6L), B == 2L, Z >= 1L)],
                DT[, sum_bor3(A %in% c(5L, 5L, 6L), B == 2L, Z >= 1L)])
+  expect_equal(DT[, sum_or3s(A %in% c(5L, 5L, 6L), B != 2L, Z >= 1L)],
+               DT[, sum_bor3(A %in% c(5L, 5L, 6L), B != 2L, Z >= 1L)])
 })
