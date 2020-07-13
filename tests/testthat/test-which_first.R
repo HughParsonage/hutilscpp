@@ -515,3 +515,13 @@ test_that("which_first not trues", {
   expect_equal(which_last(c(NA, NA)), 0L)
 })
 
+test_that("which_first_quick", {
+  x <- 11:20
+  expect_equal(which_first(x == 13L, use.which.max = TRUE), 3L)
+})
+
+test_that("which_first_lgl_NA", {
+  x <- c(TRUE, NA, TRUE, FALSE)
+  expect_equal(which_first(x %in% c(FALSE, NA)), 2L)
+})
+
