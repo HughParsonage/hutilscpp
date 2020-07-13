@@ -1,5 +1,6 @@
 #' Are even
-#' @param x An integer vector. Double vectors may also be used.
+#' @param x An integer vector. Double vectors may also be used. Long vectors are
+#' not supported.
 #' @param check_integerish (logical, default: \code{TRUE}) Should the
 #' values in \code{x} be checked for non-integer values
 #' if \code{x} is a double vector. If \code{TRUE}
@@ -20,6 +21,9 @@
 
 are_even <- function(x, check_integerish = TRUE) {
   wb <- 0L
+  if (length(x) > .Machine$integer.max) {
+    stop("`length(x) = ", length(x), "` but long vectors are not supported.")  # nocov
+  }
   if (is.integer(x)) {
     return(do_are_even(x, double(0), wb))
   }

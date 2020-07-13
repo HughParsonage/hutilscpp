@@ -165,3 +165,7 @@ test_that("in-place", {
 })
 
 
+test_that("pmax0 bitwise", {
+
+})
+
