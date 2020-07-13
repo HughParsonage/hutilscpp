@@ -6,3 +6,4 @@
 ^\.travis\.yml$
 ^hutilscpp\.Rproj$
 ^\.Rproj\.user$
+^\.github/workflows$
