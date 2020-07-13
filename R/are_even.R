@@ -43,7 +43,7 @@ are_even <- function(x, check_integerish = TRUE) {
 #' @rdname are_even
 which_are_even <- function(x, check_integerish = TRUE) {
   if (length(x) >= .Machine$integer.max) {
-    stop("`which_are_even() not implemented for long `x`.")
+    stop("`which_are_even() not implemented for long `x`.") # nocov
   }
   wb <- 0L
   if (is.integer(x)) {
