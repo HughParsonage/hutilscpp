@@ -166,6 +166,6 @@ test_that("in-place", {
 
 
 test_that("pmax0 bitwise", {
-
+  expect_equal(do_pmax0_bitwise(-1:5), pmax.int(-1:5, 0L))
 })
 
