@@ -230,7 +230,7 @@ IntegerVector do_which2_yr(IntegerVector Year,
 IntegerVector do_which_in(IntegerVector x, IntegerVector tbl) {
   R_xlen_t n = x.size();
   if (n >= INT_MAX) {
-    stop("Length exceeds integer max.");
+    stop("Length exceeds integer max.");  // # nocov
   }
 
   int m = (int)n;
@@ -252,7 +252,7 @@ IntegerVector do_which_in(IntegerVector x, IntegerVector tbl) {
   return wrap(o);
 }
 
-
+// # nocov start
 std::vector<int> do_intersect3_stdint(std::vector<int> x,
                                       std::vector<int> y,
                                       std::vector<int> z) {
@@ -291,6 +291,7 @@ std::vector<int> do_intersect3_stdint(std::vector<int> x,
   }
   return o;
 }
+// # nocov end
 
 // [[Rcpp::export(rng = false)]]
 bool test_intersect3_stdint(int M = 0) {
