@@ -1,7 +1,9 @@
 test_that("sum_or3s works", {
-  sum_bor3 <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L, nThread = 1L) {
+  sum_bor3 <- function(exprA, exprB = TRUE, exprC = TRUE, ..., .parent_nframes = 1L, nThread = 1L) {
     if (missing(..1)) {
       sum(exprA | exprB | exprC)
+    } else if (missing(..2)) {
+      return(exprA | exprB)
     } else {
       sum_bor3(exprA | exprB, exprC, ...)
     }
@@ -20,4 +22,12 @@ test_that("sum_or3s works", {
                DT[, sum_bor3(A %in% c(5L, 5L, 6L), B == 2L, Z >= 1L)])
   expect_equal(DT[, sum_or3s(A %in% c(5L, 5L, 6L), B != 2L, Z >= 1L)],
                DT[, sum_bor3(A %in% c(5L, 5L, 6L), B != 2L, Z >= 1L)])
+  expect_equal(DT[, sum_or3s(A %in% c(5L, 5L, 6L), B != 2L, Z %between% c(1L, 4L))],
+               DT[, sum_bor3(A %in% c(5L, 5L, 6L), B != 2L, Z %between% c(1L, 4L))])
+  expect_equal(DT[, sum_or3s(A %in% c(5L, 5L, 6L), Z %between% c(1L, 4L))],
+               DT[, sum_bor3(A %in% c(5L, 5L, 6L), Z %between% c(1L, 4L))])
+  expect_equal(DT[, sum_or3s(A %in% c(5L, 5L, 6L), B != 2L, Z %in% 1:4)],
+               DT[, sum_bor3(A %in% c(5L, 5L, 6L), B != 2L, Z %in% 1:4)])
+  expect_equal(DT[, sum_or3s(A %in% c(5L, 5L, 6L), B != 2L, Z %in% c(2L, 1:4))],
+               DT[, sum_bor3(A %in% c(5L, 5L, 6L), B != 2L, Z %in% c(2L, 1:4))])
 })
