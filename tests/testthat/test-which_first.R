@@ -523,5 +523,8 @@ test_that("which_first_quick", {
 test_that("which_first_lgl_NA", {
   x <- c(TRUE, NA, TRUE, FALSE)
   expect_equal(which_first(x %in% c(FALSE, NA)), 2L)
+  expect_equal(which_first(x %in% c(TRUE, NA)), 1L)
+  x2 <- c(NA, x)
+  expect_equal(which_first(x2 %in% c(TRUE, NA)), 1L)
 })
 
