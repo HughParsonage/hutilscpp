@@ -30,4 +30,8 @@ test_that("sum_or3s works", {
                DT[, sum_bor3(A %in% c(5L, 5L, 6L), B != 2L, Z %in% 1:4)])
   expect_equal(DT[, sum_or3s(A %in% c(5L, 5L, 6L), B != 2L, Z %in% c(2L, 1:4))],
                DT[, sum_bor3(A %in% c(5L, 5L, 6L), B != 2L, Z %in% c(2L, 1:4))])
+  expect_equal(DT[, sum_or3s(A %in% c(5L, integer(101)), B != 2L, Z %in% c(2L, 1:4))],
+               DT[, sum_bor3(A %in% c(5L, integer(101)), B != 2L, Z %in% c(2L, 1:4))])
+  expect_equal(DT[, sum_or3s(A %in% c(5L, integer(101)), B %in% c(100:1001), Z %in% c(integer(101)))],
+               DT[, sum_bor3(A %in% c(5L, integer(101)), B %in% c(100:1001), Z %in% c(integer(101)))])
 })
