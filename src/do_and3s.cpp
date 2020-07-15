@@ -541,13 +541,13 @@ R_xlen_t do_sum3s_par(IntegerVector x, int ox, int x1, int x2,
   bool C_opposite = C_lgl && oz == 1;
 
   if (useX && A_lgl) {
-    stop("Internal error: useX && A_lgl");
+    stop("Internal error: useX && A_lgl"); // # nocov
   }
   if (useY && B_lgl) {
-    stop("Internal error: useY && B_lgl");
+    stop("Internal error: useY && B_lgl"); // # nocov
   }
   if (useZ && C_lgl) {
-    stop("Internal error: useZ && C_lgl");
+    stop("Internal error: useZ && C_lgl"); // # nocov
   }
 
   R_xlen_t out = 0;
