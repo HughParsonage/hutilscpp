@@ -26,6 +26,12 @@ test_that("A in len>100 ", {
 
 })
 
+test_that("'Make coverage explicit'", {
+  A <- c(FALSE, TRUE, TRUE)
+  expect_equal(or3s(A, A, !A), A | A | !A)
+  expect_equal(or3s(A, !A, !A), A | !A | !A)
+})
+
 
 test_that("or3s works", {
   skip_if_not_installed("magrittr")
