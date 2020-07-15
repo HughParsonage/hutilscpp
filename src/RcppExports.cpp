@@ -444,34 +444,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_and3_x_op
-LogicalVector do_and3_x_op(IntegerVector x, int ox, int x1, int x2, IntegerVector y, int oy, int y1, int y2, IntegerVector z, int oz, int z1, int z2, IntegerVector X3, IntegerVector Y3, IntegerVector Z3, LogicalVector A, LogicalVector B, LogicalVector C, int nThread);
-RcppExport SEXP _hutilscpp_do_and3_x_op(SEXP xSEXP, SEXP oxSEXP, SEXP x1SEXP, SEXP x2SEXP, SEXP ySEXP, SEXP oySEXP, SEXP y1SEXP, SEXP y2SEXP, SEXP zSEXP, SEXP ozSEXP, SEXP z1SEXP, SEXP z2SEXP, SEXP X3SEXP, SEXP Y3SEXP, SEXP Z3SEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ox(oxSEXP);
-    Rcpp::traits::input_parameter< int >::type x1(x1SEXP);
-    Rcpp::traits::input_parameter< int >::type x2(x2SEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type oy(oySEXP);
-    Rcpp::traits::input_parameter< int >::type y1(y1SEXP);
-    Rcpp::traits::input_parameter< int >::type y2(y2SEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type z(zSEXP);
-    Rcpp::traits::input_parameter< int >::type oz(ozSEXP);
-    Rcpp::traits::input_parameter< int >::type z1(z1SEXP);
-    Rcpp::traits::input_parameter< int >::type z2(z2SEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type X3(X3SEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type Y3(Y3SEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type Z3(Z3SEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type A(ASEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type B(BSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type C(CSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_and3_x_op(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, X3, Y3, Z3, A, B, C, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_op_along
 LogicalVector do_op_along(IntegerVector x, int op, IntegerVector y, int nThread);
 RcppExport SEXP _hutilscpp_do_op_along(SEXP xSEXP, SEXP opSEXP, SEXP ySEXP, SEXP nThreadSEXP) {
@@ -1621,7 +1593,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_in_int", (DL_FUNC) &_hutilscpp_do_in_int, 2},
     {"_hutilscpp_do_par_in", (DL_FUNC) &_hutilscpp_do_par_in, 3},
     {"_hutilscpp_do_par_in_hash_int", (DL_FUNC) &_hutilscpp_do_par_in_hash_int, 3},
-    {"_hutilscpp_do_and3_x_op", (DL_FUNC) &_hutilscpp_do_and3_x_op, 19},
     {"_hutilscpp_do_op_along", (DL_FUNC) &_hutilscpp_do_op_along, 4},
     {"_hutilscpp_do_or3_par", (DL_FUNC) &_hutilscpp_do_or3_par, 17},
     {"_hutilscpp_do_sum_or3s_par", (DL_FUNC) &_hutilscpp_do_sum_or3s_par, 16},
