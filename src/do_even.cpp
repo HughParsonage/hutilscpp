@@ -34,6 +34,9 @@ LogicalVector do_are_even(IntegerVector x, DoubleVector y, int wb = 0) {
 IntegerVector do_which_even(IntegerVector x, DoubleVector y, int wb = 0) {
   int N = x.size();
   int M = y.size();
+  if (M >= INT_MAX || N >= INT_MAX) {
+    stop("Internal error: long vectors are not supported."); // # nocov
+  }
   int wc = (wb > 1) ? (wb - 1) : N;
   const bool is_int = N > 0;
   std::vector<int> out1(0);
