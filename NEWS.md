@@ -7,6 +7,8 @@
 * `which_last` for the first index from the last index.
 * `divisible` and `divisible16` for returning divisibility
 * `count_logical` fast tabulation of logical vectors
+* `and3s`, `or3s`, parallelized and _separated_ versions of `&`
+* `sum_and3s` and `sum_or3s`, the sums of the above logical vectors. 
 
 ## Enhancements:
 * `which_first` accepts argument `use.which.max` for better performance on known short inputs
