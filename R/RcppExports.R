@@ -229,6 +229,10 @@ do_which_last_eq_int_int <- function(x, y) {
     .Call(`_hutilscpp_do_which_last_eq_int_int`, x, y)
 }
 
+do_whichs_16 <- function(op, x, y, nThread = 1L) {
+    .Call(`_hutilscpp_do_whichs_16`, op, x, y, nThread)
+}
+
 do_xor2 <- function(x, y, anyNAx = TRUE, anyNAy = TRUE) {
     .Call(`_hutilscpp_do_xor2`, x, y, anyNAx, anyNAy)
 }

@@ -9,6 +9,7 @@
 * `count_logical` fast tabulation of logical vectors
 * `and3s`, `or3s`, parallelized and _separated_ versions of `&`
 * `sum_and3s` and `sum_or3s`, the sums of the above logical vectors. 
+* `whichs` for an alterantive implementation of `which` which separates the input
 
 ## Enhancements:
 * `which_first` accepts argument `use.which.max` for better performance on known short inputs

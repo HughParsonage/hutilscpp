@@ -740,6 +740,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_whichs_16
+IntegerVector do_whichs_16(int op, IntegerVector x, IntegerVector y, int nThread);
+RcppExport SEXP _hutilscpp_do_whichs_16(SEXP opSEXP, SEXP xSEXP, SEXP ySEXP, SEXP nThreadSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< int >::type op(opSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_whichs_16(op, x, y, nThread));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_xor2
 LogicalVector do_xor2(LogicalVector x, LogicalVector y, bool anyNAx, bool anyNAy);
 RcppExport SEXP _hutilscpp_do_xor2(SEXP xSEXP, SEXP ySEXP, SEXP anyNAxSEXP, SEXP anyNAySEXP) {
@@ -1615,6 +1628,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which_last_eq_dbl_dbl", (DL_FUNC) &_hutilscpp_do_which_last_eq_dbl_dbl, 3},
     {"_hutilscpp_do_which_1st_eq_int_int", (DL_FUNC) &_hutilscpp_do_which_1st_eq_int_int, 2},
     {"_hutilscpp_do_which_last_eq_int_int", (DL_FUNC) &_hutilscpp_do_which_last_eq_int_int, 2},
+    {"_hutilscpp_do_whichs_16", (DL_FUNC) &_hutilscpp_do_whichs_16, 4},
     {"_hutilscpp_do_xor2", (DL_FUNC) &_hutilscpp_do_xor2, 4},
     {"_hutilscpp_showValue", (DL_FUNC) &_hutilscpp_showValue, 2},
     {"_hutilscpp_haversine_distance", (DL_FUNC) &_hutilscpp_haversine_distance, 5},
