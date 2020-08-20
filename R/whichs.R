@@ -9,7 +9,7 @@
 #'
 #' @return Integer vector, the indices of \code{exprA} that return \code{TRUE}.
 #'
-#'
+#' @export
 
 whichs <- function(exprA, .env = parent.frame(), nThread = getOption("hutilscpp.nThread", 1L)) {
   sexprA <- substitute(exprA)

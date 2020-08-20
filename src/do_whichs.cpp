@@ -17,28 +17,27 @@ inline bool do_one_op_1_6(const int &op, const int &xi, const int &yi) {
   case 6:
     return xi <  yi;
   }
-  return false;
+  return false; // # nocov
 }
 
 // [[Rcpp::export(rng = false)]]
 IntegerVector do_whichs_16(int op, IntegerVector x, IntegerVector y, int nThread = 1) {
   if (op < 1 || op > 6) {
-    stop("Internal error: op < 1 || op > 6");
+    stop("Internal error(do_whichs_16): op < 1 || op > 6"); // # nocov
   }
   R_xlen_t xn = x.length();
   R_xlen_t yn = y.length();
 
   if (xn >= INT_MAX || yn >= INT_MAX) {
-    stop("do_whichs1 only accepts short vectors.");
+    stop("Internal error(do_whichs_16): do_whichs1 only accepts short vectors."); // # nocov
   }
 
   const bool yn1 = yn == 1;
   const bool xye = yn == xn;
-  const bool basic_op = op >= 1 && op <= 6;
   int n = (xn >= yn) ? xn : yn;
 
   if (xn != yn && !yn1) {
-    stop("xn != yn && yn != 1");
+    stop("Internal error(do_whichs_16): xn != yn && yn != 1"); // # nocov
   }
 
   IntegerVector out = no_init(n);
