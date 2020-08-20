@@ -43,3 +43,14 @@ test_that("sum_and3s works", {
 
 
 })
+
+test_that("sum_and/or3s doubles", {
+  x <- rep(50.5, 10)
+
+  # Would be zero if coerced to integer wrongly
+  expect_equal(sum_and3s(x > 50, x < 51), 10)
+  expect_equal(sum_and3s(x > 50.1, x < 50.9), 10)
+  expect_equal(sum_or3s(x > 50, x < 51), 10)
+  expect_equal(sum_or3s(x > 50.1, x < 50.9), 10)
+})
+

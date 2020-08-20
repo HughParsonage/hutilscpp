@@ -57,8 +57,8 @@ do_and3_par <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, no
     .Call(`_hutilscpp_do_and3_par`, x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread)
 }
 
-do_sum3s_par <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nThread = 1L) {
-    .Call(`_hutilscpp_do_sum3s_par`, x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nThread)
+do_sum3s_par <- function(x, ox, x1, x2, xd, xd1, xd2, y, oy, y1, y2, yd, yd1, yd2, z, oz, z1, z2, zd, zd1, zd2, A, B, C, ampersand = TRUE, nThread = 1L) {
+    .Call(`_hutilscpp_do_sum3s_par`, x, ox, x1, x2, xd, xd1, xd2, y, oy, y1, y2, yd, yd1, yd2, z, oz, z1, z2, zd, zd1, zd2, A, B, C, ampersand, nThread)
 }
 
 simd_sum <- function(x, a, y, b) {
@@ -147,10 +147,6 @@ do_op_along <- function(x, op, y, nThread = 1L) {
 
 do_or3_par <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread = 1L) {
     .Call(`_hutilscpp_do_or3_par`, x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread)
-}
-
-do_sum_or3s_par <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nThread) {
-    .Call(`_hutilscpp_do_sum_or3s_par`, x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nThread)
 }
 
 do_range_dbl_simple <- function(x) {

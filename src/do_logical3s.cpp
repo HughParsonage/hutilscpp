@@ -395,6 +395,36 @@ bool single_ox_x1_x2(int x, int oix, int x1, int x2) {
   return false;
 }
 
+bool single_ox_x1_x2(double x, int oix, double x1, double x2) {
+  //  T != == >= <=  >  <
+  //  0  1  2  3  4  5  6
+  switch(oix) {
+  case 1:
+    return x != x1;
+  case 2:
+    return x == x1;
+  case 3:
+    return x >= x1;
+  case 4:
+    return x <= x1;
+  case 5:
+    return x >  x1;
+  case 6:
+    return x <  x1;
+  case 7:
+    return x == x1 || x == x2;
+  case 8:
+    return x >= x1 && x <= x2;
+  case 9:
+    return x >  x1 && x <  x2;
+  case 10:
+    return x <= x1 && x <= x2;
+  case 0:
+    return true;
+  }
+  return false;
+}
+
 // [[Rcpp::export(rng = false)]]
 bool do_in_int(int x, IntegerVector table) {
   int tn = table.length();

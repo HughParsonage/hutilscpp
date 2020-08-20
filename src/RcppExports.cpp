@@ -171,8 +171,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_sum3s_par
-R_xlen_t do_sum3s_par(IntegerVector x, int ox, int x1, int x2, IntegerVector y, int oy, int y1, int y2, IntegerVector z, int oz, int z1, int z2, LogicalVector A, LogicalVector B, LogicalVector C, int nThread);
-RcppExport SEXP _hutilscpp_do_sum3s_par(SEXP xSEXP, SEXP oxSEXP, SEXP x1SEXP, SEXP x2SEXP, SEXP ySEXP, SEXP oySEXP, SEXP y1SEXP, SEXP y2SEXP, SEXP zSEXP, SEXP ozSEXP, SEXP z1SEXP, SEXP z2SEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP nThreadSEXP) {
+R_xlen_t do_sum3s_par(IntegerVector x, int ox, int x1, int x2, DoubleVector xd, double xd1, double xd2, IntegerVector y, int oy, int y1, int y2, DoubleVector yd, double yd1, double yd2, IntegerVector z, int oz, int z1, int z2, DoubleVector zd, double zd1, double zd2, LogicalVector A, LogicalVector B, LogicalVector C, bool ampersand, int nThread);
+RcppExport SEXP _hutilscpp_do_sum3s_par(SEXP xSEXP, SEXP oxSEXP, SEXP x1SEXP, SEXP x2SEXP, SEXP xdSEXP, SEXP xd1SEXP, SEXP xd2SEXP, SEXP ySEXP, SEXP oySEXP, SEXP y1SEXP, SEXP y2SEXP, SEXP ydSEXP, SEXP yd1SEXP, SEXP yd2SEXP, SEXP zSEXP, SEXP ozSEXP, SEXP z1SEXP, SEXP z2SEXP, SEXP zdSEXP, SEXP zd1SEXP, SEXP zd2SEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP ampersandSEXP, SEXP nThreadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -180,19 +180,29 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type ox(oxSEXP);
     Rcpp::traits::input_parameter< int >::type x1(x1SEXP);
     Rcpp::traits::input_parameter< int >::type x2(x2SEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type xd(xdSEXP);
+    Rcpp::traits::input_parameter< double >::type xd1(xd1SEXP);
+    Rcpp::traits::input_parameter< double >::type xd2(xd2SEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
     Rcpp::traits::input_parameter< int >::type oy(oySEXP);
     Rcpp::traits::input_parameter< int >::type y1(y1SEXP);
     Rcpp::traits::input_parameter< int >::type y2(y2SEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type yd(ydSEXP);
+    Rcpp::traits::input_parameter< double >::type yd1(yd1SEXP);
+    Rcpp::traits::input_parameter< double >::type yd2(yd2SEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type z(zSEXP);
     Rcpp::traits::input_parameter< int >::type oz(ozSEXP);
     Rcpp::traits::input_parameter< int >::type z1(z1SEXP);
     Rcpp::traits::input_parameter< int >::type z2(z2SEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type zd(zdSEXP);
+    Rcpp::traits::input_parameter< double >::type zd1(zd1SEXP);
+    Rcpp::traits::input_parameter< double >::type zd2(zd2SEXP);
     Rcpp::traits::input_parameter< LogicalVector >::type A(ASEXP);
     Rcpp::traits::input_parameter< LogicalVector >::type B(BSEXP);
     Rcpp::traits::input_parameter< LogicalVector >::type C(CSEXP);
+    Rcpp::traits::input_parameter< bool >::type ampersand(ampersandSEXP);
     Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_sum3s_par(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nThread));
+    rcpp_result_gen = Rcpp::wrap(do_sum3s_par(x, ox, x1, x2, xd, xd1, xd2, y, oy, y1, y2, yd, yd1, yd2, z, oz, z1, z2, zd, zd1, zd2, A, B, C, ampersand, nThread));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -481,32 +491,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< CharacterVector >::type nom(nomSEXP);
     Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
     rcpp_result_gen = Rcpp::wrap(do_or3_par(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_sum_or3s_par
-int do_sum_or3s_par(IntegerVector x, int ox, int x1, int x2, IntegerVector y, int oy, int y1, int y2, IntegerVector z, int oz, int z1, int z2, LogicalVector A, LogicalVector B, LogicalVector C, int nThread);
-RcppExport SEXP _hutilscpp_do_sum_or3s_par(SEXP xSEXP, SEXP oxSEXP, SEXP x1SEXP, SEXP x2SEXP, SEXP ySEXP, SEXP oySEXP, SEXP y1SEXP, SEXP y2SEXP, SEXP zSEXP, SEXP ozSEXP, SEXP z1SEXP, SEXP z2SEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ox(oxSEXP);
-    Rcpp::traits::input_parameter< int >::type x1(x1SEXP);
-    Rcpp::traits::input_parameter< int >::type x2(x2SEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type oy(oySEXP);
-    Rcpp::traits::input_parameter< int >::type y1(y1SEXP);
-    Rcpp::traits::input_parameter< int >::type y2(y2SEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type z(zSEXP);
-    Rcpp::traits::input_parameter< int >::type oz(ozSEXP);
-    Rcpp::traits::input_parameter< int >::type z1(z1SEXP);
-    Rcpp::traits::input_parameter< int >::type z2(z2SEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type A(ASEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type B(BSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type C(CSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_sum_or3s_par(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nThread));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1585,7 +1569,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_range_dbl", (DL_FUNC) &_hutilscpp_do_range_dbl, 3},
     {"_hutilscpp_do_range_int", (DL_FUNC) &_hutilscpp_do_range_int, 3},
     {"_hutilscpp_do_and3_par", (DL_FUNC) &_hutilscpp_do_and3_par, 17},
-    {"_hutilscpp_do_sum3s_par", (DL_FUNC) &_hutilscpp_do_sum3s_par, 16},
+    {"_hutilscpp_do_sum3s_par", (DL_FUNC) &_hutilscpp_do_sum3s_par, 26},
     {"_hutilscpp_simd_sum", (DL_FUNC) &_hutilscpp_simd_sum, 4},
     {"_hutilscpp_do_cumsum_reset_logical", (DL_FUNC) &_hutilscpp_do_cumsum_reset_logical, 1},
     {"_hutilscpp_do_cumsum_reset_integer", (DL_FUNC) &_hutilscpp_do_cumsum_reset_integer, 2},
@@ -1608,7 +1592,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_par_in_hash_int", (DL_FUNC) &_hutilscpp_do_par_in_hash_int, 3},
     {"_hutilscpp_do_op_along", (DL_FUNC) &_hutilscpp_do_op_along, 4},
     {"_hutilscpp_do_or3_par", (DL_FUNC) &_hutilscpp_do_or3_par, 17},
-    {"_hutilscpp_do_sum_or3s_par", (DL_FUNC) &_hutilscpp_do_sum_or3s_par, 16},
     {"_hutilscpp_do_range_dbl_simple", (DL_FUNC) &_hutilscpp_do_range_dbl_simple, 1},
     {"_hutilscpp_do_anyNonfinite", (DL_FUNC) &_hutilscpp_do_anyNonfinite, 1},
     {"_hutilscpp_do_which_first", (DL_FUNC) &_hutilscpp_do_which_first, 1},

@@ -46,7 +46,17 @@ sum_and3s <- function(exprA, exprB, exprC, ...,
     d[[13]],
     d[[14]],
     d[[15]],
-    nThread
+    d[[16]],
+    d[[17]],
+    d[[18]],
+    d[[19]],
+    d[[20]],
+    d[[21]],
+    d[[22]],
+    d[[23]],
+    d[[24]],
+    ampersand = TRUE,
+    nThread = nThread
   )
 }
 
@@ -68,7 +78,7 @@ sum_or3s <- function(exprA, exprB, exprC, ...,
                       .env = .env,
                       nThread = nThread)
 
-  do_sum_or3s_par(
+  do_sum3s_par(
     d[[1]],
     d[[2]],
     d[[3]],
@@ -84,7 +94,17 @@ sum_or3s <- function(exprA, exprB, exprC, ...,
     d[[13]],
     d[[14]],
     d[[15]],
-    nThread
+    d[[16]],
+    d[[17]],
+    d[[18]],
+    d[[19]],
+    d[[20]],
+    d[[21]],
+    d[[22]],
+    d[[23]],
+    d[[24]],
+    ampersand = FALSE,
+    nThread = nThread
   )
 }
 

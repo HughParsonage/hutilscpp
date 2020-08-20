@@ -166,7 +166,34 @@ decompose_expr <- function(sexprA,
       C <- eval(sexprC, envir = .env)
     }
   }
-  list(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C)
+
+  xd <- yd <- zd <- double(0)
+  if (is.double(x)) {
+    x %<->% xd
+  }
+  if (is.double(y)) {
+    y %<->% yd
+  }
+  if (is.double(z)) {
+    z %<->% zd
+  }
+
+  xd1 <- if (is.integer(x1)) NA_real_ else x1
+  xd2 <- if (is.integer(x2)) NA_real_ else x2
+  yd1 <- if (is.integer(y1)) NA_real_ else y1
+  yd2 <- if (is.integer(y2)) NA_real_ else y2
+  zd1 <- if (is.integer(z1)) NA_real_ else z1
+  zd2 <- if (is.integer(z2)) NA_real_ else z2
+
+
+
+  list(x, ox, x1, x2,
+       xd, xd1, xd2,
+       y, oy, y1, y2,
+       yd, yd1, yd2,
+       z, oz, z1, z2,
+       zd, zd1, zd2,
+       A, B, C)
 }
 
 
