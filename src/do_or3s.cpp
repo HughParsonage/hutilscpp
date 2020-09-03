@@ -509,3 +509,130 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
   return out;
 }
+
+/*
+namespace h3a {
+
+template <int RTYPE>
+LogicalVector and1s(const Vector<RTYPE>& x, int opx,
+                    const Vector<RTYPE>& x1,
+                    const Vector<RTYPE>& x2,
+                    int nThread) {
+  R_xlen_t N = x.length();
+  R_xlen_t nx1 = x1.length();
+
+  const bool r1 = nx1 == 1;
+  const bool rn = nx1 == N;
+
+
+  LogicalVector out = no_init(N);
+
+  switch(opx) {
+  case 1:
+    switch(TYPEOF(x)) {
+    case INTSXP:
+      switch(TYPEOF(x1)) {
+      case INTSXP:
+        if (r1) {
+          const int rhs1 = x1[0];
+#pragma omp parallel for num_threads(nThread)
+          for (R_xlen_t i = 0; i < N; ++i) {
+            out[i] = x[i] != rhs1;
+          }
+          return out;
+        }
+        if (rn) {
+#pragma omp parallel for num_threads(nThread)
+          for (R_xlen_t i = 0; i < N; ++i) {
+            out[i] = x[i] != x1[i];
+          }
+          return out;
+        }
+      case REALSXP:
+        if (r1) {
+          const double rhs1 = x1[0];
+          const bool isnt_integerish =
+            !R_finite(rhs1) || rhs1 > 2147483647 || rhs < -2147483647 ||
+            (rhs1 != ((int)rhs1));
+
+#pragma omp parallel for num_threads(nThread)
+          for (R_xlen_t i = 0; i < N; ++i) {
+            out[i] = isnt_integerish ? TRUE : (x[i] != ((int)(rhs1)));
+          }
+        }
+        if (rn) {
+#pragma omp parallel for num_threads(nThread)
+          for (R_xlen_t i = 0; i < N; ++i) {
+            const double rhs1 = x1[i];
+            const bool isnt_integerish =
+              !R_finite(rhs1) || rhs1 > 2147483647 || rhs < -2147483647 ||
+              (rhs1 != ((int)rhs1));
+            out[i] = isnt_integerish ? TRUE : (x[i] != ((int)(rhs1)));
+          }
+        }
+      }
+
+
+
+    case REALSXP:
+      switch(TYPEOF(x1)) {
+      case INTSXP:
+        if (r1) {
+          const int rhs1 = x1[0];
+#pragma omp parallel for num_threads(nThread)
+          for (R_xlen_t i = 0; i < N; ++i) {
+            out[i] = x[i] != rhs1;
+          }
+          return out;
+        }
+        if (rn) {
+#pragma omp parallel for num_threads(nThread)
+          for (R_xlen_t i = 0; i < N; ++i) {
+            out[i] = x[i] != x1[i];
+          }
+          return out;
+        }
+      case REALSXP:
+        // int != dbl
+        // if it's not integerish then all true
+        if (r1) {
+#pragma omp parallel for num_threads(nThread)
+          for (R_xlen_t i = 0; i < N; ++i) {
+            out[i] = x[i] != x1[0];
+          }
+        }
+        if (rn) {
+#pragma omp parallel for num_threads(nThread)
+          for (R_xlen_t i = 0; i < N; ++i) {
+            const double rhs1 = x1[i];
+            out[i] = x[i] != rhs1
+          }
+        }
+      }
+    }
+  }
+  return Rcpp::LogicalVector();
+}
+// [[Rcpp::export(rng = false)]]
+LogicalVector do_and1(SEXP x, int opx,
+                      SEXP x1,
+                      SEXP x2,
+                      int nThread = 1) {
+  R_xlen_t N = x.length();
+  Vector<RTYPE> out = no_init(N);
+#pragma omp parallel for num_threads(n)
+  for (int i = 0; i < N; ++i) {
+    out[i] = (x[i] <= 0) ? 0 : x[i];
+  }
+  return out;
+}
+}
+*/
+
+
+
+
+
+
+
+

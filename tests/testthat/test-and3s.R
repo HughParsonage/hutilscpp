@@ -69,7 +69,7 @@ test_that("and3s length 3 %in%", {
 test_that("is_binary_sexp", {
   a <- 5
   ff <- function(expr) is_binary_sexp(substitute(expr))
-  expect_true(ff(a > 1))
+  expect_true(ff(a > 1L))
   expect_false(ff(mean(a) > 1))
 })
 

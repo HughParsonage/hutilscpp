@@ -70,8 +70,8 @@ is_binary_sexp <- function(sexprA, .parent_nframes = 2L) {
     attr(isBinary, "rhs") <- rhs
     attr(isBinary, "rhs_eval") <- rhs_eval <- eval.parent(rhs, n = .parent_nframes)
 
-    if (OR(is.numeric(rhs),
-           AND(is.numeric(rhs_eval),
+    if (OR(is.integer(rhs),
+           AND(is.integer(rhs_eval),
                OR(length(rhs_eval) == 1L,
                   OR(M == op2M("%between%") && length(rhs_eval) == 2L,
                      M == op2M("%in%")))))) {

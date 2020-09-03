@@ -1,3 +1,12 @@
+test_that("big doubles", {
+  x <- 1:5 + 0.5 + .Machine$integer.max
+  expect_equal(or3s(x > 2147483649.5), x > 2147483649.5)
+  expect_equal(sum_or3s(x > 2147483649.5), sum(x > 2147483649.5))
+  expect_equal(and3s(x > 2147483649.5), x > 2147483649.5)
+  expect_equal(sum_and3s(x > 2147483649.5), sum(x > 2147483649.5))
+})
+
+
 test_that("A in len>100 ", {
   A <-
     c(-945028649L, -705457251L, 807204080L, 1708708214L, -885957403L,

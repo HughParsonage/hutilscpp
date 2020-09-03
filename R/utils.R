@@ -84,3 +84,11 @@ firstNonNegativeRadix <- function(x, ...) {
 
 g <- glue::glue
 
+
+is_wholer <- function(dbl) {
+  length(dbl) == 1L &&
+  !is.na(dbl) &&
+  dbl >= -2147483647 &&
+  dbl <= 2147483647 &&
+  dbl == as.integer(dbl)
+}

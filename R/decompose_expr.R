@@ -1,4 +1,23 @@
 
+
+# returns the safe integer for a single double
+# iop2safe_int <- function(op, dbl) {
+#   is_wholer <- function(dbl) dbl >= -2147483647 && dbl <= 2147483647 && dbl == as.integer(dbl)
+#
+#   switch(op,
+#          # "!=" true iff dbl is whole number, so != a if a whol numebr and falsey
+#          {
+#            if (dbl >= -2147483647 && dbl <= 2147483647 && dbl == as.integer(dbl)) {
+#              return(list(op, as.integer(dbl)))
+#            } else {
+#              return(list(-1L, 0L))
+#            }
+#          },
+#          # "==" true
+#          list())
+# }
+
+
 decompose_expr <- function(sexprA,
                            sexprB,
                            sexprC,
@@ -6,7 +25,7 @@ decompose_expr <- function(sexprA,
                            missingB,
                            missingC,
                            .parent_nframes = 1L,
-                           .env,
+                           .env = parent.frame(.parent_nframes),
                            nThread = 1L) {
   X3 <- Y3 <- Z3 <- integer(0)
   A <- B <- C <- logical(0)
@@ -167,32 +186,79 @@ decompose_expr <- function(sexprA,
     }
   }
 
-  xd <- yd <- zd <- double(0)
+  # Handle double vectors in expression
+  # Issues:
+  # make sure the correct type is not coerced
+  # make sure if lhs double, the integer is 0-length
+  #
+  # if it's lhs int then the rhs needs care
+  # e.g. 1:5 >= 2.6 !=  1:5 >= 2L
+
+
   if (is.double(x)) {
-    x %<->% xd
+    xd <- x
+    x <- integer(0)
+    # these are likely doubles, and could exceed range, causing spurious warnings
+    # when passed (coercively) to Rcpp. Set to an integer and assume downstream
+    # ignore
+    x1d <- x1
+    x2d <- x2
+    x1 <- x2 <- NA_integer_
+  } else {
+    xd <- double(0)
+    x1d <- x2d <- NA_real_
+    if (is_wholer(x1) && is_wholer(x2)) {
+      x1 <- as.integer(x1)
+      x2 <- as.integer(x2)
+    } else {
+      A <- eval(sexprA, envir = .env)
+      x <- integer(0)
+    }
   }
   if (is.double(y)) {
-    y %<->% yd
-  }
-  if (is.double(z)) {
-    z %<->% zd
+    yd <- y
+    y <- integer(0)
+    y1d <- y1
+    y2d <- y2
+    y1 <- y2 <- NA_integer_
+  } else {
+    yd <- double(0)
+    y1d <- y2d <- NA_real_
+    if (is_wholer(y1) && is_wholer(y2)) {
+      y1 <- as.integer(y1)
+      y2 <- as.integer(y2)
+    } else {
+      B <- eval(sexprB, envir = .env)
+      y <- integer(0)
+    }
   }
 
-  xd1 <- if (is.integer(x1)) NA_real_ else x1
-  xd2 <- if (is.integer(x2)) NA_real_ else x2
-  yd1 <- if (is.integer(y1)) NA_real_ else y1
-  yd2 <- if (is.integer(y2)) NA_real_ else y2
-  zd1 <- if (is.integer(z1)) NA_real_ else z1
-  zd2 <- if (is.integer(z2)) NA_real_ else z2
+  if (is.double(z)) {
+    zd <- z
+    z <- integer(0)
+    z1d <- z1
+    z2d <- z2
+    z1 <- z2 <- NA_integer_
+  } else {
+    zd <- double(0)
+    z1d <- z2d <- NA_real_
+    if (is_wholer(z1) && is_wholer(z2)) {
+      z1 <- as.integer(z1)
+      z2 <- as.integer(z2)
+    } else {
+      C <- eval(sexprC, envir = .env)
+      z <- integer(0)
+    }
+  }
 
 
 
   list(x, ox, x1, x2,
-       xd, xd1, xd2,
+       xd, x1d, x2d,
        y, oy, y1, y2,
-       yd, yd1, yd2,
+       yd, y1d, y2d,
        z, oz, z1, z2,
-       zd, zd1, zd2,
+       zd, z1d, z2d,
        A, B, C)
 }
 
