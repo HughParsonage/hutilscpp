@@ -333,22 +333,6 @@ diagnose_omp <- function(threads_requested, msg_no_openmp, msg_threads_neg, msg_
     .Call(`_hutilscpp_diagnose_omp`, threads_requested, msg_no_openmp, msg_threads_neg, msg_unknown_issues, msg_too_many_threads)
 }
 
-do_pmax0_abs_dbl <- function(x, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pmax0_abs_dbl`, x, in_place)
-}
-
-do_pmin0_abs_dbl <- function(x, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pmin0_abs_dbl`, x, in_place)
-}
-
-do_pmax0_abs_int <- function(x, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pmax0_abs_int`, x, in_place)
-}
-
-do_pmin0_abs_int <- function(x, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pmin0_abs_int`, x, in_place)
-}
-
 do_firstNonNegativeRadix_int <- function(x, mini = 0L, maxi = -1L, desc = FALSE, depth = 0L) {
     .Call(`_hutilscpp_do_firstNonNegativeRadix_int`, x, mini, maxi, desc, depth)
 }
@@ -357,137 +341,32 @@ do_firstNonNegativeRadix_dbl <- function(x, mini = 0L, maxi = -1L, desc = FALSE,
     .Call(`_hutilscpp_do_firstNonNegativeRadix_dbl`, x, mini, maxi, desc, depth)
 }
 
-do_pmax0_radix_sorted_dbl <- function(x, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pmax0_radix_sorted_dbl`, x, in_place)
+do_pmax0_radix_sorted_dbl <- function(x, in_place = FALSE, nThread = 1L) {
+    .Call(`_hutilscpp_do_pmax0_radix_sorted_dbl`, x, in_place, nThread)
 }
 
-do_pmin0_radix_sorted_dbl <- function(x, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pmin0_radix_sorted_dbl`, x, in_place)
+do_pmin0_radix_sorted_dbl <- function(x, in_place = FALSE, nThread = 1L) {
+    .Call(`_hutilscpp_do_pmin0_radix_sorted_dbl`, x, in_place, nThread)
 }
 
-do_pmin0_radix_sorted_int <- function(x, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pmin0_radix_sorted_int`, x, in_place)
+do_pmax0_radix_sorted_int <- function(x, in_place = FALSE, nThread = 1L) {
+    .Call(`_hutilscpp_do_pmax0_radix_sorted_int`, x, in_place, nThread)
 }
 
-do_pmax0_radix_sorted_int <- function(x, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pmax0_radix_sorted_int`, x, in_place)
+do_pmin0_radix_sorted_int <- function(x, in_place = FALSE, nThread = 1L) {
+    .Call(`_hutilscpp_do_pmin0_radix_sorted_int`, x, in_place, nThread)
 }
 
 do_pmax0_bitwise <- function(x, nThread = 1L) {
     .Call(`_hutilscpp_do_pmax0_bitwise`, x, nThread)
 }
 
-#' @name do_pmaxC
-#' @title Internal pmaxC helpers
-#' @description Internal functions used when the overheads of assertions
-#' would be too expensive. The \code{_IP_} flavours modify in place.
-#' @param x A numeric/integer vector.
-#' @param a A single numeric/integer.
-#' @param in_place Modify \code{x} in place?
-#' @export do_pmaxC_dbl do_pmaxC_int do_pmax0 do_pmaxIPint0 do_pmaxIPnum0
-NULL
-
-#' @rdname do_pmaxC
-do_pmaxC_dbl <- function(x, a, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pmaxC_dbl`, x, a, in_place)
+do_pmin0_bitwise <- function(x, nThread = 1L) {
+    .Call(`_hutilscpp_do_pmin0_bitwise`, x, nThread)
 }
 
-#' @rdname do_pmaxC
-do_pmaxC_int <- function(x, a, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pmaxC_int`, x, a, in_place)
-}
-
-#' @rdname do_pmaxC
-do_pmax0 <- function(x, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pmax0`, x, in_place)
-}
-
-do_pmaxIP_int <- function(x, a) {
-    .Call(`_hutilscpp_do_pmaxIP_int`, x, a)
-}
-
-do_pmaxIP_dbl <- function(x, a) {
-    .Call(`_hutilscpp_do_pmaxIP_dbl`, x, a)
-}
-
-#' @rdname do_pmaxC
-do_pmaxIPnum0 <- function(x) {
-    .Call(`_hutilscpp_do_pmaxIPnum0`, x)
-}
-
-#' @rdname do_pmaxC
-do_pmaxIPint0 <- function(x) {
-    .Call(`_hutilscpp_do_pmaxIPint0`, x)
-}
-
-#' @title Parallel maximum in C++
-#' @description A faster \code{pmax()}.
-#'
-#' @name do_pmaxV
-#' @param x A numeric vector.
-#' @param y A numeric vector, the same length as x.
-#' @param in_place (bool, default: \code{false}) Should the function operate on \code{x} in-place?
-#' @return The parallel maximum of the input values.
-#' @export do_pmaxNumNum do_pmaxIntInt
-NULL
-
-#' @rdname do_pmaxV
-do_pmaxNumNum <- function(x, y, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pmaxNumNum`, x, y, in_place)
-}
-
-#' @rdname do_pmaxV
-do_pmaxIntInt <- function(x, y, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pmaxIntInt`, x, y, in_place)
-}
-
-#' @title Parallel maximum
-#' @description A faster \code{pmin()}.
-#'
-#' @name do_pminC
-#' @param x A numeric vector.
-#' @param a A single numeric value.
-#' @param in_place (bool, default: \code{false}) Should the function operate on \code{x} in-place?
-#' @return The parallel minimum of the input values. The \code{0} versions are shortcuts for \code{a = 0}.
-#' @note This function will always be faster than \code{pmin(x, a)} when \code{a} is a single value, but can be slower than \code{pmin.int(x, a)} when \code{x} is short. Use this function when comparing a numeric vector with a single value.
-#' @export do_pminC
-NULL
-
-do_pminC <- function(x, a, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pminC`, x, a, in_place)
-}
-
-do_pminC_int <- function(x, a, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pminC_int`, x, a, in_place)
-}
-
-do_pmin0_dbl <- function(x, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pmin0_dbl`, x, in_place)
-}
-
-do_pmin0_int <- function(x, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pmin0_int`, x, in_place)
-}
-
-#' @title Parallel maximum
-#' @description A faster \code{pmin()}.
-#'
-#' @name do_pminV
-#' @param x A numeric vector.
-#' @param y A numeric vector, the same length as x.
-#' @param in_place (bool, default: \code{false}) Modify \code{x} in-place?
-#' @return The parallel maximum of the input values.
-#' @export do_pminV_dbl do_pminV_int
-NULL
-
-#' @rdname do_pminV
-do_pminV_dbl <- function(x, y, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pminV_dbl`, x, y, in_place)
-}
-
-#' @rdname do_pminV
-do_pminV_int <- function(x, y, in_place = FALSE) {
-    .Call(`_hutilscpp_do_pminV_int`, x, y, in_place)
+do_pminpmax <- function(X, Y, do_min = FALSE, in_place = FALSE, keep_nas = FALSE, dbl_ok = FALSE, swap_xy = FALSE, nThread = 1L) {
+    .Call(`_hutilscpp_do_pminpmax`, X, Y, do_min, in_place, keep_nas, dbl_ok, swap_xy, nThread)
 }
 
 squishn <- function(x, a, b, in_place = FALSE) {

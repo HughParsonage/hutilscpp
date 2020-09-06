@@ -19,7 +19,7 @@ check_TF <- function(x) {
   }
 }
 
-isnt_number <- function(a, na.bad = TRUE, infinite.bad = TRUE) {
+isnt_number <- function(a, na.bad = TRUE, infinite.bad = TRUE, int.only = FALSE) {
   if (!is.numeric(a)) {
     o <- TRUE
     ac <- deparse(substitute(a))
@@ -43,6 +43,29 @@ isnt_number <- function(a, na.bad = TRUE, infinite.bad = TRUE) {
     ac <- deparse(substitute(a))
     attr(o, "ErrorMessage") <- paste0("`", ac, "` was not finite, but this is not permitted.")
     return(o)
+  }
+  if (int.only && !is.integer(a)) {
+    if (is.nan(a)) {
+      o <- TRUE
+      ac <- deparse(substitute(a))
+      attr(o, "ErrorMessage") <- paste0("`", ac, "` was not safely coercible to integer (NaN).")
+      return(o)
+    }
+    if (is.na(a)) {
+      return(FALSE)
+    }
+    if ((a > 2147483647) || (a < -2147483647)) {
+      o <- TRUE
+      ac <- deparse(substitute(a))
+      attr(o, "ErrorMessage") <- paste0("`", ac, " = ", a, "` was not safely coercible to integer (out of range).")
+      return(o)
+    }
+    if (abs(as.integer(a) - a) > sqrt(.Machine$double.eps)) {
+      o <- TRUE
+      ac <- deparse(substitute(a))
+      attr(o, "ErrorMessage") <- paste0("`", ac, " = ", a, "` was not safely coercible to integer (not a whole number).")
+      return(o)
+    }
   }
   FALSE
 }

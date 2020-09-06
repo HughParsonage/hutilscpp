@@ -2,35 +2,98 @@
 % Please edit documentation in R/pmaxC.R
 \name{pmaxC}
 \alias{pmaxC}
-\alias{pmax0}
+\alias{pminC}
 \alias{pmaxV}
+\alias{pminV}
+\alias{pmax0}
+\alias{pmin0}
 \alias{pmax3}
+\alias{pmin3}
 \title{Parallel maximum/minimum}
 \usage{
-pmaxC(x, a, in_place = FALSE)
+pmaxC(
+  x,
+  a,
+  in_place = FALSE,
+  keep_nas = FALSE,
+  dbl_ok = FALSE,
+  nThread = getOption("hutilscpp.nThread", 1L)
+)
 
-pmax0(x, in_place = FALSE, sorted = FALSE)
+pminC(
+  x,
+  a,
+  in_place = FALSE,
+  keep_nas = FALSE,
+  nThread = getOption("hutilscpp.nThread", 1L)
+)
 
-pmaxV(x, y, in_place = FALSE)
+pmax0(
+  x,
+  in_place = FALSE,
+  sorted = FALSE,
+  keep_nas = FALSE,
+  nThread = getOption("hutilscpp.nThread", 1L)
+)
+
+pmin0(
+  x,
+  in_place = FALSE,
+  sorted = FALSE,
+  keep_nas = FALSE,
+  nThread = getOption("hutilscpp.nThread", 1L)
+)
+
+pmaxV(x, y, in_place = FALSE, dbl_ok = FALSE)
+
+pminV(x, y, in_place = FALSE, dbl_ok = FALSE)
 
 pmax3(x, y, z, in_place = FALSE)
+
+pmin3(x, y, z, in_place = FALSE)
 }
 \arguments{
-\item{x}{A numeric vector.}
+\item{x}{\describe{
+\item{\code{numeric(n)}}{A numeric vector.}
+}}
 
-\item{a}{A single numeric value.}
+\item{a}{\describe{\item{\code{numeric(1)}}{A single numeric value.}}}
 
-\item{in_place}{(logical, default: \code{FALSE}) Should \code{x}
-be modified in-place.}
+\item{in_place}{\describe{
+\item{\code{TRUE | FALSE}, default: \code{FALSE}}{Should \code{x} be modified in-place? For advanced use only.}
+}}
 
-\item{sorted}{If \code{TRUE}, \code{x} is assumed to be sorted. Thus the
+\item{keep_nas}{\describe{
+\item{\code{TRUE | FALSE}, default: \code{FALSE}}{Should \code{NA}s values be
+preserved? By default, \code{FALSE}, so the behaviour of the function is
+dependent on the representation of \code{NA}s at the C++ level.}
+}}
+
+\item{nThread}{\describe{
+\item{\code{integer(1)}}{The number of threads to use. Combining \code{nThread > 1}
+and \code{in_place = TRUE} is not supported.}
+}}
+
+\item{sorted}{\describe{
+\item{\code{TRUE | FALSE}, default: \code{FALSE}}{
+Is \code{x} known to be sorted?
+If \code{TRUE}, \code{x} is assumed to be sorted. Thus the
 first zero determines whether the position at which zeroes start or end.}
+}}
 
-\item{y, z}{Other numeric vectors the same length as \code{x}}
+\item{y, z}{\describe{\item{\code{numeric(n)}}{Other numeric vectors the same length as \code{x}}}}
 }
 \value{
-The parallel maximum/minimum of the input values. \code{pmax0(x)} is
-shorthand for \code{pmaxC(x, 0)}, i.e. convert negative values in \code{x} to 0.
+Versions of \code{pmax} and \code{pmin}, designed for performance.
+
+When \code{in_place = TRUE}, the values of \code{x} are modified in-place.
+For advanced users only.
+
+The differences are:
+\describe{
+\item{\code{pmaxC(x, a)} and \code{pminC(x, a)}}{Both \code{x} and \code{a} must be numeric and
+\code{a} must be length-one.}
+}
 }
 \description{
 Faster \code{pmax()} and \code{pmin()}.
@@ -43,8 +106,9 @@ Use this function when comparing a numeric vector with a single value.
 Use \code{in_place = TRUE} only within functions when you are sure it is safe, i.e. not a
 reference to something outside the environment.
 
-If \code{x} is nonnegative so \code{pmax0(x) = identity(x)} the function will be much faster
-still, as the \code{C++} code only starts allocating once a negative value is found.
+By design, the functions first check whether \code{x} will be modified before
+allocating memory to a new vector. For example, if all values in \code{x} are
+nonnegative, the vector is returned.
 }
 \examples{
 pmaxC(-5:5, 2)

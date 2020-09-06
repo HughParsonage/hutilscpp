@@ -1,5 +1,8 @@
 # hutilscpp 0.4.0
 
+## Breaking changes
+* `pminV` no longer accept non-numeric input
+
 ## Bug fixes:
 * `pmax0(x, in_place = TRUE)` now returns early, rather than checking the vector twice.
 
