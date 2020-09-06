@@ -2,16 +2,53 @@
 #' @description Faster \code{pmax()} and \code{pmin()}.
 #'
 #' @name pmaxC
-#' @param x A numeric vector.
-#' @param y,z Other numeric vectors the same length as \code{x}
-#' @param a A single numeric value.
+#' @aliases pminC pmaxV pminV pmax0 pmin0
+#' @param x \describe{
+#' \item{\code{numeric(n)}}{A numeric vector.}
+#' }
+#' @param y,z \describe{\item{\code{numeric(n)}}{Other numeric vectors the same length as \code{x}}}
+#' @param a \describe{\item{\code{numeric(1)}}{A single numeric value.}}
 #'
-#' @param in_place (logical, default: \code{FALSE}) Should \code{x}
-#' be modified in-place.
-#' @param sorted If \code{TRUE}, \code{x} is assumed to be sorted. Thus the
-#'  first zero determines whether the position at which zeroes start or end.
-#' @return The parallel maximum/minimum of the input values. \code{pmax0(x)} is
-#'  shorthand for \code{pmaxC(x, 0)}, i.e. convert negative values in \code{x} to 0.
+#' @param in_place \describe{
+#' \item{\code{TRUE | FALSE}, default: \code{FALSE}}{Should \code{x} be modified in-place? For advanced use only.}
+#' }
+#'
+#' @param keep_nas \describe{
+#' \item{\code{TRUE | FALSE}, default: \code{FALSE}}{Should \code{NA}s values be
+#' preserved? By default, \code{FALSE}, so the behaviour of the function is
+#' dependent on the representation of \code{NA}s at the C++ level.}
+#' }
+#'
+#' @param sorted \describe{
+#' \item{\code{TRUE | FALSE}, default: \code{FALSE}}{
+#' Is \code{x} known to be sorted?
+#' If \code{TRUE}, \code{x} is assumed to be sorted. Thus the
+#'  first zero determines whether the position at which zeroes start or end.}
+#' }
+#'
+#' @param nThread \describe{
+#' \item{\code{integer(1)}}{The number of threads to use. Combining \code{nThread > 1}
+#' and \code{in_place = TRUE} is not supported.}
+#' }
+#'
+#' @return Versions of \code{pmax} and \code{pmin}, designed for performance.
+#'
+#' When \code{in_place = TRUE}, the values of \code{x} are modified in-place.
+#' For advanced users only.
+#'
+#'
+#'
+#'
+#'
+#' The differences are:
+#' \describe{
+#' \item{\code{pmaxC(x, a)} and \code{pminC(x, a)}}{Both \code{x} and \code{a} must be numeric and
+#' \code{a} must be length-one.}
+#' }
+#'
+#'
+#'
+#'
 #' @note This function will always be faster than \code{pmax(x, a)} when \code{a} is
 #'  a single value, but can be slower than \code{pmax.int(x, a)} when \code{x} is short.
 #'  Use this function when comparing a numeric vector with a single value.
@@ -19,8 +56,10 @@
 #'  Use \code{in_place = TRUE} only within functions when you are sure it is safe, i.e. not a
 #'  reference to something outside the environment.
 #'
-#'  If \code{x} is nonnegative so \code{pmax0(x) = identity(x)} the function will be much faster
-#'  still, as the \code{C++} code only starts allocating once a negative value is found.
+#'  By design, the functions first check whether \code{x} will be modified before
+#'  allocating memory to a new vector. For example, if all values in \code{x} are
+#'  nonnegative, the vector is returned.
+#'
 #'
 #' @examples
 #' pmaxC(-5:5, 2)
@@ -29,122 +68,206 @@
 #'
 #'
 
-pmaxC <- function(x, a, in_place = FALSE) {
-  # The whole point of this function is speed,
-  # so give results immediately if the user
-  # provides results that are expected and safe.
-  if (length(x) && length(a) == 1L) {
-    if (is.integer(x) && is.integer(a)) {
-      if (in_place) {
-        return(do_pmaxIP_int(x, a))
-      } else {
-        return(do_pmaxC_int(x, a))
-      }
-    }
-    if (is.double(x) && is.double(a)) {
-      if (in_place) {
-        return(do_pmaxIP_dbl(x, a))
-      } else {
-        return(do_pmaxC_dbl(x, a))
-      }
-    }
+pmaxC <- function(x, a,
+                  in_place = FALSE,
+                  keep_nas = FALSE,
+                  dbl_ok = TRUE,
+                  nThread = getOption("hutilscpp.nThread", 1L)) {
+  check_TF(in_place)
+  check_TF(keep_nas)
+  if (!is.atomic(x) || !is.numeric(x)) {
+    stop("\n`x` was of type ", typeof(x), ", class ", toString(class(x)), " and\n",
+         "`a` was of type ", typeof(a), ", class ", toString(class(a)), " and\n",
+         "Both `x` and `a` must be atomic numeric vectors.")
+  }
+  if (amsg <- isnt_number(a, na.bad = TRUE, infinite.bad = TRUE, int.only = !dbl_ok)) {
+    stop(attr(amsg, "ErrorMessage"))
+  }
+  if (is.double(x)) {
+    a <- as.double(a)
   }
 
-
-  if (!is.numeric(x)) {
-    stop("`x` was a ", class(x), ", but must be numeric.")
-  }
-  if (!length(x)) {
-    return(x)
-  }
-  if (!is.numeric(a)) {
-    stop("`a` was a ", class(a), ", but must be numeric.")
-  }
-  if (length(a) != 1L) {
-    stop("`a` had length ", length(a), ", but must be length-one. ",
-         "If you require the parallel maximum of two equal-length vectors, ",
-         "use pmaxV(x, y).")
-  }
-
-  # e.g.
-  # pmaxC(<int>, 0) => 0L
-  # but we need to be careful
-  # pmaxC(<int>, 0.5) !=> 0
-  if (is.integer(x)) {
-    ai <- as.integer(a)
-    OR <- `||`
-    if (OR(ai == a,
-           abs(ai - a) < sqrt(.Machine$double.eps))) {
-      return(do_pmaxC_int(x, ai))
-    } else {
-      message("Output is double.")
-      return(do_pmaxC_dbl(as.double(x), a))
-    }
-  }
-  if (is.double(x) && is.integer(a)) {
-    return(do_pmaxC_dbl(x, as.double(a), in_place = in_place))
-  }
-
-  stop("Internal error pmaxC:65") # nocov
+  o <- do_pminpmax(x, a,
+                   do_min = FALSE,
+                   in_place = in_place,
+                   keep_nas = keep_nas,
+                   dbl_ok = dbl_ok,
+                   swap_xy = FALSE,
+                   nThread = nThread)
+  return(o)
 }
 
 #' @rdname pmaxC
-pmax0 <- function(x, in_place = FALSE, sorted = FALSE) {
+#' @export
+pminC <- function(x, a,
+                  in_place = FALSE,
+                  keep_nas = FALSE,
+                  dbl_ok = TRUE,
+                  nThread = getOption("hutilscpp.nThread", 1L)) {
+  check_TF(in_place)
+  check_TF(keep_nas)
+  if (!is.atomic(x) || !is.numeric(x)) {
+    stop("\n`x` was of type ", typeof(x), ", class ", toString(class(x)), " and\n",
+         "`a` was of type ", typeof(a), ", class ", toString(class(a)), " and\n",
+         "Both `x` and `a` must be atomic numeric vectors.")
+  }
+  if (amsg <- isnt_number(a, na.bad = TRUE, infinite.bad = TRUE, int.only = !dbl_ok)) {
+    stop(attr(amsg, "ErrorMessage"))
+  }
+  if (is.double(x)) {
+    a <- as.double(a)
+  }
+
+  o <- do_pminpmax(x, a,
+                   do_min = TRUE,
+                   in_place = in_place,
+                   dbl_ok = dbl_ok,
+                   swap_xy = FALSE,
+                   nThread = nThread)
+  return(o)
+}
+
+#' @rdname pmaxC
+#' @export
+pmax0 <- function(x, in_place = FALSE, sorted = FALSE, keep_nas = FALSE, nThread = getOption("hutilscpp.nThread", 1L)) {
   if (!is.atomic(x) || !is.numeric(x)) {
     stop("`x` was a ", class(x), ", but must be numeric.")
   }
   if (!length(x)) {
     return(x)
   }
-  if (isTRUE(sorted)) {
+  check_TF(in_place)
+  check_TF(sorted)
+  check_TF(keep_nas)
+  check_omp(nThread)
+
+  if (sorted) {
     if (is.integer(x)) {
-     return(do_pmax0_radix_sorted_int(x, in_place = TRUE))
+      return(do_pmax0_radix_sorted_int(x, in_place = in_place))
     } else {
-      return(do_pmax0_radix_sorted_dbl(x, in_place = TRUE))
+      return(do_pmax0_radix_sorted_dbl(x, in_place = in_place))
     }
+  }
+
+  if (is.integer(x) && !keep_nas && !in_place) {
+    return(do_pmax0_bitwise(x, nThread = nThread))
+  }
+  z <- if (is.double(x)) 0 else 0L
+  do_pminpmax(x, z, do_min = FALSE, in_place = in_place, keep_nas = keep_nas, nThread = nThread)
+}
+
+#' @rdname pmaxC
+#' @export
+pmin0 <- function(x, in_place = FALSE, sorted = FALSE, keep_nas = FALSE, nThread = getOption("hutilscpp.nThread", 1L)) {
+  if (!is.atomic(x) || !is.numeric(x)) {
+    stop("`x` was a ", class(x), ", but must be numeric.")
+  }
+  if (!length(x)) {
+    return(x)
+  }
+  check_TF(in_place)
+  check_TF(sorted)
+  check_TF(keep_nas)
+  check_omp(nThread)
+
+  if (sorted) {
+    if (is.integer(x)) {
+      return(do_pmin0_radix_sorted_int(x, in_place = in_place))
+    } else {
+      return(do_pmin0_radix_sorted_dbl(x, in_place = in_place))
+    }
+  }
+
+  if (is.integer(x) && !keep_nas && !in_place) {
+    return(do_pmin0_bitwise(x, nThread = nThread))
+  }
+  z <- if (is.double(x)) 0 else 0L
+  do_pminpmax(x, z, do_min = TRUE, in_place = in_place, keep_nas = keep_nas, nThread = nThread)
+}
+
+#' @rdname pmaxC
+#' @export
+pmaxV <- function(x, y, in_place = FALSE, dbl_ok = FALSE, nThread = getOption("hutilscpp.nThread", 1L)) {
+  check_TF(in_place)
+  check_TF(dbl_ok)
+  if (length(x) != length(y)) {
+    stop("`length(x) = ", length(x), "`, yet ",
+         "`length(y) = ", length(y), "`. ",
+         "`x` and `y` must have the same length.")
+  }
+  if (!is.atomic(x) || !is.atomic(y) || !is.numeric(x) || !is.numeric(y)) {
+    stop("\n`x` was of type ", typeof(x), ", class ", toString(class(x)), " and\n",
+         "`y` was of type ", typeof(y), ", class ", toString(class(y)), " and\n",
+         "Both `x` and `y` must be atomic numeric vectors.")
   }
 
   if (in_place) {
-    if (is.integer(x)) {
-      do_pmaxIPint0(x)
-    } else {
-      do_pmaxIPnum0(x)
-    }
+    swap_xy <- FALSE
   } else {
-    if (is.integer(x)) {
-      do_pmax0_abs_int(x)
-    } else {
-      do_pmax0_abs_dbl(x)
-    }
+    swap_xy <- is.integer(y) && is.double(x)
   }
+  o <- do_pminpmax(if (swap_xy) y else x,
+                   if (swap_xy) x else y,
+                   do_min = FALSE,
+                   in_place = in_place,
+                   dbl_ok = dbl_ok,
+                   swap_xy = swap_xy,
+                   nThread = nThread)
+  return(o)
 }
 
 #' @rdname pmaxC
-pmaxV <- function(x, y, in_place = FALSE) {
-  if (is.integer(x) && is.integer(y)) {
-    return(do_pmaxIntInt(x, y))
+#' @export
+pminV <- function(x, y, in_place = FALSE, dbl_ok = FALSE, nThread = getOption("hutilscpp.nThread", 1L)) {
+  check_TF(in_place)
+  check_TF(dbl_ok)
+  if (length(x) != length(y)) {
+    stop("`length(x) = ", length(x), "`, yet ",
+         "`length(y) = ", length(y), "`. ",
+         "`x` and `y` must have the same length.")
   }
-  if (is.double(x) && is.double(y)) {
-    return(do_pmaxNumNum(x, y))
+  if (!is.atomic(x) || !is.atomic(y) || !is.numeric(x) || !is.numeric(y)) {
+    stop("\n`x` was of type ", typeof(x), ", class ", toString(class(x)), " and\n",
+         "`y` was of type ", typeof(y), ", class ", toString(class(y)), " and\n",
+         "Both `x` and `y` must be atomic numeric vectors.")
   }
-  if (is.integer(y)) {
-    stop("`y` is type integer, yet `x` is type double.")
+
+  if (in_place) {
+    swap_xy <- FALSE
+  } else {
+    swap_xy <- is.integer(y) && is.double(x)
   }
-  if (is.double(y)) {
-    stop("`y` is type double, yet `x` is type integer.")
-  }
+  o <- do_pminpmax(if (swap_xy) y else x,
+                   if (swap_xy) x else y,
+                   do_min = TRUE,
+                   in_place = in_place,
+                   dbl_ok = dbl_ok,
+                   swap_xy = swap_xy,
+                   nThread = nThread)
+  return(o)
 }
 
 #' @rdname pmaxC
+#' @export
 pmax3 <- function(x, y, z, in_place = FALSE) {
+  .pminpmax3(x, y, z, in_place = in_place, do_max = TRUE)
+}
+
+#' @rdname pmaxC
+#' @export
+pmin3 <- function(x, y, z, in_place = FALSE) {
+  .pminpmax3(x, y, z, in_place = in_place, do_max = FALSE)
+}
+
+.pminpmax3 <- function(x, y, z, in_place = FALSE, do_max) {
   check_TF(in_place)
   lx <- length(x)
   if (length(y) == lx && length(z) == lx) {
     if (is.integer(x) && is.integer(y) && is.integer(z)) {
-      return(do_summary3_int(x, y, z, in_place, do_max = TRUE))
+      return(do_summary3_int(x, y, z, in_place, do_max = do_max))
     }
     if (is.double(x) && is.double(y) && is.double(z)) {
-      return(do_summary3_dbl(x, y, z, in_place, do_max = TRUE))
+      return(do_summary3_dbl(x, y, z, in_place, do_max = do_max))
     }
   }
   if (!is.numeric(x) || !is.numeric(y) || !is.numeric(z)) {
@@ -184,13 +307,33 @@ pmax3 <- function(x, y, z, in_place = FALSE) {
              " was not equal to the integer equivalent. ")
       }
     }
-    return(do_summary3_int(x, yi, zi, in_place = in_place, do_max = TRUE))
+    return(do_summary3_int(x, yi, zi, in_place = in_place, do_max = do_max))
   }
   if (is.double(x) && is.numeric(y) && is.numeric(z)) {
-    return(do_summary3_dbl(x, as.double(y), as.double(z), in_place = in_place, do_max = TRUE))
+    return(do_summary3_dbl(x, as.double(y), as.double(z), in_place = in_place, do_max = do_max))
   }
-
-  pmax(x, pmax(y, z)) # nocov
+  # nocov begin
+  if (do_max) {
+    pmax(x, pmax(y, z))
+  } else {
+    pmin(x, pmin(y, z))
+  }
+  # nocov end
 }
+
+
+do_pmax0_abs_dbl <- function(x) pmax0(x)
+do_pmin0_abs_dbl <- function(x) pmin0(x)
+do_pmax0_abs_int <- function(x) pmax0(x)
+do_pmin0_abs_int <- function(x) pmin0(x)
+do_pmax0 <- do_pmax0_bitwise
+do_pmin0 <- do_pmin0_bitwise
+
+do_pminV_dbl <- function(x, y, in_place = FALSE) pminV(x, y, in_place = in_place)
+do_pminV_int <- function(x, y, in_place = FALSE) pminV(x, y, in_place = in_place)
+do_pmaxNumNum <- do_pmaxIntInt <- do_pminV_int
+
+
+
 
 

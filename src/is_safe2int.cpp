@@ -1,7 +1,9 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-
+bool do_is_safe2int(double x) {
+  return R_finite(x) && x <= 2147483647 && x >= -2147483647 && ((int)x == x);
+}
 
 // [[Rcpp::export]]
 int is_safe2int(DoubleVector x, double int_max) {

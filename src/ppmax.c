@@ -47,3 +47,26 @@ SEXP do_c_pmax(SEXP x, SEXP a, SEXP b) {
   return(ans);
 }
 
+SEXP do_c_pmax_int(SEXP x, SEXP a) {
+  R_len_t nx = length(x), na = length(a);
+  if (!isInteger(x) || !isInteger(a)) {
+    error("x is not a real.");
+  }
+  if (na != 1) {
+    error("a did not have length 1");
+  }
+
+  SEXP ans = PROTECT(allocVector(INTSXP, nx));
+  int *restrict ansp = INTEGER(ans);
+  const int *ap = INTEGER(a);
+  const int *xp = INTEGER(x);
+  const int aaa = ap[0];
+
+  for (R_len_t i = 0; i < nx; i++) {
+    int xi = xp[i];
+    ansp[i] = (xi > aaa) ? xi : aaa;
+  }
+  UNPROTECT(1);
+  return(ans);
+}
+
