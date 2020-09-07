@@ -17,6 +17,19 @@ test_that("pmax0 radix", {
   expect_identical(pmax0(x), do_pmax0_radix_sorted_int(x))
   x <- rev(x)
   expect_identical(pmax0(x), do_pmax0_radix_sorted_int(x))
+
+  x <- -5:6
+  pmax0(x, sorted = TRUE, in_place = TRUE)
+  expect_equal(x, pmax(-5:6, 0))
+  x <- as.double(-5:6)
+  pmax0(x, sorted = TRUE, in_place = TRUE)
+  expect_equal(x, pmax(-5:6, 0))
+  x <- 5:-6
+  pmax0(x, sorted = TRUE, in_place = TRUE)
+  expect_equal(x, pmax(5:-6, 0))
+  x <- 5:-6 + 0
+  pmax0(x, sorted = TRUE, in_place = TRUE)
+  expect_equal(x, pmax(5:-6, 0))
 })
 
 test_that("pmax0 radix extrema", {
