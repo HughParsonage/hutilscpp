@@ -463,39 +463,8 @@ SEXP do_pminpmax(SEXP X, SEXP Y,
       return out;
     }
   }
-
-  if (TYPEOF(X) == REALSXP && TYPEOF(Y) == REALSXP) {
-    DoubleVector x = X;
-    DoubleVector y = Y;
-    R_xlen_t N = x.length();
-    R_xlen_t Ny = y.length();
-    if (N != Ny && Ny != 1) {
-      stop("Lengths differ.");
-    }
-    const double y0 = y[0];
-    if (in_place) {
-      for (R_xlen_t i = 0; i < N; ++i) {
-        double xi = x[i];
-        double a = (Ny == N) ? y[i] : y0;
-        bool choose_xi = (keep_nas && (xi == NA_INTEGER)) || (do_min xor (xi > a));
-        double res = (choose_xi) ? xi : a;
-        x[i] = res;
-      }
-      return x;
-    }
-    DoubleVector out = no_init(N);
-#pragma omp parallel for num_threads(nThread)
-    for (R_xlen_t i = 0; i < N; ++i) {
-      double xi = x[i];
-      double a = (Ny == N) ? y[i] : y0;
-      bool choose_xi = (keep_nas && (xi == NA_INTEGER)) || (do_min xor (xi > a));
-      double res = (choose_xi) ? xi : a;
-      out[i] = res;
-    }
-    return out;
-  }
-  stop("Internal error: unreachable pminmax.cpp");
-  return R_NilValue;
+  stop("Internal error: unreachable pminmax.cpp"); // # nocov
+  return R_NilValue; // # nocov
 }
 
 

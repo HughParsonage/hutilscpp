@@ -31,3 +31,13 @@ test_that("pminC Error handling", {
   expect_error(pminC("abc", "abc"), regexp = "numeric")
   expect_error(pminC(0:1, "abc"), regexp = "numeric")
 })
+
+test_that("pminC_real_real", {
+  x <- runif(100)
+  y <- x[2]
+  expect_equal(pminC(x, y), pmin(x, y))
+  x <- c(NaN, x)
+  expect_equal(pminC(x, y, keep_nas = TRUE), pmin(x, y))
+})
+
+
