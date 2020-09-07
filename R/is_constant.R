@@ -14,6 +14,10 @@
 #' @param x An atomic vector. Only logical, integer, double, and character
 #' vectors are supported. Others may work but have not been tested.
 #'
+#' @param nThread \describe{
+#' \item{\code{integer(1)}}{Number of threads to use in \code{is_constant}.}
+#' }
+#'
 #' @return
 #' Whether or not the vector \code{x} is constant:
 #' \describe{
@@ -25,6 +29,8 @@
 #'
 #' This has the virtue of \code{!isntConstant(x) == is_constant(x)}.}
 #' }
+#'
+#' Empty vectors are constant, as are length-one vectors.
 #'
 #'
 #' @examples

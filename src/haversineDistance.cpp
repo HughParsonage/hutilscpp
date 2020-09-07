@@ -102,9 +102,9 @@ NumericVector theEuclidDistance (NumericVector x1,
                                  NumericVector y2,
                                  bool unitless = false) {
   R_xlen_t N = x1.size();
-  unsigned int y1N = y1.size();
-  unsigned int x2N = x2.size();
-  unsigned int y2N = y2.size();
+  R_xlen_t y1N = y1.size();
+  R_xlen_t x2N = x2.size();
+  R_xlen_t y2N = y2.size();
   if (N != y1N || N != x2N || N != y2N) {
     stop("x and y lengths differ.");
   }

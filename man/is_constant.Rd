@@ -12,6 +12,10 @@ isntConstant(x)
 \arguments{
 \item{x}{An atomic vector. Only logical, integer, double, and character
 vectors are supported. Others may work but have not been tested.}
+
+\item{nThread}{\describe{
+\item{\code{integer(1)}}{Number of threads to use in \code{is_constant}.}
+}}
 }
 \value{
 Whether or not the vector \code{x} is constant:
@@ -24,6 +28,8 @@ which \code{x} has a different value to the first.
 
 This has the virtue of \code{!isntConstant(x) == is_constant(x)}.}
 }
+
+Empty vectors are constant, as are length-one vectors.
 }
 \description{
 Efficiently decide whether an atomic vector is constant; that is,
