@@ -82,6 +82,13 @@ preserved? By default, \code{FALSE}, so the behaviour of the function is
 dependent on the representation of \code{NA}s at the C++ level.}
 }}
 
+\item{dbl_ok}{\describe{
+\item{\code{TRUE | FALSE}, default: \code{TRUE}}{Is it acceptable to return
+a non-integer vector if \code{x} is integer? If \code{TRUE}, the default,
+if \code{x} is an integer vector, a double vector may be returned if
+\code{a} is not an integer.}
+}}
+
 \item{nThread}{\describe{
 \item{\code{integer(1)}}{The number of threads to use. Combining \code{nThread > 1}
 and \code{in_place = TRUE} is not supported.}

@@ -20,6 +20,13 @@
 #' dependent on the representation of \code{NA}s at the C++ level.}
 #' }
 #'
+#' @param dbl_ok \describe{
+#' \item{\code{TRUE | FALSE}, default: \code{TRUE}}{Is it acceptable to return
+#' a non-integer vector if \code{x} is integer? If \code{TRUE}, the default,
+#' if \code{x} is an integer vector, a double vector may be returned if
+#' \code{a} is not an integer.}
+#' }
+#'
 #' @param sorted \describe{
 #' \item{\code{TRUE | FALSE}, default: \code{FALSE}}{
 #' Is \code{x} known to be sorted?

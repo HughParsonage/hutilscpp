@@ -9,10 +9,21 @@ bool is_constant_(const Vector<RTYPE>& x, int nThread)
     return true;
   }
 
+  if (nThread <= 1) {
+    for (R_xlen_t i = 1; i < N; ++i) {
+      if (x[i] != x[0]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   bool o = x[0] == x[N - 1];
 #pragma omp parallel for num_threads(nThread) reduction(&& : o)
   for (R_xlen_t i = 1; i < N; ++i) {
-    o = o && x[i] == x[0];
+    if (o) {
+      o = x[i] == x[0];
+    }
   }
   return o;
 }
