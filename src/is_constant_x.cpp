@@ -32,9 +32,12 @@ bool all_na_real(DoubleVector x, int nThread = 1) {
   return o;
 }
 
+
 // [[Rcpp::export(rng = false)]]
 bool do_is_constant(SEXP x, int nThread = 1) {
   switch(TYPEOF(x)) {
+  case NILSXP:
+    return true;
   case LGLSXP:
     return impl::is_constant_(as<LogicalVector>(x), nThread);
   case INTSXP:
@@ -43,6 +46,8 @@ bool do_is_constant(SEXP x, int nThread = 1) {
     return impl::is_constant_(as<DoubleVector>(x), nThread);
   case STRSXP:
     return impl::is_constant_(as<CharacterVector>(x), nThread);
+  case RAWSXP:
+    return impl::is_constant_(as<RawVector>(x), nThread);
   }
   return false;
 }
