@@ -25,19 +25,7 @@ void message(std::string txt) {
 
 
 
-namespace impl {
-template <int RTYPE>
-Vector<RTYPE> pmaxC(const Vector<RTYPE>& x, int ai, double ad, int n)
-{
-  R_xlen_t N = x.length();
-  Vector<RTYPE> out = no_init(N);
-#pragma omp parallel for num_threads(n)
-  for (int i = 0; i < N; ++i) {
-    out[i] = (x[i] <= 0) ? 0 : x[i];
-  }
-  return out;
-}
-}
+
 
 // pmax0
 // 1. Ordered

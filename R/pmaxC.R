@@ -13,6 +13,7 @@
 #' \item{\code{TRUE | FALSE}, default: \code{FALSE}}{Should \code{x} be modified in-place? For advanced use only.}
 #' }
 #'
+#'
 #' @param keep_nas \describe{
 #' \item{\code{TRUE | FALSE}, default: \code{FALSE}}{Should \code{NA}s values be
 #' preserved? By default, \code{FALSE}, so the behaviour of the function is

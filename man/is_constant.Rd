@@ -5,7 +5,7 @@
 \alias{isntConstant}
 \title{Is a vector constant?}
 \usage{
-is_constant(x)
+is_constant(x, nThread = getOption("hutilscpp.nThread", 1L))
 
 isntConstant(x)
 }
@@ -17,7 +17,8 @@ vectors are supported. Others may work but have not been tested.}
 Whether or not the vector \code{x} is constant:
 \describe{
 \item{\code{is_constant}}{\code{TRUE} or \code{FALSE}. Missing values are considered to
-be the same.}
+be the same as each other, so a vector entirely composed of missing values is
+considered constant. Note that \code{is_constant(c(NA_real_, NaN))} is \code{TRUE}.}
 \item{\code{isntConstant}}{If constant, \code{0L}; otherwise, the first integer position at
 which \code{x} has a different value to the first.
 

@@ -18,3 +18,8 @@ test_that("Pure C works", {
   expect_equal(max(res), 0.1)
 })
 
+test_that("pmax_pure_c int", {
+  x <- -5:5
+  expect_equal(pmax_pure_c(x, 0L), pmax(x, 0L))
+})
+

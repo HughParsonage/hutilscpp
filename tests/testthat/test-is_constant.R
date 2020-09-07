@@ -33,6 +33,8 @@ test_that("is_constant with NA", {
   expect_false(is_constant(c(1L, 1L, 1L, NA)))
   expect_true(is_constant(c(NA, NA, NA)))
   expect_true(is_constant(c(NA_integer_, NA_integer_)))
+  expect_true(is_constant(c(NA_real_, NA_real_)))
+  expect_true(is_constant(c(NA_real_, NA_real_, NaN)))
   expect_true(is_constant(c(NA_character_, NA_integer_)))
 })
 

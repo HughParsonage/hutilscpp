@@ -3,9 +3,8 @@ pmax_pure_c <- function(x, a) {
     return(.Call("do_c_pmax", x, a, -Inf))
   }
   if (is.integer(x) && is.integer(a)) {
-    return(.Call("do_c_pmax_int", x, a))
+    return(.Call("do_c_pminmax", x, a, TRUE))
   }
 
   pmax.int(x, a)
-
 }

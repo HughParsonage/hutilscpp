@@ -888,6 +888,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// all_na_real
+bool all_na_real(DoubleVector x, int nThread);
+RcppExport SEXP _hutilscpp_all_na_real(SEXP xSEXP, SEXP nThreadSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(all_na_real(x, nThread));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_is_constant
+bool do_is_constant(SEXP x, int nThread);
+RcppExport SEXP _hutilscpp_do_is_constant(SEXP xSEXP, SEXP nThreadSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_is_constant(x, nThread));
+    return rcpp_result_gen;
+END_RCPP
+}
 // is_safe2int
 int is_safe2int(DoubleVector x, double int_max);
 RcppExport SEXP _hutilscpp_is_safe2int(SEXP xSEXP, SEXP int_maxSEXP) {
@@ -1347,7 +1369,7 @@ END_RCPP
 }
 
 RcppExport SEXP do_c_pmax(SEXP, SEXP, SEXP);
-RcppExport SEXP do_c_pmax_int(SEXP, SEXP);
+RcppExport SEXP do_c_pminmax(SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_AnyCharMatch", (DL_FUNC) &_hutilscpp_AnyCharMatch, 3},
@@ -1414,6 +1436,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_theEmptiestQuarters", (DL_FUNC) &_hutilscpp_theEmptiestQuarters, 7},
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
     {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 11},
+    {"_hutilscpp_all_na_real", (DL_FUNC) &_hutilscpp_all_na_real, 2},
+    {"_hutilscpp_do_is_constant", (DL_FUNC) &_hutilscpp_do_is_constant, 2},
     {"_hutilscpp_is_safe2int", (DL_FUNC) &_hutilscpp_is_safe2int, 2},
     {"_hutilscpp_force_as_integer", (DL_FUNC) &_hutilscpp_force_as_integer, 2},
     {"_hutilscpp_is_sorted_ascending_dbl", (DL_FUNC) &_hutilscpp_is_sorted_ascending_dbl, 1},
@@ -1451,8 +1475,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_summary3_int", (DL_FUNC) &_hutilscpp_do_summary3_int, 5},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
-    {"do_c_pmax",     (DL_FUNC) &do_c_pmax,     3},
-    {"do_c_pmax_int", (DL_FUNC) &do_c_pmax_int, 2},
+    {"do_c_pmax",    (DL_FUNC) &do_c_pmax,    3},
+    {"do_c_pminmax", (DL_FUNC) &do_c_pminmax, 3},
     {NULL, NULL, 0}
 };
 

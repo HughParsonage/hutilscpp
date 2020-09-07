@@ -16,7 +16,7 @@ pmaxC(
   a,
   in_place = FALSE,
   keep_nas = FALSE,
-  dbl_ok = FALSE,
+  dbl_ok = TRUE,
   nThread = getOption("hutilscpp.nThread", 1L)
 )
 
@@ -25,6 +25,7 @@ pminC(
   a,
   in_place = FALSE,
   keep_nas = FALSE,
+  dbl_ok = TRUE,
   nThread = getOption("hutilscpp.nThread", 1L)
 )
 
@@ -44,9 +45,21 @@ pmin0(
   nThread = getOption("hutilscpp.nThread", 1L)
 )
 
-pmaxV(x, y, in_place = FALSE, dbl_ok = FALSE)
+pmaxV(
+  x,
+  y,
+  in_place = FALSE,
+  dbl_ok = FALSE,
+  nThread = getOption("hutilscpp.nThread", 1L)
+)
 
-pminV(x, y, in_place = FALSE, dbl_ok = FALSE)
+pminV(
+  x,
+  y,
+  in_place = FALSE,
+  dbl_ok = FALSE,
+  nThread = getOption("hutilscpp.nThread", 1L)
+)
 
 pmax3(x, y, z, in_place = FALSE)
 
