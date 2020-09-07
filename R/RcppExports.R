@@ -269,6 +269,14 @@ match_min_Haversine <- function(lat1, lon1, lat2, lon2, tabl, cartR = -1, dist0_
     .Call(`_hutilscpp_match_min_Haversine`, lat1, lon1, lat2, lon2, tabl, cartR, dist0_km, verify_cartR, do_verify_box, excl_self, ncores)
 }
 
+all_na_real <- function(x, nThread = 1L) {
+    .Call(`_hutilscpp_all_na_real`, x, nThread)
+}
+
+do_is_constant <- function(x, nThread = 1L) {
+    .Call(`_hutilscpp_do_is_constant`, x, nThread)
+}
+
 is_safe2int <- function(x, int_max) {
     .Call(`_hutilscpp_is_safe2int`, x, int_max)
 }

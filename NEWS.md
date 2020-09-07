@@ -16,6 +16,10 @@
 
 ## Enhancements:
 * `which_first` accepts argument `use.which.max` for better performance on known short inputs
+* `is_constant` now accepts `nThread` for multithreaded checking of constant vectors
+  and is much faster in general even in single-thread mode.
+  
+
 
 
 # hutilscpp 0.3.0

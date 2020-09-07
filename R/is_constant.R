@@ -18,7 +18,8 @@
 #' Whether or not the vector \code{x} is constant:
 #' \describe{
 #' \item{\code{is_constant}}{\code{TRUE} or \code{FALSE}. Missing values are considered to
-#' be the same.}
+#' be the same as each other, so a vector entirely composed of missing values is
+#' considered constant. Note that \code{is_constant(c(NA_real_, NaN))} is \code{TRUE}.}
 #' \item{\code{isntConstant}}{If constant, \code{0L}; otherwise, the first integer position at
 #' which \code{x} has a different value to the first.
 #'
@@ -86,49 +87,15 @@
 #'
 #' @export is_constant isntConstant
 
-is_constant <- function(x) {
+is_constant <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
   if (!is.atomic(x)) {
     stop("`x` was not atomic. ",
          "Such objects are not supported.")
   }
-  if (length(x) <= 1L) {
+  if (is.double(x) && all_na_real(x, nThread = nThread)) {
     return(TRUE)
   }
-  if (is.logical(x)) {
-    if (anyNA(x)) {
-      if (any(x, na.rm = TRUE)) {
-        return(FALSE)
-      }
-      if (!all(x, na.rm = TRUE)) {
-        return(FALSE)
-      }
-      return(TRUE)
-    }
-    return(XOR(!any(x, na.rm = TRUE), all(x, na.rm = TRUE)))
-  }
-  # Instead of anyNA(x) we only need to check the first element
-  x1 <- x[1L]
-  if (anyNA(x1)) {
-    return(all(is.na(x),
-               # slightly faster
-               na.rm = TRUE))
-  }
-
-  if (is.integer(x)) {
-    !AnyWhich_int(x, x1, FALSE, FALSE, FALSE)
-  } else if (is.double(x)) {
-    !AnyWhich_dbl(x, x1, FALSE, FALSE, FALSE)
-  } else if (is.character(x)) {
-    # Does any character in x not not match the first?
-    # (double negative because the single positive only
-    # checks the second element)
-    !AnyCharMatch(x, x1, opposite = TRUE)
-  } else if (is.factor(x)) {
-    is_constant(as.integer(x))
-  } else {
-    # e.g. raw
-    identical(x, rep_len(x1, length(x)))
-  }
+  do_is_constant(x, nThread = nThread)
 }
 
 #' @rdname is_constant

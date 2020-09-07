@@ -47,24 +47,30 @@ SEXP do_c_pmax(SEXP x, SEXP a, SEXP b) {
   return(ans);
 }
 
-SEXP do_c_pmax_int(SEXP x, SEXP a) {
+
+SEXP do_c_pminmax(SEXP x, SEXP a, SEXP domax) {
   R_len_t nx = length(x), na = length(a);
-  if (!isInteger(x) || !isInteger(a)) {
-    error("x is not a real.");
+
+  if ((!isInteger(x) && !isInteger(a))) {
+    error("x and a have conflicting types."); // # nocov
   }
   if (na != 1) {
-    error("a did not have length 1");
+    error("a did not have length 1"); // # nocov
   }
 
   SEXP ans = PROTECT(allocVector(INTSXP, nx));
   int *restrict ansp = INTEGER(ans);
+  const int *domaxp = INTEGER(domax);
   const int *ap = INTEGER(a);
   const int *xp = INTEGER(x);
+  const char mxx = domaxp[0];
   const int aaa = ap[0];
+
 
   for (R_len_t i = 0; i < nx; i++) {
     int xi = xp[i];
-    ansp[i] = (xi > aaa) ? xi : aaa;
+    const char xi_below = xi <= aaa;
+    ansp[i] = (mxx ^ xi_below) ? xi : aaa;
   }
   UNPROTECT(1);
   return(ans);
