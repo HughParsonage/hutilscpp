@@ -27,6 +27,14 @@ test_that("is_constant works", {
 
 })
 
+test_that("is_constant nThread", {
+  skip_on_cran()
+  x <- integer(1024)
+  expect_true(is_constant(x, nThread = 2L))
+  xnc <- c(x, 1L, x)
+  expect_false(is_constant(xnc, nThread = 2L))
+})
+
 test_that("is_constant with NA", {
   expect_false(is_constant(c(TRUE, TRUE, TRUE, NA)))
   expect_false(is_constant(c(FALSE, FALSE, NA)))

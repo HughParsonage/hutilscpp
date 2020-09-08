@@ -25,6 +25,7 @@ test_that("pmaxC error handling", {
   expect_error(pmaxC(list(1), 1L), regexp = "atomic")
   expect_error(pmaxC(1:5, 1:2), "length.*2")
   expect_message(pmaxC(1:5, 0.5), "Output is double.")
+  expect_error(pmaxC(1:5, 2.5, dbl_ok = FALSE))
 })
 
 test_that("pmaxC_real_real", {
@@ -34,3 +35,17 @@ test_that("pmaxC_real_real", {
   x <- c(NaN, x)
   expect_equal(pminC(x, y, keep_nas = TRUE), pmin(x, y))
 })
+
+test_that("pmaxC_int_real", {
+  x <- 1:5
+  o <- pmax(x, 2)
+  pmaxC(x, 2, in_place = TRUE)
+  expect_equal(x, o)
+  xd <- 1:5 + 0
+  pmaxC(xd, 2L, in_place = TRUE)
+  expect_equal(xd, o)
+
+
+
+})
+
