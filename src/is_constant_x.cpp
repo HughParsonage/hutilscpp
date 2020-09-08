@@ -60,5 +60,5 @@ bool do_is_constant(SEXP x, int nThread = 1) {
   case RAWSXP:
     return impl::is_constant_(as<RawVector>(x), nThread);
   }
-  return false;
+  return false; // # nocov
 }
