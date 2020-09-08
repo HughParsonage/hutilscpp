@@ -429,11 +429,7 @@ SEXP do_pminpmax(SEXP X, SEXP Y,
       }
     } else {
       if (!dbl_ok) {
-        if (swap_xy) {
-          stop("`y` was type integer, yet `x` is type double. Set dbl_ok = TRUE if double output is acceptable.");
-        } else {
-          stop("`x` was type integer, yet `y` is type double. Set dbl_ok = TRUE if double output is acceptable.");
-        }
+        stop("`x` was type integer, yet `y` is type double. Set dbl_ok = TRUE if double output is acceptable.");
       }
       if (in_place) {
         stop("Internal error(do_pminpmax): INT x DBL y INPLACE"); // # nocov
