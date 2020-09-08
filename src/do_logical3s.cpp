@@ -486,7 +486,25 @@ LogicalVector do_par_in_hash_int(IntegerVector x, IntegerVector table, int nThre
     out[i] = oi;
   }
   return out;
+}
 
+// [[Rcpp::export(rng = false)]]
+LogicalVector do_par_in_hash_dbl(DoubleVector x, DoubleVector table, int nThread = 1) {
+  std::unordered_set<double> H;
+  int tn = table.length();
+  for (int t = 0; t < tn; ++t) {
+    H.insert(table[t]);
+  }
+
+  R_xlen_t N = x.length();
+  LogicalVector out = no_init(N);
+#pragma omp parallel for num_threads(nThread)
+  for (R_xlen_t i = 0; i < N; ++i) {
+    double xi = x[i];
+    bool oi = H.count(xi);
+    out[i] = oi;
+  }
+  return out;
 }
 
 // [[Rcpp::export]]

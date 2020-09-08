@@ -141,6 +141,10 @@ do_par_in_hash_int <- function(x, table, nThread = 1L) {
     .Call(`_hutilscpp_do_par_in_hash_int`, x, table, nThread)
 }
 
+do_par_in_hash_dbl <- function(x, table, nThread = 1L) {
+    .Call(`_hutilscpp_do_par_in_hash_dbl`, x, table, nThread)
+}
+
 do_op_along <- function(x, op, y, nThread = 1L) {
     .Call(`_hutilscpp_do_op_along`, x, op, y, nThread)
 }

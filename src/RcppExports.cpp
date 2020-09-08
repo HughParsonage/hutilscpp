@@ -454,6 +454,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_par_in_hash_dbl
+LogicalVector do_par_in_hash_dbl(DoubleVector x, DoubleVector table, int nThread);
+RcppExport SEXP _hutilscpp_do_par_in_hash_dbl(SEXP xSEXP, SEXP tableSEXP, SEXP nThreadSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type table(tableSEXP);
+    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_par_in_hash_dbl(x, table, nThread));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_op_along
 LogicalVector do_op_along(IntegerVector x, int op, IntegerVector y, int nThread);
 RcppExport SEXP _hutilscpp_do_op_along(SEXP xSEXP, SEXP opSEXP, SEXP ySEXP, SEXP nThreadSEXP) {
@@ -1404,6 +1416,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_in_int", (DL_FUNC) &_hutilscpp_do_in_int, 2},
     {"_hutilscpp_do_par_in", (DL_FUNC) &_hutilscpp_do_par_in, 3},
     {"_hutilscpp_do_par_in_hash_int", (DL_FUNC) &_hutilscpp_do_par_in_hash_int, 3},
+    {"_hutilscpp_do_par_in_hash_dbl", (DL_FUNC) &_hutilscpp_do_par_in_hash_dbl, 3},
     {"_hutilscpp_do_op_along", (DL_FUNC) &_hutilscpp_do_op_along, 4},
     {"_hutilscpp_do_or3_par", (DL_FUNC) &_hutilscpp_do_or3_par, 17},
     {"_hutilscpp_do_range_dbl_simple", (DL_FUNC) &_hutilscpp_do_range_dbl_simple, 1},
