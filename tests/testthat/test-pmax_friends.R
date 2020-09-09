@@ -102,13 +102,7 @@ test_that("pmaxV", {
   expect_identical(pmaxV(1:5, 5:1), c(5L, 4L, 3L, 4L, 5L))
 })
 
-test_that("pmaxV error", {
-  expect_error(pmaxV(1:5, 1:5 + 0.5), regexp = "type double")
-  expect_error(do_pminV_int(1:5, 1:6), "same length")
-  expect_error(do_pminV_dbl(1:5 + 0, 1:6 + 0), "same length")
-  expect_error(do_pmaxIntInt(1:5, 1:6), "same length")
-  expect_error(do_pmaxNumNum(1:5 + 0, 1:6 + 0), "same length")
-})
+
 
 test_that("benchmark", {
   skip_on_cran()

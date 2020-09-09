@@ -17,6 +17,9 @@ test_that("sum_or3s works", {
 
   expect_equal(sum_or3s(abc == 1, def >= 1, ghi <= 2), 100)
 
+  S3 <- 100:1001
+  B3 <- c(99L, 100:1001)
+
   DT <- data.table(A = 1:100, B = 2L, Z = 3L)
   expect_equal(DT[, sum_or3s(A %in% c(5L, 5L, 6L), B == 2L, Z >= 1L)],
                DT[, sum_bor3(A %in% c(5L, 5L, 6L), B == 2L, Z >= 1L)])
@@ -32,6 +35,8 @@ test_that("sum_or3s works", {
                DT[, sum_bor3(A %in% c(5L, 5L, 6L), B != 2L, Z %in% c(2L, 1:4))])
   expect_equal(DT[, sum_or3s(A %in% c(5L, integer(101)), B != 2L, Z %in% c(2L, 1:4))],
                DT[, sum_bor3(A %in% c(5L, integer(101)), B != 2L, Z %in% c(2L, 1:4))])
-  expect_equal(DT[, sum_or3s(A %in% c(5L, integer(101)), B %in% c(100:1001), Z %in% c(integer(101)))],
-               DT[, sum_bor3(A %in% c(5L, integer(101)), B %in% c(100:1001), Z %in% c(integer(101)))])
+  expect_equal(DT[, sum_or3s(A %in% c(5L, integer(101)), B %in% S3, Z %in% c(integer(101)))],
+               DT[, sum_bor3(A %in% c(5L, integer(101)), B %in% S3, Z %in% c(integer(101)))])
+  expect_equal(DT[, sum_or3s(A %in% c(5L, integer(101)), B %in% B3, Z %in% c(integer(101)))],
+               DT[, sum_bor3(A %in% c(5L, integer(101)), B %in% B3, Z %in% c(integer(101)))])
 })

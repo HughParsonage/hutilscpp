@@ -37,6 +37,26 @@ Implies <- function(x, y, anyNAx = TRUE, anyNAy = TRUE) {
     .Call(`_hutilscpp_Implies`, x, y, anyNAx, anyNAy)
 }
 
+is_altrep <- function(x) {
+    .Call(`_hutilscpp_is_altrep`, x)
+}
+
+allocate0_int <- function(N, nThread = 1L) {
+    .Call(`_hutilscpp_allocate0_int`, N, nThread)
+}
+
+allocate0_dbl <- function(N, nThread = 1L) {
+    .Call(`_hutilscpp_allocate0_dbl`, N, nThread)
+}
+
+allocate0_except <- function(N, India, Victor, nThread = 1L) {
+    .Call(`_hutilscpp_allocate0_except`, N, India, Victor, nThread)
+}
+
+allocate_with_root <- function(N, a, r, left, do_pmin, nThread = 1L) {
+    .Call(`_hutilscpp_allocate_with_root`, N, a, r, left, do_pmin, nThread)
+}
+
 anyOutside_int <- function(x, a, b, nas_present = FALSE, na_is_outside = TRUE) {
     .Call(`_hutilscpp_anyOutside_int`, x, a, b, nas_present, na_is_outside)
 }

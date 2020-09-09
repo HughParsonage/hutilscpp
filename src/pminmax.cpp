@@ -1,22 +1,6 @@
-#include <Rcpp.h>
 #include "cpphutils.h"
-using namespace Rcpp;
 
-int amin(int & x, int & y) {
-  return (x < y) ? x : y;
-}
-int amax(int & x, int & y) {
-  return (x > y) ? x : y;
-}
-double amin(double & x, double & y) {
-  return (x < y) ? x : y;
-}
-double amax(double & x, double & y) {
-  return (x > y) ? x : y;
-}
-double abs_max0(double & x) {
-  return (std::fabs(x) + x) / 2;
-}
+
 
 void message(std::string txt) {
   Rcpp::Function msg("message");
@@ -26,14 +10,6 @@ void message(std::string txt) {
 
 
 
-
-// pmax0
-// 1. Ordered
-//    a. pmin
-//    b. pmax
-// 2. p...C
-// 3. p...V
-// 4. p...3
 
 
 // [[Rcpp::export(rng = false)]]
@@ -45,6 +21,9 @@ R_xlen_t do_firstNonNegativeRadix_int(IntegerVector x,
 
   R_xlen_t xsize = x.length();
   if (maxi < 0 || maxi > xsize) {
+    if (xsize < 1) {
+      return xsize; // # nocov
+    }
     maxi = xsize;
   }
   if (mini < 0) {
@@ -62,7 +41,7 @@ R_xlen_t do_firstNonNegativeRadix_int(IntegerVector x,
     }
   }
 
-  if (mini > maxi - 8) {
+  if (mini > maxi - 1024 || depth > 31) {
     for (R_xlen_t i = mini; i < maxi; ++i) {
       if (desc) {
         if (x[i] <= 0) {
@@ -79,7 +58,7 @@ R_xlen_t do_firstNonNegativeRadix_int(IntegerVector x,
   R_xlen_t medi = mini + (maxi - mini) / 2;
   bool lhs = (x[medi] < 0) ? desc : !desc;
   R_xlen_t left = lhs ? mini : medi - 1;
-  R_xlen_t right = lhs ? medi + 1 : maxi;
+  R_xlen_t right = lhs ? medi + 2 : maxi;
   return do_firstNonNegativeRadix_int(x, left, right, desc, depth + 1);
 }
 
@@ -93,6 +72,9 @@ R_xlen_t do_firstNonNegativeRadix_dbl(DoubleVector x,
 
   R_xlen_t xsize = x.length();
   if (maxi < 0 || maxi > xsize) {
+    if (xsize < 1) {
+      return 0; // # nocov
+    }
     maxi = xsize;
   }
   if (mini < 0) {
@@ -111,7 +93,7 @@ R_xlen_t do_firstNonNegativeRadix_dbl(DoubleVector x,
     }
   }
 
-  if (mini > maxi - 8) {
+  if (mini > maxi - 1024 || depth > 31) {
     // showValuex("depth = ", depth);
     for (R_xlen_t i = mini; i < maxi; ++i) {
       if (desc) {
@@ -138,10 +120,19 @@ DoubleVector do_pmax0_radix_sorted_dbl(DoubleVector x,
                                        bool in_place = false,
                                        int nThread = 1) {
   R_xlen_t N = x.size();
+  if (N == 0) {
+    return x;
+  }
+  if (N == 1) {
+    return (x[0] >= 0) ? x : DoubleVector(1);
+  }
   bool x0_positive = x[0] > 0;
   bool xn_positive = x[N - 1] > 0;
   if (x0_positive && xn_positive) {
     return x;
+  }
+  if (!x0_positive && !xn_positive) {
+    return DoubleVector(N);
   }
   bool desc = x[0] > 0;
   R_xlen_t root = do_firstNonNegativeRadix_dbl(x, 0, N, desc);
@@ -178,6 +169,9 @@ DoubleVector do_pmin0_radix_sorted_dbl(DoubleVector x,
   if (!x0_positive && !xn_positive) {
     return x;
   }
+  if (x0_positive && xn_positive) {
+    return DoubleVector(N);
+  }
   const bool desc = x[0] > 0;
   R_xlen_t root = do_firstNonNegativeRadix_dbl(x, 0, N, desc);
   if (in_place) {
@@ -209,6 +203,9 @@ IntegerVector do_pmax0_radix_sorted_int(IntegerVector x,
   bool xn_positive = x[N - 1] > 0;
   if (x0_positive && xn_positive) {
     return x;
+  }
+  if (!x0_positive && !xn_positive) {
+    return IntegerVector(N);
   }
   bool desc = x[0] > 0;
   R_xlen_t root = do_firstNonNegativeRadix_int(x, 0, N, desc);
@@ -245,6 +242,9 @@ IntegerVector do_pmin0_radix_sorted_int(IntegerVector x,
   if (!x0_positive && !xn_positive) {
     return x;
   }
+  if (x0_positive && xn_positive) {
+    return IntegerVector(N);
+  }
   const bool desc = x[0] > 0;
   R_xlen_t root = do_firstNonNegativeRadix_int(x, 0, N, desc);
   if (in_place) {
@@ -278,6 +278,7 @@ IntegerVector do_pmax0_bitwise(IntegerVector x, int nThread = 1) {
   if (j == N) {
     return x;
   }
+
   IntegerVector out = no_init(N);
 
 #pragma omp parallel for num_threads(nThread)
@@ -336,7 +337,7 @@ SEXP do_pminpmax(SEXP X, SEXP Y,
     R_xlen_t N = x.length();
     R_xlen_t Ny = y.length();
     if (N != Ny && Ny != 1) {
-      stop("Lengths differ.");
+      stop("Lengths differ."); // # nocov
     }
     const bool y_lenN = Ny == N;
     const int y0 = y[0];
@@ -369,7 +370,7 @@ SEXP do_pminpmax(SEXP X, SEXP Y,
     R_xlen_t N = x.length();
     R_xlen_t Ny = y.length();
     if (N != Ny && Ny != 1) {
-      stop("Lengths differ.");
+      stop("Lengths differ."); // # nocov
     }
     const double y0 = y[0];
     if (in_place) {
@@ -401,7 +402,7 @@ SEXP do_pminpmax(SEXP X, SEXP Y,
     R_xlen_t N = x.length();
     R_xlen_t Ny = y.length();
     if (N != Ny && Ny != 1) {
-      stop("Lengths differ.");
+      stop("Lengths differ."); // # nocov
     }
     const double y0 = y[0];
     bool int_out = (Ny == 1) && do_is_safe2int(y0);
@@ -428,9 +429,6 @@ SEXP do_pminpmax(SEXP X, SEXP Y,
         return out;
       }
     } else {
-      if (!dbl_ok) {
-        stop("`x` was type integer, yet `y` is type double. Set dbl_ok = TRUE if double output is acceptable.");
-      }
       if (in_place) {
         stop("Internal error(do_pminpmax): INT x DBL y INPLACE"); // # nocov
       }
@@ -450,8 +448,5 @@ SEXP do_pminpmax(SEXP X, SEXP Y,
   stop("Internal error: unreachable pminmax.cpp"); // # nocov
   return R_NilValue; // # nocov
 }
-
-
-
 
 
