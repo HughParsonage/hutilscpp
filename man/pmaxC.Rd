@@ -49,7 +49,7 @@ pmaxV(
   x,
   y,
   in_place = FALSE,
-  dbl_ok = FALSE,
+  dbl_ok = TRUE,
   nThread = getOption("hutilscpp.nThread", 1L)
 )
 
@@ -57,7 +57,7 @@ pminV(
   x,
   y,
   in_place = FALSE,
-  dbl_ok = FALSE,
+  dbl_ok = TRUE,
   nThread = getOption("hutilscpp.nThread", 1L)
 )
 

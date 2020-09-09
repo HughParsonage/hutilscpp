@@ -18,14 +18,13 @@ bool is_constant_(const Vector<RTYPE>& x, int nThread)
     return true;
   }
 
-  bool o = x[0] == x[N - 1];
-#pragma omp parallel for num_threads(nThread) reduction(&& : o)
+  R_xlen_t n_neq = 0;
+
+#pragma omp parallel for num_threads(nThread) reduction(+ : n_neq)
   for (R_xlen_t i = 1; i < N; ++i) {
-    if (o) {
-      o = x[i] == x[0];
-    }
+    n_neq += x[i] != x[0];
   }
-  return o;
+  return n_neq == 0;
 }
 
 }

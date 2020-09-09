@@ -88,6 +88,66 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// is_altrep
+bool is_altrep(SEXP x);
+RcppExport SEXP _hutilscpp_is_altrep(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_altrep(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// allocate0_int
+IntegerVector allocate0_int(R_xlen_t N, int nThread);
+RcppExport SEXP _hutilscpp_allocate0_int(SEXP NSEXP, SEXP nThreadSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< R_xlen_t >::type N(NSEXP);
+    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(allocate0_int(N, nThread));
+    return rcpp_result_gen;
+END_RCPP
+}
+// allocate0_dbl
+DoubleVector allocate0_dbl(R_xlen_t N, int nThread);
+RcppExport SEXP _hutilscpp_allocate0_dbl(SEXP NSEXP, SEXP nThreadSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< R_xlen_t >::type N(NSEXP);
+    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(allocate0_dbl(N, nThread));
+    return rcpp_result_gen;
+END_RCPP
+}
+// allocate0_except
+IntegerVector allocate0_except(R_xlen_t N, IntegerVector India, IntegerVector Victor, int nThread);
+RcppExport SEXP _hutilscpp_allocate0_except(SEXP NSEXP, SEXP IndiaSEXP, SEXP VictorSEXP, SEXP nThreadSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< R_xlen_t >::type N(NSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type India(IndiaSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type Victor(VictorSEXP);
+    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(allocate0_except(N, India, Victor, nThread));
+    return rcpp_result_gen;
+END_RCPP
+}
+// allocate_with_root
+IntegerVector allocate_with_root(R_xlen_t N, int a, R_xlen_t r, bool left, bool do_pmin, int nThread);
+RcppExport SEXP _hutilscpp_allocate_with_root(SEXP NSEXP, SEXP aSEXP, SEXP rSEXP, SEXP leftSEXP, SEXP do_pminSEXP, SEXP nThreadSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< R_xlen_t >::type N(NSEXP);
+    Rcpp::traits::input_parameter< int >::type a(aSEXP);
+    Rcpp::traits::input_parameter< R_xlen_t >::type r(rSEXP);
+    Rcpp::traits::input_parameter< bool >::type left(leftSEXP);
+    Rcpp::traits::input_parameter< bool >::type do_pmin(do_pminSEXP);
+    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(allocate_with_root(N, a, r, left, do_pmin, nThread));
+    return rcpp_result_gen;
+END_RCPP
+}
 // anyOutside_int
 int anyOutside_int(IntegerVector x, int a, int b, bool nas_present, bool na_is_outside);
 RcppExport SEXP _hutilscpp_anyOutside_int(SEXP xSEXP, SEXP aSEXP, SEXP bSEXP, SEXP nas_presentSEXP, SEXP na_is_outsideSEXP) {
@@ -1390,6 +1450,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_AnyWhichInDbl", (DL_FUNC) &_hutilscpp_AnyWhichInDbl, 2},
     {"_hutilscpp_AnyWhichInInt", (DL_FUNC) &_hutilscpp_AnyWhichInInt, 2},
     {"_hutilscpp_Implies", (DL_FUNC) &_hutilscpp_Implies, 4},
+    {"_hutilscpp_is_altrep", (DL_FUNC) &_hutilscpp_is_altrep, 1},
+    {"_hutilscpp_allocate0_int", (DL_FUNC) &_hutilscpp_allocate0_int, 2},
+    {"_hutilscpp_allocate0_dbl", (DL_FUNC) &_hutilscpp_allocate0_dbl, 2},
+    {"_hutilscpp_allocate0_except", (DL_FUNC) &_hutilscpp_allocate0_except, 4},
+    {"_hutilscpp_allocate_with_root", (DL_FUNC) &_hutilscpp_allocate_with_root, 6},
     {"_hutilscpp_anyOutside_int", (DL_FUNC) &_hutilscpp_anyOutside_int, 5},
     {"_hutilscpp_anyOutside_dbl", (DL_FUNC) &_hutilscpp_anyOutside_dbl, 5},
     {"_hutilscpp_do_range_dbl", (DL_FUNC) &_hutilscpp_do_range_dbl, 3},

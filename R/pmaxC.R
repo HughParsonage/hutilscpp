@@ -149,6 +149,14 @@ pmax0 <- function(x, in_place = FALSE, sorted = FALSE, keep_nas = FALSE, nThread
   check_TF(keep_nas)
   check_omp(nThread)
 
+  if (is_altrep(x)) {
+    if (in_place) {
+      warning("`in_place = TRUE`, but `x` is an ALTREP vector. ",
+              "This is unsupported so `in_place` is being set to FALSE.")
+    }
+    return(do_pminmax0_altrep(x, do_pmin = FALSE, keep_nas = keep_nas, nThread = nThread))
+  }
+
   if (sorted) {
     if (is.integer(x)) {
       return(do_pmax0_radix_sorted_int(x, in_place = in_place))
@@ -178,6 +186,14 @@ pmin0 <- function(x, in_place = FALSE, sorted = FALSE, keep_nas = FALSE, nThread
   check_TF(keep_nas)
   check_omp(nThread)
 
+  if (is_altrep(x)) {
+    if (in_place) {
+      warning("`in_place = TRUE`, but `x` is an ALTREP vector. ",
+              "This is unsupported so `in_place` is being set to FALSE.")
+    }
+    return(do_pminmax0_altrep(x, do_pmin = TRUE, keep_nas = keep_nas, nThread = nThread))
+  }
+
   if (sorted) {
     if (is.integer(x)) {
       return(do_pmin0_radix_sorted_int(x, in_place = in_place))
@@ -195,7 +211,7 @@ pmin0 <- function(x, in_place = FALSE, sorted = FALSE, keep_nas = FALSE, nThread
 
 #' @rdname pmaxC
 #' @export
-pmaxV <- function(x, y, in_place = FALSE, dbl_ok = FALSE, nThread = getOption("hutilscpp.nThread", 1L)) {
+pmaxV <- function(x, y, in_place = FALSE, dbl_ok = TRUE, nThread = getOption("hutilscpp.nThread", 1L)) {
   check_TF(in_place)
   check_TF(dbl_ok)
   if (length(x) != length(y)) {
@@ -226,7 +242,7 @@ pmaxV <- function(x, y, in_place = FALSE, dbl_ok = FALSE, nThread = getOption("h
 
 #' @rdname pmaxC
 #' @export
-pminV <- function(x, y, in_place = FALSE, dbl_ok = FALSE, nThread = getOption("hutilscpp.nThread", 1L)) {
+pminV <- function(x, y, in_place = FALSE, dbl_ok = TRUE, nThread = getOption("hutilscpp.nThread", 1L)) {
   check_TF(in_place)
   check_TF(dbl_ok)
   if (length(x) != length(y)) {
@@ -337,11 +353,43 @@ do_pmin0_abs_int <- function(x) pmin0(x)
 do_pmax0 <- do_pmax0_bitwise
 do_pmin0 <- do_pmin0_bitwise
 
-do_pminV_dbl <- function(x, y, in_place = FALSE) pminV(x, y, in_place = in_place)
-do_pminV_int <- function(x, y, in_place = FALSE) pminV(x, y, in_place = in_place)
-do_pmaxNumNum <- do_pmaxIntInt <- do_pminV_int
 
+do_pminmax0_altrep <- function(x,
+                               a = 0L,
+                               keep_nas = FALSE,
+                               do_pmin = FALSE,
+                               nThread = getOption("hutilscpp.nThread", 1L)) {
+  x1 <- x[1]
+  n <- length(x)
+  xn <- x[n]
 
+  all_nonnegative <- x1 >= 0 && xn >= 0
+  all_nonpositive <- x1 <= 0 && xn <= 0
+
+  if (do_pmin && all_nonpositive) {
+    return(x)
+  }
+  if (!do_pmin && all_nonnegative) {
+    return(x)
+  }
+  if (!do_pmin && all_nonpositive) {
+    return(allocate0_int(n, nThread = nThread))
+  }
+  if (do_pmin && all_nonnegative) {
+    return(allocate0_int(n, nThread = nThread))
+  }
+
+  d <- x[2] - x[1]
+  # Should zeroes be to the
+  # left of the root or
+  #  0  0  0  1  2  3  4
+  # right?
+  # -2 -1  0  0  0  0  0
+  #
+  zero_left <- XOR(do_pmin, x1 < 0)
+  root <- (-x1 / d)
+  allocate_with_root(n, a = a, root, zero_left, do_pmin = do_pmin, nThread = nThread)
+}
 
 
 

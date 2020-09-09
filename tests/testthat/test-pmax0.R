@@ -1,4 +1,5 @@
 test_that("pmax0 abs", {
+  expect_true(TRUE) # to get started
   x <- c(-1, 0, 1, -1)
   expect_identical(pmax.int(x, 0), do_pmax0_abs_dbl(x))
   # Need to test extrema
@@ -19,12 +20,13 @@ test_that("pmax0 radix", {
   expect_identical(pmax0(x), do_pmax0_radix_sorted_int(x))
 
   x <- -5:6
+  x[1] <- -5L
   pmax0(x, sorted = TRUE, in_place = TRUE)
   expect_equal(x, pmax(-5:6, 0))
-  x <- as.double(-5:6)
+  x <- (-5:6 + 0)
   pmax0(x, sorted = TRUE, in_place = TRUE)
   expect_equal(x, pmax(-5:6, 0))
-  x <- 5:-6
+  x <- copy(5:-6)
   pmax0(x, sorted = TRUE, in_place = TRUE)
   expect_equal(x, pmax(5:-6, 0))
   x <- 5:-6 + 0
@@ -39,13 +41,13 @@ test_that("pmax0 radix extrema", {
   min_int <- -.Machine$integer.max
   max_int <- +.Machine$integer.max
   x <- min_int:max_int
-  res <- do_pmax0_radix_sorted_int(x)
-  expect_equal(which_first(x > 0), which_first(res > 0))
+  res <- pmax0(x)
+  expect_equal(which_first(res > 0), max_int)
   res <- NULL
   x <- NULL
   x <- max_int:min_int
-  res <- do_pmax0_radix_sorted_int(x)
-  expect_equal(which_first(x == 0), which_first(res == 0))
+  res <- pmax0(x)
+  expect_equal(which_first(x == 0), max_int)
 })
 
 test_that("firstNonnegativeRadix", {
@@ -75,13 +77,14 @@ test_that("firstNonnegativeRadix corners", {
   expect_lte(firstNonNegativeRadix(-x, desc = TRUE), 1)
   expect_lte(firstNonNegativeRadix(-x, maxi = 5), 5)
 
+  # Check bad arguments to mini
   expect_equal(do_firstNonNegativeRadix_int(1:5, mini = -2L), 0)
   expect_equal(do_firstNonNegativeRadix_dbl(1:5, mini = -2L), 0)
 
 })
 
 test_that("Already nonnegative", {
-  x <- 1:100
+  x <- 1:100 + 0L
   expect_equal(pmax0(x, sorted = TRUE), pmax(x, 0))
   expect_equal(do_pmax0_abs_int(x), 1:100)
   expect_equal(do_pmax0_radix_sorted_int(x), 1:100)
@@ -171,8 +174,8 @@ test_that("do_pmin0s", {
 
 
 test_that("in-place", {
-  abc <- -1:5
-  def <- -1:5
+  abc <- -1:5 + 0L
+  def <- -1:5 + 0L
   expect_equal(pmax0(abc, in_place = TRUE), pmax.int(def, 0L))
   expect_equal(abc, pmax.int(def, 0L))
 })
@@ -180,5 +183,27 @@ test_that("in-place", {
 
 test_that("pmax0 bitwise", {
   expect_equal(do_pmax0_bitwise(-1:5), pmax.int(-1:5, 0L))
+})
+
+
+test_that("pmax0 sorted but all negative", {
+  expect_equal(pmax0(rep(-1L, 10), sorted = TRUE), integer(10))
+  expect_equal(pmax0(-10:-1, sorted = TRUE), integer(10))
+  expect_equal(pmax0(rep(-1, 10), sorted = TRUE), double(10))
+  expect_equal(pmax0(-10:-1 + 0, sorted = TRUE), double(10))
+})
+
+test_that("pmax0 altrep", {
+  expect_warning(pmax0(1:10, in_place = TRUE), "ALTREP")
+  expect_equal(pmax0(1:10), pmax(1:10, 0L))
+  expect_equal(pmax0(-1:-10), pmax(-1:-10, 0L))
+  expect_equal(pmax0(-1:10), pmax(-1:10, 0L))
+  expect_equal(pmax0(1:-10), pmax(1:-10, 0L))
+})
+
+test_that("pmax0 sorted double", {
+  expect_equal(do_pmax0_radix_sorted_dbl(double(0)), double(0))
+  expect_equal(do_pmax0_radix_sorted_dbl(0.25), 0.25)
+  expect_equal(do_pmax0_radix_sorted_dbl(-0.25), 0)
 })
 

@@ -18,6 +18,10 @@ test_that("isnt_number", {
   expect_error(anyOutside(1:5, double(0), 1),
                regexp = "`a` had length 0, but must be length-one",
                fixed = TRUE)
+  expect_true(isnt_number(3e9, int.only = TRUE, na.bad = FALSE))
+  expect_true(isnt_number(NaN, int.only = TRUE, na.bad = FALSE))
+  expect_false(isnt_number(NA_real_, int.only = TRUE, na.bad = FALSE))
+  expect_true(isnt_number(-3e9, int.only = TRUE))
 })
 
 test_that("isnt_integersih", {
