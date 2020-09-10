@@ -32,11 +32,11 @@ bool is_constant_(const Vector<RTYPE>& x, int nThread)
 // [[Rcpp::export(rng = false)]]
 bool all_na_real(DoubleVector x, int nThread = 1) {
   R_xlen_t N = x.length();
-  bool o = R_IsNA(x[0]);
+  bool o = ISNAN(x[0]);
   if (o) {
 #pragma omp parallel for num_threads(nThread) reduction(&& : o)
     for (R_xlen_t i = 1; i < N; ++i) {
-      o = o && R_IsNA(x[0]);
+      o = o && ISNAN(x[i]);
     }
   }
   return o;

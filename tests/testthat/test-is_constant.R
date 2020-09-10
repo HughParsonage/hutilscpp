@@ -24,6 +24,10 @@ test_that("is_constant works", {
   expect_false(is_constant(c(character(10), 1)))
   expect_false(is_constant(c(raw(10), as.raw(1))))
   expect_false(is_constant(c(factor(c(character(10), 1)))))
+  expect_false(is_constant(c(NaN, 1)))
+  expect_false(is_constant(c(NA, 1)))
+  expect_true(is_constant(c(NaN, NA)))
+  expect_false(is_constant(c(NA, NaN, 1)))
 
 })
 
