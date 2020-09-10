@@ -39,13 +39,13 @@ IntegerVector allocate0_except(R_xlen_t N, IntegerVector India, IntegerVector Vi
   R_xlen_t tn = India.length();
   R_xlen_t vn = Victor.length();
   if (vn < 1 || tn < 1) {
-    warning("Ignoring Victor.");
-    return out;
+    warning("Ignoring Victor."); // # nocov
+    return out; // # nocov
   }
   for (R_xlen_t j = 0; j < tn; ++j) {
     R_xlen_t i = India[j];
     if (i < 0 || i >= N) {
-      continue;
+      continue; // # nocov
     }
     int v = (tn == vn) ? Victor[j] : Victor[0];
     out[i] = v;

@@ -1,10 +1,13 @@
 
 
-rev <- function(x) {
+hutilscpp_rev <- function(x) {
+  if (!length(x)) {
+    return(x)
+  }
   # to avoid slowness on certain altrep vectors
   if (is_altrep(x)) {
     return(seq.int(x[length(x)], x[1]))
   }
-  if (length(x)) x[length(x):1L] else x
+  x[length(x):1L]
 }
 
