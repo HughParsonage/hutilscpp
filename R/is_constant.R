@@ -30,6 +30,10 @@
 #' This has the virtue of \code{!isntConstant(x) == is_constant(x)}.}
 #' }
 #'
+#' Multithreaded \code{is_constant(x, nThread)} should only be used if
+#' \code{x} is expected to be true. It will be faster when
+#' \code{x} is constant but much slower otherwise.
+#'
 #' Empty vectors are constant, as are length-one vectors.
 #'
 #'
