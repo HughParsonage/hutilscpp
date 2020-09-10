@@ -25,12 +25,12 @@ test_that("Error handling", {
 test_that("pmin0 sorted", {
   x <- as.double(seq(-1e6, 1e7, length.out = 3e3))
   expect_identical(pmin0(x), do_pmin0_radix_sorted_dbl(x))
-  x <- rev(x)
+  x <- hutilscpp_rev(x)
   expect_identical(pmin0(x), do_pmin0_radix_sorted_dbl(x))
-  x <- rev(x)
+  x <- hutilscpp_rev(x)
   x <- as.integer(x)
   expect_identical(pmin0(x), do_pmin0_radix_sorted_int(x))
-  x <- rev(x)
+  x <- hutilscpp_rev(x)
   expect_identical(pmin0(x), do_pmin0_radix_sorted_int(x))
 
   x <- -5:6 + 0L

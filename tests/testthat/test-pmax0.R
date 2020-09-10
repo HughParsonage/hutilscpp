@@ -11,12 +11,12 @@ test_that("pmax0 abs", {
 test_that("pmax0 radix", {
   x <- as.double(seq(-1e6, 1e7, length.out = 3e3))
   expect_identical(pmax0(x), do_pmax0_radix_sorted_dbl(x))
-  x <- rev(x)
+  x <- hutilscpp_rev(x)
   expect_identical(pmax0(x), do_pmax0_radix_sorted_dbl(x))
-  x <- rev(x)
+  x <- hutilscpp_rev(x)
   x <- as.integer(x)
   expect_identical(pmax0(x), do_pmax0_radix_sorted_int(x))
-  x <- rev(x)
+  x <- hutilscpp_rev(x)
   expect_identical(pmax0(x), do_pmax0_radix_sorted_int(x))
 
   x <- -5:6
@@ -53,7 +53,7 @@ test_that("pmax0 radix extrema", {
 test_that("firstNonnegativeRadix", {
   x <- c(-1, -1, 0, 0, 1, 1)
   expect_equal(firstNonNegativeRadix(x) + 1L, 3L)
-  x <- rev(x)
+  x <- hutilscpp_rev(x)
   expect_equal(firstNonNegativeRadix(x, desc = TRUE) + 1L, 3L)
 
   big <- seq(-99e3, 75e4, length.out = 1e4)
@@ -99,7 +99,7 @@ test_that("Already nonnegative", {
   expect_equal(pmax0(x, sorted = TRUE), pmax(x, 0))
   expect_equal(do_pmax0_abs_int(x), pmax(x, 0))
   expect_equal(do_pmax0_radix_sorted_int(x), pmax(x, 0))
-  x <- rev(x)
+  x <- hutilscpp_rev(x)
   expect_equal(pmax0(x, sorted = TRUE), pmax(x, 0))
   expect_equal(do_pmax0_abs_int(x), pmax(x, 0))
   expect_equal(do_pmax0_radix_sorted_int(x), pmax(x, 0))
@@ -121,7 +121,7 @@ test_that("do_pmin0s", {
   x <- sort(x)
   expect_equal(do_pmin0_radix_sorted_int(x), pmin(x, 0L))
 
-  x <- rev(x)
+  x <- hutilscpp_rev(x)
 
   expect_equal(do_pmin0_abs_int(x), pmin(x, 0L))
   x <- sort(x)
@@ -134,7 +134,7 @@ test_that("do_pmin0s", {
   x <- sort(x)
   expect_equal(do_pmin0_radix_sorted_dbl(x), pmin(x, 0L))
 
-  x <- rev(x)
+  x <- hutilscpp_rev(x)
 
   expect_equal(do_pmin0_abs_dbl(x), pmin(x, 0L))
   x <- sort(x)
