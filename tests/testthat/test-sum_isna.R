@@ -58,3 +58,33 @@ test_that("sum_isfalse", {
   x <- c(TRUE, FALSE, NA)
   expect_equal(sum_isfalse(x), 1)
 })
+
+test_that("sum_isna_real", {
+  x <- c(1:5, 0.5)
+  expect_equal(sum_isna(x), sum(is.na(x)))
+  x <- c(NA, 1:5, 0.5)
+  expect_equal(sum_isna(x), sum(is.na(x)))
+  x <- c(NA, 1:5, 0.5, NA)
+  expect_equal(sum_isna(x), sum(is.na(x)))
+  x <- c(NA, 1:5, 0.5, NaN)
+  expect_equal(sum_isna(x), sum(is.na(x)))
+  x <- c(NaN, 1:5, 0.5, NaN)
+  expect_equal(sum_isna(x), sum(is.na(x)))
+  x <- c(1:5, 0.5, NaN)
+  expect_equal(sum_isna(x), sum(is.na(x)))
+
+  x <- c(1:5, 0.5)
+  expect_equal(sum_isna(x, do_anyNA = FALSE), sum(is.na(x)))
+  x <- c(NA, 1:5, 0.5)
+  expect_equal(sum_isna(x, do_anyNA = FALSE), sum(is.na(x)))
+  x <- c(NA, 1:5, 0.5, NA)
+  expect_equal(sum_isna(x, do_anyNA = FALSE), sum(is.na(x)))
+  x <- c(NA, 1:5, 0.5, NaN)
+  expect_equal(sum_isna(x, do_anyNA = FALSE), sum(is.na(x)))
+  x <- c(NaN, 1:5, 0.5, NaN)
+  expect_equal(sum_isna(x, do_anyNA = FALSE), sum(is.na(x)))
+  x <- c(1:5, 0.5, NaN)
+  expect_equal(sum_isna(x, do_anyNA = FALSE), sum(is.na(x)))
+})
+
+

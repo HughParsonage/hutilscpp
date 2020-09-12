@@ -346,14 +346,6 @@ pmin3 <- function(x, y, z, in_place = FALSE) {
 }
 
 
-do_pmax0_abs_dbl <- function(x) pmax0(x)
-do_pmin0_abs_dbl <- function(x) pmin0(x)
-do_pmax0_abs_int <- function(x) pmax0(x)
-do_pmin0_abs_int <- function(x) pmin0(x)
-do_pmax0 <- do_pmax0_bitwise
-do_pmin0 <- do_pmin0_bitwise
-
-
 do_pminmax0_altrep <- function(x,
                                a = 0L,
                                keep_nas = FALSE,

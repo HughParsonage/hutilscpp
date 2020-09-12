@@ -409,28 +409,28 @@ squishi <- function(x, a, b, in_place = FALSE) {
     .Call(`_hutilscpp_squishi`, x, a, b, in_place)
 }
 
-sum_isna_int <- function(x) {
-    .Call(`_hutilscpp_sum_isna_int`, x)
+sum_isna_int <- function(x, nThread = 1L) {
+    .Call(`_hutilscpp_sum_isna_int`, x, nThread)
 }
 
-sum_isna_dbl <- function(x) {
-    .Call(`_hutilscpp_sum_isna_dbl`, x)
+sum_isna_dbl <- function(x, nThread = 1L) {
+    .Call(`_hutilscpp_sum_isna_dbl`, x, nThread)
 }
 
-sum_isna_complx <- function(x) {
-    .Call(`_hutilscpp_sum_isna_complx`, x)
+sum_isna_complx <- function(x, nThread = 1L) {
+    .Call(`_hutilscpp_sum_isna_complx`, x, nThread)
 }
 
-sum_isna_char <- function(x) {
-    .Call(`_hutilscpp_sum_isna_char`, x)
+sum_isna_char <- function(x, nThread = 1L) {
+    .Call(`_hutilscpp_sum_isna_char`, x, nThread)
 }
 
-sum_isfalse <- function(x) {
-    .Call(`_hutilscpp_sum_isfalse`, x)
+sum_isfalse <- function(x, nThread = 1L) {
+    .Call(`_hutilscpp_sum_isfalse`, x, nThread)
 }
 
-sum_isna_logi <- function(x) {
-    .Call(`_hutilscpp_sum_isna_logi`, x)
+sum_isna_logi <- function(x, nThread = 1L) {
+    .Call(`_hutilscpp_sum_isna_logi`, x, nThread)
 }
 
 do_summary3_dbl <- function(x, y, z, in_place = FALSE, do_max = TRUE) {
@@ -439,6 +439,30 @@ do_summary3_dbl <- function(x, y, z, in_place = FALSE, do_max = TRUE) {
 
 do_summary3_int <- function(x, y, z, in_place = FALSE, do_max = TRUE) {
     .Call(`_hutilscpp_do_summary3_int`, x, y, z, in_place, do_max)
+}
+
+validate_nchar1 <- function(x, return_size = FALSE) {
+    .Call(`_hutilscpp_validate_nchar1`, x, return_size)
+}
+
+max_charsize <- function(x) {
+    .Call(`_hutilscpp_max_charsize`, x)
+}
+
+is_space <- function(x) {
+    .Call(`_hutilscpp_is_space`, x)
+}
+
+where_square_bracket_opens <- function(x, i = 0L) {
+    .Call(`_hutilscpp_where_square_bracket_opens`, x, i)
+}
+
+tmp_mark_work <- function(x, Command) {
+    .Call(`_hutilscpp_tmp_mark_work`, x, Command)
+}
+
+MatchArgCont <- function(x, Command) {
+    .Call(`_hutilscpp_MatchArgCont`, x, Command)
 }
 
 extractMandatory <- function(x, command, nCommands) {
