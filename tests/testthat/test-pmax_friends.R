@@ -71,7 +71,7 @@ test_that("pmax0", {
   expect_identical(pmax0(integer(0)), integer(0))
   expect_equal(pmax0(c(-1, 0.5, 0)), c(0, 0.5, 0))
   expect_error(pmax0(""), regexp = "numeric")
-  expect_equal(min(do_pmax0(c(-1, 0, 1))), 0)
+  expect_equal(min(pmax0(c(-1, 0, 1))), 0)
 })
 
 test_that("pmax0 in-place", {

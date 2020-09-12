@@ -6,18 +6,27 @@
 #' count the \code{NA}'s in \code{x} one-by-one? By default, set to \code{TRUE},
 #' since it is generally quicker. It will only be slower when \code{NA} is rare
 #' and occurs late in \code{x}.
+#'
+#' Ignored silently if \code{nThread != 1}.
+#'
+#' @param nThread \describe{
+#' \item{\code{nThread}}{Number of threads to use.}
+#' }
+#'
 #' @examples
 #' sum_isna(c(1:5, NA))
+#' sum_isna(c(NaN, NA))  # 2 from v0.4.0 (Sep 2020)
 #' @export
 
-sum_isna <- function(x, do_anyNA = TRUE) {
+sum_isna <- function(x, do_anyNA = TRUE, nThread = getOption("hutilscpp.nThread", 1L)) {
   if (!is.atomic(x)) {
     stop("`x` was class ", paste0(class(x), collapse = " "), ", but must be atomic.")
   }
   if (length(x) == 0L) {
     return(0L)
   }
-  if (do_anyNA && !anyNA(x)) {
+  check_omp(nThread)
+  if (do_anyNA && nThread == 1L && !anyNA(x)) {
     return(0L)
   }
   o <- switch(typeof(x),

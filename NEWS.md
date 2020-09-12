@@ -2,9 +2,11 @@
 
 ## Breaking changes
 * `pminV` no longer accept non-numeric input
+* `do_` functions have been removed entirely
 
 ## Bug fixes:
 * `pmax0(x, in_place = TRUE)` now returns early, rather than checking the vector twice.
+* `sum_isna` now reflects `sum(is.na(x))` when x contains `NaN`.
 
 ## New functions:
 * `which_last` for the first index from the last index.
@@ -18,6 +20,7 @@
 * `which_first` accepts argument `use.which.max` for better performance on known short inputs
 * `is_constant` now accepts `nThread` for multithreaded checking of constant vectors
   and is much faster in general even in single-thread mode.
+* `sum_isna` now accepts `nThread` for multithreaded accumulation of missing value counts
   
 
 

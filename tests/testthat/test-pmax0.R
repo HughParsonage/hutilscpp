@@ -1,11 +1,11 @@
 test_that("pmax0 abs", {
   expect_true(TRUE) # to get started
   x <- c(-1, 0, 1, -1)
-  expect_identical(pmax.int(x, 0), do_pmax0_abs_dbl(x))
+  expect_identical(pmax.int(x, 0), pmax0(x))
   # Need to test extrema
   skip_if_not(is.integer(-.Machine$integer.max))
   y <- c(-.Machine$integer.max, .Machine$integer.max, 0L)
-  expect_identical(do_pmax0_abs_int(y), c(0L, .Machine$integer.max, 0L))
+  expect_identical(pmax0(y), c(0L, .Machine$integer.max, 0L))
 })
 
 test_that("pmax0 radix", {
@@ -86,57 +86,57 @@ test_that("firstNonnegativeRadix corners", {
 test_that("Already nonnegative", {
   x <- 1:100 + 0L
   expect_equal(pmax0(x, sorted = TRUE), pmax(x, 0))
-  expect_equal(do_pmax0_abs_int(x), 1:100)
+  expect_equal(pmax0(x), 1:100)
   expect_equal(do_pmax0_radix_sorted_int(x), 1:100)
   x <- as.double(x)
   expect_equal(pmax0(x, sorted = TRUE), 1:100)
-  expect_equal(do_pmax0_abs_dbl(x), 1:100)
+  expect_equal(pmax0(x), 1:100)
   expect_equal(do_pmax0_radix_sorted_dbl(x), 1:100)
   x <- x - 2L
-  expect_equal(do_pmax0_abs_dbl(x), pmax(x, 0))
+  expect_equal(pmax0(x), pmax(x, 0))
   expect_equal(do_pmax0_radix_sorted_dbl(x), pmax(x, 0))
   x <- as.integer(x)
   expect_equal(pmax0(x, sorted = TRUE), pmax(x, 0))
-  expect_equal(do_pmax0_abs_int(x), pmax(x, 0))
+  expect_equal(pmax0(x), pmax(x, 0))
   expect_equal(do_pmax0_radix_sorted_int(x), pmax(x, 0))
   x <- hutilscpp_rev(x)
   expect_equal(pmax0(x, sorted = TRUE), pmax(x, 0))
-  expect_equal(do_pmax0_abs_int(x), pmax(x, 0))
+  expect_equal(pmax0(x), pmax(x, 0))
   expect_equal(do_pmax0_radix_sorted_int(x), pmax(x, 0))
   x <- as.double(x)
   expect_equal(pmax0(x, sorted = TRUE), pmax(x, 0))
-  expect_equal(do_pmax0_abs_dbl(x), pmax(x, 0))
+  expect_equal(pmax0(x), pmax(x, 0))
   expect_equal(do_pmax0_radix_sorted_dbl(x), pmax(x, 0))
 
 
   x <- c(x, -1L, x)
-  expect_equal(do_pmax0_abs_int(x), pmax(x, 0L))
+  expect_equal(pmax0(x), pmax(x, 0L))
   xd <- as.double(x)
-  expect_equal(do_pmax0_abs_dbl(x), pmax(xd, 0))
+  expect_equal(pmax0(x), pmax(xd, 0))
 })
 
 test_that("do_pmin0s", {
   x <- c(0L, 6L, -4L, -2L, -1L, 7L, 9L, 4L, 8L, 3L, 10L, 5L, -3L, 1L, 2L)
-  expect_equal(do_pmin0_abs_int(x), pmin(x, 0L))
+  expect_equal(pmin0(x), pmin(x, 0L))
   x <- sort(x)
   expect_equal(do_pmin0_radix_sorted_int(x), pmin(x, 0L))
 
   x <- hutilscpp_rev(x)
 
-  expect_equal(do_pmin0_abs_int(x), pmin(x, 0L))
+  expect_equal(pmin0(x), pmin(x, 0L))
   x <- sort(x)
   expect_equal(do_pmin0_radix_sorted_int(x), pmin(x, 0L))
 
 
   x <- as.double(x)
 
-  expect_equal(do_pmin0_abs_dbl(x), pmin(x, 0L))
+  expect_equal(pmin0(x), pmin(x, 0L))
   x <- sort(x)
   expect_equal(do_pmin0_radix_sorted_dbl(x), pmin(x, 0L))
 
   x <- hutilscpp_rev(x)
 
-  expect_equal(do_pmin0_abs_dbl(x), pmin(x, 0L))
+  expect_equal(pmin0(x), pmin(x, 0L))
   x <- sort(x)
   expect_equal(do_pmin0_radix_sorted_dbl(x), pmin(x, 0L))
 
@@ -146,23 +146,23 @@ test_that("do_pmin0s", {
 
   # Now check already nonpositive
   x <- as.double(x)
-  expect_equal(do_pmin0_abs_dbl(x), pmin(x, 0L))
+  expect_equal(pmin0(x), pmin(x, 0L))
   x <- sort(x)
   expect_equal(do_pmin0_radix_sorted_dbl(x), pmin(x, 0L))
 
   x <- as.integer(x)
-  expect_equal(do_pmin0_abs_int(x), pmin(x, 0L))
+  expect_equal(pmin0(x), pmin(x, 0L))
   x <- sort(x)
   expect_equal(do_pmin0_radix_sorted_int(x), pmin(x, 0L))
 
   # Now strictly positive
   x <- x - 1L
-  expect_equal(do_pmin0_abs_int(x), pmin(x, 0L))
+  expect_equal(pmin0(x), pmin(x, 0L))
   x <- sort(x)
   expect_equal(do_pmin0_radix_sorted_int(x), pmin(x, 0L))
 
   x <- as.double(x)
-  expect_equal(do_pmin0_abs_dbl(x), pmin(x, 0L))
+  expect_equal(pmin0(x), pmin(x, 0L))
   x <- sort(x)
   expect_equal(do_pmin0_radix_sorted_dbl(x), pmin(x, 0L))
 

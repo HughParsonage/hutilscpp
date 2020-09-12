@@ -1,34 +1,39 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// [[Rcpp::export]]
-R_xlen_t sum_isna_int(IntegerVector x) {
+// [[Rcpp::export(rng = false)]]
+R_xlen_t sum_isna_int(IntegerVector x, int nThread = 1) {
   R_xlen_t n = x.size();
   R_xlen_t out = 0;
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread) reduction(+ : out)
+#endif
   for (R_xlen_t i = 0; i < n; ++i) {
-    if (x[i] == NA_INTEGER) {
-      out += 1;
-    }
+    out += x[i] == NA_INTEGER;
   }
   return out;
 }
 
-// [[Rcpp::export]]
-R_xlen_t sum_isna_dbl(DoubleVector x) {
+// [[Rcpp::export(rng = false)]]
+R_xlen_t sum_isna_dbl(DoubleVector x, int nThread = 1) {
   R_xlen_t n = x.size();
   R_xlen_t out = 0;
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread) reduction(+ : out)
+#endif
   for (R_xlen_t i = 0; i < n; ++i) {
-    if (R_IsNA(x[i])) {
-      out += 1;
-    }
+    out += ISNAN(x[i]);
   }
   return out;
 }
 
-// [[Rcpp::export]]
-R_xlen_t sum_isna_complx(ComplexVector x) {
+// [[Rcpp::export(rng = false)]]
+R_xlen_t sum_isna_complx(ComplexVector x, int nThread = 1) {
   R_xlen_t n = x.size();
   R_xlen_t out = 0;
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread) reduction(+ : out)
+#endif
   for (R_xlen_t i = 0; i < n; ++i) {
     Rcomplex v = COMPLEX_ELT(x, i);
     if (ISNAN(v.r) || ISNAN(v.i)) {
@@ -38,22 +43,26 @@ R_xlen_t sum_isna_complx(ComplexVector x) {
   return out;
 }
 
-// [[Rcpp::export]]
-R_xlen_t sum_isna_char(CharacterVector x) {
+// [[Rcpp::export(rng = false)]]
+R_xlen_t sum_isna_char(CharacterVector x, int nThread = 1) {
   R_xlen_t n = x.size();
   R_xlen_t out = 0;
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread) reduction(+ : out)
+#endif
   for (R_xlen_t i = 0; i < n; ++i) {
-    if (x[i] == NA_STRING) {
-      out += 1;
-    }
+    out += x[i] == NA_STRING;
   }
   return out;
 }
 
-// [[Rcpp::export]]
-R_xlen_t sum_isfalse(LogicalVector x) {
+// [[Rcpp::export(rng = false)]]
+R_xlen_t sum_isfalse(LogicalVector x, int nThread = 1) {
   R_xlen_t n = x.size();
   R_xlen_t out = n;
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread) reduction(+ : out)
+#endif
   for (R_xlen_t i = 0; i < n; ++i) {
     bool xi = x[i];
     out -= xi;
@@ -61,16 +70,15 @@ R_xlen_t sum_isfalse(LogicalVector x) {
   return out;
 }
 
-// [[Rcpp::export]]
-R_xlen_t sum_isna_logi(LogicalVector x) {
+// [[Rcpp::export(rng = false)]]
+R_xlen_t sum_isna_logi(LogicalVector x, int nThread = 1) {
   R_xlen_t n = x.size();
   R_xlen_t out = 0;
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread) reduction(+ : out)
+#endif
   for (R_xlen_t i = 0; i < n; ++i) {
-    if (x[i] == NA_LOGICAL) {
-      out += 1;
-    }
+    out += x[i] == NA_LOGICAL;
   }
   return out;
 }
-
-
