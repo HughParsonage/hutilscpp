@@ -30689,4 +30689,22 @@ test_that("or3s ... and parent frames", {
                or(or3(exprA >= 1L, exprB >= 1L, exprC >= 1L),
                   or3(exprA <= 6L, exprB <= 7L, exprC <= 10L)))
 
+  skip_if_not_installed("data.table")
+  library(data.table)
+  DT <- CJ(u = logical(4),
+           v = c(FALSE, FALSE, FALSE, TRUE),
+           w = c(FALSE, FALSE, TRUE, TRUE),
+           x = c(FALSE, TRUE, TRUE, TRUE),
+           y = c(TRUE, TRUE, TRUE, TRUE))
+  DT[, ans1 := or3s(u, v, w, x, !y)]
+  DT[, bns1 :=  u | v | w | x | !y]
+  DT[, ans2 := or3s(u,  v,  w,  !x,  y)]
+  DT[, bns2 :=      u | v | w | !x | y]
+  DT[, ans3 := or3s(u,  v,  w,  !x,  !y)]
+  DT[, bns3 :=      u | v | w | !x | !y]
+  expect_equal(DT$ans1, DT$bns1)
+  expect_equal(DT$ans2, DT$bns2)
+  expect_equal(DT$ans3, DT$bns3)
+
+
 })
