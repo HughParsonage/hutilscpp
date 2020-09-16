@@ -209,40 +209,10 @@ R_xlen_t do_which_first_lgl_lgl_op(LogicalVector x, LogicalVector y, int op, boo
   for (R_xlen_t k = 0; k < N; ++k) {
     R_xlen_t i = reverse ? (N - k - 1) : k;
     int xi = x[i];
-    int yi = len1 ? y[0] : y[i];
-
-
-    switch(op) {
-    case OP_NE:
-      if (xi != yi) {
-        return i + 1;
-      }
-      break;
-    case OP_EQ:
-      if (xi == yi) {
-        return i + 1;
-      }
-      break;
-    case OP_GE:
-      if (xi >= yi) {
-        return i + 1;
-      }
-      break;
-    case OP_LE:
-      if (xi <= yi) {
-        return i + 1;
-      }
-      break;
-    case OP_GT:
-      if (xi >  yi) {
-        return i + 1;
-      }
-      break;
-    case OP_LT:
-      if (xi <  yi) {
-        return i + 1;
-      }
-      break;
+    int y1 = len1 ? y[0] : y[i];
+    int y2 = (N == 2) ? y[1] : y[0];
+    if (single_ox_x1_x2(xi, op, y1, y2)) {
+      return i + 1;
     }
   }
   return 0;
@@ -323,48 +293,23 @@ R_xlen_t do_which_first_n(SEXP X, SEXP Y, int op, bool last = false) {
        R_xlen_t i = last ? (N - k - 1) : k;
        double yi = (Ny == N) ? y[i] : y[0];
        double xi = x[i];
-       switch (op) {
-       case 1:
-         if (xi != yi) return i + 1;
-         break;
-       case 2:
-         if (xi == yi) return i + 1;
-         break;
-       case 3:
-         if (xi >= yi) return i + 1;
-         break;
-       case 4:
-         if (xi <= yi) return i + 1;
-         break;
-       case 5:
-         if (xi >  yi) return i + 1;
-         break;
-       case 6:
-         if (xi <  yi) return i + 1;
-         break;
-       case 7:
+       double y1 = y[0];
+       double y2 = (op >= OP_IN) ? y[1] : y[0];
+       if (op < OP_IN) {
+         if (single_ox_x1_x2(xi, op, yi, yi)) {
+           return i + 1;
+         }
+       } else if (op == OP_IN) {
          for (R_xlen_t j = 0; j < Ny; ++j) {
            double yj = y[j];
            if (xi == yj) {
              return i + 1;
            }
          }
-         break;
-       case 8:
-         if (xi >= y[0] && xi <= y[1]) {
+       } else {
+         if (single_ox_x1_x2(xi, op, y1, y2)) {
            return i + 1;
          }
-         break;
-       case 9:
-         if (xi > y[0] && xi < y[1]) {
-           return i + 1;
-         }
-         break;
-       case 10:
-         if (xi <= y[0] || xi >= y[1]) {
-           return i + 1;
-         }
-         break;
        }
      }
      return 0;
@@ -384,24 +329,10 @@ R_xlen_t do_which_first_n(SEXP X, SEXP Y, int op, bool last = false) {
        R_xlen_t i = last ? (N - k - 1) : k;
        double yi = (Ny == N) ? y[i] : y[0];
        double xi = x[i];
+       if (op < OP_IN && single_ox_x1_x2(xi, op, yi, yi)) {
+         return i + 1;
+       }
        switch (op) {
-       case 1:
-         if (xi != yi) return i + 1;
-         break;
-       case 2:
-         if (xi == yi) return i + 1;
-         break;
-       case 3:
-         if (xi >= yi) return i + 1;
-         break;
-       case 4:
-         if (xi <= yi) return i + 1;
-         break;
-       case 5:
-         if (xi >  yi) return i + 1;
-         break;
-       case 6:
-         if (xi <  yi) return i + 1;
          break;
        case 7:
          for (R_xlen_t j = 0; j < Ny; ++j) {
