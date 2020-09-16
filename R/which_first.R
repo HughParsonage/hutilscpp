@@ -6,6 +6,7 @@
 #' @return The same as \code{which.max(expr)} or \code{which(expr)[1]} but returns \code{0L}
 #'  when \code{expr} has no \code{TRUE} values.
 #'
+#'
 #' @details
 #' If the \code{expr} is of the form \code{LHS <operator> RHS}
 #' and \code{LHS} is a single symbol, \code{operator} is one of

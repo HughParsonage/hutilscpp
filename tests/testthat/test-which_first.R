@@ -1,4 +1,4 @@
-context("test-which_first")
+context("which_first")
 
 test_that("which_first works", {
   x <- runif(10, 1, 2)
@@ -765,3 +765,22 @@ test_that("which_last internals", {
   expect_equal(do_which_first_notTRUE(c(TRUE, TRUE)), 0L)
   expect_equal(do_which_first_notTRUE(c(NA)), 1L)
 })
+
+test_that("which_firstNA", {
+  expect_equal(which_firstNA(1:10), 0)
+  expect_equal(which_firstNA(c(1:10, NA)), 11)
+  expect_equal(which_firstNA(NA), 1L)
+  expect_equal(which_firstNA(TRUE), 0)
+  expect_equal(which_firstNA(c(NA, " ")), 1)
+  expect_equal(which_firstNA(letters), 0)
+  expect_equal(which_firstNA(raw(5)), 0)
+  expect_equal(which_firstNA(NULL), 0)
+  expect_equal(which_firstNA(c(NA, 0)), 1)
+  expect_equal(which_firstNA(c(0, 0, NA, 0)), 3)
+  expect_equal(which_firstNA(c(0, 0, NA, NA)), 3)
+  expect_equal(which_firstNA(c(0, 0, 0)), 0)
+  expect_equal(which_firstNA(c(NA_real_)), 1)
+})
+
+
+
