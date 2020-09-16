@@ -14,7 +14,9 @@ test_that("count_logical works", {
 
 test_that("count_logical long", {
   skip_on_travis()
+  skip_on_appveyor()
   skip_if_not(is64bit())
+
   x <- logical(.Machine$integer.max + 1)
   cl <- count_logical(x)
   expect_equal(cl, c(.Machine$integer.max + 1, 0, 0))
