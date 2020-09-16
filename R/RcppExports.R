@@ -53,10 +53,6 @@ do_sum3s_par <- function(x, ox, x1, x2, xd, xd1, xd2, y, oy, y1, y2, yd, yd1, yd
     .Call(`_hutilscpp_do_sum3s_par`, x, ox, x1, x2, xd, xd1, xd2, y, oy, y1, y2, yd, yd1, yd2, z, oz, z1, z2, zd, zd1, zd2, A, B, C, ampersand, nThread)
 }
 
-simd_sum <- function(x, a, y, b) {
-    .Call(`_hutilscpp_simd_sum`, x, a, y, b)
-}
-
 do_cumsum_reset_logical <- function(x) {
     .Call(`_hutilscpp_do_cumsum_reset_logical`, x)
 }
@@ -179,10 +175,6 @@ do_which_last_notFALSE <- function(x) {
 
 do_which_first_lgl_lgl_op <- function(x, y, op, reverse = FALSE) {
     .Call(`_hutilscpp_do_which_first_lgl_lgl_op`, x, y, op, reverse)
-}
-
-do_which_first_int_int <- function(x, y, eq = TRUE, gt = FALSE, lt = FALSE) {
-    .Call(`_hutilscpp_do_which_first_int_int`, x, y, eq, gt, lt)
 }
 
 do_which_first_n <- function(X, Y, op, last = FALSE) {

@@ -1,6 +1,6 @@
 #include "cpphutils.h"
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 R_xlen_t do_which_first(LogicalVector x) {
   R_xlen_t N = x.size();
   for (R_xlen_t i = 0; i < N; ++i) {
@@ -11,7 +11,7 @@ R_xlen_t do_which_first(LogicalVector x) {
   return 0;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 R_xlen_t do_which_last(LogicalVector x) {
   R_xlen_t N = x.size();
   for (R_xlen_t i = N - 1; i >= 0; --i) {
@@ -22,7 +22,7 @@ R_xlen_t do_which_last(LogicalVector x) {
   return 0;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 R_xlen_t do_which_first_false (LogicalVector x) {
   R_xlen_t N = x.size();
   for (R_xlen_t i = 0; i < N; ++i) {
@@ -33,7 +33,7 @@ R_xlen_t do_which_first_false (LogicalVector x) {
   return 0;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 R_xlen_t do_which_last_false (LogicalVector x) {
   R_xlen_t N = x.size();
   for (R_xlen_t i = N - 1; i >= 0; --i) {
@@ -44,7 +44,7 @@ R_xlen_t do_which_last_false (LogicalVector x) {
   return 0;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 R_xlen_t do_which_first_notTRUE(LogicalVector x) {
   R_xlen_t N = x.size();
   for (R_xlen_t i = 0; i < N; ++i) {
@@ -55,7 +55,7 @@ R_xlen_t do_which_first_notTRUE(LogicalVector x) {
   return 0;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 R_xlen_t do_which_last_notTRUE(LogicalVector x) {
   R_xlen_t N = x.size();
   for (R_xlen_t i = N - 1; i >= 0; --i) {
@@ -66,7 +66,7 @@ R_xlen_t do_which_last_notTRUE(LogicalVector x) {
   return 0;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 R_xlen_t do_which_last_notFALSE(LogicalVector x) {
   R_xlen_t N = x.size();
   for (R_xlen_t i = N - 1; i >= 0; --i) {
@@ -177,75 +177,8 @@ R_xlen_t do_which_first_lgl_lgl_op(LogicalVector x, LogicalVector y, int op, boo
   return 0;
 }
 
-// [[Rcpp::export]]
-R_xlen_t do_which_first_int_int(IntegerVector x,
-                                IntegerVector y,
-                                bool eq = true,
-                                bool gt = false,
-                                bool lt = false) {
-  const R_xlen_t n = x.size();
-  const R_xlen_t m = y.size();
-  if (n != m) {
-    stop("lengths x and y differ.");
-  }
-  // != == >= <=  >  <
-  //  0  1  2  3  4  5
-  const int op = !(eq || gt || lt) ? 0 : (eq ? (gt ? 2 : (lt ? 3 : 1)) : (gt ? 4 : 5));
-
-  // if (op == 0) {
-  //   for (R_xlen_t i = 0; i < n; ++i) {
-  //     int xi = x[i];
-  //     int yi = y[i];
-  //     if (xi != yi) {
-  //       return ++i;
-  //     }
-  //   }
-  //   return 0;
-  // }
-
-  for (R_xlen_t i = 0; i < n; ++i) {
-    switch (op) {
-    case 0:
-      if (x[i] != y[i]) {
-        return ++i;
-      }
-      continue;
-    case 1:
-      if (x[i] == y[i]) {
-        return ++i;
-      }
-      continue;
-    case 2:
-      if (x[i] >= y[i]) {
-        return ++i;
-      }
-      continue;
-    case 3:
-      if (x[i] <= y[i]) {
-        return ++i;
-      }
-      continue;
-    case 4:
-      if (x[i] > y[i]) {
-        return ++i;
-      }
-      continue;
-    case 5:
-      if (x[i] < y[i]) {
-        return ++i;
-      }
-      continue;
-
-    }
-  }
-  return 0;
-
-}
-
-
-
-
-R_xlen_t do_which_first_n_(SEXP X, SEXP Y, int op, bool last = false) {
+// [[Rcpp::export(rng = false)]]
+R_xlen_t do_which_first_n(SEXP X, SEXP Y, int op, bool last = false) {
    if (TYPEOF(X) == INTSXP && TYPEOF(Y) == INTSXP) {
      IntegerVector x = X;
      IntegerVector y = Y;
@@ -490,20 +423,6 @@ R_xlen_t do_which_first_n_(SEXP X, SEXP Y, int op, bool last = false) {
    return 0; // # nocov
 }
 
-
-// [[Rcpp::export(rng = false)]]
-SEXP do_which_first_n(SEXP X, SEXP Y, int op, bool last = false) {
-  R_xlen_t o = do_which_first_n_(X, Y, op, last);
-  if (o <= 2147483647) {
-    IntegerVector oi(1);
-    oi[0] = o;
-    return oi;
-  } else {
-    NumericVector oi(1);
-    oi[0] = o;
-    return oi;
-  }
-}
 
 
 
