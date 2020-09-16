@@ -116,23 +116,23 @@ R_xlen_t do_which_first_lgl_lgl_op(LogicalVector x, LogicalVector y, int op, boo
       if (y[1] == FALSE && y[0] != FALSE) {
         return 0;
       }
+
       // otherwise we just use the normal:
-    } else {
-      //
-      for (R_xlen_t k = 0; k < N; ++k) {
-        R_xlen_t i = reverse ? (N - k - 1) : k;
-        if (hasNA && x[i] == NA_LOGICAL) {
-          return i + 1;
-        }
-        if (hasTRUE && x[i] == TRUE) {
-          return i + 1;
-        }
-        if (hasFALSE && x[i] == FALSE) {
-          return i + 1;
-        }
-      }
-      return 0;
     }
+    //
+    for (R_xlen_t k = 0; k < N; ++k) {
+      R_xlen_t i = reverse ? (N - k - 1) : k;
+      if (hasNA && x[i] == NA_LOGICAL) {
+        return i + 1;
+      }
+      if (hasTRUE && x[i] == TRUE) {
+        return i + 1;
+      }
+      if (hasFALSE && x[i] == FALSE) {
+        return i + 1;
+      }
+    }
+    return 0;
   }
 
   for (R_xlen_t k = 0; k < N; ++k) {
@@ -172,10 +172,6 @@ R_xlen_t do_which_first_lgl_lgl_op(LogicalVector x, LogicalVector y, int op, boo
         return i + 1;
       }
       break;
-    case OP_BW:
-      if (xi >= yi && xi <= yi) {
-        return i + 1;
-      }
     }
   }
   return 0;
