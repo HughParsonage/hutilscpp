@@ -12,6 +12,8 @@ test_that("isnt_integersih", {
 })
 
 test_that("is_integerish(altrep)", {
+  skip_if_not(is64bit())
+  skip_on_appveyor()
   x <- -2e9:2e9
   expect_equal(which_isnt_integerish(x), 0L)
   x <- -3e9:2e9

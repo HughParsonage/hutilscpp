@@ -114,8 +114,14 @@ test_that("which_last(all FALSE)", {
 
 test_that("which_first long", {
   skip_on_travis()
+  skip_on_appveyor()
   skip_if(.Machine$sizeof.pointer != 8)
-  x <- allocate0_except(25e8, c(2e9, 23e8), c(1L, -1L))
+  x <-
+    tryCatch(allocate0_except(25e8, c(2e9, 23e8), c(1L, -1L)),
+             error = function(e) {
+               NULL
+             })
+  skip_if(is.null(x), message = "error during allocation")
   expect_equal(which_first(x > 2L), 0L)
   expect_equal(which_last(x == 0), length(x))
   expect_equal(which_first(x == 1), 2e9)
