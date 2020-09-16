@@ -236,7 +236,7 @@ which_first <- function(expr,
       stop("Internal error: which_first_logical:165:20190823. Please report") # nocov
     }
 
-    if (length(rhs_eval) == length(lhs_eval)) {
+    if (length(rhs_eval) == length(lhs_eval) || operator == "%in%" || operator == "%between%") {
       if (is.logical(rhs_eval)) {
         # is.logical(rhs_eval)  necessary to ensure integers don't falsely resemble TRUE
         # e.g. which_first(c(TRUE, TRUE) != c(1L, 2L)) should be 2 not 0.
