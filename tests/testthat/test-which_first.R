@@ -157,25 +157,7 @@ test_that("match", {
   expect_identical(which_first(int_m == 2L), 2L)
 })
 
-test_that("which_first_int_int", {
-  x <- sample.int(10, size = 1000, replace = TRUE)
-  y <- sample.int(10, size = 1000, replace = TRUE)
-  expect_error(do_which_first_int_int(1:9, 1:10), "lengths")
-  expect_equal(do_which_first_int_int(x, y), which.max(x == y))
-  expect_equal(do_which_first_int_int(x, y, FALSE), which.max(x != y))
-  expect_equal(do_which_first_int_int(x, y, TRUE, gt = TRUE), which.max(x >= y))
-  expect_equal(do_which_first_int_int(x, x + 1L, TRUE, gt = TRUE), 0L)
-  expect_equal(do_which_first_int_int(x, y, TRUE, lt = TRUE), which.max(x <= y))
-  expect_equal(do_which_first_int_int(x, y, FALSE, gt = TRUE), which.max(x > y))
-  expect_equal(do_which_first_int_int(x, x, FALSE, gt = TRUE), 0L)
-  expect_equal(do_which_first_int_int(x, y, FALSE, lt = TRUE), which.max(x < y))
-  x <- c(0L, 1L)
-  y <- c(0L, 1L)
-  expect_equal(do_which_first_int_int(x, y, eq = FALSE), 0L)
-  y <- c(2L, 1L)
-  expect_equal(do_which_first_int_int(y, x, eq = TRUE, lt = TRUE), 2L)
-  expect_equal(do_which_first_int_int(y, x, eq = TRUE), 2L)
-})
+
 
 test_that(".which_first_logical all NA", {
   skip("For later consideration.")

@@ -210,20 +210,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// simd_sum
-int simd_sum(IntegerVector x, int a, IntegerVector y, int b);
-RcppExport SEXP _hutilscpp_simd_sum(SEXP xSEXP, SEXP aSEXP, SEXP ySEXP, SEXP bSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type a(aSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type b(bSEXP);
-    rcpp_result_gen = Rcpp::wrap(simd_sum(x, a, y, b));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_cumsum_reset_logical
 IntegerVector do_cumsum_reset_logical(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_cumsum_reset_logical(SEXP xSEXP) {
@@ -522,7 +508,6 @@ R_xlen_t do_which_first(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_first(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(do_which_first(x));
     return rcpp_result_gen;
@@ -533,7 +518,6 @@ R_xlen_t do_which_last(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_last(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(do_which_last(x));
     return rcpp_result_gen;
@@ -544,7 +528,6 @@ R_xlen_t do_which_first_false(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_first_false(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(do_which_first_false(x));
     return rcpp_result_gen;
@@ -555,7 +538,6 @@ R_xlen_t do_which_last_false(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_last_false(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(do_which_last_false(x));
     return rcpp_result_gen;
@@ -566,7 +548,6 @@ R_xlen_t do_which_first_notTRUE(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_first_notTRUE(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(do_which_first_notTRUE(x));
     return rcpp_result_gen;
@@ -577,7 +558,6 @@ R_xlen_t do_which_last_notTRUE(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_last_notTRUE(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(do_which_last_notTRUE(x));
     return rcpp_result_gen;
@@ -588,7 +568,6 @@ R_xlen_t do_which_last_notFALSE(LogicalVector x);
 RcppExport SEXP _hutilscpp_do_which_last_notFALSE(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(do_which_last_notFALSE(x));
     return rcpp_result_gen;
@@ -607,23 +586,8 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_which_first_int_int
-R_xlen_t do_which_first_int_int(IntegerVector x, IntegerVector y, bool eq, bool gt, bool lt);
-RcppExport SEXP _hutilscpp_do_which_first_int_int(SEXP xSEXP, SEXP ySEXP, SEXP eqSEXP, SEXP gtSEXP, SEXP ltSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< bool >::type eq(eqSEXP);
-    Rcpp::traits::input_parameter< bool >::type gt(gtSEXP);
-    Rcpp::traits::input_parameter< bool >::type lt(ltSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_first_int_int(x, y, eq, gt, lt));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_which_first_n
-SEXP do_which_first_n(SEXP X, SEXP Y, int op, bool last);
+R_xlen_t do_which_first_n(SEXP X, SEXP Y, int op, bool last);
 RcppExport SEXP _hutilscpp_do_which_first_n(SEXP XSEXP, SEXP YSEXP, SEXP opSEXP, SEXP lastSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -1370,7 +1334,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_range_int", (DL_FUNC) &_hutilscpp_do_range_int, 3},
     {"_hutilscpp_do_and3_par", (DL_FUNC) &_hutilscpp_do_and3_par, 17},
     {"_hutilscpp_do_sum3s_par", (DL_FUNC) &_hutilscpp_do_sum3s_par, 26},
-    {"_hutilscpp_simd_sum", (DL_FUNC) &_hutilscpp_simd_sum, 4},
     {"_hutilscpp_do_cumsum_reset_logical", (DL_FUNC) &_hutilscpp_do_cumsum_reset_logical, 1},
     {"_hutilscpp_do_cumsum_reset_integer", (DL_FUNC) &_hutilscpp_do_cumsum_reset_integer, 2},
     {"_hutilscpp_do_cumsum_reset_double", (DL_FUNC) &_hutilscpp_do_cumsum_reset_double, 2},
@@ -1402,7 +1365,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which_last_notTRUE", (DL_FUNC) &_hutilscpp_do_which_last_notTRUE, 1},
     {"_hutilscpp_do_which_last_notFALSE", (DL_FUNC) &_hutilscpp_do_which_last_notFALSE, 1},
     {"_hutilscpp_do_which_first_lgl_lgl_op", (DL_FUNC) &_hutilscpp_do_which_first_lgl_lgl_op, 4},
-    {"_hutilscpp_do_which_first_int_int", (DL_FUNC) &_hutilscpp_do_which_first_int_int, 5},
     {"_hutilscpp_do_which_first_n", (DL_FUNC) &_hutilscpp_do_which_first_n, 4},
     {"_hutilscpp_do_which_isnt_integerish", (DL_FUNC) &_hutilscpp_do_which_isnt_integerish, 1},
     {"_hutilscpp_do_whichs_16", (DL_FUNC) &_hutilscpp_do_whichs_16, 4},

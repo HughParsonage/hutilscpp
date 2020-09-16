@@ -629,15 +629,4 @@ R_xlen_t do_sum3s_par(IntegerVector x, int ox, int x1, int x2,
   return out;
 }
 
-#include "nmmintrin.h"
-#include "immintrin.h"
-
-// __m128i _mm_min_epi32 (__m128i a, __m128i b);
-
-// [[Rcpp::export]]
-int simd_sum(IntegerVector x, int a, IntegerVector y, int b) {
-  // union { __m128i oz4; __m128i ow4; };
-  // oz4 = ow4 = _mm_setzero_ps();
-  return x[0];
-}
 

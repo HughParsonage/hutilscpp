@@ -282,17 +282,12 @@ which_first <- function(expr,
     } else {
       o <- .which_first_logical(lhs_eval, as.logical(rhs_eval), operator = operator, rev = reverse)
     }
-    return(o)
-  }
-
-  if (op < do_op2M("%in%") && length(lhs_eval) != length(rhs_eval) && length(rhs_eval) != 1L) {
-    stop("In `which_first(<lhs> ", operator, " <rhs>)`, the length of <rhs> was neither ",
-         "`length(<lhs>) = ", length(lhs_eval), "` nor 1. Such recycling is not supported")
+    return(R_xlen_t(o))
   }
 
   if (is.numeric(lhs_eval) && is.numeric(rhs_eval) &&
       (length(lhs_eval) == length(rhs_eval) || op)) {
-    return(do_which_first_n(lhs_eval, rhs_eval, op, reverse))
+    return(R_xlen_t(do_which_first_n(lhs_eval, rhs_eval, op, reverse)))
   }
 
   if (is.character(lhs_eval)) {
@@ -310,11 +305,8 @@ which_first <- function(expr,
   }
 
   o <- .which_first(expr, reverse = reverse)
-  # any which's return R_xlen_t
-  if (o <= .Machine$integer.max) {
-    o <- as.integer(o)
-  }
-  o
+
+  R_xlen_t(o)
 }
 
 .which_first <- function(expr, verbose = FALSE, reverse = FALSE) {
