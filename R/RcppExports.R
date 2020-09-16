@@ -173,6 +173,14 @@ do_which_last_notFALSE <- function(x) {
     .Call(`_hutilscpp_do_which_last_notFALSE`, x)
 }
 
+do_which_firstNA <- function(x) {
+    .Call(`_hutilscpp_do_which_firstNA`, x)
+}
+
+do_which_lastNA <- function(x) {
+    .Call(`_hutilscpp_do_which_lastNA`, x)
+}
+
 do_which_first_lgl_lgl_op <- function(x, y, op, reverse = FALSE) {
     .Call(`_hutilscpp_do_which_first_lgl_lgl_op`, x, y, op, reverse)
 }

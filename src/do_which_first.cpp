@@ -77,6 +77,73 @@ R_xlen_t do_which_last_notFALSE(LogicalVector x) {
   return 0;
 }
 
+namespace hcwf {
+template <int RTYPE>
+R_xlen_t do_which_firstNA_(const Vector<RTYPE>& x) {
+  R_xlen_t N = x.length();
+  for (R_xlen_t i = 0; i < N; ++i) {
+    if (Vector<RTYPE>::is_na(x[i])) {
+      return i + 1;
+    }
+  }
+  return 0;
+}
+
+template <int RTYPE>
+R_xlen_t do_which_lastNA_(const Vector<RTYPE>& x) {
+  R_xlen_t N = x.length();
+  for (R_xlen_t i = N - 1; i >= 0; --i) {
+    if (Vector<RTYPE>::is_na(x[i])) {
+      return i + 1;
+    }
+  }
+  return 0;
+}
+
+}
+
+// [[Rcpp::export(rng = false)]]
+R_xlen_t do_which_firstNA(SEXP x) {
+  switch(TYPEOF(x)) {
+  case NILSXP:
+    return 0;
+  case LGLSXP:
+    return hcwf::do_which_firstNA_(as<LogicalVector>(x));
+  case INTSXP:
+    return hcwf::do_which_firstNA_(as<IntegerVector>(x));
+  case REALSXP:
+    return hcwf::do_which_firstNA_(as<DoubleVector>(x));
+  case STRSXP:
+    return hcwf::do_which_firstNA_(as<CharacterVector>(x));
+  case RAWSXP:
+    return 0;
+  }
+  return 0;
+}
+
+// [[Rcpp::export(rng = false)]]
+R_xlen_t do_which_lastNA(SEXP x) {
+  switch(TYPEOF(x)) {
+  case NILSXP:
+    return 0;
+  case LGLSXP:
+    return hcwf::do_which_lastNA_(as<LogicalVector>(x));
+  case INTSXP:
+    return hcwf::do_which_lastNA_(as<IntegerVector>(x));
+  case REALSXP:
+    return hcwf::do_which_lastNA_(as<DoubleVector>(x));
+  case STRSXP:
+    return hcwf::do_which_lastNA_(as<CharacterVector>(x));
+  case RAWSXP:
+    return 0;
+  }
+  return 0;
+}
+
+
+
+
+
 
 // [[Rcpp::export(rng = false)]]
 R_xlen_t do_which_first_lgl_lgl_op(LogicalVector x, LogicalVector y, int op, bool reverse = false) {
@@ -104,7 +171,11 @@ R_xlen_t do_which_first_lgl_lgl_op(LogicalVector x, LogicalVector y, int op, boo
     }
 
     if (hasNA && hasTRUE && hasFALSE) {
-      return 1;
+      if (reverse) {
+        return N - 1;
+      } else {
+        return 1;
+      }
     }
 
     // Two values, for %between%, we need F,F F,T or T,T
