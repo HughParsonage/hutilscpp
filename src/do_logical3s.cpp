@@ -40,7 +40,6 @@ LogicalVector do_and3_na(LogicalVector x, LogicalVector y, LogicalVector z,
 
   LogicalVector out = no_init(n);
 
-  bool na_becomes_na    = na_value == 0;
   bool na_becomes_true  = na_value > 0;
   bool na_becomes_false = na_value < 0;
 

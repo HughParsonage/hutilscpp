@@ -249,7 +249,7 @@ which_first <- function(expr,
             return(0L)
           }
         } else {
-          do_which_first_lgl_lgl_op(lhs_eval, rhs_eval, op, reverse = TRUE)
+          return(do_which_first_lgl_lgl_op(lhs_eval, rhs_eval, op, reverse = reverse))
         }
       }
     }

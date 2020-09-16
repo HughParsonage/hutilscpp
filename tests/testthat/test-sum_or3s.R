@@ -45,11 +45,11 @@ test_that("sum_or3s works", {
 test_that("internal-betweens", {
   x <- 1:10 + 0L
   expect_equal(sum_or3s(x %between% c(1L, 3L)), 3L)
-  expect_equal(sum_or3s(x %(between)% c(1L, 3L)), 2L)
+  expect_equal(sum_or3s(x %(between)% c(1L, 3L)), 1L)
   expect_equal(sum_or3s(x %]between[% c(1L, 10L)), 2L)
   x <- as.double(x)
   expect_equal(sum_or3s(x %between% c(1, 3)), 3L)
-  expect_equal(sum_or3s(x %(between)% c(1, 3)), 2L)
+  expect_equal(sum_or3s(x %(between)% c(1, 3)), 1L)
   expect_equal(sum_or3s(x %]between[% c(1, 10)), 2L)
 
 })
