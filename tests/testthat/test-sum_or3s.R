@@ -53,3 +53,33 @@ test_that("internal-betweens", {
   expect_equal(sum_or3s(x %]between[% c(1, 10)), 2L)
 
 })
+
+test_that("mixture double ints sum_or3s", {
+  sum_bor3 <- function(exprA, exprB = TRUE, exprC = TRUE, ..., .parent_nframes = 1L, nThread = 1L) {
+    if (missing(..1)) {
+      sum(exprA | exprB | exprC)
+    } else if (missing(..2)) {
+      return(exprA | exprB)
+    } else {
+      sum_bor3(exprA | exprB, exprC, ...)
+    }
+  }
+
+  y <- c(101L, 103L, 110L, 999L)
+  expect_equal(sum_or3s(y == 103.5,
+                        y <= 103.5,
+                        y %in% c(998:999)),
+               3)
+  expect_equal(sum_or3s(y <= 103.5,
+                        y %in% c(998:999, 1000:9999)),
+               3)
+  y <- as.double(y)
+  expect_equal(sum_or3s(y == 103.5,
+                        y <= 103.5,
+                        y %in% c(998:999)),
+               3)
+
+
+})
+
+
