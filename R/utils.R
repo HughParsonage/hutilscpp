@@ -73,25 +73,6 @@ isnt_number <- function(a, na.bad = TRUE, infinite.bad = TRUE, int.only = FALSE)
 AND <- `&&`
 OR <- `||`
 
-#' @noRd
-#' @param x A vector, likely to be double.
-#' @param xi integer version of \code{x}. May be cheaper if already known
-#' @param anyNAs Does `x` contain any NA or NaN values?
-which_isnt_integerish <- function(x, xi = as.integer(x), check_finite = TRUE) {
-  if (is.integer(x)) {
-    return(0L)
-  }
-  if (!is.double(x)) {
-    return(1L)
-  }
-  if (!isFALSE(check_finite) && {nfx <- do_anyNonfinite(x)}) {
-    return(nfx)
-  }
-
-  storage.mode(xi) <- "double"
-  which_first(x != xi)
-}
-
 isFALSE <- function(x) {
   is.logical(x) && length(x) == 1L && !anyNA(x) && !x
 }
@@ -115,3 +96,5 @@ is_wholer <- function(dbl) {
   dbl <= 2147483647 &&
   dbl == as.integer(dbl)
 }
+
+is64bit <- function() .Machine$sizeof.pointer == 8L # nocov
