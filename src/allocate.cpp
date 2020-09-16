@@ -30,7 +30,7 @@ DoubleVector allocate0_dbl(R_xlen_t N, int nThread = 1) {
 }
 
 // [[Rcpp::export(rng = false)]]
-IntegerVector allocate0_except(R_xlen_t N, IntegerVector India, IntegerVector Victor, int nThread = 1) {
+IntegerVector allocate0_except(R_xlen_t N, DoubleVector India, IntegerVector Victor, int nThread = 1) {
   IntegerVector out = no_init(N);
 #pragma omp parallel for num_threads(nThread)
   for (R_xlen_t i = 0; i < N; ++i) {

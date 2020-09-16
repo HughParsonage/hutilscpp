@@ -40,3 +40,16 @@ test_that("sum_or3s works", {
   expect_equal(DT[, sum_or3s(A %in% c(5L, integer(101)), B %in% B3, Z %in% c(integer(101)))],
                DT[, sum_bor3(A %in% c(5L, integer(101)), B %in% B3, Z %in% c(integer(101)))])
 })
+
+
+test_that("internal-betweens", {
+  x <- 1:10 + 0L
+  expect_equal(sum_or3s(x %between% c(1L, 3L)), 3L)
+  expect_equal(sum_or3s(x %(between)% c(1L, 3L)), 2L)
+  expect_equal(sum_or3s(x %]between[% c(1L, 10L)), 2L)
+  x <- as.double(x)
+  expect_equal(sum_or3s(x %between% c(1, 3)), 3L)
+  expect_equal(sum_or3s(x %(between)% c(1, 3)), 2L)
+  expect_equal(sum_or3s(x %]between[% c(1, 10)), 2L)
+
+})

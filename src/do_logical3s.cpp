@@ -366,29 +366,34 @@ DoubleVector do_count_logical_long(LogicalVector x, int nThread = 1) {
 
 
 bool single_ox_x1_x2(int x, int oix, int x1, int x2) {
-  //  T != == >= <=  >  <
-  //  0  1  2  3  4  5  6
   switch(oix) {
-  case 1:
+  case OP_NE:
     return x != x1;
-  case 2:
+
+  case OP_EQ:
     return x == x1;
-  case 3:
+
+  case OP_GE:
     return x >= x1;
-  case 4:
+
+  case OP_LE:
     return x <= x1;
-  case 5:
+
+  case OP_GT:
     return x >  x1;
-  case 6:
+
+  case OP_LT:
     return x <  x1;
-  case 7:
-    return x == x1 || x == x2;
-  case 8:
+
+  case OP_BW:
     return x >= x1 && x <= x2;
-  case 9:
+
+  case OP_BO:
     return x >  x1 && x <  x2;
-  case 10:
-    return x <= x1 && x <= x2;
+
+  case OP_BC:
+    return x <= x1 || x >= x2;
+
   case 0:
     return true;
   }
@@ -396,29 +401,34 @@ bool single_ox_x1_x2(int x, int oix, int x1, int x2) {
 }
 
 bool single_ox_x1_x2(double x, int oix, double x1, double x2) {
-  //  T != == >= <=  >  <
-  //  0  1  2  3  4  5  6
   switch(oix) {
-  case 1:
+  case OP_NE:
     return x != x1;
-  case 2:
+
+  case OP_EQ:
     return x == x1;
-  case 3:
+
+  case OP_GE:
     return x >= x1;
-  case 4:
+
+  case OP_LE:
     return x <= x1;
-  case 5:
+
+  case OP_GT:
     return x >  x1;
-  case 6:
+
+  case OP_LT:
     return x <  x1;
-  case 7:
-    return x == x1 || x == x2;
-  case 8:
+
+  case OP_BW:
     return x >= x1 && x <= x2;
-  case 9:
+
+  case OP_BO:
     return x >  x1 && x <  x2;
-  case 10:
-    return x <= x1 && x <= x2;
+
+  case OP_BC:
+    return x <= x1 || x >= x2;
+
   case 0:
     return true;
   }
@@ -507,19 +517,7 @@ LogicalVector do_par_in_hash_dbl(DoubleVector x, DoubleVector table, int nThread
   return out;
 }
 
-// [[Rcpp::export]]
-LogicalVector do_op_along(IntegerVector x, int op, IntegerVector y, int nThread = 1) {
-  R_xlen_t N = x.length();
-  if (y.length() != N) {
-    stop("Internal error: do_op_along() lengths differ.");
-  }
-  LogicalVector out = no_init(N);
-#pragma omp parallel for num_threads(nThread)
-  for (R_xlen_t i = 0; i < N; ++i) {
-    out[i] = single_ox_x1_x2(x[i], op, y[i], 0);
-  }
-  return out;
-}
+
 
 
 

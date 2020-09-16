@@ -101,7 +101,7 @@ test_that("which_last(x == y)", {
 
   i <- c(0.5, 0.4, 0.3, 0.5)
   j <- c(0.5, 0.4, 0.2 + 0.1, 0)
-  expect_equal(which_last(i == j), 3)
+  expect_equal(which_last(i == j), 2)
 })
 
 test_that("which_last(all FALSE)", {
@@ -112,5 +112,51 @@ test_that("which_last(all FALSE)", {
   expect_equal(which_last(allTRUE != TRUE), 0L)
 })
 
+test_that("which_first long", {
+  skip_on_travis()
+  skip_if(.Machine$sizeof.pointer != 8)
+  x <- allocate0_except(25e8, c(2e9, 23e8), c(1L, -1L))
+  expect_equal(which_first(x > 2L), 0L)
+  expect_equal(which_last(x == 0), length(x))
+  expect_equal(which_first(x == 1), 2e9)
+  expect_equal(which_first(x < 0), 23e8)
+  expect_equal(which_first(x < -0.5), 23e8)
+})
 
+test_that("which_last internals", {
+  expect_equal(do_which_last_notTRUE(c(FALSE)), 1L)
+  expect_equal(do_which_last_notTRUE(c(TRUE)), 0L)
+  expect_equal(do_which_last_notTRUE(c(TRUE, TRUE)), 0L)
+  expect_equal(do_which_last_notTRUE(c(NA)), 1L)
+  expect_equal(do_which_last_notFALSE(c(FALSE)), 0L)
+  expect_equal(do_which_last_notFALSE(c(FALSE, FALSE)), 0L)
+  expect_equal(do_which_last_notFALSE(c(TRUE)), 1L)
+  expect_equal(do_which_last_notFALSE(c(NA)), 1L)
+})
 
+test_that("which_last( %between% )", {
+  x <- c(1:10, -1L)
+  expect_equal(which_last(x %between% c(1L, 10L)), 10L)
+  expect_equal(which_last(x %]between[% c(1L, 10L)), 11L)
+  x <- as.double(x)
+  expect_equal(which_last(x %between% c(1L, 10L)), 10L)
+  expect_equal(which_last(x %]between[% c(1L, 10L)), 11L)
+
+  x <- c(1:10, -1L)
+  expect_equal(which_last(x %between% c(1, 10)), 10L)
+  expect_equal(which_last(x %]between[% c(1, 10)), 11L)
+  x <- as.double(x)
+  expect_equal(which_last(x %between% c(1, 10)), 10L)
+  expect_equal(which_last(x %]between[% c(1, 10)), 11L)
+})
+
+test_that("last(lgl lgl)", {
+  x <- c(TRUE, FALSE, TRUE)
+  y <- c(FALSE, FALSE, TRUE)
+  expect_equal(which_last(x == y), 3)
+  expect_equal(which_last(x != y), 1)
+  expect_equal(which_last(x >= y), 3)
+  expect_equal(which_last(x <= y), 3)
+  expect_equal(which_last(x > y), 1)
+  expect_equal(which_last(x < y), 0)
+})

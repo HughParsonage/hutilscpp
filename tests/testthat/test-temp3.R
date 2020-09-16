@@ -3,11 +3,6 @@ test_that("temp3 works", {
   expect_true(do_in_int(1L, 1:4))
   expect_false(do_in_int(0L, 1:4))
 
-
-  expect_true(all(do_op_along(1:10, 0, 1:10)))
-  expect_false(any(do_op_along(1:10, -1, 1:10)))
-
-  expect_error(do_op_along(1:10, 0L, 1:11), "lengths differ")
   expect_true(test_intersect3_stdint())
   expect_true(test_intersect3_stdint(4))
   expect_true(test_intersect3_stdint(5))

@@ -10,3 +10,20 @@ test_that("count_logical works", {
   expect_equal(count_logical(logical(1e10)), c(1e10, 0, 0))
   expect_equal(count_logical(logical(1e10), parallel::detectCores()), c(1e10, 0, 0))
 })
+
+
+test_that("count_logical long", {
+  skip_on_travis()
+  skip_if_not(is64bit())
+  x <- logical(.Machine$integer.max + 1)
+  cl <- count_logical(x)
+  expect_equal(cl, c(.Machine$integer.max + 1, 0, 0))
+  skip_on_cran()
+  cl <- count_logical(x, nThread = 2)
+  expect_equal(cl, c(.Machine$integer.max + 1, 0, 0))
+  x <- NULL
+  x <- allocate0_except(.Machine$integer.max + 1, 2, NA_integer_, nThread = 2)
+  storage.mode(x) <- "logical"
+  cl <- count_logical(x, nThread = 2)
+  expect_equal(cl, c(.Machine$integer.max, 0, 1))
+})
