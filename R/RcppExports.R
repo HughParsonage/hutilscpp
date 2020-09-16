@@ -5,34 +5,6 @@ AnyCharMatch <- function(x, a, opposite = FALSE) {
     .Call(`_hutilscpp_AnyCharMatch`, x, a, opposite)
 }
 
-#' @title Quickly verify (and locate) the existence of a breach.
-#' @name AnyWhich
-#' @description Used when a single instance is likely to occur and be important to detect quickly
-#' (in a sufficiently large integer vector).
-#' @param x An integer vector.
-#' @param a A (single) integer. That which is to be compared.
-#' @param gt,lt,eq Booleans, whether or not the comparison is greater than, less than, or equal to.
-#' Only \code{gt} and \code{lt} are mutually exclusive. If all \code{FALSE}, find the first instance
-#' where none are equal (i.e. does \code{x} have more than one distinct value).
-#' @noRd
-NULL
-
-AnyWhich_dbl <- function(x, a, gt, lt, eq, rev = FALSE) {
-    .Call(`_hutilscpp_AnyWhich_dbl`, x, a, gt, lt, eq, rev)
-}
-
-AnyWhich_int <- function(x, a, gt, lt, eq, rev = FALSE) {
-    .Call(`_hutilscpp_AnyWhich_int`, x, a, gt, lt, eq, rev)
-}
-
-AnyWhichInDbl <- function(x, Table) {
-    .Call(`_hutilscpp_AnyWhichInDbl`, x, Table)
-}
-
-AnyWhichInInt <- function(x, Table) {
-    .Call(`_hutilscpp_AnyWhichInInt`, x, Table)
-}
-
 Implies <- function(x, y, anyNAx = TRUE, anyNAy = TRUE) {
     .Call(`_hutilscpp_Implies`, x, y, anyNAx, anyNAy)
 }
@@ -165,8 +137,8 @@ do_par_in_hash_dbl <- function(x, table, nThread = 1L) {
     .Call(`_hutilscpp_do_par_in_hash_dbl`, x, table, nThread)
 }
 
-do_op_along <- function(x, op, y, nThread = 1L) {
-    .Call(`_hutilscpp_do_op_along`, x, op, y, nThread)
+do_op2M <- function(x) {
+    .Call(`_hutilscpp_do_op2M`, x)
 }
 
 do_or3_par <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread = 1L) {
@@ -175,10 +147,6 @@ do_or3_par <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom
 
 do_range_dbl_simple <- function(x) {
     .Call(`_hutilscpp_do_range_dbl_simple`, x)
-}
-
-do_anyNonfinite <- function(x) {
-    .Call(`_hutilscpp_do_anyNonfinite`, x)
 }
 
 do_which_first <- function(x) {
@@ -209,44 +177,20 @@ do_which_last_notFALSE <- function(x) {
     .Call(`_hutilscpp_do_which_last_notFALSE`, x)
 }
 
+do_which_first_lgl_lgl_op <- function(x, y, op, reverse = FALSE) {
+    .Call(`_hutilscpp_do_which_first_lgl_lgl_op`, x, y, op, reverse)
+}
+
 do_which_first_int_int <- function(x, y, eq = TRUE, gt = FALSE, lt = FALSE) {
     .Call(`_hutilscpp_do_which_first_int_int`, x, y, eq, gt, lt)
 }
 
-do_which_first_lgl_lgl <- function(x, y, eq, lt, gt, skip_na = FALSE) {
-    .Call(`_hutilscpp_do_which_first_lgl_lgl`, x, y, eq, lt, gt, skip_na)
+do_which_first_n <- function(X, Y, op, last = FALSE) {
+    .Call(`_hutilscpp_do_which_first_n`, X, Y, op, last)
 }
 
-do_which_1st_uneq_dbl_dbl <- function(x, y, tol) {
-    .Call(`_hutilscpp_do_which_1st_uneq_dbl_dbl`, x, y, tol)
-}
-
-do_which_last_uneq_dbl_dbl <- function(x, y, tol) {
-    .Call(`_hutilscpp_do_which_last_uneq_dbl_dbl`, x, y, tol)
-}
-
-do_which_1st_uneq_int_int <- function(x, y) {
-    .Call(`_hutilscpp_do_which_1st_uneq_int_int`, x, y)
-}
-
-do_which_last_uneq_int_int <- function(x, y) {
-    .Call(`_hutilscpp_do_which_last_uneq_int_int`, x, y)
-}
-
-do_which_1st_eq_dbl_dbl <- function(x, y, tol) {
-    .Call(`_hutilscpp_do_which_1st_eq_dbl_dbl`, x, y, tol)
-}
-
-do_which_last_eq_dbl_dbl <- function(x, y, tol) {
-    .Call(`_hutilscpp_do_which_last_eq_dbl_dbl`, x, y, tol)
-}
-
-do_which_1st_eq_int_int <- function(x, y) {
-    .Call(`_hutilscpp_do_which_1st_eq_int_int`, x, y)
-}
-
-do_which_last_eq_int_int <- function(x, y) {
-    .Call(`_hutilscpp_do_which_last_eq_int_int`, x, y)
+do_which_isnt_integerish <- function(x) {
+    .Call(`_hutilscpp_do_which_isnt_integerish`, x)
 }
 
 do_whichs_16 <- function(op, x, y, nThread = 1L) {
@@ -297,8 +241,16 @@ all_na_real <- function(x, nThread = 1L) {
     .Call(`_hutilscpp_all_na_real`, x, nThread)
 }
 
+do_isntConstant_dbl <- function(x) {
+    .Call(`_hutilscpp_do_isntConstant_dbl`, x)
+}
+
 do_is_constant <- function(x, nThread = 1L) {
     .Call(`_hutilscpp_do_is_constant`, x, nThread)
+}
+
+do_isntConstant <- function(x) {
+    .Call(`_hutilscpp_do_isntConstant`, x)
 }
 
 is_safe2int <- function(x, int_max) {
@@ -441,6 +393,18 @@ do_summary3_int <- function(x, y, z, in_place = FALSE, do_max = TRUE) {
     .Call(`_hutilscpp_do_summary3_int`, x, y, z, in_place, do_max)
 }
 
+#' @name where_square_bracket_opens
+#' @param x Character vector of characters.
+#' @param i position of closing bracket.
+#'
+#' @return
+#' -1 if x[i] does not closing bracket
+#'  0 if bracket never closes
+#'  j the location of the closing brace
+#'
+#' @noRd
+NULL
+
 validate_nchar1 <- function(x, return_size = FALSE) {
     .Call(`_hutilscpp_validate_nchar1`, x, return_size)
 }
@@ -455,14 +419,6 @@ is_space <- function(x) {
 
 where_square_bracket_opens <- function(x, i = 0L) {
     .Call(`_hutilscpp_where_square_bracket_opens`, x, i)
-}
-
-tmp_mark_work <- function(x, Command) {
-    .Call(`_hutilscpp_tmp_mark_work`, x, Command)
-}
-
-MatchArgCont <- function(x, Command) {
-    .Call(`_hutilscpp_MatchArgCont`, x, Command)
 }
 
 extractMandatory <- function(x, command, nCommands) {

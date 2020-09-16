@@ -316,22 +316,20 @@ pmin3 <- function(x, y, z, in_place = FALSE) {
     yi <- y
     zi <- z
     if (is.double(y)) {
-      yi <- as.integer(y)
       if (AND(is.double(y),
-              wb <- which_isnt_integerish(y, yi))) {
+              wb <- which_isnt_integerish(y))) {
         stop("`x` was type integer and `y` was type double, but entry ", wb,
              " was not equal to the integer equivalent. ")
       }
     }
     if (is.double(z)) {
-      zi <- as.integer(z)
       if (AND(is.double(z),
-              wb <- which_isnt_integerish(z, zi))) {
+              wb <- which_isnt_integerish(z))) {
         stop("`x` was type integer and `z` was type double, but entry ", wb,
              " was not equal to the integer equivalent. ")
       }
     }
-    return(do_summary3_int(x, yi, zi, in_place = in_place, do_max = do_max))
+    return(do_summary3_int(x, y, z, in_place = in_place, do_max = do_max))
   }
   if (is.double(x) && is.numeric(y) && is.numeric(z)) {
     return(do_summary3_dbl(x, as.double(y), as.double(z), in_place = in_place, do_max = do_max))

@@ -241,8 +241,6 @@ test_that("unexpected o", {
   expect_equal(which_first(x.raw <= 0), 1L)
   expect_equal(which_first(x.raw > 0), 6L)
   expect_equal(which_first(x.raw >= 0), 1L)
-  expect_error(which_first(x.raw %in% 0),
-               regexp = "not supported")
 
 })
 
@@ -527,4 +525,264 @@ test_that("which_first_lgl_NA", {
   x2 <- c(NA, x)
   expect_equal(which_first(x2 %in% c(TRUE, NA)), 1L)
 })
+
+test_that("which_first(x > 1) (len = 1)", {
+  x <- 1
+  expect_equal(which_first(x > 1), 0)
+  expect_equal(which_first(x <= 1), 1)
+
+  expect_equal(which_first(x != 1), 0)
+  expect_equal(which_first(x == 1), 1)
+  expect_equal(which_first(x >= 1), 1)
+  expect_equal(which_first(x <= 1), 1)
+  expect_equal(which_first(x > 1), 0)
+  expect_equal(which_first(x < 1), 0)
+  expect_equal(which_first(x %in% 1), 1)
+  expect_equal(which_first(x %between% c(1L, 1L)), 1)
+  expect_equal(which_first(x %(between)% c(1, 1)), 0)
+  expect_equal(which_first(x %]between[% c(1, 1)), 1)
+
+  expect_equal(which_first(x != 0.9), 1)
+  expect_equal(which_first(x == 0.9), 0)
+  expect_equal(which_first(x >= 0.9), 1)
+  expect_equal(which_first(x <= 0.9), 0)
+  expect_equal(which_first(x > 0.9), 1)
+  expect_equal(which_first(x < 0.9), 0)
+  expect_equal(which_first(x %in% 0.9), 0)
+  expect_equal(which_first(x %between% c(0.9, 0.95)), 0)
+  expect_equal(which_first(x %between% c(0.9, 1.95)), 1)
+  expect_equal(which_first(x %(between)% c(0.9, 1)), 0)
+  expect_equal(which_first(x %(between)% c(0.9, 1.2)), 1)
+  expect_equal(which_first(x %]between[% c(0.9, 0.95)), 1)
+  expect_equal(which_first(x %]between[% c(0.9, 1.95)), 0)
+
+  x <- 1L
+  expect_equal(which_first(x > 1), 0)
+  expect_equal(which_first(x <= 1), 1)
+
+  expect_equal(which_first(x != 1), 0)
+  expect_equal(which_first(x == 1), 1)
+  expect_equal(which_first(x >= 1), 1)
+  expect_equal(which_first(x <= 1), 1)
+  expect_equal(which_first(x > 1), 0)
+  expect_equal(which_first(x < 1), 0)
+  expect_equal(which_first(x %in% 1), 1)
+  expect_equal(which_first(x %between% c(1, 2)), 1)
+  expect_equal(which_first(x %(between)% c(1, 2)), 0)
+  expect_equal(which_first(x %]between[% c(1, 2)), 1)
+
+  x <- 0L
+  expect_equal(which_first(x != 0.9), 1)
+  expect_equal(which_first(x == 0.9), 0)
+  expect_equal(which_first(x >= 0.9), 0)
+  expect_equal(which_first(x <= 0.9), 1)
+  expect_equal(which_first(x > 0.9), 0)
+  expect_equal(which_first(x < 0.9), 1)
+  expect_equal(which_first(x %in% 0.9), 0)
+  expect_equal(which_first(x %in% c(0, 0.9)), 1)
+  expect_equal(which_first(x %between% c(0, 0.9)), 1)
+  expect_equal(which_first(x %(between)% c(0.9, 1)), 0)
+  expect_equal(which_first(x %(between)% c(0.9, 0)), 0)
+  expect_equal(which_first(x %]between[% c(0.9, 0.95)), 1)
+  expect_equal(which_first(x %]between[% c(0.9, 1.95)), 1)
+})
+
+test_that("first_which", {
+  expect_equal(first_which(c(FALSE, FALSE)), 0L)
+  expect_equal(first_which(c(FALSE, TRUE)), 2L)
+  expect_equal(first_which(c(TRUE, TRUE)), 1L)
+  expect_equal(first_which(c(TRUE, NA)), 1L)
+  expect_equal(first_which(c(NA, NA)), 0L)
+})
+
+
+test_that("which_first(<x> <o> <y>) lens equal", {
+
+
+  x <- c(113L, 102L, 106L, 100L, 114L)
+  y <- c(108L, 106L, 114L, 100L, 109L)
+
+  expect_equal(which_first(x != y),
+               first_which(x != y))
+  expect_equal(which_first(x == y),
+               first_which(x == y))
+  expect_equal(which_first(x >= y),
+               first_which(x >= y))
+  expect_equal(which_first(x <= y),
+               first_which(x <= y))
+  expect_equal(which_first(x > y),
+               first_which(x > y))
+  expect_equal(which_first(x < y),
+               first_which(x < y))
+  expect_equal(which_first(x %in% y),
+               first_which(x %in% y))
+  expect_equal(which_first(x %between% y[1:2]),
+               first_which(x %between% y[1:2]))
+  expect_equal(which_first(x %(between)% y[2:3]),
+               first_which(x %(between)% y[2:3]))
+
+  x <- as.double(x)
+  expect_equal(which_first(x != y),
+               first_which(x != y))
+  expect_equal(which_first(x == y),
+               first_which(x == y))
+  expect_equal(which_first(x >= y),
+               first_which(x >= y))
+  expect_equal(which_first(x <= y),
+               first_which(x <= y))
+  expect_equal(which_first(x > y),
+               first_which(x > y))
+  expect_equal(which_first(x < y),
+               first_which(x < y))
+  expect_equal(which_first(x %in% y),
+               first_which(x %in% y))
+  expect_equal(which_first(x %between% y[1:2]),
+               first_which(x %between% y[1:2]))
+  expect_equal(which_first(x %(between)% y[2:3]),
+               first_which(x %(between)% y[2:3]))
+
+  y <- as.double(y)
+  expect_equal(which_first(x != y),
+               first_which(x != y))
+  expect_equal(which_first(x == y),
+               first_which(x == y))
+  expect_equal(which_first(x >= y),
+               first_which(x >= y))
+  expect_equal(which_first(x <= y),
+               first_which(x <= y))
+  expect_equal(which_first(x > y),
+               first_which(x > y))
+  expect_equal(which_first(x < y),
+               first_which(x < y))
+  expect_equal(which_first(x %in% y),
+               first_which(x %in% y))
+  expect_equal(which_first(x %between% y[1:2]),
+               first_which(x %between% y[1:2]))
+  expect_equal(which_first(x %(between)% y[2:3]),
+               first_which(x %(between)% y[2:3]))
+
+  x <- as.integer(x)
+  expect_equal(which_first(x != y),
+               first_which(x != y))
+  expect_equal(which_first(x == y),
+               first_which(x == y))
+  expect_equal(which_first(x >= y),
+               first_which(x >= y))
+  expect_equal(which_first(x <= y),
+               first_which(x <= y))
+  expect_equal(which_first(x > y),
+               first_which(x > y))
+  expect_equal(which_first(x < y),
+               first_which(x < y))
+  expect_equal(which_first(x %in% y),
+               first_which(x %in% y))
+  expect_equal(which_first(x %between% y[1:2]),
+               first_which(x %between% y[1:2]))
+  expect_equal(which_first(x %(between)% y[2:3]),
+               first_which(x %(between)% y[2:3]))
+
+  y <- y - 0.5
+  expect_equal(which_first(x != y),
+               first_which(x != y))
+  expect_equal(which_first(x == y),
+               first_which(x == y))
+  expect_equal(which_first(x >= y),
+               first_which(x >= y))
+  expect_equal(which_first(x <= y),
+               first_which(x <= y))
+  expect_equal(which_first(x > y),
+               first_which(x > y))
+  expect_equal(which_first(x < y),
+               first_which(x < y))
+  expect_equal(which_first(x %in% y),
+               first_which(x %in% y))
+  expect_equal(which_first(x %between% y[1:2]),
+               first_which(x %between% y[1:2]))
+  expect_equal(which_first(x %(between)% y[2:3]),
+               first_which(x %(between)% y[2:3]))
+
+  x <- integer(0)
+  expect_equal(which_first(x != y),
+               first_which(x != y))
+  expect_equal(which_first(x == y),
+               first_which(x == y))
+  expect_equal(which_first(x >= y),
+               first_which(x >= y))
+  expect_equal(which_first(x <= y),
+               first_which(x <= y))
+  expect_equal(which_first(x > y),
+               first_which(x > y))
+  expect_equal(which_first(x < y),
+               first_which(x < y))
+  expect_equal(which_first(x %in% y),
+               first_which(x %in% y))
+  expect_equal(which_first(x %between% y[1:2]),
+               first_which(x %between% y[1:2]))
+  expect_equal(which_first(x %(between)% y[2:3]),
+               first_which(x %(between)% y[2:3]))
+
+  x <- double(0)
+  expect_equal(which_first(x != y),
+               first_which(x != y))
+  expect_equal(which_first(x == y),
+               first_which(x == y))
+  expect_equal(which_first(x >= y),
+               first_which(x >= y))
+  expect_equal(which_first(x <= y),
+               first_which(x <= y))
+  expect_equal(which_first(x > y),
+               first_which(x > y))
+  expect_equal(which_first(x < y),
+               first_which(x < y))
+  expect_equal(which_first(x %in% y),
+               first_which(x %in% y))
+  expect_equal(which_first(x %between% y[1:2]),
+               first_which(x %between% y[1:2]))
+  expect_equal(which_first(x %(between)% y[2:3]),
+               first_which(x %(between)% y[2:3]))
+
+  y <- integer(0)
+  expect_equal(which_first(x != y),
+               first_which(x != y))
+  expect_equal(which_first(x == y),
+               first_which(x == y))
+  expect_equal(which_first(x >= y),
+               first_which(x >= y))
+  expect_equal(which_first(x <= y),
+               first_which(x <= y))
+  expect_equal(which_first(x > y),
+               first_which(x > y))
+  expect_equal(which_first(x < y),
+               first_which(x < y))
+  expect_equal(which_first(x %in% y),
+               first_which(x %in% y))
+
+  y <- double(0)
+  expect_equal(which_first(x != y),
+               first_which(x != y))
+  expect_equal(which_first(x == y),
+               first_which(x == y))
+  expect_equal(which_first(x >= y),
+               first_which(x >= y))
+  expect_equal(which_first(x <= y),
+               first_which(x <= y))
+  expect_equal(which_first(x > y),
+               first_which(x > y))
+  expect_equal(which_first(x < y),
+               first_which(x < y))
+  expect_equal(which_first(x %in% y),
+               first_which(x %in% y))
+})
+
+test_that("which_first(lgl lgl)", {
+  x <- c(TRUE, FALSE, TRUE)
+  y <- c(FALSE, FALSE, TRUE)
+  expect_equal(which_first(x == y), 2)
+  expect_equal(which_first(x != y), 1)
+  expect_equal(which_first(x >= y), 1)
+  expect_equal(which_first(x <= y), 2)
+  expect_equal(which_first(x > y), 1)
+  expect_equal(which_first(x < y), 0)
+})
+
 

@@ -18,62 +18,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// AnyWhich_dbl
-R_xlen_t AnyWhich_dbl(DoubleVector x, double a, bool gt, bool lt, bool eq, bool rev);
-RcppExport SEXP _hutilscpp_AnyWhich_dbl(SEXP xSEXP, SEXP aSEXP, SEXP gtSEXP, SEXP ltSEXP, SEXP eqSEXP, SEXP revSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type a(aSEXP);
-    Rcpp::traits::input_parameter< bool >::type gt(gtSEXP);
-    Rcpp::traits::input_parameter< bool >::type lt(ltSEXP);
-    Rcpp::traits::input_parameter< bool >::type eq(eqSEXP);
-    Rcpp::traits::input_parameter< bool >::type rev(revSEXP);
-    rcpp_result_gen = Rcpp::wrap(AnyWhich_dbl(x, a, gt, lt, eq, rev));
-    return rcpp_result_gen;
-END_RCPP
-}
-// AnyWhich_int
-R_xlen_t AnyWhich_int(IntegerVector x, int a, bool gt, bool lt, bool eq, bool rev);
-RcppExport SEXP _hutilscpp_AnyWhich_int(SEXP xSEXP, SEXP aSEXP, SEXP gtSEXP, SEXP ltSEXP, SEXP eqSEXP, SEXP revSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type a(aSEXP);
-    Rcpp::traits::input_parameter< bool >::type gt(gtSEXP);
-    Rcpp::traits::input_parameter< bool >::type lt(ltSEXP);
-    Rcpp::traits::input_parameter< bool >::type eq(eqSEXP);
-    Rcpp::traits::input_parameter< bool >::type rev(revSEXP);
-    rcpp_result_gen = Rcpp::wrap(AnyWhich_int(x, a, gt, lt, eq, rev));
-    return rcpp_result_gen;
-END_RCPP
-}
-// AnyWhichInDbl
-int AnyWhichInDbl(DoubleVector x, DoubleVector Table);
-RcppExport SEXP _hutilscpp_AnyWhichInDbl(SEXP xSEXP, SEXP TableSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DoubleVector >::type Table(TableSEXP);
-    rcpp_result_gen = Rcpp::wrap(AnyWhichInDbl(x, Table));
-    return rcpp_result_gen;
-END_RCPP
-}
-// AnyWhichInInt
-int AnyWhichInInt(IntegerVector x, IntegerVector Table);
-RcppExport SEXP _hutilscpp_AnyWhichInInt(SEXP xSEXP, SEXP TableSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type Table(TableSEXP);
-    rcpp_result_gen = Rcpp::wrap(AnyWhichInInt(x, Table));
-    return rcpp_result_gen;
-END_RCPP
-}
 // Implies
 LogicalVector Implies(LogicalVector x, LogicalVector y, bool anyNAx, bool anyNAy);
 RcppExport SEXP _hutilscpp_Implies(SEXP xSEXP, SEXP ySEXP, SEXP anyNAxSEXP, SEXP anyNAySEXP) {
@@ -121,12 +65,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // allocate0_except
-IntegerVector allocate0_except(R_xlen_t N, IntegerVector India, IntegerVector Victor, int nThread);
+IntegerVector allocate0_except(R_xlen_t N, DoubleVector India, IntegerVector Victor, int nThread);
 RcppExport SEXP _hutilscpp_allocate0_except(SEXP NSEXP, SEXP IndiaSEXP, SEXP VictorSEXP, SEXP nThreadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< R_xlen_t >::type N(NSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type India(IndiaSEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type India(IndiaSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type Victor(VictorSEXP);
     Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
     rcpp_result_gen = Rcpp::wrap(allocate0_except(N, India, Victor, nThread));
@@ -526,17 +470,13 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_op_along
-LogicalVector do_op_along(IntegerVector x, int op, IntegerVector y, int nThread);
-RcppExport SEXP _hutilscpp_do_op_along(SEXP xSEXP, SEXP opSEXP, SEXP ySEXP, SEXP nThreadSEXP) {
+// do_op2M
+int do_op2M(CharacterVector x);
+RcppExport SEXP _hutilscpp_do_op2M(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type op(opSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_op_along(x, op, y, nThread));
+    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_op2M(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -574,17 +514,6 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(do_range_dbl_simple(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_anyNonfinite
-R_xlen_t do_anyNonfinite(DoubleVector x);
-RcppExport SEXP _hutilscpp_do_anyNonfinite(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_anyNonfinite(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -665,6 +594,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_which_first_lgl_lgl_op
+R_xlen_t do_which_first_lgl_lgl_op(LogicalVector x, LogicalVector y, int op, bool reverse);
+RcppExport SEXP _hutilscpp_do_which_first_lgl_lgl_op(SEXP xSEXP, SEXP ySEXP, SEXP opSEXP, SEXP reverseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type op(opSEXP);
+    Rcpp::traits::input_parameter< bool >::type reverse(reverseSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_first_lgl_lgl_op(x, y, op, reverse));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_which_first_int_int
 R_xlen_t do_which_first_int_int(IntegerVector x, IntegerVector y, bool eq, bool gt, bool lt);
 RcppExport SEXP _hutilscpp_do_which_first_int_int(SEXP xSEXP, SEXP ySEXP, SEXP eqSEXP, SEXP gtSEXP, SEXP ltSEXP) {
@@ -680,119 +622,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_which_first_lgl_lgl
-R_xlen_t do_which_first_lgl_lgl(LogicalVector x, LogicalVector y, bool eq, bool lt, bool gt, bool skip_na);
-RcppExport SEXP _hutilscpp_do_which_first_lgl_lgl(SEXP xSEXP, SEXP ySEXP, SEXP eqSEXP, SEXP ltSEXP, SEXP gtSEXP, SEXP skip_naSEXP) {
+// do_which_first_n
+SEXP do_which_first_n(SEXP X, SEXP Y, int op, bool last);
+RcppExport SEXP _hutilscpp_do_which_first_n(SEXP XSEXP, SEXP YSEXP, SEXP opSEXP, SEXP lastSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< bool >::type eq(eqSEXP);
-    Rcpp::traits::input_parameter< bool >::type lt(ltSEXP);
-    Rcpp::traits::input_parameter< bool >::type gt(gtSEXP);
-    Rcpp::traits::input_parameter< bool >::type skip_na(skip_naSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_first_lgl_lgl(x, y, eq, lt, gt, skip_na));
+    Rcpp::traits::input_parameter< SEXP >::type X(XSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< int >::type op(opSEXP);
+    Rcpp::traits::input_parameter< bool >::type last(lastSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_first_n(X, Y, op, last));
     return rcpp_result_gen;
 END_RCPP
 }
-// do_which_1st_uneq_dbl_dbl
-R_xlen_t do_which_1st_uneq_dbl_dbl(DoubleVector x, DoubleVector y, double tol);
-RcppExport SEXP _hutilscpp_do_which_1st_uneq_dbl_dbl(SEXP xSEXP, SEXP ySEXP, SEXP tolSEXP) {
+// do_which_isnt_integerish
+R_xlen_t do_which_isnt_integerish(DoubleVector x);
+RcppExport SEXP _hutilscpp_do_which_isnt_integerish(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DoubleVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_1st_uneq_dbl_dbl(x, y, tol));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_last_uneq_dbl_dbl
-R_xlen_t do_which_last_uneq_dbl_dbl(DoubleVector x, DoubleVector y, double tol);
-RcppExport SEXP _hutilscpp_do_which_last_uneq_dbl_dbl(SEXP xSEXP, SEXP ySEXP, SEXP tolSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DoubleVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_last_uneq_dbl_dbl(x, y, tol));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_1st_uneq_int_int
-R_xlen_t do_which_1st_uneq_int_int(IntegerVector x, IntegerVector y);
-RcppExport SEXP _hutilscpp_do_which_1st_uneq_int_int(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_1st_uneq_int_int(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_last_uneq_int_int
-R_xlen_t do_which_last_uneq_int_int(IntegerVector x, IntegerVector y);
-RcppExport SEXP _hutilscpp_do_which_last_uneq_int_int(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_last_uneq_int_int(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_1st_eq_dbl_dbl
-R_xlen_t do_which_1st_eq_dbl_dbl(DoubleVector x, DoubleVector y, double tol);
-RcppExport SEXP _hutilscpp_do_which_1st_eq_dbl_dbl(SEXP xSEXP, SEXP ySEXP, SEXP tolSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DoubleVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_1st_eq_dbl_dbl(x, y, tol));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_last_eq_dbl_dbl
-R_xlen_t do_which_last_eq_dbl_dbl(DoubleVector x, DoubleVector y, double tol);
-RcppExport SEXP _hutilscpp_do_which_last_eq_dbl_dbl(SEXP xSEXP, SEXP ySEXP, SEXP tolSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DoubleVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< double >::type tol(tolSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_last_eq_dbl_dbl(x, y, tol));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_1st_eq_int_int
-R_xlen_t do_which_1st_eq_int_int(IntegerVector x, IntegerVector y);
-RcppExport SEXP _hutilscpp_do_which_1st_eq_int_int(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_1st_eq_int_int(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_last_eq_int_int
-R_xlen_t do_which_last_eq_int_int(IntegerVector x, IntegerVector y);
-RcppExport SEXP _hutilscpp_do_which_last_eq_int_int(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_last_eq_int_int(x, y));
+    rcpp_result_gen = Rcpp::wrap(do_which_isnt_integerish(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -971,6 +820,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_isntConstant_dbl
+R_xlen_t do_isntConstant_dbl(DoubleVector x);
+RcppExport SEXP _hutilscpp_do_isntConstant_dbl(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_isntConstant_dbl(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_is_constant
 bool do_is_constant(SEXP x, int nThread);
 RcppExport SEXP _hutilscpp_do_is_constant(SEXP xSEXP, SEXP nThreadSEXP) {
@@ -979,6 +838,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
     rcpp_result_gen = Rcpp::wrap(do_is_constant(x, nThread));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_isntConstant
+R_xlen_t do_isntConstant(SEXP x);
+RcppExport SEXP _hutilscpp_do_isntConstant(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_isntConstant(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1415,6 +1284,50 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// validate_nchar1
+int validate_nchar1(CharacterVector x, bool return_size);
+RcppExport SEXP _hutilscpp_validate_nchar1(SEXP xSEXP, SEXP return_sizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type return_size(return_sizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(validate_nchar1(x, return_size));
+    return rcpp_result_gen;
+END_RCPP
+}
+// max_charsize
+int max_charsize(CharacterVector x);
+RcppExport SEXP _hutilscpp_max_charsize(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(max_charsize(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// is_space
+bool is_space(CharacterVector x);
+RcppExport SEXP _hutilscpp_is_space(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(is_space(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// where_square_bracket_opens
+R_xlen_t where_square_bracket_opens(CharacterVector x, R_xlen_t i);
+RcppExport SEXP _hutilscpp_where_square_bracket_opens(SEXP xSEXP, SEXP iSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< R_xlen_t >::type i(iSEXP);
+    rcpp_result_gen = Rcpp::wrap(where_square_bracket_opens(x, i));
+    return rcpp_result_gen;
+END_RCPP
+}
 // extractMandatory
 List extractMandatory(CharacterVector x, CharacterVector command, int nCommands);
 RcppExport SEXP _hutilscpp_extractMandatory(SEXP xSEXP, SEXP commandSEXP, SEXP nCommandsSEXP) {
@@ -1445,10 +1358,6 @@ RcppExport SEXP do_c_pminmax(SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_AnyCharMatch", (DL_FUNC) &_hutilscpp_AnyCharMatch, 3},
-    {"_hutilscpp_AnyWhich_dbl", (DL_FUNC) &_hutilscpp_AnyWhich_dbl, 6},
-    {"_hutilscpp_AnyWhich_int", (DL_FUNC) &_hutilscpp_AnyWhich_int, 6},
-    {"_hutilscpp_AnyWhichInDbl", (DL_FUNC) &_hutilscpp_AnyWhichInDbl, 2},
-    {"_hutilscpp_AnyWhichInInt", (DL_FUNC) &_hutilscpp_AnyWhichInInt, 2},
     {"_hutilscpp_Implies", (DL_FUNC) &_hutilscpp_Implies, 4},
     {"_hutilscpp_is_altrep", (DL_FUNC) &_hutilscpp_is_altrep, 1},
     {"_hutilscpp_allocate0_int", (DL_FUNC) &_hutilscpp_allocate0_int, 2},
@@ -1482,10 +1391,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_par_in", (DL_FUNC) &_hutilscpp_do_par_in, 3},
     {"_hutilscpp_do_par_in_hash_int", (DL_FUNC) &_hutilscpp_do_par_in_hash_int, 3},
     {"_hutilscpp_do_par_in_hash_dbl", (DL_FUNC) &_hutilscpp_do_par_in_hash_dbl, 3},
-    {"_hutilscpp_do_op_along", (DL_FUNC) &_hutilscpp_do_op_along, 4},
+    {"_hutilscpp_do_op2M", (DL_FUNC) &_hutilscpp_do_op2M, 1},
     {"_hutilscpp_do_or3_par", (DL_FUNC) &_hutilscpp_do_or3_par, 17},
     {"_hutilscpp_do_range_dbl_simple", (DL_FUNC) &_hutilscpp_do_range_dbl_simple, 1},
-    {"_hutilscpp_do_anyNonfinite", (DL_FUNC) &_hutilscpp_do_anyNonfinite, 1},
     {"_hutilscpp_do_which_first", (DL_FUNC) &_hutilscpp_do_which_first, 1},
     {"_hutilscpp_do_which_last", (DL_FUNC) &_hutilscpp_do_which_last, 1},
     {"_hutilscpp_do_which_first_false", (DL_FUNC) &_hutilscpp_do_which_first_false, 1},
@@ -1493,16 +1401,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which_first_notTRUE", (DL_FUNC) &_hutilscpp_do_which_first_notTRUE, 1},
     {"_hutilscpp_do_which_last_notTRUE", (DL_FUNC) &_hutilscpp_do_which_last_notTRUE, 1},
     {"_hutilscpp_do_which_last_notFALSE", (DL_FUNC) &_hutilscpp_do_which_last_notFALSE, 1},
+    {"_hutilscpp_do_which_first_lgl_lgl_op", (DL_FUNC) &_hutilscpp_do_which_first_lgl_lgl_op, 4},
     {"_hutilscpp_do_which_first_int_int", (DL_FUNC) &_hutilscpp_do_which_first_int_int, 5},
-    {"_hutilscpp_do_which_first_lgl_lgl", (DL_FUNC) &_hutilscpp_do_which_first_lgl_lgl, 6},
-    {"_hutilscpp_do_which_1st_uneq_dbl_dbl", (DL_FUNC) &_hutilscpp_do_which_1st_uneq_dbl_dbl, 3},
-    {"_hutilscpp_do_which_last_uneq_dbl_dbl", (DL_FUNC) &_hutilscpp_do_which_last_uneq_dbl_dbl, 3},
-    {"_hutilscpp_do_which_1st_uneq_int_int", (DL_FUNC) &_hutilscpp_do_which_1st_uneq_int_int, 2},
-    {"_hutilscpp_do_which_last_uneq_int_int", (DL_FUNC) &_hutilscpp_do_which_last_uneq_int_int, 2},
-    {"_hutilscpp_do_which_1st_eq_dbl_dbl", (DL_FUNC) &_hutilscpp_do_which_1st_eq_dbl_dbl, 3},
-    {"_hutilscpp_do_which_last_eq_dbl_dbl", (DL_FUNC) &_hutilscpp_do_which_last_eq_dbl_dbl, 3},
-    {"_hutilscpp_do_which_1st_eq_int_int", (DL_FUNC) &_hutilscpp_do_which_1st_eq_int_int, 2},
-    {"_hutilscpp_do_which_last_eq_int_int", (DL_FUNC) &_hutilscpp_do_which_last_eq_int_int, 2},
+    {"_hutilscpp_do_which_first_n", (DL_FUNC) &_hutilscpp_do_which_first_n, 4},
+    {"_hutilscpp_do_which_isnt_integerish", (DL_FUNC) &_hutilscpp_do_which_isnt_integerish, 1},
     {"_hutilscpp_do_whichs_16", (DL_FUNC) &_hutilscpp_do_whichs_16, 4},
     {"_hutilscpp_do_xor2", (DL_FUNC) &_hutilscpp_do_xor2, 4},
     {"_hutilscpp_showValue", (DL_FUNC) &_hutilscpp_showValue, 2},
@@ -1515,7 +1417,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
     {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 11},
     {"_hutilscpp_all_na_real", (DL_FUNC) &_hutilscpp_all_na_real, 2},
+    {"_hutilscpp_do_isntConstant_dbl", (DL_FUNC) &_hutilscpp_do_isntConstant_dbl, 1},
     {"_hutilscpp_do_is_constant", (DL_FUNC) &_hutilscpp_do_is_constant, 2},
+    {"_hutilscpp_do_isntConstant", (DL_FUNC) &_hutilscpp_do_isntConstant, 1},
     {"_hutilscpp_is_safe2int", (DL_FUNC) &_hutilscpp_is_safe2int, 2},
     {"_hutilscpp_force_as_integer", (DL_FUNC) &_hutilscpp_force_as_integer, 2},
     {"_hutilscpp_is_sorted_ascending_dbl", (DL_FUNC) &_hutilscpp_is_sorted_ascending_dbl, 1},
@@ -1551,6 +1455,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_sum_isna_logi", (DL_FUNC) &_hutilscpp_sum_isna_logi, 2},
     {"_hutilscpp_do_summary3_dbl", (DL_FUNC) &_hutilscpp_do_summary3_dbl, 5},
     {"_hutilscpp_do_summary3_int", (DL_FUNC) &_hutilscpp_do_summary3_int, 5},
+    {"_hutilscpp_validate_nchar1", (DL_FUNC) &_hutilscpp_validate_nchar1, 2},
+    {"_hutilscpp_max_charsize", (DL_FUNC) &_hutilscpp_max_charsize, 1},
+    {"_hutilscpp_is_space", (DL_FUNC) &_hutilscpp_is_space, 1},
+    {"_hutilscpp_where_square_bracket_opens", (DL_FUNC) &_hutilscpp_where_square_bracket_opens, 2},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
     {"do_c_pmax",    (DL_FUNC) &do_c_pmax,    3},

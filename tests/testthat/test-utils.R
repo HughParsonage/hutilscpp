@@ -24,12 +24,4 @@ test_that("isnt_number", {
   expect_true(isnt_number(-3e9, int.only = TRUE))
 })
 
-test_that("isnt_integersih", {
-  expect_identical(which_isnt_integerish(c(1, 2, 3)), 0L)
-  expect_identical(which_isnt_integerish(c(1, 2, 3.1)), 3L)
-  expect_identical(which_isnt_integerish(c(1, 2, -3.1)), 3L)
-  expect_identical(which_isnt_integerish(c(1, 2, -2.1)), 3L)
-  expect_identical(which_isnt_integerish(0L), 0L)
-  expect_identical(which_isnt_integerish("a"), 1L)
 
-})

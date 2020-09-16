@@ -9,6 +9,8 @@
 #' @importFrom hutils NOR
 #' @importFrom hutils XOR
 #' @importFrom hutils AND
+#' @importFrom magrittr and
+#' @importFrom magrittr or
 
 #' @useDynLib hutilscpp, .registration=TRUE
 "_PACKAGE"

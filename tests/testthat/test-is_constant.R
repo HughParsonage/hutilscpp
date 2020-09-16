@@ -28,7 +28,34 @@ test_that("is_constant works", {
   expect_false(is_constant(c(NA, 1)))
   expect_true(is_constant(c(NaN, NA)))
   expect_false(is_constant(c(NA, NaN, 1)))
+})
 
+test_that("is_constant(nThread = 2)", {
+  skip_on_cran()
+  withr::with_options(list(hutilscpp.nThread = 2L), {
+    expect_true(is_constant(NULL))
+    expect_true(is_constant(integer(0)))
+    expect_true(is_constant(integer(1)))
+
+    expect_true(is_constant(logical(10)))
+    expect_true(is_constant(integer(10)))
+    expect_true(is_constant(double(10)))
+    expect_true(is_constant(character(10)))
+    expect_true(is_constant(as.factor(character(10))))
+    expect_true(is_constant(raw(10)))
+
+    expect_false(is_constant(c(TRUE, FALSE)))
+    expect_false(is_constant(c(integer(10), 1L)))
+    expect_false(is_constant(c(integer(10), 1)))
+    expect_false(is_constant(c(character(10), 1)))
+    expect_false(is_constant(c(character(10), 1)))
+    expect_false(is_constant(c(raw(10), as.raw(1))))
+    expect_false(is_constant(c(factor(c(character(10), 1)))))
+    expect_false(is_constant(c(NaN, 1)))
+    expect_false(is_constant(c(NA, 1)))
+    expect_true(is_constant(c(NaN, NA)))
+    expect_false(is_constant(c(NA, NaN, 1)))
+  })
 })
 
 test_that("is_constant nThread", {
@@ -101,5 +128,11 @@ test_that("isntConstant other type", {
   expect_equal(isntConstant(c(x5, as.raw(1))), 6L)
 })
 
+test_that("do_isntConstant(LGL)", {
+  expect_equal(do_isntConstant(NULL), 0L)
+  expect_equal(do_isntConstant(TRUE), 0L)
+  expect_equal(do_isntConstant(c(TRUE, FALSE)), 2L)
+  expect_equal(do_isntConstant(c(TRUE, TRUE)), 0L)
+})
 
 

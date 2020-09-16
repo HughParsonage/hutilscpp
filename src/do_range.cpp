@@ -1,5 +1,3 @@
-#include <Rcpp.h>
-using namespace Rcpp;
 #include "cpphutils.h"
 
 
@@ -145,16 +143,6 @@ DoubleVector do_range_dbl(DoubleVector x, double halt_if_min, double halt_if_max
 
 }
 
-// [[Rcpp::export]]
-R_xlen_t do_anyNonfinite(DoubleVector x) {
-  R_xlen_t n = x.size();
-  for (R_xlen_t i = 0; i < n; ++i) {
-    if (!R_finite(x[i])) {
-      return i + 1;
-    }
-  }
-  return 0;
-}
 
 
 
