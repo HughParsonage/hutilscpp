@@ -1,5 +1,4 @@
-#include <Rcpp.h>
-using namespace Rcpp;
+#include "cpphutils.h"
 
 // #nocov start
 int showValuea(const char* what, double x) {
@@ -8,6 +7,159 @@ int showValuea(const char* what, double x) {
 }
 // #nocov end
 
+// [[Rcpp::export]]
+int validate_nchar1(CharacterVector x, bool return_size = false) {
+  R_xlen_t N = x.length();
+
+  for (R_xlen_t i = 0; i < N; ++i) {
+    if (x[i].size() > 1) {
+      return return_size ? x[i].size() : i + 1;
+    }
+  }
+  return 0;
+}
+
+// [[Rcpp::export(rng = false)]]
+int max_charsize(CharacterVector x) {
+  R_xlen_t N = x.length();
+  int o = 0;
+  for (R_xlen_t i = 0; i < N; ++i) {
+    int xis = x[i].size();
+    o = xis > o ? xis : o;
+  }
+  return o;
+}
+
+// [[Rcpp::export]]
+bool is_space(CharacterVector x) {
+  char x0 = x[0][0];
+  return x0 == 32;
+}
+
+//' @name where_square_bracket_opens
+//' @param x Character vector of characters.
+//' @param i position of closing bracket.
+//'
+//' @return
+//' -1 if x[i] does not closing bracket
+//'  0 if bracket never closes
+//'  j the location of the closing brace
+//'
+//' @noRd
+
+// [[Rcpp::export(rng = false)]]
+R_xlen_t where_square_bracket_opens(CharacterVector x, R_xlen_t i = 0) {
+  R_xlen_t N = x.length();
+
+  if (i < 0 || i >= N) {
+    return -1;
+  }
+  char xi = x[i][0];
+  if (xi != STOP_SQBRK) {
+    return -1;
+  }
+  int depth = 0;
+  for (R_xlen_t k = i; k >= 0; --k) {
+    char xk = x[k][0];
+    depth += (xk == STOP_SQBRK) - (xk == OPEN_SQBRK);
+    if (depth == 0) {
+      return k;
+    }
+  }
+
+  return 0;
+}
+#if false
+
+/// [[Rcpp::export(rng = false)]]
+IntegerVector tmp_mark_work(CharacterVector x, CharacterVector Command) {
+  R_xlen_t N = x.length();
+  R_xlen_t CN = Command.length();
+
+  IntegerVector out(N);
+  char c0 = Command[0][0];
+  R_xlen_t i = 0;
+  while (i < (N - CN)) {
+    char xi = x[i][0];
+    if (xi != c0) {
+      ++i;
+      continue;
+    }
+    // cj is the index throughout Command
+    R_xlen_t c_j = 1;
+    bool i_starts_command = true;
+    while (c_j < CN) {
+      char Cj = Command[c_j][0];
+      char xj = x[i + c_j][0];
+      if (Cj != xj) {
+        i_starts_command = false;
+        break;
+      }
+      ++c_j;
+    }
+    if (!i_starts_command) {
+      ++i; // can't be tempted to i += c_j because \text{\textbf}
+      continue;
+    }
+    out[i] += 1;
+    for (R_xlen_t c_k = 1; c_k < CN; ++c_k) {
+      ++i;
+      out[i] += 1;
+    }
+  }
+  return out;
+}
+
+/// [[Rcpp::export(rng = false)]]
+IntegerVector MatchArgCont(CharacterVector x, CharacterVector Command) {
+  R_xlen_t N = x.length();
+  R_xlen_t CN = Command.length();
+
+  // Different to max(nchar()); this fn is for purpose of array size
+  int max_nchar_x = max_charsize(x);
+  int max_nchar_c = max_charsize(Command);
+  if (max_nchar_c > max_nchar_x) {
+    // Implies Command can never occur in x
+    return IntegerVector(N);
+  }
+  if (max_nchar_c != 1) {
+    stop("Unexpected strings in Command");
+  }
+  IntegerVector out = no_init(N);
+  char c0 = Command[0][0];
+
+  constexpr char SPACE = 32;
+  constexpr char OPEN_BRACE = 123;
+  constexpr char STOP_BRACE = 125;
+  constexpr char OPEN_SQBRK = 91;
+  constexpr char STOP_SQBRK = 93;
+
+
+  for (R_xlen_t i = CN; i < N; ++i) {
+    char xi = x[i][0];
+    if (xi == 123) {
+      // i = "{"
+      R_xlen_t j = i;
+      R_xlen_t k = CN;
+      bool maybe_command = true;
+      while (--j >= 0 && maybe_command) {
+        char xj = x[j][0];
+        if (xj == SPACE) {
+          continue;
+        }
+        if (xj == STOP_SQBRK) {
+
+        }
+      }
+    }
+  }
+
+
+  return out;
+
+
+}
+#endif
 
 // [[Rcpp::export]]
 List extractMandatory (CharacterVector x, CharacterVector command, int nCommands) {
