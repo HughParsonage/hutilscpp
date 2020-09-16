@@ -52,11 +52,7 @@ range_rcpp <- function(x,
     return(out)
   }
   if (is.integer(x)) {
-    if (length(x) < .Machine$integer.max) {
-      return(as.integer(do_range_int(x)))  # not worth it to do _simple(x)
-    } else {
-      return(do_range_int(x))
-    }
+    return(R_xlen_t(do_range_int(x)))
   }
   if (is.double(x)) {
     if (anyNAx) {

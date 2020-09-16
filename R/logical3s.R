@@ -43,8 +43,7 @@ op2M <- function(operator) {
          "%in%" = 7L,
          "%between%" = 8L,
          "%(between)%" = 9L,
-         "%]between[%" = 10L,
-         0L)
+         "%]between[%" = 10L)
 }
 
 is_binary_sexp <- function(sexprA, .parent_nframes = 2L) {
