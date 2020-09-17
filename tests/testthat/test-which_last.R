@@ -186,3 +186,21 @@ test_that("which_firstNA", {
   expect_equal(which_lastNA(c(NA_real_)), 1)
 })
 
+
+
+test_that("which_last(x %between% c(NA, 1))", {
+  x <- c(1L, 5L, 3L, 10L, -1L)
+  expect_equal(which_last(x %between% c(NA_integer_, NA_integer_)), length(x))
+  expect_equal(which_last(x %between% c(NA_integer_, NaN)), length(x))
+
+  x <- c(0.1, 0.01, 0.25, 0.3, 0.9, 0.8)
+  expect_equal(which_last(x %between% c(NA, NA_integer_)), length(x))
+  expect_equal(which_last(x %between% c(NA, NaN)), length(x))
+  expect_equal(which_last(x %between% c(NA, 1)), length(x))
+  expect_equal(which_last(x %between% c(NA, -1)), 0)
+  expect_equal(which_last(x %between% c(NA, 0.09)), 2)
+  expect_equal(which_last(x %between% c(0.5, NA)),
+               last_which(x %between% c(0.5, NA)))
+  expect_equal(which_last(x %between% c(0.9, NA)),
+               last_which(x %between% c(0.9, NA)))
+})
