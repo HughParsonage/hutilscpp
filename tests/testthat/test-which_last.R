@@ -186,7 +186,10 @@ test_that("which_firstNA", {
   expect_equal(which_lastNA(c(NA_real_)), 1)
 })
 
-
+test_that("last_which", {
+  expect_equal(last_which(FALSE), 0L)
+  expect_equal(last_which(logical(2)), 0L)
+})
 
 test_that("which_last(x %between% c(NA, 1))", {
   x <- c(1L, 5L, 3L, 10L, -1L)

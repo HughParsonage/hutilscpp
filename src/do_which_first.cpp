@@ -217,7 +217,9 @@ R_xlen_t do_which_first_lgl_lgl_op(LogicalVector x, LogicalVector y, int op, boo
           return i + 1;
         }
       }
-      return 0;
+      // Should never occur since would only
+      // occur x %between% c(NA, NA) resolved above
+      return 0; // # nocov
     }
     //
     for (R_xlen_t k = 0; k < N; ++k) {
