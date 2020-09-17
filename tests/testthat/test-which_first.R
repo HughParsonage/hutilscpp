@@ -866,5 +866,91 @@ test_that("anyNA(x) implies which_first(x %in% c(NA, <rtype>))", {
                first_which(x_w_na %in% c(NA, 10)))
 })
 
+test_that("which_first %between% error", {
+  x <- 1:10
+  expect_error(which_first(x %between% x))
+  xd <- as.double(x)
+  expect_error(which_first(x %between% xd))
+  expect_error(which_first(xd %between% x))
+  expect_error(which_first(xd %between% xd))
+})
+
+test_that("(between) and ]between[ with NA", {
+  x <- c(11L, 1:5, 10L)
+  expect_equal(which_first(x %(between)% c(NA, 2L)),
+               which_first(x < 2L))
+  expect_equal(which_first(x %(between)% c(5L, NA)),
+               which_first(x > 5L))
+  expect_equal(which_first(x %]between[% c(NA, 2L)),
+               which_first(x >= 2L))
+  expect_equal(which_first(x %]between[% c(5L, NA)),
+               which_first(x <= 5L))
+
+  expect_equal(first_which(x %(between)% c(NA, 2L)),
+               which_first(x < 2L))
+  expect_equal(first_which(x %(between)% c(5L, NA)),
+               which_first(x > 5L))
+  expect_equal(first_which(x %]between[% c(NA, 2L)),
+               which_first(x >= 2L))
+  expect_equal(first_which(x %]between[% c(5L, NA)),
+               which_first(x <= 5L))
+
+  expect_equal(which_first(x %(between)% c(NA, 2)),
+               which_first(x < 2))
+  expect_equal(which_first(x %(between)% c(5, NA)),
+               which_first(x > 5))
+  expect_equal(which_first(x %]between[% c(NA, 2)),
+               which_first(x >= 2))
+  expect_equal(which_first(x %]between[% c(5, NA)),
+               which_first(x <= 5))
+
+  expect_equal(first_which(x %(between)% c(NA, 2)),
+               which_first(x < 2))
+  expect_equal(first_which(x %(between)% c(5, NA)),
+               which_first(x > 5))
+  expect_equal(first_which(x %]between[% c(NA, 2)),
+               which_first(x >= 2))
+  expect_equal(first_which(x %]between[% c(5, NA)),
+               which_first(x <= 5))
+
+
+  x <- as.double(x)
+
+  expect_equal(which_first(x %(between)% c(NA, 2L)),
+               which_first(x < 2L))
+  expect_equal(which_first(x %(between)% c(5L, NA)),
+               which_first(x > 5L))
+  expect_equal(which_first(x %]between[% c(NA, 2L)),
+               which_first(x >= 2L))
+  expect_equal(which_first(x %]between[% c(5L, NA)),
+               which_first(x <= 5L))
+
+  expect_equal(first_which(x %(between)% c(NA, 2L)),
+               which_first(x < 2L))
+  expect_equal(first_which(x %(between)% c(5L, NA)),
+               which_first(x > 5L))
+  expect_equal(first_which(x %]between[% c(NA, 2L)),
+               which_first(x >= 2L))
+  expect_equal(first_which(x %]between[% c(5L, NA)),
+               which_first(x <= 5L))
+
+  expect_equal(which_first(x %(between)% c(NA, 2)),
+               which_first(x < 2))
+  expect_equal(which_first(x %(between)% c(5, NA)),
+               which_first(x > 5))
+  expect_equal(which_first(x %]between[% c(NA, 2)),
+               which_first(x >= 2))
+  expect_equal(which_first(x %]between[% c(5, NA)),
+               which_first(x <= 5))
+
+  expect_equal(first_which(x %(between)% c(NA, 2)),
+               which_first(x < 2))
+  expect_equal(first_which(x %(between)% c(5, NA)),
+               which_first(x > 5))
+  expect_equal(first_which(x %]between[% c(NA, 2)),
+               which_first(x >= 2))
+  expect_equal(first_which(x %]between[% c(5, NA)),
+               which_first(x <= 5))
+})
 
 
