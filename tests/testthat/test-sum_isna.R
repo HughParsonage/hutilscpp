@@ -88,7 +88,7 @@ test_that("sum_isna_real", {
 })
 
 test_that("sum_isna nThread == 1", {
-  expect_equal(sum_isna(1:10, do_anyNA = TRUE, nThread = 1L))
+  expect_equal(sum_isna(1:10, do_anyNA = TRUE, nThread = 1L), 0L)
 })
 
 
