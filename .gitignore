@@ -7,3 +7,5 @@ data-raw/y.rds
 .Ruserdata
 data-raw/
 .Renviron
+*.gcda
+*.gcno

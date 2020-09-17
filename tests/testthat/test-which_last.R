@@ -115,6 +115,7 @@ test_that("which_last(all FALSE)", {
 test_that("which_first long", {
   skip_on_travis()
   skip_on_appveyor()
+  skip_if_covr()
   skip_if(.Machine$sizeof.pointer != 8)
   x <-
     tryCatch(allocate0_except(25e8, c(2e9, 23e8), c(1L, -1L)),

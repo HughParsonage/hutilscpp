@@ -42,12 +42,17 @@ test_that("pmax0 radix extrema", {
   max_int <- +.Machine$integer.max
   x <- min_int:max_int
   res <- pmax0(x)
-  expect_equal(which_first(res > 0), max_int)
+  expect_equal(res[1], 0L)
+  if (!is_covr()) {
+    expect_equal(which_first(res > 0), max_int)
+  }
   res <- NULL
   x <- NULL
   x <- max_int:min_int
   res <- pmax0(x)
-  expect_equal(which_first(x == 0), max_int)
+  if (!is_covr()) {
+    expect_equal(which_first(x == 0), max_int)
+  }
 })
 
 test_that("firstNonnegativeRadix", {
