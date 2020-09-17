@@ -17,11 +17,13 @@ check_omp <- function(nThread) {
                  msg_too_many_threads = g("`nThread = {nThread}` which exceeds the number of threads available on this computer."))
   if (diagnosis[[1]]) {
     if (diagnosis[[2]]) {
-      warning(diagnosis[[3]])
+                              # Coverage not needed since we don't know how to reproduce
+      warning(diagnosis[[3]]) # nocov
     } else {
       stop(diagnosis[[3]])
     }
   }
-  as.integer(nThread)
+                      # Coverage not needed since normally nothing has changed
+  as.integer(nThread) # nocov
 }
 
