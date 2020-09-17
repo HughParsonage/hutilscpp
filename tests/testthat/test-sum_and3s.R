@@ -58,5 +58,9 @@ test_that("sum_and3s decompose_expr", {
   x <- c(10L, 20L, 15L, 55:100, integer(100))
   expect_equal(sum_and3s(x >= 0L, x %in% x, x > -0.5),
                length(x))
+  expect_equal(sum_and3s(x %in% x, x %in% x, x %in% x),
+               length(x))
+  expect_equal(sum_and3s(x > -0.5, x > -0.5, x > -0.5),
+               length(x))
 })
 
