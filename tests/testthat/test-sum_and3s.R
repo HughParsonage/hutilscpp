@@ -54,3 +54,9 @@ test_that("sum_and/or3s doubles", {
   expect_equal(sum_or3s(x > 50.1, x < 50.9), 10)
 })
 
+test_that("sum_and3s decompose_expr", {
+  x <- c(10L, 20L, 15L, 55:100, integer(100))
+  expect_equal(sum_and3s(x >= 0L, x %in% x, x > -0.5),
+               length(x))
+})
+
