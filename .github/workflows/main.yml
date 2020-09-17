@@ -2,7 +2,7 @@ name: Render and Deploy RMarkdown Website
 'on': push
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@master
@@ -10,8 +10,6 @@ jobs:
         run: |-
           Rscript -e "install.packages(c('rcmdcheck', 'remotes', 'covr'), repos = 'https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
           Rscript -e "remotes::install_deps(dependencies = TRUE, repos = 'https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
-      - name: rcmdcheck
-        run: Rscript -e "rcmdcheck::rcmdcheck()"
       - name: codecov
         run: Rscript -e "covr::codecov()"
     container: rocker/verse:latest
