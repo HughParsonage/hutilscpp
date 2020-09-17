@@ -35,20 +35,20 @@ test_that("sum_isna long", {
   skip_on_cran()
   skip_on_travis()
   skip_if_not(identical(.Platform$r_arch, "x64"))
-  do_skip <- FALSE
-  tryCatch(x <- logical(1e10), error = function(e) {
+  tryCatch(x <- logical(3e9), error = function(e) {
     if (grepl("allocate", e$m)) {
       do_skip = TRUE
     } else {
       cat(e$m)
     }
   })
+  do_skip <- length(x) != 3e9
   skip_if(do_skip)
   expect_identical(sum_isna(x), 0L)
 
   x <- NULL
-  x <- rep_len(c(TRUE, NA), 1e10)
-  expect_equal(sum_isna(x), 5e9)
+  x <- rep_len(c(TRUE, NA), 3e9)
+  expect_equal(sum_isna(x), 3e9 / 2)
 })
 
 
@@ -89,6 +89,10 @@ test_that("sum_isna_real", {
 
 test_that("sum_isna nThread == 1", {
   expect_equal(sum_isna(1:10, do_anyNA = TRUE, nThread = 1L), 0L)
+})
+
+test_that("sum_isna_altrep", {
+  expect_equal(sum_isna(1:5), 0L)
 })
 
 
