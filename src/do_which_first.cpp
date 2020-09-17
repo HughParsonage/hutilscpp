@@ -227,59 +227,34 @@ R_xlen_t do_which_first_n(SEXP X, SEXP Y, int op, bool last = false) {
      if (N == 0 || Ny == 0) {
        return 0; // # nocov
      }
+     const bool y1_is_i = (Ny == N && op < OP_IN);
+     const bool y2_is_1 = (Ny >= 2 && op >= OP_IN);
 
      for (R_xlen_t k = 0; k < N; ++k) {
        R_xlen_t i = last ? (N - k - 1) : k;
-       int yi = (Ny == N) ? y[i] : y[0];
        int xi = x[i];
-       switch (op) {
-       case 1:
-         if (xi != yi) return i + 1;
-         break;
-       case 2:
-         if (xi == yi) return i + 1;
-         break;
-       case 3:
-         if (xi >= yi) return i + 1;
-         break;
-       case 4:
-         if (xi <= yi) return i + 1;
-         break;
-       case 5:
-         if (xi >  yi) return i + 1;
-         break;
-       case 6:
-         if (xi <  yi) return i + 1;
-         break;
-       case 7:
+       // For operators != == >= <= > < we treat it as
+       //    x > y  if y has same length as x
+       //    x > 1  if y has length one [which we assume occurs whenever Ny != N]
+       // for other operators %in% %between% etc the operation is not
+       // 'parallel' so the first element of y is always y1
+       int y1 = y1_is_i ? y[i] : y[0];
+       int y2 = y2_is_1 ? y[1] : y[0];
+       if (op != OP_IN) {
+         if (single_ox_x1_x2(xi, op, y1, y2)) {
+           return i + 1;
+         }
+       } else {
          for (R_xlen_t j = 0; j < Ny; ++j) {
            int yj = y[j];
            if (xi == yj) {
              return i + 1;
            }
          }
-         break;
-       case 8:
-         if (xi >= y[0] && xi <= y[1]) {
-           return i + 1;
-         }
-         break;
-       case 9:
-         if (xi > y[0] && xi < y[1]) {
-           return i + 1;
-         }
-         break;
-       case 10:
-         if (xi <= y[0] || xi >= y[1]) {
-           return i + 1;
-         }
-         break; // # nocov
        }
      }
      return 0;
    }
-
-
 
    if (TYPEOF(X) == REALSXP && TYPEOF(Y) == REALSXP) {
      DoubleVector x = X;
@@ -288,12 +263,14 @@ R_xlen_t do_which_first_n(SEXP X, SEXP Y, int op, bool last = false) {
      if (N == 0 || Ny == 0) {
        return 0; // # nocov
      }
+     const bool y1_is_i = (Ny == N && op < OP_IN);
+     const bool y2_is_1 = (Ny >= 2 && op >= OP_IN);
 
      for (R_xlen_t k = 0; k < N; ++k) {
        R_xlen_t i = last ? (N - k - 1) : k;
        double xi = x[i];
-       double y1 = (Ny == N && op < OP_IN) ? y[i] : y[0];
-       double y2 = (op >= OP_IN) ? y[1] : y[0];
+       double y1 = y1_is_i ? y[i] : y[0];
+       double y2 = y2_is_1 ? y[1] : y[0];
        if (op != OP_IN) {
          if (single_ox_x1_x2(xi, op, y1, y2)) {
            return i + 1;
@@ -310,21 +287,21 @@ R_xlen_t do_which_first_n(SEXP X, SEXP Y, int op, bool last = false) {
      return 0;
    }
 
-
    if (TYPEOF(X) == REALSXP && TYPEOF(Y) == INTSXP) {
-
      DoubleVector x = X;
      IntegerVector y = Y;
      R_xlen_t N = x.length(), Ny = y.length();
      if (N == 0 || Ny == 0) {
        return 0; // # nocov
      }
+     const bool y1_is_i = (Ny == N && op < OP_IN);
+     const bool y2_is_1 = (Ny >= 2 && op >= OP_IN);
 
      for (R_xlen_t k = 0; k < N; ++k) {
        R_xlen_t i = last ? (N - k - 1) : k;
        double xi = x[i];
-       double y1 = (Ny == N && op < OP_IN) ? y[i] : y[0];
-       double y2 = (op >= OP_IN) ? y[1] : y[0];
+       double y1 = y1_is_i ? y[i] : y[0];
+       double y2 = y2_is_1 ? y[1] : y[0];
        if (op != OP_IN) {
          if (single_ox_x1_x2(xi, op, y1, y2)) {
            return i + 1;
@@ -348,12 +325,14 @@ R_xlen_t do_which_first_n(SEXP X, SEXP Y, int op, bool last = false) {
      if (N == 0 || Ny == 0) {
        return 0; // # nocov
      }
+     const bool y1_is_i = (Ny == N && op < OP_IN);
+     const bool y2_is_1 = (Ny >= 2 && op >= OP_IN);
 
      for (R_xlen_t k = 0; k < N; ++k) {
        R_xlen_t i = last ? (N - k - 1) : k;
        double xi = x[i];
-       double y1 = (Ny == N && op < OP_IN) ? y[i] : y[0];
-       double y2 = (op >= OP_IN) ? y[1] : y[0];
+       double y1 = y1_is_i ? y[i] : y[0];
+       double y2 = y2_is_1 ? y[1] : y[0];
        if (op != OP_IN) {
          if (single_ox_x1_x2(xi, op, y1, y2)) {
            return i + 1;
