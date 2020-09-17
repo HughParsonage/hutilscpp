@@ -22,7 +22,7 @@ test_that("Error handling", {
 # bankstown to sydney airports approximately 17628m
 test_that("Bankstown airport to Sydney airport approximately 17628m", {
   expect_lt(haversineDistance(-33 - 56/60 - 46/3600, 151 + 10/60 + 38/3600,
-                               -33 - 55/60 - 28/3600, 150 + 59/60+18/3600) / 17.628 - 1,
+                              -33 - 55/60 - 28/3600, 150 + 59/60+18/3600) / 17.628 - 1,
             0.01)
 })
 
@@ -126,148 +126,150 @@ test_that("is_sorted_ascending", {
 
 test_that("Emptiest quadrants", {
   skip_if_not_installed("covr")
+  skip_if_not_installed("withr")
   on_cran_not_covr <-
     !identical(Sys.getenv("NOT_CRAN"), "true") &&
     !covr::in_covr()
 
   skip_if(on_cran_not_covr, message = "On CRAN but not COVR")
   library(data.table)
-  x <- c(sample(0:49, size = 2000, replace = TRUE), sample(76:100, size = 1000, replace = TRUE))
-  y <- seq(0, 100, length.out = length(x))
-  expect_identical(EmptiestQuarter(x, y, min(x), max(x), min(y), max(y)),  c(2L, 0L))
-  expect_identical(last(theEmptiestQuarters(x, y, min(x), max(x), min(y), max(y))), -1L)
+  withr::with_seed(7441, {
+    x <- c(sample(0:49, size = 2000, replace = TRUE), sample(76:100, size = 1000, replace = TRUE))
+    y <- seq(0, 100, length.out = length(x))
+    expect_identical(EmptiestQuarter(x, y, min(x), max(x), min(y), max(y)),  c(2L, 0L))
+    expect_identical(last(theEmptiestQuarters(x, y, min(x), max(x), min(y), max(y))), -1L)
 
-  not <- `!`
-  ands <- function(x, ...) {
-    if (missing(..1)) {
-      return(x)
+    not <- `!`
+    ands <- function(x, ...) {
+      if (missing(..1)) {
+        return(x)
+      }
+      x & ands(...)
     }
-    x & ands(...)
-  }
-  not2 <- function(...) {
-    not(ands(...))
-  }
+    not2 <- function(...) {
+      not(ands(...))
+    }
 
 
-  DT <- data.table(x = runif(10000, -1, 1),
-                   y = runif(10000, -1, 1))
-  DT_NE <- DT[not2(x > 0,
-                   y > 0,
-                   y - 1.9 * x <= 0.2,
-                   y - x >= -0.1)]
-  # Make sure we don't a gap in the wrong cell
-  while (DT_NE[x %between% c(0.25, 0.5)][y %between% c(0.5, 0.75), .N] == 0L) {
     DT <- data.table(x = runif(10000, -1, 1),
                      y = runif(10000, -1, 1))
     DT_NE <- DT[not2(x > 0,
                      y > 0,
                      y - 1.9 * x <= 0.2,
                      y - x >= -0.1)]
-  }
-
-
-  res1 <- DT_NE[, poleInaccessibility2(x, y)]  # Will be unscaled
-  res <- DT_NE[, poleInaccessibility2(x, y, x_range = c(-1, 1), y_range = c(-1, 1))]
-  if (identical(res,
-                c("xmin" = 0.5,
-                  "xmax" = 0.75,
-                  "ymin" = 0.75,
-                  "ymax" = 1.00))) {
-    expect_identical(res,
-                     c("xmin" = 0.5,
-                       "xmax" = 0.75,
-                       "ymin" = 0.75,
-                       "ymax" = 1.00))
-  } else {
-    if (identical(Sys.getenv("USERNAME"), "hughp")) {
-      saveRDS(res, "~/hutilscpp/data-raw/res.rds")
-      saveRDS(DT_NE, "~/hutilscpp/data-raw/DT_NE.rds")
+    # Make sure we don't a gap in the wrong cell
+    while (DT_NE[x %between% c(0.25, 0.5)][y %between% c(0.5, 0.75), .N] == 0L) {
+      DT <- data.table(x = runif(10000, -1, 1),
+                       y = runif(10000, -1, 1))
+      DT_NE <- DT[not2(x > 0,
+                       y > 0,
+                       y - 1.9 * x <= 0.2,
+                       y - x >= -0.1)]
     }
-  }
-
-  # The chance of this if-statement being FALSE is vanishingly small
-  # but Murphy's Law says it will happen on CRAN when they're making
-  # a major release.  Let's lower the stakes.
-  if (identical(round(res1, 2),
-                c("xmin" = 0.5,
-                  "xmax" = 0.75,
-                  "ymin" = 0.75,
-                  "ymax" = 1.00))) {
-    expect_identical(round(res1, 2),  # Won't fail too often?
-                     c("xmin" = 0.5,
-                       "xmax" = 0.75,
-                       "ymin" = 0.75,
-                       "ymax" = 1.00))
-  }
-  # if (FALSE) {
-  #   library(ggplot2);ggplot(DT_NE,
-  #                           aes(x, y)) +
-  #     geom_point() +
-  #     geom_blank(data = head(DT_NE, 2),
-  #                aes(x = c(-1.01, 1.01),
-  #                    y = c(-1.01, 1.01))) +
-  #     annotate("rect",
-  #              xmin = res["xmin"],
-  #              xmax = res["xmax"],
-  #              ymin = res["ymin"],
-  #              ymax = res["ymax"],
-  #              fill = NA,
-  #              color = "red")
-  # }
-  res3 <- DT_NE[, poleInaccessibility3(x, y)]
-  expect_false(DT_NE[, any(x > res3["xmin"] &
-                           x < res3["xmax"] &
-                           y > res3["ymin"] &
-                           y < res3["ymax"])])
-
-  res3 <- DT_NE[, poleInaccessibility3(x, y, x_range = c(-1, 1), y_range = c(-1, 1))]
-  expect_false(DT_NE[, any(x > res3["xmin"] &
-                             x < res3["xmax"] &
-                             y > res3["ymin"] &
-                             y < res3["ymax"])])
 
 
-  expect_identical(DT_NE[, EmptiestQuarter(x, y, -1, 1, -1, 1)],
-                   c(3L, DT_NE[x >= 0 & y >= 0, .N]))
-  expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 3L)
-  expect_equal((DT_NE[, theEmptiestQuarters(x, y)])[1:2],
-               c(3, 3))
+    res1 <- DT_NE[, poleInaccessibility2(x, y)]  # Will be unscaled
+    res <- DT_NE[, poleInaccessibility2(x, y, x_range = c(-1, 1), y_range = c(-1, 1))]
+    if (identical(res,
+                  c("xmin" = 0.5,
+                    "xmax" = 0.75,
+                    "ymin" = 0.75,
+                    "ymax" = 1.00))) {
+      expect_identical(res,
+                       c("xmin" = 0.5,
+                         "xmax" = 0.75,
+                         "ymin" = 0.75,
+                         "ymax" = 1.00))
+    } else {
+      if (identical(Sys.getenv("USERNAME"), "hughp")) {
+        saveRDS(res, "~/hutilscpp/data-raw/res.rds")
+        saveRDS(DT_NE, "~/hutilscpp/data-raw/DT_NE.rds")
+      }
+    }
 
-  DT <- data.table(x = runif(100000, -1, 1),
-                   y = runif(100000, -1, 1))
-  DT_NE <- DT[not2(x > 0,
-                   y > 0,
-                   {y - 1.9 * x} <= 0.2,
-                   {y - 0.9*x} >= -0.1)]
-  # Make sure we don't a gap in the wrong cell
-  i <- 0
-  while (i < 1e6 &&
-         OR(DT_NE[x %between% c(0.25, 0.5)][y %between% c(0.5, 0.75), .N] == 0L,
-            AND({DT_NE[, theEmptiestQuarters(x, y)]}[1] != 3,
-                {DT_NE[, theEmptiestQuarters(x, y)]}[2] != 3))) {
+    # The chance of this if-statement being FALSE is vanishingly small
+    # but Murphy's Law says it will happen on CRAN when they're making
+    # a major release.  Let's lower the stakes.
+    if (identical(round(res1, 2),
+                  c("xmin" = 0.5,
+                    "xmax" = 0.75,
+                    "ymin" = 0.75,
+                    "ymax" = 1.00))) {
+      expect_identical(round(res1, 2),  # Won't fail too often?
+                       c("xmin" = 0.5,
+                         "xmax" = 0.75,
+                         "ymin" = 0.75,
+                         "ymax" = 1.00))
+    }
+    # if (FALSE) {
+    #   library(ggplot2);ggplot(DT_NE,
+    #                           aes(x, y)) +
+    #     geom_point() +
+    #     geom_blank(data = head(DT_NE, 2),
+    #                aes(x = c(-1.01, 1.01),
+    #                    y = c(-1.01, 1.01))) +
+    #     annotate("rect",
+    #              xmin = res["xmin"],
+    #              xmax = res["xmax"],
+    #              ymin = res["ymin"],
+    #              ymax = res["ymax"],
+    #              fill = NA,
+    #              color = "red")
+    # }
+    res3 <- DT_NE[, poleInaccessibility3(x, y)]
+    expect_false(DT_NE[, any(x > res3["xmin"] &
+                               x < res3["xmax"] &
+                               y > res3["ymin"] &
+                               y < res3["ymax"])])
+
+    res3 <- DT_NE[, poleInaccessibility3(x, y, x_range = c(-1, 1), y_range = c(-1, 1))]
+    expect_false(DT_NE[, any(x > res3["xmin"] &
+                               x < res3["xmax"] &
+                               y > res3["ymin"] &
+                               y < res3["ymax"])])
+
+
+    expect_identical(DT_NE[, EmptiestQuarter(x, y, -1, 1, -1, 1)],
+                     c(3L, DT_NE[x >= 0 & y >= 0, .N]))
+    expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 3L)
+    expect_equal((DT_NE[, theEmptiestQuarters(x, y)])[1:2],
+                 c(3, 3))
+
     DT <- data.table(x = runif(100000, -1, 1),
                      y = runif(100000, -1, 1))
     DT_NE <- DT[not2(x > 0,
                      y > 0,
-                     y - 1.9*x <= 0.2,
-                     y - 0.9*x >= -0.1)]
-    i <- i + 1
-  }
+                     {y - 1.9 * x} <= 0.2,
+                     {y - 0.9*x} >= -0.1)]
+    # Make sure we don't a gap in the wrong cell
+    i <- 0
+    while (i < 1e6 &&
+           OR(DT_NE[x %between% c(0.25, 0.5)][y %between% c(0.5, 0.75), .N] == 0L,
+              AND({DT_NE[, theEmptiestQuarters(x, y)]}[1] != 3,
+                  {DT_NE[, theEmptiestQuarters(x, y)]}[2] != 3))) {
+      DT <- data.table(x = runif(100000, -1, 1),
+                       y = runif(100000, -1, 1))
+      DT_NE <- DT[not2(x > 0,
+                       y > 0,
+                       y - 1.9*x <= 0.2,
+                       y - 0.9*x >= -0.1)]
+      i <- i + 1
+    }
 
 
 
-  # Cover all the quarters
-  DT_NE[, y := -y]
-  expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 2L)
-  expect_identical(first(DT_NE[, theEmptiestQuarters(x, y)]), 2L)
-  DT_NE[, x := -x]
-  expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 0L)
-  expect_identical(first(DT_NE[, theEmptiestQuarters(x, y)]), 0L)
-  DT_NE[, y := -y]
-  expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 1L)
-  expect_identical(first(DT_NE[, theEmptiestQuarters(x, y)]), 1L)
+    # Cover all the quarters
+    DT_NE[, y := -y]
+    expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 2L)
+    expect_identical(first(DT_NE[, theEmptiestQuarters(x, y)]), 2L)
+    DT_NE[, x := -x]
+    expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 0L)
+    expect_identical(first(DT_NE[, theEmptiestQuarters(x, y)]), 0L)
+    DT_NE[, y := -y]
+    expect_identical(first(DT_NE[, EmptiestQuarter(x, y)]), 1L)
+    expect_identical(first(DT_NE[, theEmptiestQuarters(x, y)]), 1L)
 
-
+  }) # withr
 })
 
 test_that("poleInaccessibility error handling", {
