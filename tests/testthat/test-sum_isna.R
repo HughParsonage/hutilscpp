@@ -93,6 +93,7 @@ test_that("sum_isna nThread == 1", {
 
 test_that("sum_isna_altrep", {
   expect_equal(sum_isna(1:5), 0L)
+  expect_equal(sum_isna(1:5, do_anyNA = FALSE), 0L)
 })
 
 
