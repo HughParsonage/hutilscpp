@@ -118,7 +118,7 @@ R_xlen_t do_which_firstNA(SEXP x) {
   case RAWSXP:
     return 0;
   }
-  return 0;
+  return 0; // # nocov
 }
 
 // [[Rcpp::export(rng = false)]]
@@ -137,7 +137,7 @@ R_xlen_t do_which_lastNA(SEXP x) {
   case RAWSXP:
     return 0;
   }
-  return 0;
+  return 0; // # nocov
 }
 
 
@@ -273,7 +273,7 @@ R_xlen_t do_which_first_n(SEXP X, SEXP Y, int op, bool last = false) {
          if (xi <= y[0] || xi >= y[1]) {
            return i + 1;
          }
-         break;
+         break; // # nocov
        }
      }
      return 0;

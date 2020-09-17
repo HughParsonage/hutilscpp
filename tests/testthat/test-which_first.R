@@ -568,6 +568,11 @@ test_that("which_first(<x> <o> <y>) lens equal", {
                first_which(x %(between)% z))
   expect_equal(which_first(x %]between[% z),
                first_which(x %]between[% z))
+  z <- c(1L, 0L)
+  expect_equal(which_first(x %(between)% z),
+               first_which(x %(between)% z))
+  expect_equal(which_first(x %]between[% z),
+               first_which(x %]between[% z))
 
 
   x <- as.double(x)
@@ -780,6 +785,8 @@ test_that("which_first internals", {
   expect_equal(do_which_first_lgl_lgl_op(logical(11), TRUE, do_op2M("%in%")), 0)
   expect_equal(do_which_first_lgl_lgl_op(logical(11), FALSE, do_op2M("%in%")), 1)
   expect_equal(do_which_first_lgl_lgl_op(logical(11), c(TRUE, FALSE), do_op2M("%between%")), 0)
+  expect_equal(do_which_first_lgl_lgl_op(c(TRUE, NA), c(FALSE, NA), do_op2M("%in%")), 2)
+  expect_equal(do_which_first_lgl_lgl_op(c(TRUE, TRUE), c(TRUE, FALSE), do_op2M("%between%")), 0)
 
 })
 
