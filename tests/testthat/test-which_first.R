@@ -794,6 +794,7 @@ test_that("which_first internals", {
   expect_equal(do_which_first_lgl_lgl_op(c(TRUE, TRUE), c(TRUE, FALSE), do_op2M("%between%")), 0)
   expect_equal(do_which_first_lgl_lgl_op(c(TRUE, TRUE), c(TRUE, TRUE), do_op2M("%in%")), 1)
   expect_equal(do_which_first_lgl_lgl_op(c(FALSE, TRUE), c(TRUE, TRUE), do_op2M("%in%")), 2)
+  expect_equal(do_which_first_lgl_lgl_op(c(FALSE, FALSE), c(TRUE, TRUE), do_op2M("%between%")), 0)
 
 })
 
