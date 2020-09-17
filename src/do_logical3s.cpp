@@ -392,11 +392,8 @@ bool single_ox_x1_x2(int x, int oix, int x1, int x2) {
 
   case OP_BC:
     return x <= x1 || x >= x2;
-
-  case 0:
-    return true;
   }
-  return false;
+  return false; // # nocov
 }
 
 bool single_ox_x1_x2(double x, int oix, double x1, double x2) {
@@ -427,11 +424,8 @@ bool single_ox_x1_x2(double x, int oix, double x1, double x2) {
 
   case OP_BC:
     return x <= x1 || x >= x2;
-
-  case 0:
-    return true;
   }
-  return false;
+  return false; // # nocov
 }
 
 // [[Rcpp::export(rng = false)]]
