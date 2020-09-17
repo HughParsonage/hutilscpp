@@ -205,21 +205,17 @@ R_xlen_t do_which_first_lgl_lgl_op(LogicalVector x, LogicalVector y, int op, boo
           }
           continue;
         }
-
         if (onlyFALSE) {
           if (x[i] == FALSE) {
             return i + 1;
           }
           continue;
         }
-
         if (x[i] != NA_LOGICAL) {
           return i + 1;
         }
       }
-      // Should never occur since would only
-      // occur x %between% c(NA, NA) resolved above
-      return 0; // # nocov
+      return 0;
     }
     //
     for (R_xlen_t k = 0; k < N; ++k) {
