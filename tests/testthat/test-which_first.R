@@ -535,8 +535,6 @@ test_that("first_which", {
 
 
 test_that("which_first(<x> <o> <y>) lens equal", {
-
-
   x <- c(113L, 102L, 106L, 100L, 114L)
   y <- c(108L, 106L, 114L, 100L, 109L)
 
@@ -763,10 +761,13 @@ test_that("which_first(lgl lgl)", {
   B1 <- c(NA, TRUE)
   B2 <- c(TRUE, FALSE)
   B3 <- c(FALSE, TRUE)
+  B4 <- c(NA, FALSE)
   expect_equal(which_first(x %in% B1),
                first_which(x %in% B1))
   expect_equal(which_first(x %between% B2), 0)
   expect_equal(which_first(x %between% B3), 1)
+  expect_equal(which_first(x %between% B4), 2)
+  expect_equal(which_first(x %(between)% B3), 0)
   expect_equal(which_first(x %in% c(NA, TRUE, FALSE, TRUE)), 1)
 })
 
@@ -804,6 +805,65 @@ test_that("which_firstNA", {
   expect_equal(which_firstNA(c(0, 0, NA, NA)), 3)
   expect_equal(which_firstNA(c(0, 0, 0)), 0)
   expect_equal(which_firstNA(c(NA_real_)), 1)
+})
+
+test_that("which_first(x %between% c(NA, 1))", {
+  x <- c(1L, 5L, 3L, 10L, -1L)
+  expect_equal(which_first(x %between% c(NA_integer_, NA_integer_)), 1)
+  expect_equal(which_first(x %between% c(NA_integer_, 1L)), 1)
+  expect_equal(which_first(x %between% c(NA_integer_, 0L)), length(x))
+  expect_equal(which_first(x %between% c(NA_integer_, -2L)), 0)
+  expect_equal(which_first(x %between% c(2L, NA_integer_)), 2)
+  expect_equal(which_first(x %between% c(10L, NA_integer_)), 4)
+  expect_equal(which_first(x %between% c(12L, NA_integer_)), 0)
+
+  expect_equal(which_first(x %between% c(NA_integer_, NaN)), 1)
+  expect_equal(which_first(x %between% c(NA_integer_, 1)), 1)
+  expect_equal(which_first(x %between% c(NA_integer_, 0)), length(x))
+  expect_equal(which_first(x %between% c(NA_integer_, -2)), 0)
+  expect_equal(which_first(x %between% c(2, NA_integer_)), 2)
+  expect_equal(which_first(x %between% c(10, NA_integer_)), 4)
+  expect_equal(which_first(x %between% c(12, NA_integer_)), 0)
+
+  x <- as.double(x)
+  expect_equal(which_first(x %between% c(NA_integer_, NA_integer_)), 1)
+  expect_equal(which_first(x %between% c(NA_integer_, 1L)), 1)
+  expect_equal(which_first(x %between% c(NA_integer_, 0L)), length(x))
+  expect_equal(which_first(x %between% c(NA_integer_, -2L)), 0)
+  expect_equal(which_first(x %between% c(2L, NA_integer_)), 2)
+  expect_equal(which_first(x %between% c(10L, NA_integer_)), 4)
+  expect_equal(which_first(x %between% c(12L, NA_integer_)), 0)
+
+  x <- c(0.1, 0.01, 0.25, 0.3, 0.9, 0.8)
+  expect_equal(which_first(x %between% c(NA, NaN)), 1)
+  expect_equal(which_first(x %between% c(NA, 1)), 1)
+  expect_equal(which_first(x %between% c(NA, -1)), 0)
+  expect_equal(which_first(x %between% c(NA, 0.09)), 2)
+  expect_equal(which_first(x %between% c(0.5, NA)),
+               first_which(x %between% c(0.5, NA)))
+  expect_equal(which_first(x %between% c(0.9, NA)),
+               first_which(x %between% c(0.9, NA)))
+})
+
+test_that("anyNA(x) implies which_first(x %in% c(NA, <rtype>))", {
+  x_w_na <- c(1L, 5L, 3L, 10L, -1L, NA)
+  expect_equal(which_first(x_w_na %in% c(NA, 11L)),
+               first_which(x_w_na %in% c(NA, 11L)))
+  expect_equal(which_first(x_w_na %in% c(NA, 10L)),
+               first_which(x_w_na %in% c(NA, 10L)))
+  expect_equal(which_first(x_w_na %in% c(NA, 11)),
+               first_which(x_w_na %in% c(NA, 11)))
+  expect_equal(which_first(x_w_na %in% c(NA, 10)),
+               first_which(x_w_na %in% c(NA, 10)))
+  x_w_na <- as.double(x_w_na)
+  expect_equal(which_first(x_w_na %in% c(NA, 11L)),
+               first_which(x_w_na %in% c(NA, 11L)))
+  expect_equal(which_first(x_w_na %in% c(NA, 10L)),
+               first_which(x_w_na %in% c(NA, 10L)))
+  expect_equal(which_first(x_w_na %in% c(NA, 11)),
+               first_which(x_w_na %in% c(NA, 11)))
+  expect_equal(which_first(x_w_na %in% c(NA, 10)),
+               first_which(x_w_na %in% c(NA, 10)))
 })
 
 

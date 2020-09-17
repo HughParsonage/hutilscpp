@@ -151,6 +151,11 @@ R_xlen_t do_which_first_lgl_lgl_op(LogicalVector x, LogicalVector y, int op, boo
   if (N == 0 || Ny == 0) {
     return 0;
   }
+  if (op == OP_BO) {
+    // even (F, T) can never occur
+    return 0;
+  }
+
   const bool len_eq = Ny == N;
   const bool len1 = Ny == 1;
   if (!len_eq && !len1 && op != OP_IN && op != OP_BW) {
@@ -181,14 +186,38 @@ R_xlen_t do_which_first_lgl_lgl_op(LogicalVector x, LogicalVector y, int op, boo
     // Two values, for %between%, we need F,F F,T or T,T
     // otherwise will never occur so return 0 now
     if (op == OP_BW) {
-      if (y[0] == TRUE && y[1] != TRUE) {
+      if (y[0] == TRUE && y[1] == FALSE) {
         return 0;
       }
-      if (y[1] == FALSE && y[0] != FALSE) {
-        return 0;
-      }
+      // c(NA, TRUE) => x <= TRUE
+      y[0] = (y[0] == NA_LOGICAL) ? FALSE : y[0];
+      y[1] = (y[1] == NA_LOGICAL) ? TRUE  : y[1];
+
+      const bool onlyTRUE  = y[0] == TRUE;
+      const bool onlyFALSE = y[1] == FALSE;
 
       // otherwise we just use the normal:
+      for (R_xlen_t k = 0; k < N; ++k) {
+        R_xlen_t i = reverse ? (N - k - 1) : k;
+        if (onlyTRUE) {
+          if (x[i] == TRUE) {
+            return i + 1;
+          }
+          continue;
+        }
+
+        if (onlyFALSE) {
+          if (x[i] == FALSE) {
+            return i + 1;
+          }
+          continue;
+        }
+
+        if (x[i] != NA_LOGICAL) {
+          return i + 1;
+        }
+      }
+      return 0;
     }
     //
     for (R_xlen_t k = 0; k < N; ++k) {
@@ -218,8 +247,34 @@ R_xlen_t do_which_first_lgl_lgl_op(LogicalVector x, LogicalVector y, int op, boo
   return 0;
 }
 
+// Used for %in% to determine whether RHS should trigger TRUE if lhs is NA
+bool table_with_na(SEXP Y, int op) {
+  if (op != OP_IN) {
+    return false;
+  }
+  if (TYPEOF(Y) == INTSXP) {
+    IntegerVector y = Y;
+    R_xlen_t N = y.length();
+    for (R_xlen_t i = 0; i < N; ++i) {
+      if (y[i] == NA_INTEGER) {
+        return true;
+      }
+    }
+  } else {
+    DoubleVector y = Y;
+    R_xlen_t N = y.length();
+    for (R_xlen_t i = 0; i < N; ++i) {
+      if (ISNAN(y[i])) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 // [[Rcpp::export(rng = false)]]
 R_xlen_t do_which_first_n(SEXP X, SEXP Y, int op, bool last = false) {
+  const bool table_has_na = table_with_na(Y, op);
    if (TYPEOF(X) == INTSXP && TYPEOF(Y) == INTSXP) {
      IntegerVector x = X;
      IntegerVector y = Y;
@@ -227,8 +282,40 @@ R_xlen_t do_which_first_n(SEXP X, SEXP Y, int op, bool last = false) {
      if (N == 0 || Ny == 0) {
        return 0; // # nocov
      }
-     const bool y1_is_i = (Ny == N && op < OP_IN);
-     const bool y2_is_1 = (Ny >= 2 && op >= OP_IN);
+
+     if (op == OP_BW ||
+         op == OP_BO ||
+         op == OP_BC) {
+       if (Ny != 2) {
+         stop("%between% expected rhs of length-2");
+       }
+       if (y[0] == NA_INTEGER && y[1] == NA_INTEGER) {
+         return last ? N : 1;
+       }
+       if (y[0] == NA_INTEGER) {
+         if (op == OP_BW) {
+           op = OP_LE;
+         } else if (op == OP_BO) {
+           op = OP_LT;
+         } else {
+           op = OP_GE;
+         }
+         y[0] = y[1];
+       } else if (y[1] == NA_INTEGER) {
+         if (op == OP_BW) {
+           op = OP_GE;
+         } else if (op == OP_BO) {
+           op = OP_GT;
+         } else {
+           op = OP_LE;
+         }
+         // y[0] already correct
+       }
+     }
+     const int oq = op;
+
+     const bool y1_is_i = (Ny == N && oq < OP_IN);
+     const bool y2_is_1 = (Ny >= 2 && oq >= OP_IN);
 
      for (R_xlen_t k = 0; k < N; ++k) {
        R_xlen_t i = last ? (N - k - 1) : k;
@@ -240,11 +327,14 @@ R_xlen_t do_which_first_n(SEXP X, SEXP Y, int op, bool last = false) {
        // 'parallel' so the first element of y is always y1
        int y1 = y1_is_i ? y[i] : y[0];
        int y2 = y2_is_1 ? y[1] : y[0];
-       if (op != OP_IN) {
-         if (single_ox_x1_x2(xi, op, y1, y2)) {
+       if (oq != OP_IN) {
+         if (single_ox_x1_x2(xi, oq, y1, y2)) {
            return i + 1;
          }
        } else {
+         if (table_has_na && xi == NA_INTEGER) {
+           return i + 1;
+         }
          for (R_xlen_t j = 0; j < Ny; ++j) {
            int yj = y[j];
            if (xi == yj) {
@@ -263,6 +353,38 @@ R_xlen_t do_which_first_n(SEXP X, SEXP Y, int op, bool last = false) {
      if (N == 0 || Ny == 0) {
        return 0; // # nocov
      }
+
+     if (op == OP_BW ||
+         op == OP_BO ||
+         op == OP_BC) {
+       if (Ny != 2) {
+         stop("%between% expected rhs of length-2");
+       }
+       if (ISNAN(y[0]) && ISNAN(y[1])) {
+         return last ? N : 1;
+       }
+       if (ISNAN(y[0])) {
+         if (op == OP_BW) {
+           op = OP_LE;
+         } else if (op == OP_BO) {
+           op = OP_LT;
+         } else {
+           op = OP_GE;
+         }
+         y[0] = y[1];
+       } else if (ISNAN(y[1])) {
+         if (op == OP_BW) {
+           op = OP_GE;
+         } else if (op == OP_BO) {
+           op = OP_GT;
+         } else {
+           op = OP_LE;
+         }
+         // y[0] already correct
+       }
+     }
+     const int oq = op;
+
      const bool y1_is_i = (Ny == N && op < OP_IN);
      const bool y2_is_1 = (Ny >= 2 && op >= OP_IN);
 
@@ -271,11 +393,14 @@ R_xlen_t do_which_first_n(SEXP X, SEXP Y, int op, bool last = false) {
        double xi = x[i];
        double y1 = y1_is_i ? y[i] : y[0];
        double y2 = y2_is_1 ? y[1] : y[0];
-       if (op != OP_IN) {
-         if (single_ox_x1_x2(xi, op, y1, y2)) {
+       if (oq != OP_IN) {
+         if (single_ox_x1_x2(xi, oq, y1, y2)) {
            return i + 1;
          }
        } else {
+         if (table_has_na && ISNAN(xi)) {
+           return i + 1;
+         }
          for (R_xlen_t j = 0; j < Ny; ++j) {
            double yj = y[j];
            if (xi == yj) {
@@ -294,6 +419,39 @@ R_xlen_t do_which_first_n(SEXP X, SEXP Y, int op, bool last = false) {
      if (N == 0 || Ny == 0) {
        return 0; // # nocov
      }
+
+     if (op == OP_BW ||
+         op == OP_BO ||
+         op == OP_BC) {
+       if (Ny != 2) {
+         stop("%between% expected rhs of length-2");
+       }
+       if (y[0] == NA_INTEGER && y[1] == NA_INTEGER) {
+         return last ? N : 1;
+       }
+       if (y[0] == NA_INTEGER) {
+         if (op == OP_BW) {
+           op = OP_LE;
+         } else if (op == OP_BO) {
+           op = OP_LT;
+         } else {
+           op = OP_GE;
+         }
+         y[0] = y[1];
+       } else if (y[1] == NA_INTEGER) {
+         if (op == OP_BW) {
+           op = OP_GE;
+         } else if (op == OP_BO) {
+           op = OP_GT;
+         } else {
+           op = OP_LE;
+         }
+         // y[0] already correct
+       }
+     }
+
+     const int oq = op;
+
      const bool y1_is_i = (Ny == N && op < OP_IN);
      const bool y2_is_1 = (Ny >= 2 && op >= OP_IN);
 
@@ -302,11 +460,14 @@ R_xlen_t do_which_first_n(SEXP X, SEXP Y, int op, bool last = false) {
        double xi = x[i];
        double y1 = y1_is_i ? y[i] : y[0];
        double y2 = y2_is_1 ? y[1] : y[0];
-       if (op != OP_IN) {
-         if (single_ox_x1_x2(xi, op, y1, y2)) {
+       if (oq != OP_IN) {
+         if (single_ox_x1_x2(xi, oq, y1, y2)) {
            return i + 1;
          }
        } else {
+         if (table_has_na && ISNAN(xi)) {
+           return i + 1;
+         }
          for (R_xlen_t j = 0; j < Ny; ++j) {
            double yj = y[j];
            if (xi == yj) {
@@ -325,19 +486,55 @@ R_xlen_t do_which_first_n(SEXP X, SEXP Y, int op, bool last = false) {
      if (N == 0 || Ny == 0) {
        return 0; // # nocov
      }
+
+     if (op == OP_BW ||
+         op == OP_BO ||
+         op == OP_BC) {
+       if (Ny != 2) {
+         stop("%between% expected rhs of length-2");
+       }
+       if (ISNAN(y[0]) && ISNAN(y[1])) {
+         return last ? N : 1;
+       }
+       if (ISNAN(y[0])) {
+         if (op == OP_BW) {
+           op = OP_LE;
+         } else if (op == OP_BO) {
+           op = OP_LT;
+         } else {
+           op = OP_GE;
+         }
+         y[0] = y[1];
+       } else if (ISNAN(y[1])) {
+         if (op == OP_BW) {
+           op = OP_GE;
+         } else if (op == OP_BO) {
+           op = OP_GT;
+         } else {
+           op = OP_LE;
+         }
+         // y[0] already correct
+       }
+     }
+     const int oq = op;
+
      const bool y1_is_i = (Ny == N && op < OP_IN);
      const bool y2_is_1 = (Ny >= 2 && op >= OP_IN);
 
      for (R_xlen_t k = 0; k < N; ++k) {
        R_xlen_t i = last ? (N - k - 1) : k;
-       double xi = x[i];
-       double y1 = y1_is_i ? y[i] : y[0];
-       double y2 = y2_is_1 ? y[1] : y[0];
-       if (op != OP_IN) {
-         if (single_ox_x1_x2(xi, op, y1, y2)) {
+       if (oq != OP_IN) {
+         double xi = x[i];
+         double y1 = y1_is_i ? y[i] : y[0];
+         double y2 = y2_is_1 ? y[1] : y[0];
+         if (single_ox_x1_x2(xi, oq, y1, y2)) {
            return i + 1;
          }
        } else {
+         if (table_has_na && x[i] == NA_INTEGER) {
+           return i + 1;
+         }
+         double xi = x[i];
          for (R_xlen_t j = 0; j < Ny; ++j) {
            double yj = y[j];
            if (xi == yj) {

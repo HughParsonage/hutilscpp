@@ -9,6 +9,14 @@ first_which <- function(expr) {
   }
 }
 
+last_which <- function(expr) {
+  o <- which(expr)
+  if (length(o)) {
+    return(last(o))
+  } else {
+    return(0L)
+  }
+}
 
 
 
