@@ -773,7 +773,6 @@ test_that("which_first(lgl lgl)", {
   expect_equal(which_first(x %between% T2),
                first_which(and(x >= T2[1], x <= T2[2])))
   expect_equal(which_first(x %in% T2), which_first(x))
-
 })
 
 test_that("which_first internals", {
@@ -794,6 +793,7 @@ test_that("which_first internals", {
   expect_equal(do_which_first_lgl_lgl_op(c(TRUE, NA), c(FALSE, NA), do_op2M("%in%")), 2)
   expect_equal(do_which_first_lgl_lgl_op(c(TRUE, TRUE), c(TRUE, FALSE), do_op2M("%between%")), 0)
   expect_equal(do_which_first_lgl_lgl_op(c(TRUE, TRUE), c(TRUE, TRUE), do_op2M("%in%")), 1)
+  expect_equal(do_which_first_lgl_lgl_op(c(FALSE, TRUE), c(TRUE, TRUE), do_op2M("%in%")), 2)
 
 })
 
