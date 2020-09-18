@@ -122,9 +122,9 @@ R_xlen_t locate_next_brace(CharacterVector x, R_xlen_t i = 0) {
   }
   return -1;
 }
-#endif
 
-// [[Rcpp::export(rng = false)]]
+
+/// [[Rcpp::export(rng = false)]]
 IntegerVector tex_group(CharacterVector x) {
   int n = x.length();
   if (n > 1e7) {
@@ -151,7 +151,7 @@ IntegerVector tex_group(CharacterVector x) {
   return wrap(tg);
 }
 
-#if false
+
 
 
 
