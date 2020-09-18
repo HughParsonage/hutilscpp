@@ -60,3 +60,12 @@ test_that("NA", {
   expect_equal(do_are_even(integer(0), c(NA, 1, 2), 0L), c(NA, FALSE, TRUE))
 })
 
+test_that("large", {
+  expect_true(all(are_even(c(0L, 10L, 1e10))))
+})
+
+test_that("keep_nas", {
+  expect_true(all(are_even(c(0L, 10L), nThread = 1L, keep_nas = FALSE)))
+  skip_on_cran()
+  expect_false(any(are_even(c(11L, 13L), nThread = 2L, keep_nas = FALSE)))
+})

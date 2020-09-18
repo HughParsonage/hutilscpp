@@ -431,10 +431,6 @@ where_square_bracket_opens <- function(x, i = 0L) {
     .Call(`_hutilscpp_where_square_bracket_opens`, x, i)
 }
 
-tex_group <- function(x) {
-    .Call(`_hutilscpp_tex_group`, x)
-}
-
 extractMandatory <- function(x, command, nCommands) {
     .Call(`_hutilscpp_extractMandatory`, x, command, nCommands)
 }

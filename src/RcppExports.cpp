@@ -1320,16 +1320,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// tex_group
-IntegerVector tex_group(CharacterVector x);
-RcppExport SEXP _hutilscpp_tex_group(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(tex_group(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // extractMandatory
 List extractMandatory(CharacterVector x, CharacterVector command, int nCommands);
 RcppExport SEXP _hutilscpp_extractMandatory(SEXP xSEXP, SEXP commandSEXP, SEXP nCommandsSEXP) {
@@ -1462,7 +1452,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_max_charsize", (DL_FUNC) &_hutilscpp_max_charsize, 1},
     {"_hutilscpp_is_space", (DL_FUNC) &_hutilscpp_is_space, 1},
     {"_hutilscpp_where_square_bracket_opens", (DL_FUNC) &_hutilscpp_where_square_bracket_opens, 2},
-    {"_hutilscpp_tex_group", (DL_FUNC) &_hutilscpp_tex_group, 1},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
     {"do_c_pmax",    (DL_FUNC) &do_c_pmax,    3},
