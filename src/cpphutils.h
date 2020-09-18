@@ -19,7 +19,7 @@ bool single_ox_x1_x2(double x, int oix, double x1, double x2);
 
 bool do_in_int(int x, IntegerVector table);
 
-int do_is_safe2int(double x);
+bool do_is_safe2int(double x);
 
 // switch(operator,
 //        "!=" = 1L,

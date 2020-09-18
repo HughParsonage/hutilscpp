@@ -24,6 +24,8 @@
 * `is_constant` now accepts `nThread` for multithreaded checking of constant vectors
   and is much faster in general even in single-thread mode.
 * `sum_isna` now accepts `nThread` for multithreaded accumulation of missing value counts
+* `are_even` can be slightly faster on integers if ignoring `NA`, handles large 
+  doubles (like `1e10`), and accepts `nThread`.
   
 
 

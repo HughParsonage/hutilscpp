@@ -33,7 +33,7 @@ int max_charsize(CharacterVector x) {
 // [[Rcpp::export]]
 bool is_space(CharacterVector x) {
   char x0 = x[0][0];
-  return x0 == 32;
+  return x0 == SPACE;
 }
 
 //' @name where_square_bracket_opens
@@ -70,6 +70,90 @@ R_xlen_t where_square_bracket_opens(CharacterVector x, R_xlen_t i = 0) {
   return 0;
 }
 #if false
+/// [[Rcpp::export(rng = false)]]
+R_xlen_t where_brace_opens(CharacterVector x, R_xlen_t i = 0) {
+  R_xlen_t N = x.length();
+
+  if (i < 0 || i >= N) {
+    return -1;
+  }
+  char xi = x[i][0];
+  if (xi != STOP_BRACE) {
+    return -1;
+  }
+  int depth = 0;
+  for (R_xlen_t k = i; k >= 0; --k) {
+    char xk = x[k][0];
+    depth += (xk == STOP_BRACE) - (xk == OPEN_BRACE);
+    if (depth == 0) {
+      return k;
+    }
+  }
+
+  return 0;
+}
+
+/// [[Rcpp::export(rng = false)]]
+R_xlen_t locate_prev_brace(CharacterVector x, R_xlen_t i = 0) {
+  R_xlen_t N = x.length();
+  if (i >= N) {
+    return -1;
+  }
+  while (--i >= 0) {
+    char xi = x[i][0];
+    if (xi == OPEN_BRACE) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+/// [[Rcpp::export(rng = false)]]
+R_xlen_t locate_next_brace(CharacterVector x, R_xlen_t i = 0) {
+  R_xlen_t N = x.length();
+  if (i < 0) {
+    return -1;
+  }
+  while (++i <= N) {
+    char xi = x[i][0];
+    if (xi == STOP_BRACE) {
+      return i;
+    }
+  }
+  return -1;
+}
+#endif
+
+// [[Rcpp::export(rng = false)]]
+IntegerVector tex_group(CharacterVector x) {
+  int n = x.length();
+  if (n > 1e7) {
+    stop("Too large");
+  }
+  int N = 100 * n; // proxy for number of chars
+  std::vector<char> o;
+  o.reserve(N);
+
+  std::vector<int> tg;
+  tg.reserve(N);
+
+  int current_tex_group = 0;
+  for (int li = 0; li < n; ++li) {
+    int ncharli = x[li].size();
+    for (int ci = 0; ci < ncharli; ++ci) {
+      char xci = x[li][ci];
+      o.push_back(xci);
+      current_tex_group += (xci == OPEN_BRACE) - (xci == STOP_BRACE);
+      tg.push_back(current_tex_group);
+    }
+  }
+
+  return wrap(tg);
+}
+
+#if false
+
+
 
 /// [[Rcpp::export(rng = false)]]
 IntegerVector tmp_mark_work(CharacterVector x, CharacterVector Command) {

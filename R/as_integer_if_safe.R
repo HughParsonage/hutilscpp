@@ -27,11 +27,14 @@
 #' #>  2.469s  2.455s
 #'
 #' @export
-#'
 
 as_integer_if_safe <- function(x) {
   if (is.double(x)) {
-    status <- is_safe2int(x, as.double(.Machine$integer.max))
+    if (is_altrep(x)) {
+      # Implies out of range
+      return(x)
+    }
+    status <- is_safe2int(x)
     if (status) {
       return(force_as_integer(x, status))
     }
