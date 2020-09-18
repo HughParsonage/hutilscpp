@@ -59,8 +59,10 @@ to simple-to-parse logical expressions.
 If the \code{expr} is of the form \code{LHS <operator> RHS}
 and \code{LHS} is a single symbol, \code{operator} is one of
 \code{==},  \code{!=}, \code{>}, \code{>=}, \code{<}, \code{<=},
-or \code{\%in\%}.
-and \code{RHS} is a single numeric value, then \code{expr} is not
+\code{\%in\%},
+or
+\code{\%between\%},
+and \code{RHS} is numeric, then \code{expr} is not
 evaluated directly; instead, each element of \code{LHS} is compared
 individually.
 
@@ -81,6 +83,10 @@ when the expression is \code{TRUE} for some position. However, \code{which_first
 is faster when all elements of \code{expr} are \code{FALSE}.
 Thus \code{which_first} has a smaller worst-case time than the
 alternatives for most \code{x}.
+
+Missing values on the RHS are handled specially.
+\code{which_first(x \%between\% c(NA, 1))} for example is equivalent to
+\code{which_first(x <= 1)}, as in \code{\link[data.table:between]{data.table::between}}.
 }
 \examples{
 

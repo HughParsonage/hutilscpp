@@ -291,6 +291,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_divisible2
+LogicalVector do_divisible2(IntegerVector x, int nThread);
+RcppExport SEXP _hutilscpp_do_divisible2(SEXP xSEXP, SEXP nThreadSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_divisible2(x, nThread));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_divisible16
 LogicalVector do_divisible16(IntegerVector x, int nThread);
 RcppExport SEXP _hutilscpp_do_divisible16(SEXP xSEXP, SEXP nThreadSEXP) {
@@ -304,15 +315,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_are_even
-LogicalVector do_are_even(IntegerVector x, DoubleVector y, int wb);
-RcppExport SEXP _hutilscpp_do_are_even(SEXP xSEXP, SEXP ySEXP, SEXP wbSEXP) {
+LogicalVector do_are_even(IntegerVector x, DoubleVector y, int wb, int nThread);
+RcppExport SEXP _hutilscpp_do_are_even(SEXP xSEXP, SEXP ySEXP, SEXP wbSEXP, SEXP nThreadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< DoubleVector >::type y(ySEXP);
     Rcpp::traits::input_parameter< int >::type wb(wbSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_are_even(x, y, wb));
+    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_are_even(x, y, wb, nThread));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -836,14 +847,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // is_safe2int
-int is_safe2int(DoubleVector x, double int_max);
-RcppExport SEXP _hutilscpp_is_safe2int(SEXP xSEXP, SEXP int_maxSEXP) {
+int is_safe2int(DoubleVector x);
+RcppExport SEXP _hutilscpp_is_safe2int(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type int_max(int_maxSEXP);
-    rcpp_result_gen = Rcpp::wrap(is_safe2int(x, int_max));
+    rcpp_result_gen = Rcpp::wrap(is_safe2int(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -852,7 +861,6 @@ IntegerVector force_as_integer(DoubleVector x, int na_code);
 RcppExport SEXP _hutilscpp_force_as_integer(SEXP xSEXP, SEXP na_codeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type na_code(na_codeSEXP);
     rcpp_result_gen = Rcpp::wrap(force_as_integer(x, na_code));
@@ -1312,6 +1320,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// tex_group
+IntegerVector tex_group(CharacterVector x);
+RcppExport SEXP _hutilscpp_tex_group(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(tex_group(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // extractMandatory
 List extractMandatory(CharacterVector x, CharacterVector command, int nCommands);
 RcppExport SEXP _hutilscpp_extractMandatory(SEXP xSEXP, SEXP commandSEXP, SEXP nCommandsSEXP) {
@@ -1361,8 +1379,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_duplicated_sorted_dbl", (DL_FUNC) &_hutilscpp_do_duplicated_sorted_dbl, 1},
     {"_hutilscpp_do_cumsum_reset_sorted_int", (DL_FUNC) &_hutilscpp_do_cumsum_reset_sorted_int, 1},
     {"_hutilscpp_do_divisible", (DL_FUNC) &_hutilscpp_do_divisible, 3},
+    {"_hutilscpp_do_divisible2", (DL_FUNC) &_hutilscpp_do_divisible2, 2},
     {"_hutilscpp_do_divisible16", (DL_FUNC) &_hutilscpp_do_divisible16, 2},
-    {"_hutilscpp_do_are_even", (DL_FUNC) &_hutilscpp_do_are_even, 3},
+    {"_hutilscpp_do_are_even", (DL_FUNC) &_hutilscpp_do_are_even, 4},
     {"_hutilscpp_do_which_even", (DL_FUNC) &_hutilscpp_do_which_even, 3},
     {"_hutilscpp_do_and3_na", (DL_FUNC) &_hutilscpp_do_and3_na, 6},
     {"_hutilscpp_do_which2_yr", (DL_FUNC) &_hutilscpp_do_which2_yr, 13},
@@ -1404,7 +1423,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_isntConstant_dbl", (DL_FUNC) &_hutilscpp_do_isntConstant_dbl, 1},
     {"_hutilscpp_do_is_constant", (DL_FUNC) &_hutilscpp_do_is_constant, 2},
     {"_hutilscpp_do_isntConstant", (DL_FUNC) &_hutilscpp_do_isntConstant, 1},
-    {"_hutilscpp_is_safe2int", (DL_FUNC) &_hutilscpp_is_safe2int, 2},
+    {"_hutilscpp_is_safe2int", (DL_FUNC) &_hutilscpp_is_safe2int, 1},
     {"_hutilscpp_force_as_integer", (DL_FUNC) &_hutilscpp_force_as_integer, 2},
     {"_hutilscpp_is_sorted_ascending_dbl", (DL_FUNC) &_hutilscpp_is_sorted_ascending_dbl, 1},
     {"_hutilscpp_is_sorted_descending_dbl", (DL_FUNC) &_hutilscpp_is_sorted_descending_dbl, 1},
@@ -1443,6 +1462,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_max_charsize", (DL_FUNC) &_hutilscpp_max_charsize, 1},
     {"_hutilscpp_is_space", (DL_FUNC) &_hutilscpp_is_space, 1},
     {"_hutilscpp_where_square_bracket_opens", (DL_FUNC) &_hutilscpp_where_square_bracket_opens, 2},
+    {"_hutilscpp_tex_group", (DL_FUNC) &_hutilscpp_tex_group, 1},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
     {"do_c_pmax",    (DL_FUNC) &do_c_pmax,    3},

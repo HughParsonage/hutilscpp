@@ -1,6 +1,9 @@
 #include "cpphutils.h"
 #include <Rcpp.h>
 using namespace Rcpp;
+#include <omp.h>
+
+constexpr bool ON_TWOS_COMPLEMENT = (-1 == ~0);
 
 // [[Rcpp::export]]
 LogicalVector do_divisible(IntegerVector x, int d, int nThread = 1) {
@@ -10,6 +13,24 @@ LogicalVector do_divisible(IntegerVector x, int d, int nThread = 1) {
 #pragma omp parallel for num_threads(nThread)
   for (R_xlen_t i = 0; i < N; ++i) {
     out[i] = !(x[i] % d);
+  }
+  return out;
+}
+
+// [[Rcpp::export(rng = false)]]
+LogicalVector do_divisible2(IntegerVector x, int nThread = 1) {
+  R_xlen_t N = x.length();
+  // # nocov start
+  if (!ON_TWOS_COMPLEMENT) {
+    stop("Unexpected arch.");
+  }
+  // # nocov end
+
+  LogicalVector out = no_init(N);
+#pragma omp parallel for num_threads(nThread) schedule(static)
+  for (R_xlen_t i = 0; i < N; ++i) {
+    uint_fast32_t ui = (uint_fast32_t)x[i];
+    out[i] = !(ui & 1U);
   }
   return out;
 }
@@ -26,3 +47,4 @@ LogicalVector do_divisible16(IntegerVector x, int nThread = 1) {
   }
   return out;
 }
+

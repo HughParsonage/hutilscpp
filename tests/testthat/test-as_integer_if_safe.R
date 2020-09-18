@@ -24,7 +24,9 @@ test_that("as_integer_if_safe works", {
 })
 
 test_that("utils", {
-  expect_equal(is_safe2int(1:10 + 0, 9), 0)
+  expect_equal(is_safe2int(Inf), 0)
+  expect_equal(is_safe2int(NaN), 2)
+  expect_equal(is_safe2int(100), 1)
 })
 
 test_that("ubsan warning", {
@@ -34,6 +36,20 @@ test_that("ubsan warning", {
   expect_false(is.integer(as_integer_if_safe(Inf)))
   expect_false(is.integer(as_integer_if_safe(-Inf)))
   expect_error(force_as_integer(double(10), na_code = 0L), regexp = "Internal error")
+})
+
+test_that("large even numbers", {
+  skip_if_not_installed("withr")
+  withr::with_options(list(warn = -1), {
+    expect_true(all(are_even(c(.Machine$integer.max + 1, -1e10, 1e10))))
+    expect_false(any(are_even(c(.Machine$integer.max + 1, -1e10, 1e10) + 1)))
+  })
+})
+
+test_that("altrep", {
+  skip_if_not(is_altrep(1:100))
+  skip_if_not(is64bit())
+  expect_true(is.double(as_integer_if_safe(-3e9:3e9)))
 })
 
 

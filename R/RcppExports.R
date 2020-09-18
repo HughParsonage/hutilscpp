@@ -81,12 +81,16 @@ do_divisible <- function(x, d, nThread = 1L) {
     .Call(`_hutilscpp_do_divisible`, x, d, nThread)
 }
 
+do_divisible2 <- function(x, nThread = 1L) {
+    .Call(`_hutilscpp_do_divisible2`, x, nThread)
+}
+
 do_divisible16 <- function(x, nThread = 1L) {
     .Call(`_hutilscpp_do_divisible16`, x, nThread)
 }
 
-do_are_even <- function(x, y, wb = 0L) {
-    .Call(`_hutilscpp_do_are_even`, x, y, wb)
+do_are_even <- function(x, y, wb = 0L, nThread = 1L) {
+    .Call(`_hutilscpp_do_are_even`, x, y, wb, nThread)
 }
 
 do_which_even <- function(x, y, wb = 0L) {
@@ -253,8 +257,14 @@ do_isntConstant <- function(x) {
     .Call(`_hutilscpp_do_isntConstant`, x)
 }
 
-is_safe2int <- function(x, int_max) {
-    .Call(`_hutilscpp_is_safe2int`, x, int_max)
+#' @noRd
+#' @param x Candidate vector.
+#' @return
+#'   0 if unsafe to coerce to integer
+#'   1 if   safe to coerce to integer and _zero_ NAs in output
+#'   2 if   safe to coerce to integer but _some_ NAs in output
+is_safe2int <- function(x) {
+    .Call(`_hutilscpp_is_safe2int`, x)
 }
 
 force_as_integer <- function(x, na_code) {
@@ -419,6 +429,10 @@ is_space <- function(x) {
 
 where_square_bracket_opens <- function(x, i = 0L) {
     .Call(`_hutilscpp_where_square_bracket_opens`, x, i)
+}
+
+tex_group <- function(x) {
+    .Call(`_hutilscpp_tex_group`, x)
 }
 
 extractMandatory <- function(x, command, nCommands) {

@@ -3,20 +3,32 @@
 \name{are_even}
 \alias{are_even}
 \alias{which_are_even}
-\title{Are even}
+\title{Are elements of a vector even?}
 \usage{
-are_even(x, check_integerish = TRUE)
+are_even(
+  x,
+  check_integerish = TRUE,
+  keep_nas = TRUE,
+  nThread = getOption("hutilscpp.nThread", 1L)
+)
 
 which_are_even(x, check_integerish = TRUE)
 }
 \arguments{
-\item{x}{An integer vector. Double vectors may also be used. Long vectors are
-not supported.}
+\item{x}{An integer vector. Double vectors may also be used, but will
+be truncated, with a warning if any element are not integers.
+Long vectors are not supported unless \code{x} is integer and \code{keep_nas = FALSE}.}
 
 \item{check_integerish}{(logical, default: \code{TRUE}) Should the
 values in \code{x} be checked for non-integer values
 if \code{x} is a double vector. If \code{TRUE}
 and values are found to be non-integer a warning is emitted.}
+
+\item{keep_nas}{(logical, default: \code{TRUE}) Should \code{NA}s in \code{x}
+return \code{NA} in the result? If \code{FALSE}, will return \code{TRUE} since
+the internal reprsentation of \code{x} is even. Only applies if \code{is.integer(x)}.}
+
+\item{nThread}{Number of threads to use.}
 }
 \value{
 For \code{are_even}, a logical vector the same length as \code{x},
@@ -25,5 +37,5 @@ For \code{are_even}, a logical vector the same length as \code{x},
 For \code{which_are_even} the integer positions of even values in \code{x}.
 }
 \description{
-Are even
+Are elements of a vector even?
 }
