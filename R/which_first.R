@@ -176,74 +176,18 @@ which_first <- function(expr,
 
   if (is.logical(lhs_eval)) {
     if (operator == "%in%") {
-      # miniaturize rhs to be subset of c(TRUE, FALSE, NA)
-      rhs_eval_mini <- c(if (anyNA(rhs_eval)) NA,
-                         if (any(rhs_eval, na.rm = TRUE)) TRUE,
-                         if (!all(rhs_eval, na.rm = TRUE)) FALSE)
-      if (length(rhs_eval_mini) == 3L) {
-        return(if (reverse) length(lhs_eval) else 1L) # all must be present
-      }
-      if (length(rhs_eval_mini) == 1L) {
-        if (anyNA(rhs_eval_mini)) {
-          if (anyNA(lhs_eval)) {
-            if (reverse) {
-              return(do_which_last(is.na(lhs_eval)))
-            } else {
-              return(which.max(is.na(lhs_eval)))
-            }
-          } else {
-            return(0L)
-          }
-        }
-        return(.which_first_logical(lhs_eval, rhs_eval_mini, rev = reverse))
-      }
-      # must be length 2
-      if (!anyNA(rhs_eval_mini)) {
-        # TRUE or FALSE
-        o1 <- .which_first_logical(lhs_eval, TRUE, rev = reverse)
-        if (o1 == 0) {
-          return(.which_first_logical(lhs_eval, FALSE, rev = reverse))
-        }
-        o2 <- .which_first_logical(lhs_eval[seq_len(o1)], FALSE, rev = reverse)
-        if (o2 == 0) {
-          return(o1)
-        }
-        if (reverse) {
-          return(max(o1, o2))
-        } else {
-          return(min(o1, o2))
-        }
+      if (reverse) {
+        o <- do_which_last_in_lgl(lhs_eval,
+                                  anyNA_ = anyNA(rhs_eval),
+                                  any_ = any(rhs_eval, na.rm = TRUE),
+                                  nall_ = !all(rhs_eval, na.rm = TRUE))
       } else {
-        # NA and {TRUE or FALSE}
-        if (any(rhs_eval_mini, na.rm = TRUE)) {
-          # NA and TRUE
-          if (reverse) {
-            return(do_which_last_notFALSE(lhs_eval))
-          }
-          o1 <- .which_first_logical(lhs_eval, TRUE, rev = reverse)
-        } else {
-          # NA and FALSE
-          if (reverse) {
-            return(do_which_last_notTRUE(lhs_eval))
-          } else {
-            return(do_which_first_notTRUE(lhs_eval))
-          }
-        }
-        if (o1 == 0L) {
-          if (anyNA(lhs_eval)) {
-            return(which.max(is.na(lhs_eval)))
-          } else {
-            return(0L)
-          }
-        }
-
-        if (anyNA(lhs_eval_1 <- lhs_eval[seq_len(o1)])) {
-          return(which.max(is.na(lhs_eval_1)))
-        } else {
-          return(o1)
-        }
+        o <- do_which_first_in_lgl(lhs_eval,
+                                   anyNA_ = anyNA(rhs_eval),
+                                   any_ = any(rhs_eval, na.rm = TRUE),
+                                   nall_ = !all(rhs_eval, na.rm = TRUE))
       }
-      stop("Internal error: which_first_logical:165:20190823. Please report") # nocov
+      return(R_xlen_t(o))
     }
 
     if (length(rhs_eval) == length(lhs_eval) ||
@@ -298,9 +242,59 @@ which_first <- function(expr,
     return(R_xlen_t(o))
   }
 
-  if (is.numeric(lhs_eval) && is.numeric(rhs_eval) &&
-      (length(lhs_eval) == length(rhs_eval) || op)) {
-    return(R_xlen_t(do_which_first_n(lhs_eval, rhs_eval, op, reverse)))
+  if (is.numeric(lhs_eval) && is.numeric(rhs_eval)) {
+    if (op == 7L) {
+      o <-
+        if (reverse) {
+          switch(typeof(lhs_eval),
+                 "integer" = switch(typeof(rhs_eval),
+                                    "integer" = do_which_last_xi_ini(lhs_eval, rhs_eval),
+                                    "double" =  do_which_last_xi_ind(lhs_eval, rhs_eval)),
+                 "double" = do_which_last_xd_ind(lhs_eval, rhs_eval, anyNA(rhs_eval)))
+        } else {
+          switch(typeof(lhs_eval),
+                 "integer" = switch(typeof(rhs_eval),
+                                    "integer" = do_which_first_xi_ini(lhs_eval, rhs_eval),
+                                    "double" =  do_which_first_xi_ind(lhs_eval, rhs_eval)),
+                 "double" = do_which_first_xd_ind(lhs_eval, rhs_eval, anyNA(rhs_eval)))
+        }
+      return(R_xlen_t(o))
+    }
+
+    nx <- length(lhs_eval)
+    ny <- length(rhs_eval)
+    if (op > 7L && op <= 10L && ny != 2) {
+      stop("Expression in `which_first` was of the form:\n\t which_first(x %between% rhs)\n",
+           "yet `length(rhs) = ", ny, "`. Ensure the object passed to RHS is an atomic vector ",
+           "of length two.")
+    }
+    if (is.integer(rhs_eval)) {
+      y1d <- y1i <- rhs_eval[1L]
+      y2d <- y2i <- rhs_eval[2L]
+
+    } else {
+      y1d <- y1i <- rhs_eval[1L]
+      y2d <- y2i <- rhs_eval[2L]
+    }
+    if (reverse) {
+      o <- do_which_last__(lhs_eval, op, rhs_eval,
+                           nx = nx,
+                           ny = ny,
+                           y1i = y1i,
+                           y2i = y2i,
+                           y1d = y1d,
+                           y2d = y2d)
+    } else {
+      o <- do_which_first__(lhs_eval, op, rhs_eval,
+                            nx = nx,
+                            ny = ny,
+                            y1i = y1i,
+                            y2i = y2i,
+                            y1d = y1d,
+                            y2d = y2d)
+      # o <- .which_first(expr)
+    }
+    return(R_xlen_t(o))
   }
 
   if (is.character(lhs_eval)) {
