@@ -194,7 +194,7 @@ test_that("which_last works on doubles", {
   expect_equal(which_last(x > 1L), length(x))
   expect_equal(which_last(x < 1L), 3L)
 
-  y <- x + 1L
+  y <- as.integer(x + 1L)
   expect_equal(which_last(x != y), last_which(x != y))
   expect_equal(which_last(x == y), last_which(x == y))
   expect_equal(which_last(x >= y), last_which(x >= y))
@@ -202,7 +202,23 @@ test_that("which_last works on doubles", {
   expect_equal(which_last(x > y), last_which(x > y))
   expect_equal(which_last(x < y), last_which(x < y))
 
-  y <- x - 1L
+  y <- as.integer(x - 1L)
+  expect_equal(which_last(x != y), last_which(x != y))
+  expect_equal(which_last(x == y), last_which(x == y))
+  expect_equal(which_last(x >= y), last_which(x >= y))
+  expect_equal(which_last(x <= y), last_which(x <= y))
+  expect_equal(which_last(x > y), last_which(x > y))
+  expect_equal(which_last(x < y), last_which(x < y))
+
+  y <- x + 1
+  expect_equal(which_last(x != y), last_which(x != y))
+  expect_equal(which_last(x == y), last_which(x == y))
+  expect_equal(which_last(x >= y), last_which(x >= y))
+  expect_equal(which_last(x <= y), last_which(x <= y))
+  expect_equal(which_last(x > y), last_which(x > y))
+  expect_equal(which_last(x < y), last_which(x < y))
+
+  y <- x - 1
   expect_equal(which_last(x != y), last_which(x != y))
   expect_equal(which_last(x == y), last_which(x == y))
   expect_equal(which_last(x >= y), last_which(x >= y))
@@ -375,17 +391,42 @@ test_that("which_last internals", {
 test_that("which_last( %between% )", {
   x <- c(1:10, -1L)
   expect_equal(which_last(x %between% c(1L, 10L)), 10L)
+  expect_equal(which_last(x %between% c(-1L, -10L)), 0L)
+  expect_equal(which_last(x %(between)% c(1L, 10L)),
+               last_which(x %(between)% c(1L, 10L)))
+  expect_equal(which_last(x %(between)% c(-1L, -10L)),
+               last_which(x %(between)% c(-1L, -10L)))
   expect_equal(which_last(x %]between[% c(1L, 10L)), 11L)
+
   x <- as.double(x)
   expect_equal(which_last(x %between% c(1L, 10L)), 10L)
   expect_equal(which_last(x %]between[% c(1L, 10L)), 11L)
 
   x <- c(1:10, -1L)
   expect_equal(which_last(x %between% c(1, 10)), 10L)
+  expect_equal(which_last(x %(between)% c(1, 10)),
+               last_which(x %(between)% c(1, 10)))
   expect_equal(which_last(x %]between[% c(1, 10)), 11L)
+
   x <- as.double(x)
   expect_equal(which_last(x %between% c(1, 10)), 10L)
+  expect_equal(which_last(x %(between)% c(1L, 10L)),
+               last_which(x %(between)% c(1L, 10L)))
+  expect_equal(which_last(x %(between)% c(1, 10)),
+               last_which(x %(between)% c(1, 10)))
   expect_equal(which_last(x %]between[% c(1, 10)), 11L)
+
+  x <- rep(5L, 11)
+  expect_equal(which_last(x %]between[% c(4L, 6L)),
+               last_which(x %]between[% c(4L, 6L)))
+  expect_equal(which_last(x %]between[% c(4, 6)),
+               last_which(x %]between[% c(4, 6)))
+  x <- as.double(x)
+  expect_equal(which_last(x %]between[% c(4L, 6L)),
+               last_which(x %]between[% c(4L, 6L)))
+  expect_equal(which_last(x %]between[% c(4, 6)),
+               last_which(x %]between[% c(4, 6)))
+
 })
 
 test_that("last(lgl lgl)", {
