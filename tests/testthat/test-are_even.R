@@ -61,7 +61,10 @@ test_that("NA", {
 })
 
 test_that("large", {
-  expect_true(all(are_even(c(0L, 10L, 1e10))))
+  skip_if_not_installed("withr")
+  withr::with_options(list(warn = -1), {
+    expect_true(all(are_even(c(0L, 10L, 1e10))))
+  })
 })
 
 test_that("keep_nas", {

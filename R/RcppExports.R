@@ -177,6 +177,10 @@ do_which_last_notFALSE <- function(x) {
     .Call(`_hutilscpp_do_which_last_notFALSE`, x)
 }
 
+do_which_first_in_lgl <- function(x, anyNA_, any_, nall_) {
+    .Call(`_hutilscpp_do_which_first_in_lgl`, x, anyNA_, any_, nall_)
+}
+
 do_which_firstNA <- function(x) {
     .Call(`_hutilscpp_do_which_firstNA`, x)
 }
@@ -193,8 +197,84 @@ do_which_first_n <- function(X, Y, op, last = FALSE) {
     .Call(`_hutilscpp_do_which_first_n`, X, Y, op, last)
 }
 
+do_which_first__ <- function(x, op, y, nx, ny, y1i, y2i, y1d, y2d) {
+    .Call(`_hutilscpp_do_which_first__`, x, op, y, nx, ny, y1i, y2i, y1d, y2d)
+}
+
+do_which_first_xi_ini <- function(x, y) {
+    .Call(`_hutilscpp_do_which_first_xi_ini`, x, y)
+}
+
+dblTable2int <- function(table) {
+    .Call(`_hutilscpp_dblTable2int`, table)
+}
+
+do_which_first_xi_ind <- function(x, yd) {
+    .Call(`_hutilscpp_do_which_first_xi_ind`, x, yd)
+}
+
+do_which_first_xd_ind <- function(x, y, y_has_na) {
+    .Call(`_hutilscpp_do_which_first_xd_ind`, x, y, y_has_na)
+}
+
 do_which_isnt_integerish <- function(x) {
     .Call(`_hutilscpp_do_which_isnt_integerish`, x)
+}
+
+do_which_last_xd_ad <- function(x, op, a) {
+    .Call(`_hutilscpp_do_which_last_xd_ad`, x, op, a)
+}
+
+do_which_last_xi_ai <- function(x, op, a) {
+    .Call(`_hutilscpp_do_which_last_xi_ai`, x, op, a)
+}
+
+do_which_last_xi_ad <- function(x, op, ad) {
+    .Call(`_hutilscpp_do_which_last_xi_ad`, x, op, ad)
+}
+
+do_which_last_xd_yd <- function(x, op, y) {
+    .Call(`_hutilscpp_do_which_last_xd_yd`, x, op, y)
+}
+
+do_which_last_xi_yi <- function(x, op, y) {
+    .Call(`_hutilscpp_do_which_last_xi_yi`, x, op, y)
+}
+
+do_which_last_xi_yd <- function(x, op, y) {
+    .Call(`_hutilscpp_do_which_last_xi_yd`, x, op, y)
+}
+
+do_which_last_xd_yi <- function(x, op, y) {
+    .Call(`_hutilscpp_do_which_last_xd_yi`, x, op, y)
+}
+
+do_which_last_xd_y2 <- function(x, op, y1, y2) {
+    .Call(`_hutilscpp_do_which_last_xd_y2`, x, op, y1, y2)
+}
+
+do_which_last_xd_add <- function(x, op, a1, a2) {
+    .Call(`_hutilscpp_do_which_last_xd_add`, x, op, a1, a2)
+}
+
+do_which_last__ <- function(x, op, y, nx, ny, y1i, y2i, y1d, y2d) {
+    .Call(`_hutilscpp_do_which_last__`, x, op, y, nx, ny, y1i, y2i, y1d, y2d)
+}
+
+do_which_last_in_lgl <- function(x, anyNA_, any_, nall_) {
+    .Call(`_hutilscpp_do_which_last_in_lgl`, x, anyNA_, any_, nall_)
+}
+
+do_which_last_xi_ini <- function(x, y) {
+    .Call(`_hutilscpp_do_which_last_xi_ini`, x, y)
+}
+
+do_which_last_xi_ind <- function(x, yd) {
+    .Call(`_hutilscpp_do_which_last_xi_ind`, x, yd)
+}
+
+do_which_last_xd_ind <- function(x, y, y_has_na) {
+    .Call(`_hutilscpp_do_which_last_xd_ind`, x, y, y_has_na)
 }
 
 do_whichs_16 <- function(op, x, y, nThread = 1L) {

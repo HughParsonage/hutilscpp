@@ -537,6 +537,7 @@ test_that("first_which", {
 test_that("which_first(<x> <o> <y>) lens equal", {
   x <- c(113L, 102L, 106L, 100L, 114L)
   y <- c(108L, 106L, 114L, 100L, 109L)
+  y100 <- c(rep_len(y, length(-100:0)) + -100:0)
 
   expect_equal(which_first(x != y),
                first_which(x != y))
@@ -552,6 +553,8 @@ test_that("which_first(<x> <o> <y>) lens equal", {
                first_which(x < y))
   expect_equal(which_first(x %in% y),
                first_which(x %in% y))
+  expect_equal(which_first(x %in% y100),
+               first_which(x %in% y100))
   expect_equal(which_first(x %between% y[1:2]),
                first_which(x %between% y[1:2]))
   expect_equal(which_first(x %(between)% y[2:3]),
@@ -960,4 +963,15 @@ test_that("(between) and ]between[ with NA", {
                which_first(x <= 5))
 })
 
+test_that("which_first bench mark", {
+  skip_on_cran()
+  skip_on_travis()
+  skip_on_appveyor()
+  skip_if_not_installed("bench")
+  skip_on_ci()
+  x <- double(1e8)
+  which_first_time <- bench_system_time(which_first(x > 0))
+  first_which_time <- bench_system_time(first_which(x > 0))
+  expect_lt(which_first_time[2], 0.5 * first_which_time[2])
+})
 

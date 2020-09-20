@@ -584,6 +584,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_which_first_in_lgl
+R_xlen_t do_which_first_in_lgl(LogicalVector x, bool anyNA_, bool any_, bool nall_);
+RcppExport SEXP _hutilscpp_do_which_first_in_lgl(SEXP xSEXP, SEXP anyNA_SEXP, SEXP any_SEXP, SEXP nall_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type anyNA_(anyNA_SEXP);
+    Rcpp::traits::input_parameter< bool >::type any_(any_SEXP);
+    Rcpp::traits::input_parameter< bool >::type nall_(nall_SEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_first_in_lgl(x, anyNA_, any_, nall_));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_which_firstNA
 R_xlen_t do_which_firstNA(SEXP x);
 RcppExport SEXP _hutilscpp_do_which_firstNA(SEXP xSEXP) {
@@ -630,6 +643,68 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_which_first__
+R_xlen_t do_which_first__(SEXP x, int op, SEXP y, R_xlen_t nx, R_xlen_t ny, int y1i, int y2i, double y1d, double y2d);
+RcppExport SEXP _hutilscpp_do_which_first__(SEXP xSEXP, SEXP opSEXP, SEXP ySEXP, SEXP nxSEXP, SEXP nySEXP, SEXP y1iSEXP, SEXP y2iSEXP, SEXP y1dSEXP, SEXP y2dSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type op(opSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type y(ySEXP);
+    Rcpp::traits::input_parameter< R_xlen_t >::type nx(nxSEXP);
+    Rcpp::traits::input_parameter< R_xlen_t >::type ny(nySEXP);
+    Rcpp::traits::input_parameter< int >::type y1i(y1iSEXP);
+    Rcpp::traits::input_parameter< int >::type y2i(y2iSEXP);
+    Rcpp::traits::input_parameter< double >::type y1d(y1dSEXP);
+    Rcpp::traits::input_parameter< double >::type y2d(y2dSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_first__(x, op, y, nx, ny, y1i, y2i, y1d, y2d));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_first_xi_ini
+R_xlen_t do_which_first_xi_ini(IntegerVector x, IntegerVector y);
+RcppExport SEXP _hutilscpp_do_which_first_xi_ini(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_first_xi_ini(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// dblTable2int
+IntegerVector dblTable2int(DoubleVector table);
+RcppExport SEXP _hutilscpp_dblTable2int(SEXP tableSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type table(tableSEXP);
+    rcpp_result_gen = Rcpp::wrap(dblTable2int(table));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_first_xi_ind
+R_xlen_t do_which_first_xi_ind(IntegerVector x, DoubleVector yd);
+RcppExport SEXP _hutilscpp_do_which_first_xi_ind(SEXP xSEXP, SEXP ydSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type yd(ydSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_first_xi_ind(x, yd));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_first_xd_ind
+R_xlen_t do_which_first_xd_ind(DoubleVector x, DoubleVector y, bool y_has_na);
+RcppExport SEXP _hutilscpp_do_which_first_xd_ind(SEXP xSEXP, SEXP ySEXP, SEXP y_has_naSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< bool >::type y_has_na(y_has_naSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_first_xd_ind(x, y, y_has_na));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_which_isnt_integerish
 R_xlen_t do_which_isnt_integerish(DoubleVector x);
 RcppExport SEXP _hutilscpp_do_which_isnt_integerish(SEXP xSEXP) {
@@ -637,6 +712,181 @@ BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
     rcpp_result_gen = Rcpp::wrap(do_which_isnt_integerish(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_last_xd_ad
+R_xlen_t do_which_last_xd_ad(DoubleVector x, int op, double a);
+RcppExport SEXP _hutilscpp_do_which_last_xd_ad(SEXP xSEXP, SEXP opSEXP, SEXP aSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type op(opSEXP);
+    Rcpp::traits::input_parameter< double >::type a(aSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_last_xd_ad(x, op, a));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_last_xi_ai
+R_xlen_t do_which_last_xi_ai(IntegerVector x, int op, int a);
+RcppExport SEXP _hutilscpp_do_which_last_xi_ai(SEXP xSEXP, SEXP opSEXP, SEXP aSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type op(opSEXP);
+    Rcpp::traits::input_parameter< int >::type a(aSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_last_xi_ai(x, op, a));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_last_xi_ad
+R_xlen_t do_which_last_xi_ad(IntegerVector x, int op, double ad);
+RcppExport SEXP _hutilscpp_do_which_last_xi_ad(SEXP xSEXP, SEXP opSEXP, SEXP adSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type op(opSEXP);
+    Rcpp::traits::input_parameter< double >::type ad(adSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_last_xi_ad(x, op, ad));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_last_xd_yd
+R_xlen_t do_which_last_xd_yd(DoubleVector x, int op, DoubleVector y);
+RcppExport SEXP _hutilscpp_do_which_last_xd_yd(SEXP xSEXP, SEXP opSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type op(opSEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_last_xd_yd(x, op, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_last_xi_yi
+R_xlen_t do_which_last_xi_yi(IntegerVector x, int op, IntegerVector y);
+RcppExport SEXP _hutilscpp_do_which_last_xi_yi(SEXP xSEXP, SEXP opSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type op(opSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_last_xi_yi(x, op, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_last_xi_yd
+R_xlen_t do_which_last_xi_yd(IntegerVector x, int op, DoubleVector y);
+RcppExport SEXP _hutilscpp_do_which_last_xi_yd(SEXP xSEXP, SEXP opSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type op(opSEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_last_xi_yd(x, op, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_last_xd_yi
+R_xlen_t do_which_last_xd_yi(DoubleVector x, int op, IntegerVector y);
+RcppExport SEXP _hutilscpp_do_which_last_xd_yi(SEXP xSEXP, SEXP opSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type op(opSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_last_xd_yi(x, op, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_last_xd_y2
+R_xlen_t do_which_last_xd_y2(DoubleVector x, int op, double y1, double y2);
+RcppExport SEXP _hutilscpp_do_which_last_xd_y2(SEXP xSEXP, SEXP opSEXP, SEXP y1SEXP, SEXP y2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type op(opSEXP);
+    Rcpp::traits::input_parameter< double >::type y1(y1SEXP);
+    Rcpp::traits::input_parameter< double >::type y2(y2SEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_last_xd_y2(x, op, y1, y2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_last_xd_add
+R_xlen_t do_which_last_xd_add(DoubleVector x, int op, double a1, double a2);
+RcppExport SEXP _hutilscpp_do_which_last_xd_add(SEXP xSEXP, SEXP opSEXP, SEXP a1SEXP, SEXP a2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type op(opSEXP);
+    Rcpp::traits::input_parameter< double >::type a1(a1SEXP);
+    Rcpp::traits::input_parameter< double >::type a2(a2SEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_last_xd_add(x, op, a1, a2));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_last__
+R_xlen_t do_which_last__(SEXP x, int op, SEXP y, R_xlen_t nx, R_xlen_t ny, int y1i, int y2i, double y1d, double y2d);
+RcppExport SEXP _hutilscpp_do_which_last__(SEXP xSEXP, SEXP opSEXP, SEXP ySEXP, SEXP nxSEXP, SEXP nySEXP, SEXP y1iSEXP, SEXP y2iSEXP, SEXP y1dSEXP, SEXP y2dSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type op(opSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type y(ySEXP);
+    Rcpp::traits::input_parameter< R_xlen_t >::type nx(nxSEXP);
+    Rcpp::traits::input_parameter< R_xlen_t >::type ny(nySEXP);
+    Rcpp::traits::input_parameter< int >::type y1i(y1iSEXP);
+    Rcpp::traits::input_parameter< int >::type y2i(y2iSEXP);
+    Rcpp::traits::input_parameter< double >::type y1d(y1dSEXP);
+    Rcpp::traits::input_parameter< double >::type y2d(y2dSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_last__(x, op, y, nx, ny, y1i, y2i, y1d, y2d));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_last_in_lgl
+R_xlen_t do_which_last_in_lgl(LogicalVector x, bool anyNA_, bool any_, bool nall_);
+RcppExport SEXP _hutilscpp_do_which_last_in_lgl(SEXP xSEXP, SEXP anyNA_SEXP, SEXP any_SEXP, SEXP nall_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type anyNA_(anyNA_SEXP);
+    Rcpp::traits::input_parameter< bool >::type any_(any_SEXP);
+    Rcpp::traits::input_parameter< bool >::type nall_(nall_SEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_last_in_lgl(x, anyNA_, any_, nall_));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_last_xi_ini
+R_xlen_t do_which_last_xi_ini(IntegerVector x, IntegerVector y);
+RcppExport SEXP _hutilscpp_do_which_last_xi_ini(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_last_xi_ini(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_last_xi_ind
+R_xlen_t do_which_last_xi_ind(IntegerVector x, DoubleVector yd);
+RcppExport SEXP _hutilscpp_do_which_last_xi_ind(SEXP xSEXP, SEXP ydSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type yd(ydSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_last_xi_ind(x, yd));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_last_xd_ind
+R_xlen_t do_which_last_xd_ind(DoubleVector x, DoubleVector y, bool y_has_na);
+RcppExport SEXP _hutilscpp_do_which_last_xd_ind(SEXP xSEXP, SEXP ySEXP, SEXP y_has_naSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DoubleVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< bool >::type y_has_na(y_has_naSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_last_xd_ind(x, y, y_has_na));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1393,11 +1643,31 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which_first_notTRUE", (DL_FUNC) &_hutilscpp_do_which_first_notTRUE, 1},
     {"_hutilscpp_do_which_last_notTRUE", (DL_FUNC) &_hutilscpp_do_which_last_notTRUE, 1},
     {"_hutilscpp_do_which_last_notFALSE", (DL_FUNC) &_hutilscpp_do_which_last_notFALSE, 1},
+    {"_hutilscpp_do_which_first_in_lgl", (DL_FUNC) &_hutilscpp_do_which_first_in_lgl, 4},
     {"_hutilscpp_do_which_firstNA", (DL_FUNC) &_hutilscpp_do_which_firstNA, 1},
     {"_hutilscpp_do_which_lastNA", (DL_FUNC) &_hutilscpp_do_which_lastNA, 1},
     {"_hutilscpp_do_which_first_lgl_lgl_op", (DL_FUNC) &_hutilscpp_do_which_first_lgl_lgl_op, 4},
     {"_hutilscpp_do_which_first_n", (DL_FUNC) &_hutilscpp_do_which_first_n, 4},
+    {"_hutilscpp_do_which_first__", (DL_FUNC) &_hutilscpp_do_which_first__, 9},
+    {"_hutilscpp_do_which_first_xi_ini", (DL_FUNC) &_hutilscpp_do_which_first_xi_ini, 2},
+    {"_hutilscpp_dblTable2int", (DL_FUNC) &_hutilscpp_dblTable2int, 1},
+    {"_hutilscpp_do_which_first_xi_ind", (DL_FUNC) &_hutilscpp_do_which_first_xi_ind, 2},
+    {"_hutilscpp_do_which_first_xd_ind", (DL_FUNC) &_hutilscpp_do_which_first_xd_ind, 3},
     {"_hutilscpp_do_which_isnt_integerish", (DL_FUNC) &_hutilscpp_do_which_isnt_integerish, 1},
+    {"_hutilscpp_do_which_last_xd_ad", (DL_FUNC) &_hutilscpp_do_which_last_xd_ad, 3},
+    {"_hutilscpp_do_which_last_xi_ai", (DL_FUNC) &_hutilscpp_do_which_last_xi_ai, 3},
+    {"_hutilscpp_do_which_last_xi_ad", (DL_FUNC) &_hutilscpp_do_which_last_xi_ad, 3},
+    {"_hutilscpp_do_which_last_xd_yd", (DL_FUNC) &_hutilscpp_do_which_last_xd_yd, 3},
+    {"_hutilscpp_do_which_last_xi_yi", (DL_FUNC) &_hutilscpp_do_which_last_xi_yi, 3},
+    {"_hutilscpp_do_which_last_xi_yd", (DL_FUNC) &_hutilscpp_do_which_last_xi_yd, 3},
+    {"_hutilscpp_do_which_last_xd_yi", (DL_FUNC) &_hutilscpp_do_which_last_xd_yi, 3},
+    {"_hutilscpp_do_which_last_xd_y2", (DL_FUNC) &_hutilscpp_do_which_last_xd_y2, 4},
+    {"_hutilscpp_do_which_last_xd_add", (DL_FUNC) &_hutilscpp_do_which_last_xd_add, 4},
+    {"_hutilscpp_do_which_last__", (DL_FUNC) &_hutilscpp_do_which_last__, 9},
+    {"_hutilscpp_do_which_last_in_lgl", (DL_FUNC) &_hutilscpp_do_which_last_in_lgl, 4},
+    {"_hutilscpp_do_which_last_xi_ini", (DL_FUNC) &_hutilscpp_do_which_last_xi_ini, 2},
+    {"_hutilscpp_do_which_last_xi_ind", (DL_FUNC) &_hutilscpp_do_which_last_xi_ind, 2},
+    {"_hutilscpp_do_which_last_xd_ind", (DL_FUNC) &_hutilscpp_do_which_last_xd_ind, 3},
     {"_hutilscpp_do_whichs_16", (DL_FUNC) &_hutilscpp_do_whichs_16, 4},
     {"_hutilscpp_do_xor2", (DL_FUNC) &_hutilscpp_do_xor2, 4},
     {"_hutilscpp_showValue", (DL_FUNC) &_hutilscpp_showValue, 2},

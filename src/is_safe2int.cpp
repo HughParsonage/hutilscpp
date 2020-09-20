@@ -4,6 +4,17 @@ bool do_is_safe2int(double x) {
   return R_finite(x) && x <= 2147483647 && x >= -2147483647 && ((int)x == x);
 }
 
+int type_safe2int(double x) {
+  if (ISNAN(x)) {
+    return 2;
+  }
+  if (x < -2147483647 || x > 2147483647) {
+    return 0;
+  }
+  int xi = (int)x;
+  return (xi == x) ? 1 : 0;
+}
+
 
 //' @noRd
 //' @param x Candidate vector.
