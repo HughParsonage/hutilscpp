@@ -554,3 +554,43 @@ test_that("which_last(x %in% lgl)", {
   expect_equal(which_last(fff %in% fff),
                last_which(fff %in% fff))
 })
+
+test_that("do_which_last_xi_ini", {
+  x50 <- c(0L, 40L, 53:99)
+  x100 <- c(0L, 100:400L)
+  x <- c(1:40, 50:550, 40L)
+  expect_equal(which_last(x %in% x50),
+               last_which(x %in% x50))
+  expect_equal(which_last(x %in% x100),
+               last_which(x %in% x100))
+
+  x <- -x
+  expect_equal(which_last(x %in% x50),
+               last_which(x %in% x50))
+  expect_equal(which_last(x %in% x100),
+               last_which(x %in% x100))
+
+
+  x50 <- as.double(x50)
+  x100 <- as.double(x100)
+  expect_equal(which_last(x %in% x50),
+               last_which(x %in% x50))
+  expect_equal(which_last(x %in% x100),
+               last_which(x %in% x100))
+
+  x <- -x
+  expect_equal(which_last(x %in% x50),
+               last_which(x %in% x50))
+  expect_equal(which_last(x %in% x100),
+               last_which(x %in% x100))
+
+  x50 <- c(NA, x50)
+  x100 <- c(NA, x100)
+  z <- c(NA, x)
+  expect_equal(which_last(z %in% x50),
+               last_which(z %in% x50))
+  expect_equal(which_last(z %in% x100),
+               last_which(z %in% x100))
+
+
+})
