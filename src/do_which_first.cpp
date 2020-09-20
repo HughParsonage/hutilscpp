@@ -1122,9 +1122,7 @@ R_xlen_t do_which_first__(SEXP x, int op, SEXP y,
                           int y2i,
                           double y1d,
                           double y2d) {
-  if (nx == 0) {
-    return 0;
-  }
+
   if (TYPEOF(x) == INTSXP && TYPEOF(y) == INTSXP) {
     switch(ny) {
     case 1:
