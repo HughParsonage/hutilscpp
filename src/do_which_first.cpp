@@ -874,7 +874,7 @@ R_xlen_t do_which_first_xi_ini(IntegerVector x, IntegerVector y) {
   R_xlen_t Nx = x.length();
   R_xlen_t Ny = y.length();
   if (Ny == 0) {
-    return 0;
+    return 0; // # nocov
   }
 
   if (Ny > 100) {

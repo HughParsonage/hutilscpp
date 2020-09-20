@@ -1124,3 +1124,60 @@ test_that("which_first bench mark", {
   expect_lt(which_first_time[2], 0.5 * first_which_time[2])
 })
 
+
+test_that("do_which_first_xi_ad", {
+  x <- c(-.Machine$integer.max, -1L, -1L, .Machine$integer.max)
+  w <- c(-3L, 1L, -2L)
+  expect_equal(which_first(x >= Inf),
+               first_which(x >= Inf))
+  expect_equal(which_first(x <= Inf),
+               first_which(x <= Inf))
+  expect_equal(which_first(x >  Inf),
+               first_which(x >  Inf))
+  expect_equal(which_first(x <  Inf),
+               first_which(x <  Inf))
+
+  expect_equal(which_first(x >= -Inf),
+               first_which(x >= -Inf))
+  expect_equal(which_first(x <= -Inf),
+               first_which(x <= -Inf))
+  expect_equal(which_first(x >  -Inf),
+               first_which(x >  -Inf))
+  expect_equal(which_first(x <  -Inf),
+               first_which(x <  -Inf))
+
+  expect_equal(which_first(x > NA_real_),
+               first_which(x > NA_real_))
+
+  expect_equal(which_first(x != -.Machine$integer.max),
+               first_which(x != -.Machine$integer.max))
+  expect_equal(which_first(x == 0),
+               first_which(x == 0))
+  expect_equal(which_first(w > -10),
+               first_which(w > -10))
+})
+
+
+test_that("do_which_first_xi_ind", {
+  x <- c(-400L, 4L, 5L, 2L)
+  d0 <- double(0)
+  tl <- seq(-50, 50, by = 0.5)
+  expect_equal(which_first(x %in% d0),
+               first_which(x %in% d0))
+  expect_equal(which_first(x %in% tl),
+               first_which(x %in% tl))
+})
+
+test_that("do_which_first_xd_ind", {
+  x <- c(4, 5L, 2L)
+  d0 <- double(0)
+  expect_equal(which_first(x %in% d0),
+               first_which(x %in% d0))
+})
+
+
+
+
+
+
+
