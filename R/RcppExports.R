@@ -479,6 +479,10 @@ do_summary3_int <- function(x, y, z, in_place = FALSE, do_max = TRUE) {
     .Call(`_hutilscpp_do_summary3_int`, x, y, z, in_place, do_max)
 }
 
+test_single_ox_x1_x2 <- function(x, op, x1, x2) {
+    .Call(`_hutilscpp_test_single_ox_x1_x2`, x, op, x1, x2)
+}
+
 #' @name where_square_bracket_opens
 #' @param x Character vector of characters.
 #' @param i position of closing bracket.
