@@ -9,7 +9,8 @@ test_that("which_first works", {
   expect_identical(which_first(x >= 0), 1L)
   expect_identical(which_first(x <= 0), 0L)
   expect_identical(which_first(x != 0), 1L)
-  expect_identical(which_first(x != 0), 1L)
+  x30 <- rep(3, 4)
+  expect_identical(which_first(x30 != 3.0), 0L)
 
   x <- c(-2, -1.5)
   expect_identical(which_first(x == -1.5), 2L)

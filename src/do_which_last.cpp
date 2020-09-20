@@ -146,15 +146,24 @@ R_xlen_t do_which_last_xi_ad(IntegerVector x,
     }
     // correct for integer conversion giving
     // incorrect results for >  >=  <  <=
-    if (op == OP_GT || op == OP_GE) {
+    if (op == OP_GT) {
       // x >  2.5 => x > 2
       // x > -2.5 => x > -3
       e -= (ad < 0);
     }
-    if (op == OP_LE || op == OP_LT) {
+    if (op == OP_GE) {
+      // 3,4,5   >=  4.5  => 3,4,5 >= 5
+      e += (ad > 0);
+    }
+    if (op == OP_LT) {
       // x <  2.5 => x < 3
       // x < -2.5 => x < -2
       e += (ad > 0);
+    }
+    if (op == OP_LE) {
+      // x <= 4.5  => x <= 4
+      // x <= -4.5 => x <= -4
+      e -= (ad < 0);
     }
   }
   const int a = ((int)ad) + e;
