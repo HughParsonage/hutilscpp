@@ -1513,6 +1513,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// test_single_ox_x1_x2
+bool test_single_ox_x1_x2(SEXP x, int op, SEXP x1, SEXP x2);
+RcppExport SEXP _hutilscpp_test_single_ox_x1_x2(SEXP xSEXP, SEXP opSEXP, SEXP x1SEXP, SEXP x2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type op(opSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type x1(x1SEXP);
+    Rcpp::traits::input_parameter< SEXP >::type x2(x2SEXP);
+    rcpp_result_gen = Rcpp::wrap(test_single_ox_x1_x2(x, op, x1, x2));
+    return rcpp_result_gen;
+END_RCPP
+}
 // validate_nchar1
 int validate_nchar1(CharacterVector x, bool return_size);
 RcppExport SEXP _hutilscpp_validate_nchar1(SEXP xSEXP, SEXP return_sizeSEXP) {
@@ -1704,6 +1717,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_sum_isna_logi", (DL_FUNC) &_hutilscpp_sum_isna_logi, 2},
     {"_hutilscpp_do_summary3_dbl", (DL_FUNC) &_hutilscpp_do_summary3_dbl, 5},
     {"_hutilscpp_do_summary3_int", (DL_FUNC) &_hutilscpp_do_summary3_int, 5},
+    {"_hutilscpp_test_single_ox_x1_x2", (DL_FUNC) &_hutilscpp_test_single_ox_x1_x2, 4},
     {"_hutilscpp_validate_nchar1", (DL_FUNC) &_hutilscpp_validate_nchar1, 2},
     {"_hutilscpp_max_charsize", (DL_FUNC) &_hutilscpp_max_charsize, 1},
     {"_hutilscpp_is_space", (DL_FUNC) &_hutilscpp_is_space, 1},
