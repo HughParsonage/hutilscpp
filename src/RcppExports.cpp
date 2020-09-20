@@ -786,19 +786,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_which_last_xd_y2
-R_xlen_t do_which_last_xd_y2(DoubleVector x, int op, double y1, double y2);
-RcppExport SEXP _hutilscpp_do_which_last_xd_y2(SEXP xSEXP, SEXP opSEXP, SEXP y1SEXP, SEXP y2SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type op(opSEXP);
-    Rcpp::traits::input_parameter< double >::type y1(y1SEXP);
-    Rcpp::traits::input_parameter< double >::type y2(y2SEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_last_xd_y2(x, op, y1, y2));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_which_last_xd_add
 R_xlen_t do_which_last_xd_add(DoubleVector x, int op, double a1, double a2);
 RcppExport SEXP _hutilscpp_do_which_last_xd_add(SEXP xSEXP, SEXP opSEXP, SEXP a1SEXP, SEXP a2SEXP) {
@@ -1660,7 +1647,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which_last_xi_yi", (DL_FUNC) &_hutilscpp_do_which_last_xi_yi, 3},
     {"_hutilscpp_do_which_last_xi_yd", (DL_FUNC) &_hutilscpp_do_which_last_xi_yd, 3},
     {"_hutilscpp_do_which_last_xd_yi", (DL_FUNC) &_hutilscpp_do_which_last_xd_yi, 3},
-    {"_hutilscpp_do_which_last_xd_y2", (DL_FUNC) &_hutilscpp_do_which_last_xd_y2, 4},
     {"_hutilscpp_do_which_last_xd_add", (DL_FUNC) &_hutilscpp_do_which_last_xd_add, 4},
     {"_hutilscpp_do_which_last__", (DL_FUNC) &_hutilscpp_do_which_last__, 9},
     {"_hutilscpp_do_which_last_in_lgl", (DL_FUNC) &_hutilscpp_do_which_last_in_lgl, 4},
