@@ -145,7 +145,6 @@ R_xlen_t do_which_last_xi_ad(IntegerVector x,
           return 0;
         }
       }
-      return 0;
     }
     // correct for integer conversion giving
     // incorrect results for >  >=  <  <=
