@@ -298,16 +298,16 @@ which_first <- function(expr,
       o <- do_which_last__(lhs_eval, op, rhs_eval,
                            nx = nx,
                            ny = ny,
-                           y1i = y1i,
-                           y2i = y2i,
+                           y1i = qd2i(y1i),
+                           y2i = qd2i(y2i),
                            y1d = y1d,
                            y2d = y2d)
     } else {
       o <- do_which_first__(lhs_eval, op, rhs_eval,
                             nx = nx,
                             ny = ny,
-                            y1i = y1i,
-                            y2i = y2i,
+                            y1i = qd2i(y1i),
+                            y2i = qd2i(y2i),
                             y1d = y1d,
                             y2d = y2d)
       # o <- .which_first(expr)

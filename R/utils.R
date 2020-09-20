@@ -97,6 +97,16 @@ is_wholer <- function(dbl) {
   dbl == as.integer(dbl)
 }
 
+# quiet double to int -- when passed to a C++ function that
+# accepts int but only conditionally uses
+qd2i <- function(x) {
+  if (is_safe2int(x)) {
+    as.integer(x)
+  } else {
+    NA_integer_
+  }
+}
+
 # nocov start
 is64bit <- function() .Machine$sizeof.pointer == 8L
 
