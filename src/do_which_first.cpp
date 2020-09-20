@@ -715,6 +715,9 @@ R_xlen_t do_which_first_xi_ad(IntegerVector x,
     if (op == OP_EQ || op == OP_IN) {
       return 0;
     }
+    if (op == OP_NE) {
+      return 1;
+    }
     if (!R_finite(ad)) {
       if (ad == R_PosInf) {
         switch(op) {

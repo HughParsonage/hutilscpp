@@ -35,6 +35,135 @@ test_that("which_last works on integers", {
   expect_equal(which_last(x <= y), last_which(x <= y))
   expect_equal(which_last(x > y), last_which(x > y))
   expect_equal(which_last(x < y), last_which(x < y))
+
+  y <- Inf
+  expect_equal(which_last(x != y),
+               last_which(x != y))
+  expect_equal(which_last(x == y),
+               last_which(x == y))
+  expect_equal(which_last(x >= y),
+               last_which(x >= y))
+  expect_equal(which_last(x <= y),
+               last_which(x <= y))
+  expect_equal(which_last(x > y),
+               last_which(x > y))
+  expect_equal(which_last(x < y),
+               last_which(x < y))
+
+  y <- -Inf
+  expect_equal(which_last(x != y),
+               last_which(x != y))
+  expect_equal(which_last(x == y),
+               last_which(x == y))
+  expect_equal(which_last(x >= y),
+               last_which(x >= y))
+  expect_equal(which_last(x <= y),
+               last_which(x <= y))
+  expect_equal(which_last(x > y),
+               last_which(x > y))
+  expect_equal(which_last(x < y),
+               last_which(x < y))
+
+  # y <- NaN
+  # expect_equal(which_last(x != y),
+  #              last_which(x != y))
+  # expect_equal(which_last(x == y),
+  #              last_which(x == y))
+  # expect_equal(which_last(x >= y),
+  #              last_which(x >= y))
+  # expect_equal(which_last(x <= y),
+  #              last_which(x <= y))
+  # expect_equal(which_last(x > y),
+  #              last_which(x > y))
+  # expect_equal(which_last(x < y),
+  #              last_which(x < y))
+
+  y <- max(x) + 1
+  expect_equal(which_last(x != y),
+               last_which(x != y))
+  expect_equal(which_last(x == y),
+               last_which(x == y))
+  expect_equal(which_last(x >= y),
+               last_which(x >= y))
+  expect_equal(which_last(x <= y),
+               last_which(x <= y))
+  expect_equal(which_last(x > y),
+               last_which(x > y))
+  expect_equal(which_last(x < y),
+               last_which(x < y))
+
+  y <- min(x) - 1
+  expect_equal(which_last(x != y),
+               last_which(x != y))
+  expect_equal(which_last(x == y),
+               last_which(x == y))
+  expect_equal(which_last(x >= y),
+               last_which(x >= y))
+  expect_equal(which_last(x <= y),
+               last_which(x <= y))
+  expect_equal(which_last(x > y),
+               last_which(x > y))
+  expect_equal(which_last(x < y),
+               last_which(x < y))
+
+  y <- as.double(x)
+  expect_equal(which_last(x != y),
+               last_which(x != y))
+  expect_equal(which_last(x == y),
+               last_which(x == y))
+  expect_equal(which_last(x >= y),
+               last_which(x >= y))
+  expect_equal(which_last(x <= y),
+               last_which(x <= y))
+  expect_equal(which_last(x > y),
+               last_which(x > y))
+  expect_equal(which_last(x < y),
+               last_which(x < y))
+
+  y <- as.double(x) + 1
+  expect_equal(which_last(x != y),
+               last_which(x != y))
+  expect_equal(which_last(x == y),
+               last_which(x == y))
+  expect_equal(which_last(x >= y),
+               last_which(x >= y))
+  expect_equal(which_last(x <= y),
+               last_which(x <= y))
+  expect_equal(which_last(x > y),
+               last_which(x > y))
+  expect_equal(which_last(x < y),
+               last_which(x < y))
+
+  y <- as.double(x) - 1
+  expect_equal(which_last(x != y),
+               last_which(x != y))
+  expect_equal(which_last(x == y),
+               last_which(x == y))
+  expect_equal(which_last(x >= y),
+               last_which(x >= y))
+  expect_equal(which_last(x <= y),
+               last_which(x <= y))
+  expect_equal(which_last(x > y),
+               last_which(x > y))
+  expect_equal(which_last(x < y),
+               last_which(x < y))
+
+  y[2] <- NA
+  expect_equal(which_last(x != y),
+               last_which(x != y))
+  expect_equal(which_last(x == y),
+               last_which(x == y))
+  expect_equal(which_last(x >= y),
+               last_which(x >= y))
+  expect_equal(which_last(x <= y),
+               last_which(x <= y))
+  expect_equal(which_last(x > y),
+               last_which(x > y))
+  expect_equal(which_last(x < y),
+               last_which(x < y))
+
+
+
 })
 
 test_that("which_last works on doubles", {

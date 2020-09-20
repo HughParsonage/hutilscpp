@@ -117,27 +117,30 @@ R_xlen_t do_which_last_xi_ad(IntegerVector x,
     if (op == OP_EQ || op == OP_IN) {
       return 0;
     }
+    if (op == OP_NE) {
+      return N;
+    }
     if (!R_finite(ad)) {
       if (ad == R_PosInf) {
         switch(op) {
         case OP_GE:
           return 0;
         case OP_LE:
-          return N - 1;
+          return N;
         case OP_GT:
           return 0;
         case OP_LT:
-          return N - 1;
+          return N;
         }
       }
       if (ad == R_NegInf) {
         switch(op) {
         case OP_GE:
-          return N - 1;
+          return N;
         case OP_LE:
           return 0;
         case OP_GT:
-          return N - 1;
+          return N;
         case OP_LT:
           return 0;
         }
