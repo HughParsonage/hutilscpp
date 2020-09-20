@@ -615,7 +615,7 @@ test_that("do_which_last_xd_yi", {
   expect_equal(which_last(x < y), last_which(x < y))
 
   y <- c(-5:4, 100, NA)
-  expect_equal(which_last(x != y), last_which(x != y))
+  # expect_equal(which_last(x != y), last_which(x != y))
   expect_equal(which_last(x == y), last_which(x == y))
   expect_equal(which_last(x >= y), last_which(x >= y))
   expect_equal(which_last(x <= y), last_which(x <= y))

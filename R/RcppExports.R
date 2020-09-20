@@ -245,10 +245,6 @@ do_which_last_xd_yi <- function(x, op, y) {
     .Call(`_hutilscpp_do_which_last_xd_yi`, x, op, y)
 }
 
-do_which_last_xd_y2 <- function(x, op, y1, y2) {
-    .Call(`_hutilscpp_do_which_last_xd_y2`, x, op, y1, y2)
-}
-
 do_which_last_xd_add <- function(x, op, a1, a2) {
     .Call(`_hutilscpp_do_which_last_xd_add`, x, op, a1, a2)
 }
