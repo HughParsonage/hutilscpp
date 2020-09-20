@@ -532,3 +532,25 @@ test_that("%in% with integers outside integer range", {
   s <- as.double(s)
   expect_equal(which_last(s %in% t), 4L)
 })
+
+test_that("which_last(x %in% lgl)", {
+  abc <- logical(0)
+  lgl0 <- logical(0)
+  ttt <- c(TRUE, TRUE, TRUE)
+  ttf <- c(TRUE, TRUE, FALSE)
+  ttn <- c(TRUE, TRUE, NA)
+  tfn <- c(TRUE, FALSE, NA)
+  fff <- c(FALSE, FALSE, FALSE)
+  nana <- c(NA, NA, NA)
+
+
+
+  expect_equal(which_last(abc %in% lgl0),
+               last_which(abc %in% lgl0))
+  expect_equal(which_last(ttt %in% fff),
+               last_which(ttt %in% fff))
+  expect_equal(which_last(ttt %in% ttt),
+               last_which(ttt %in% ttt))
+  expect_equal(which_last(fff %in% fff),
+               last_which(fff %in% fff))
+})
