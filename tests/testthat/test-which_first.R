@@ -1024,6 +1024,14 @@ test_that("lens 0", {
 
 })
 
+test_that("%in% with integers outside integer range", {
+  s <- c(1L, 0L, -2L, 3L, NA_integer_)
+  t <- c(-1e10, 1e10, 3)
+  expect_equal(which_first(s %in% t), 4L)
+  s <- as.double(s)
+  expect_equal(which_first(s %in% t), 4L)
+})
+
 test_that("which_first bench mark", {
   skip_on_cran()
   skip_on_travis()

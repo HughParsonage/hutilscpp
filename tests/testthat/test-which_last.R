@@ -300,6 +300,13 @@ test_that("lens 0", {
                last_which(x0d == y0))
   expect_equal(which_last(x0d == y0d),
                last_which(x0d == y0d))
+})
 
 
+test_that("%in% with integers outside integer range", {
+  s <- c(1L, 0L, -2L, 3L, NA_integer_)
+  t <- c(-1e10, 1e10, 3)
+  expect_equal(which_last(s %in% t), 4L)
+  s <- as.double(s)
+  expect_equal(which_last(s %in% t), 4L)
 })
