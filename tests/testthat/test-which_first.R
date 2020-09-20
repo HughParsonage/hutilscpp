@@ -301,6 +301,27 @@ test_that("which_first logical", {
 })
 
 test_that("which_first_logical %in%", {
+
+  abc <- logical(0)
+  lgl0 <- logical(0)
+  ttt <- c(TRUE, TRUE, TRUE)
+  ttf <- c(TRUE, TRUE, FALSE)
+  ttn <- c(TRUE, TRUE, NA)
+  tfn <- c(TRUE, FALSE, NA)
+  fff <- c(FALSE, FALSE, FALSE)
+  nana <- c(NA, NA, NA)
+
+
+
+  expect_equal(which_first(abc %in% lgl0),
+               first_which(abc %in% lgl0))
+  expect_equal(which_first(ttt %in% fff),
+               first_which(ttt %in% fff))
+  expect_equal(which_first(ttt %in% ttt),
+               first_which(ttt %in% ttt))
+  expect_equal(which_first(fff %in% fff),
+               first_which(fff %in% fff))
+
   x <- c(TRUE, FALSE, TRUE, FALSE)
   y <- c(TRUE, FALSE)
   expect_equal(which_first(x %in% y), 1)
@@ -585,14 +606,20 @@ test_that("which_first(<x> <o> <y>) lens equal", {
   x <- as.double(x)
   expect_equal(which_first(x != y),
                first_which(x != y))
+  expect_equal(which_first(x != x),
+               first_which(x != x))
   expect_equal(which_first(x == y),
                first_which(x == y))
   expect_equal(which_first(x >= y),
                first_which(x >= y))
+  expect_equal(which_first(x >= x),
+               first_which(x >= x))
   expect_equal(which_first(x <= y),
                first_which(x <= y))
   expect_equal(which_first(x > y),
                first_which(x > y))
+  expect_equal(which_first(x > x),
+               first_which(x > x))
   expect_equal(which_first(x < y),
                first_which(x < y))
   expect_equal(which_first(x %in% y),
@@ -763,6 +790,58 @@ test_that("which_first(<x> <o> <y>) lens equal", {
                first_which(x < y))
   expect_equal(which_first(x %in% y),
                first_which(x %in% y))
+
+  y <- Inf
+  expect_equal(which_first(x != y),
+               first_which(x != y))
+  expect_equal(which_first(x == y),
+               first_which(x == y))
+  expect_equal(which_first(x >= y),
+               first_which(x >= y))
+  expect_equal(which_first(x <= y),
+               first_which(x <= y))
+  expect_equal(which_first(x > y),
+               first_which(x > y))
+  expect_equal(which_first(x < y),
+               first_which(x < y))
+
+  y <- -Inf
+  expect_equal(which_first(x != y),
+               first_which(x != y))
+  expect_equal(which_first(x == y),
+               first_which(x == y))
+  expect_equal(which_first(x >= y),
+               first_which(x >= y))
+  expect_equal(which_first(x <= y),
+               first_which(x <= y))
+  expect_equal(which_first(x > y),
+               first_which(x > y))
+  expect_equal(which_first(x < y),
+               first_which(x < y))
+
+  x <- c(5, -5, 2)
+  y <- c(4, -4, 2)
+  expect_equal(which_first(y != y), 0L)
+  expect_equal(which_first(y >= x),
+               first_which(y >= x))
+  expect_equal(which_first(y > x),
+               first_which(y > x))
+  expect_equal(which_first(x < x),
+               first_which(x < x))
+  expect_equal(which_first(x <= y),
+               first_which(x <= y))
+
+  x <- c(5L, -5L, 2L)
+  y <- c(4L, -4L, 2L)
+  expect_equal(which_first(y != y), 0L)
+  expect_equal(which_first(y >= x),
+               first_which(y >= x))
+  expect_equal(which_first(y > x),
+               first_which(y > x))
+  expect_equal(which_first(x < x),
+               first_which(x < x))
+  expect_equal(which_first(x <= y),
+               first_which(x <= y))
 })
 
 test_that("which_first(lgl lgl)", {
