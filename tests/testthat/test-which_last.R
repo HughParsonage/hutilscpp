@@ -10,6 +10,31 @@ test_that("which_last works on integers", {
   expect_equal(which_last(x <= 1), length(x) - 1L)
   expect_equal(which_last(x > 1), length(x))
   expect_equal(which_last(x < 1), 3L)
+
+  expect_equal(which_last(x == 2L), length(x))
+  expect_equal(which_last(x != 2L), length(x) - 1L)
+  expect_equal(which_last(x == 1L), length(x) - 1L)
+  expect_equal(which_last(x != 1L), length(x))
+  expect_equal(which_last(x >= 1L), length(x))
+  expect_equal(which_last(x <= 1L), length(x) - 1L)
+  expect_equal(which_last(x > 1L), length(x))
+  expect_equal(which_last(x < 1L), 3L)
+
+  y <- x + 1L
+  expect_equal(which_last(x != y), last_which(x != y))
+  expect_equal(which_last(x == y), last_which(x == y))
+  expect_equal(which_last(x >= y), last_which(x >= y))
+  expect_equal(which_last(x <= y), last_which(x <= y))
+  expect_equal(which_last(x > y), last_which(x > y))
+  expect_equal(which_last(x < y), last_which(x < y))
+
+  y <- x - 1L
+  expect_equal(which_last(x != y), last_which(x != y))
+  expect_equal(which_last(x == y), last_which(x == y))
+  expect_equal(which_last(x >= y), last_which(x >= y))
+  expect_equal(which_last(x <= y), last_which(x <= y))
+  expect_equal(which_last(x > y), last_which(x > y))
+  expect_equal(which_last(x < y), last_which(x < y))
 })
 
 test_that("which_last works on doubles", {
@@ -22,6 +47,31 @@ test_that("which_last works on doubles", {
   expect_equal(which_last(x <= 1), length(x) - 1L)
   expect_equal(which_last(x > 1), length(x))
   expect_equal(which_last(x < 1), 3L)
+
+  expect_equal(which_last(x == 2L), length(x))
+  expect_equal(which_last(x != 2L), length(x) - 1L)
+  expect_equal(which_last(x == 1L), length(x) - 1L)
+  expect_equal(which_last(x != 1L), length(x))
+  expect_equal(which_last(x >= 1L), length(x))
+  expect_equal(which_last(x <= 1L), length(x) - 1L)
+  expect_equal(which_last(x > 1L), length(x))
+  expect_equal(which_last(x < 1L), 3L)
+
+  y <- x + 1L
+  expect_equal(which_last(x != y), last_which(x != y))
+  expect_equal(which_last(x == y), last_which(x == y))
+  expect_equal(which_last(x >= y), last_which(x >= y))
+  expect_equal(which_last(x <= y), last_which(x <= y))
+  expect_equal(which_last(x > y), last_which(x > y))
+  expect_equal(which_last(x < y), last_which(x < y))
+
+  y <- x - 1L
+  expect_equal(which_last(x != y), last_which(x != y))
+  expect_equal(which_last(x == y), last_which(x == y))
+  expect_equal(which_last(x >= y), last_which(x >= y))
+  expect_equal(which_last(x <= y), last_which(x <= y))
+  expect_equal(which_last(x > y), last_which(x > y))
+  expect_equal(which_last(x < y), last_which(x < y))
 })
 
 test_that("which_last on logicals", {
