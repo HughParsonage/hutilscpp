@@ -110,7 +110,7 @@ R_xlen_t do_which_last_xi_ad(IntegerVector x,
                              double ad) {
   R_xlen_t N = x.length();
   if (N == 0) {
-    return 0;
+    return 0; // # nocov
   }
   int e = 0;
   if (!do_is_safe2int(ad)) {
@@ -625,7 +625,7 @@ R_xlen_t do_which_last_in_lgl(LogicalVector x, bool anyNA_, bool any_, bool nall
 
   // anyNA -> has NA
   // any_ -> has TRUE
-  // nall -> not FALSE
+  // nall -> has FALSE
 
   // anyNA  any_   nall_
   //     0     0       0  / 0
@@ -709,7 +709,7 @@ R_xlen_t do_which_last_xi_ini(IntegerVector x, IntegerVector y) {
   R_xlen_t Nx = x.length();
   R_xlen_t Ny = y.length();
   if (Ny == 0) {
-    return 0;
+    return 0; // # nocov
   }
 
   if (Ny > 100) {
@@ -744,7 +744,7 @@ R_xlen_t do_which_last_xi_ini(IntegerVector x, IntegerVector y) {
 R_xlen_t do_which_last_xi_ind(IntegerVector x, DoubleVector yd) {
   R_xlen_t Nx = x.length();
   if (yd.length() == 0) {
-    return 0;
+    return 0; // # nocov
   }
 
   IntegerVector y = dblTable2int(yd);
@@ -782,7 +782,7 @@ R_xlen_t do_which_last_xd_ind(DoubleVector x, DoubleVector y, bool y_has_na) {
   R_xlen_t Nx = x.length();
   R_xlen_t Ny = y.length();
   if (Ny == 0) {
-    return 0;
+    return 0; // # nocov
   }
 
   if (Ny > 100) {

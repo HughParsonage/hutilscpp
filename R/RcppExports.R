@@ -193,10 +193,6 @@ do_which_first_lgl_lgl_op <- function(x, y, op, reverse = FALSE) {
     .Call(`_hutilscpp_do_which_first_lgl_lgl_op`, x, y, op, reverse)
 }
 
-do_which_first_n <- function(X, Y, op, last = FALSE) {
-    .Call(`_hutilscpp_do_which_first_n`, X, Y, op, last)
-}
-
 do_which_first__ <- function(x, op, y, nx, ny, y1i, y2i, y1d, y2d) {
     .Call(`_hutilscpp_do_which_first__`, x, op, y, nx, ny, y1i, y2i, y1d, y2d)
 }

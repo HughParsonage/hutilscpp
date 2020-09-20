@@ -630,19 +630,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_which_first_n
-R_xlen_t do_which_first_n(SEXP X, SEXP Y, int op, bool last);
-RcppExport SEXP _hutilscpp_do_which_first_n(SEXP XSEXP, SEXP YSEXP, SEXP opSEXP, SEXP lastSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< SEXP >::type X(XSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type Y(YSEXP);
-    Rcpp::traits::input_parameter< int >::type op(opSEXP);
-    Rcpp::traits::input_parameter< bool >::type last(lastSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_first_n(X, Y, op, last));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_which_first__
 R_xlen_t do_which_first__(SEXP x, int op, SEXP y, R_xlen_t nx, R_xlen_t ny, int y1i, int y2i, double y1d, double y2d);
 RcppExport SEXP _hutilscpp_do_which_first__(SEXP xSEXP, SEXP opSEXP, SEXP ySEXP, SEXP nxSEXP, SEXP nySEXP, SEXP y1iSEXP, SEXP y2iSEXP, SEXP y1dSEXP, SEXP y2dSEXP) {
@@ -1647,7 +1634,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which_firstNA", (DL_FUNC) &_hutilscpp_do_which_firstNA, 1},
     {"_hutilscpp_do_which_lastNA", (DL_FUNC) &_hutilscpp_do_which_lastNA, 1},
     {"_hutilscpp_do_which_first_lgl_lgl_op", (DL_FUNC) &_hutilscpp_do_which_first_lgl_lgl_op, 4},
-    {"_hutilscpp_do_which_first_n", (DL_FUNC) &_hutilscpp_do_which_first_n, 4},
     {"_hutilscpp_do_which_first__", (DL_FUNC) &_hutilscpp_do_which_first__, 9},
     {"_hutilscpp_do_which_first_xi_ini", (DL_FUNC) &_hutilscpp_do_which_first_xi_ini, 2},
     {"_hutilscpp_dblTable2int", (DL_FUNC) &_hutilscpp_dblTable2int, 1},
