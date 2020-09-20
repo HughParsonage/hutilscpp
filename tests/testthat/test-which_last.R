@@ -594,3 +594,33 @@ test_that("do_which_last_xi_ini", {
 
 
 })
+
+test_that("do_which_last_xd_yi", {
+  x <- c(double(10), 101, 88)
+  y <- c(-5:4, 101, 89)
+
+  expect_equal(which_last(x != y), last_which(x != y))
+  expect_equal(which_last(x == y), last_which(x == y))
+  expect_equal(which_last(x >= y), last_which(x >= y))
+  expect_equal(which_last(x <= y), last_which(x <= y))
+  expect_equal(which_last(x > y), last_which(x > y))
+  expect_equal(which_last(x < y), last_which(x < y))
+
+  y <- c(-5:4, 100, 88)
+  expect_equal(which_last(x != y), last_which(x != y))
+  expect_equal(which_last(x == y), last_which(x == y))
+  expect_equal(which_last(x >= y), last_which(x >= y))
+  expect_equal(which_last(x <= y), last_which(x <= y))
+  expect_equal(which_last(x > y), last_which(x > y))
+  expect_equal(which_last(x < y), last_which(x < y))
+
+  y <- c(-5:4, 100, NA)
+  expect_equal(which_last(x != y), last_which(x != y))
+  expect_equal(which_last(x == y), last_which(x == y))
+  expect_equal(which_last(x >= y), last_which(x >= y))
+  expect_equal(which_last(x <= y), last_which(x <= y))
+  expect_equal(which_last(x > y), last_which(x > y))
+  expect_equal(which_last(x < y), last_which(x < y))
+
+})
+

@@ -440,39 +440,7 @@ R_xlen_t do_which_last_xd_yi(DoubleVector x, int op, IntegerVector y) {
   return 0;
 }
 
-// [[Rcpp::export(rng = false)]]
-R_xlen_t do_which_last_xd_y2(DoubleVector x, int op, double y1, double y2) {
-  R_xlen_t N = x.length();
 
-  switch(op) {
-  case OP_BW:
-    for (R_xlen_t i = N - 1; i >= 0; --i) {
-      double xi = x[i];
-      if (xi >= y1 && xi <= y2) {
-        return i + 1;
-      }
-    }
-    break;
-  case OP_BO:
-    for (R_xlen_t i = N - 1; i >= 0; --i) {
-      double xi = x[i];
-      if (xi > y1 && xi < y2) {
-        return i + 1;
-      }
-    }
-    break;
-  case OP_BC:
-    for (R_xlen_t i = N - 1; i >= 0; --i) {
-      double xi = x[i];
-      if (xi <= y1 || xi >= y2) {
-        return i + 1;
-      }
-    }
-    break;
-  }
-
-  return 0;
-}
 
 R_xlen_t do_which_last_xi_aii(IntegerVector x, int op, int a1, int a2) {
   R_xlen_t N = x.length();
@@ -611,7 +579,7 @@ R_xlen_t do_which_last__(SEXP x, int op, SEXP y,
     case 2:
       return do_which_last_xd_add(x, op, y1d, y2d);
     default:
-      return do_which_last_xd_yd(x, op, y);
+      return do_which_last_xd_yi(x, op, y);
     }
   }
   if (TYPEOF(x) == REALSXP && TYPEOF(y) == REALSXP) {
