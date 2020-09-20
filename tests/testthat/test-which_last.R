@@ -257,3 +257,49 @@ test_that("which_last(x %between% c(NA, 1))", {
   expect_equal(which_last(x %between% c(0.9, NA)),
                last_which(x %between% c(0.9, NA)))
 })
+
+test_that("lens 0", {
+  xi <- c(1L, 2L)
+  xd <- c(10, 20)
+  x0 <- integer(0)
+  x0d <- double(0)
+
+  yi <- c(1L, 2L)
+  yd <- c(10, 20)
+  y0 <- integer(0)
+  y0d <- double(0)
+
+  expect_equal(which_last(xi == yi), last_which(xi == yi))
+  expect_equal(which_last(xi == yd), last_which(xi == yd))
+  expect_equal(which_last(xi == y0), last_which(xi == y0))
+  expect_equal(which_last(xi == y0d), last_which(xi == y0d))
+
+  expect_equal(which_last(xd == yi),
+               last_which(xd == yi))
+  expect_equal(which_last(xd == yd),
+               last_which(xd == yd))
+  expect_equal(which_last(xd == y0),
+               last_which(xd == y0))
+  expect_equal(which_last(xd == y0d),
+               last_which(xd == y0d))
+
+  expect_equal(which_last(x0 == yi),
+               last_which(x0 == yi))
+  expect_equal(which_last(x0 == yd),
+               last_which(x0 == yd))
+  expect_equal(which_last(x0 == y0),
+               last_which(x0 == y0))
+  expect_equal(which_last(x0 == y0d),
+               last_which(x0 == y0d))
+
+  expect_equal(which_last(x0d == yi),
+               last_which(x0d == yi))
+  expect_equal(which_last(x0d == yd),
+               last_which(x0d == yd))
+  expect_equal(which_last(x0d == y0),
+               last_which(x0d == y0))
+  expect_equal(which_last(x0d == y0d),
+               last_which(x0d == y0d))
+
+
+})

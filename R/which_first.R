@@ -263,11 +263,29 @@ which_first <- function(expr,
 
     nx <- length(lhs_eval)
     ny <- length(rhs_eval)
+
+    # op2M("%in%") = 7
+    # op2M("%between%") > 7
     if (op > 7L && op <= 10L && ny != 2) {
       stop("Expression in `which_first` was of the form:\n\t which_first(x %between% rhs)\n",
            "yet `length(rhs) = ", ny, "`. Ensure the object passed to RHS is an atomic vector ",
            "of length two.")
     }
+    if (op < 7L) {
+      if (nx == 0L || ny == 0L) {
+        return(0L)
+      }
+      # simple binary op
+      if (nx != ny && ny != 1L) {
+        stop("In `expr ~ <lhs> <op> <rhs>`, length of lhs = ", nx, " but length of rhs = ", ny, ". ",
+             "With operator '", operator, "' the only permitted lengths of the RHS are 1 and length(lhs).")
+      }
+      if (ny == 2L) {
+        # Otherwise will be redirected to between switch
+        ny <- NA_integer_
+      }
+    }
+
     if (is.integer(rhs_eval)) {
       y1d <- y1i <- rhs_eval[1L]
       y2d <- y2i <- rhs_eval[2L]
