@@ -596,6 +596,12 @@ test_that("do_which_last_xi_ini", {
 })
 
 test_that("do_which_last_xd_yi", {
+  x <- double(3)
+  expect_equal(which_last(x != 0L),
+               last_which(x != 0L))
+  expect_equal(which_last(x == 0L),
+               last_which(x == 0L))
+
   x <- c(double(10), 101, 88)
   y <- c(-5:4, 101, 89)
 
@@ -623,4 +629,23 @@ test_that("do_which_last_xd_yi", {
   expect_equal(which_last(x < y), last_which(x < y))
 
 })
+
+test_that("do_which_last_xd_ind", {
+  x <- c(-400, 4, 5, NA, 2)
+  d0 <- double(0)
+  tl <- seq(-50, 50, by = 0.5)
+  t2 <- c(tl, NA)
+  expect_equal(which_first(x %in% d0),
+               first_which(x %in% d0))
+  expect_equal(which_first(x %in% tl),
+               first_which(x %in% tl))
+  expect_equal(which_first(x %in% t2),
+               first_which(x %in% t2))
+  x <- c(-400.5, 400)
+  expect_equal(which_first(x %in% t2),
+               first_which(x %in% t2))
+})
+
+
+
 
