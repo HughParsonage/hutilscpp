@@ -1172,6 +1172,7 @@ test_that("do_which_first_xi_ind", {
   x <- c(-400L, 4L, 5L, 2L)
   d0 <- double(0)
   tl <- seq(-50, 50, by = 0.5)
+  t2 <- c(tl, NA)
   expect_equal(which_first(x %in% d0),
                first_which(x %in% d0))
   expect_equal(which_first(x %in% tl),
