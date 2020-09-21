@@ -324,7 +324,9 @@ IntegerVector do_count_logical(LogicalVector x, int nThread = 1) {
   int n = x.length();
   int trues = 0;
   int nas = 0;
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread) reduction(+:trues,nas)
+#endif
   for (int i = 0; i < n; ++i) {
     if (x[i] == NA_LOGICAL) {
       nas += 1;
@@ -346,7 +348,9 @@ DoubleVector do_count_logical_long(LogicalVector x, int nThread = 1) {
   R_xlen_t n = x.length();
   R_xlen_t trues = 0;
   R_xlen_t nas = 0;
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread) reduction(+:trues,nas)
+#endif
   for (R_xlen_t i = 0; i < n; ++i) {
     if (x[i] == NA_LOGICAL) {
       nas += 1;
@@ -454,7 +458,9 @@ LogicalVector do_par_in(IntegerVector x, IntegerVector table, int nThread = 1) {
 
   LogicalVector out = no_init(n);
 
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread) shared(out, tango)
+#endif
   for (R_xlen_t i = 0; i < n; ++i) {
     bool oi = false;
     int xi = x[i];
@@ -482,7 +488,9 @@ LogicalVector do_par_in_hash_int(IntegerVector x, IntegerVector table, int nThre
 
   R_xlen_t N = x.length();
   LogicalVector out = no_init(N);
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
   for (R_xlen_t i = 0; i < N; ++i) {
     int xi = x[i];
     bool oi = H.count(xi);
@@ -501,7 +509,9 @@ LogicalVector do_par_in_hash_dbl(DoubleVector x, DoubleVector table, int nThread
 
   R_xlen_t N = x.length();
   LogicalVector out = no_init(N);
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
   for (R_xlen_t i = 0; i < N; ++i) {
     double xi = x[i];
     bool oi = H.count(xi);

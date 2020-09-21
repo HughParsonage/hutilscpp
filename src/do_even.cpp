@@ -8,7 +8,9 @@ LogicalVector do_are_even(IntegerVector x, DoubleVector y, int wb = 0, int nThre
 
   if (is_int) {
     LogicalVector out = no_init(N);
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] == NA_INTEGER) {
         out[i] = NA_LOGICAL;

@@ -155,7 +155,9 @@ IntegerVector do_prange2_int(IntegerVector x, int nThread = 1) {
   }
   int xmax = x[0];
   int xmin = x[0];
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread) reduction(min : xmin) reduction(max : xmax)
+#endif
   for (R_xlen_t i = 0; i < N; ++i) {
     if (xmin == 1 && xmax == 1000000000) {
       continue;

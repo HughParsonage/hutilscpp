@@ -20,7 +20,9 @@ bool is_constant_(const Vector<RTYPE>& x, int nThread)
 
   R_xlen_t n_neq = 0;
 
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread) reduction(+ : n_neq)
+#endif
   for (R_xlen_t i = 1; i < N; ++i) {
     n_neq += x[i] != x[0];
   }
@@ -45,7 +47,9 @@ bool all_na_real(DoubleVector x, int nThread = 1) {
   R_xlen_t N = x.length();
   R_xlen_t n_na = ISNAN(x[0]);
   if (n_na) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread) reduction(+ : n_na)
+#endif
     for (R_xlen_t i = 1; i < N; ++i) {
       n_na += ISNAN(x[i]);
     }

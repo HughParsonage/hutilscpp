@@ -150,7 +150,9 @@ DoubleVector do_pmax0_radix_sorted_dbl(DoubleVector x,
     return out;
   } else {
     DoubleVector out = no_init(N);
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (R_xlen_t i = 0; i < N; ++i) {
       bool zero = desc ? i >= root : i < root;
       out[i] = zero ? 0 : x[i];
@@ -184,7 +186,9 @@ DoubleVector do_pmin0_radix_sorted_dbl(DoubleVector x,
     return out;
   } else {
     DoubleVector out = no_init(N);
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (R_xlen_t i = 0; i < N; ++i) {
       bool zero = desc ? i < root : i >= root;
       out[i] = zero ? 0 : x[i];
@@ -223,7 +227,9 @@ IntegerVector do_pmax0_radix_sorted_int(IntegerVector x,
     return out;
   } else {
     IntegerVector out = no_init(N);
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (R_xlen_t i = 0; i < N; ++i) {
       bool zero = desc ? i >= root : i < root;
       out[i] = zero ? 0 : x[i];
@@ -257,7 +263,9 @@ IntegerVector do_pmin0_radix_sorted_int(IntegerVector x,
     return out;
   } else {
     IntegerVector out = no_init(N);
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (R_xlen_t i = 0; i < N; ++i) {
       bool zero = desc ? i < root : i >= root;
       out[i] = zero ? 0 : x[i];
@@ -281,7 +289,9 @@ IntegerVector do_pmax0_bitwise(IntegerVector x, int nThread = 1) {
 
   IntegerVector out = no_init(N);
 
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
   for (R_xlen_t i = 0; i < N; ++i) {
     if (i < j) {
       out[i] = x[i];
@@ -306,7 +316,9 @@ IntegerVector do_pmin0_bitwise(IntegerVector x, int nThread = 1) {
     return x;
   }
   IntegerVector out = no_init(N);
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
   for (R_xlen_t i = 0; i < N; ++i) {
 
     // https://graphics.stanford.edu/~seander/bithacks.html#IntegerMinOrMax
@@ -352,7 +364,9 @@ SEXP do_pminpmax(SEXP X, SEXP Y,
       return x;
     } else {
       IntegerVector out = no_init(N);
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
       for (R_xlen_t i = 0; i < N; ++i) {
         int xi = x[i];
         int a = (y_lenN) ? y[i] : y0;
@@ -384,7 +398,9 @@ SEXP do_pminpmax(SEXP X, SEXP Y,
       return x;
     } else {
       DoubleVector out = no_init(N);
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
       for (R_xlen_t i = 0; i < N; ++i) {
         double xi = x[i];
         double a = (Ny == N) ? y[i] : y0;
@@ -418,7 +434,9 @@ SEXP do_pminpmax(SEXP X, SEXP Y,
         return x;
       } else {
         IntegerVector out = no_init(N);
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
         for (R_xlen_t i = 0; i < N; ++i) {
           int xi = x[i];
           int a = y0;
@@ -433,7 +451,9 @@ SEXP do_pminpmax(SEXP X, SEXP Y,
         stop("Internal error(do_pminpmax): INT x DBL y INPLACE"); // # nocov
       }
       DoubleVector out = no_init(N);
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
       for (R_xlen_t i = 0; i < N; ++i) {
         double xi = x[i];
         double a = (Ny == N) ? y[i] : y0;

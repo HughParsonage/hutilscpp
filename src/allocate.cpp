@@ -12,7 +12,9 @@ bool is_altrep(SEXP x) {
 // [[Rcpp::export(rng = false)]]
 IntegerVector allocate0_int(R_xlen_t N, int nThread = 1) {
   IntegerVector out = no_init(N);
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
   for (R_xlen_t i = 0; i < N; ++i) {
     out[i] = 0;
   }
@@ -22,7 +24,9 @@ IntegerVector allocate0_int(R_xlen_t N, int nThread = 1) {
 // [[Rcpp::export(rng = false)]]
 DoubleVector allocate0_dbl(R_xlen_t N, int nThread = 1) {
   DoubleVector out = no_init(N);
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
   for (R_xlen_t i = 0; i < N; ++i) {
     out[i] = 0;
   }
@@ -32,7 +36,9 @@ DoubleVector allocate0_dbl(R_xlen_t N, int nThread = 1) {
 // [[Rcpp::export(rng = false)]]
 IntegerVector allocate0_except(R_xlen_t N, DoubleVector India, IntegerVector Victor, int nThread = 1) {
   IntegerVector out = no_init(N);
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
   for (R_xlen_t i = 0; i < N; ++i) {
     out[i] = 0;
   }
@@ -61,7 +67,9 @@ IntegerVector allocate_with_root(R_xlen_t N,
                                  bool do_pmin,
                                  int nThread = 1) {
   IntegerVector out = no_init(N);
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
   for (R_xlen_t i = 0; i < N; ++i) {
     bool post = i >= r;
     if (post xor left) {

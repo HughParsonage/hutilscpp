@@ -50,7 +50,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   LogicalVector out = no_init(n);
 
   if (useX && useY && useZ) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         single_ox_x1_x2(x[i], ox, x1, x2) ||
@@ -61,7 +63,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (useX && useY && C_opposite) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         single_ox_x1_x2(x[i], ox, x1, x2) ||
@@ -72,7 +76,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (useX && useY && C_lgl) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         single_ox_x1_x2(x[i], ox, x1, x2) ||
@@ -84,7 +90,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 
   // e3 = false
   if (useX && useY && !e3) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         single_ox_x1_x2(x[i], ox, x1, x2) ||
@@ -95,7 +103,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 
   // B_lgl (but B_opposite must always precede!)
   if (useX && B_opposite && useZ) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         single_ox_x1_x2(x[i], ox, x1, x2) ||
@@ -106,7 +116,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (useX && B_lgl && useZ) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         single_ox_x1_x2(x[i], ox, x1, x2) ||
@@ -117,7 +129,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (useX && B_opposite && C_opposite) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         single_ox_x1_x2(x[i], ox, x1, x2) ||
@@ -128,7 +142,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (useX && B_lgl && C_opposite) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         single_ox_x1_x2(x[i], ox, x1, x2) ||
@@ -139,7 +155,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (useX && B_opposite && C_lgl) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         single_ox_x1_x2(x[i], ox, x1, x2) ||
@@ -150,7 +168,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (useX && B_lgl && C_lgl) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         single_ox_x1_x2(x[i], ox, x1, x2) ||
@@ -161,7 +181,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (useX && B_opposite && !e3) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         single_ox_x1_x2(x[i], ox, x1, x2) ||
@@ -171,7 +193,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (useX && B_lgl && !e3) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         single_ox_x1_x2(x[i], ox, x1, x2) ||
@@ -181,7 +205,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (useX && !e2 && !e3) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         single_ox_x1_x2(x[i], ox, x1, x2);
@@ -191,7 +217,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   // // A_opposite
 
   if (A_opposite && useY && useZ) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         !A[i] ||
@@ -202,7 +230,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_opposite && useY && C_opposite) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         !A[i] ||
@@ -213,7 +243,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_opposite && useY && C_lgl) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         !A[i] ||
@@ -225,7 +257,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 
   // e3 = false
   if (A_opposite && useY && !e3) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         !A[i] ||
@@ -236,7 +270,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 
   // B_lgl
   if (A_opposite && B_opposite && useZ) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         !A[i] ||
@@ -247,7 +283,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_opposite && B_lgl && useZ) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         !A[i] ||
@@ -258,7 +296,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_opposite && B_opposite && C_opposite) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         !A[i] ||
@@ -269,7 +309,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_opposite && B_lgl && C_opposite) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         !A[i] ||
@@ -280,7 +322,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_opposite && B_opposite && C_lgl) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         !A[i] ||
@@ -291,7 +335,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_opposite && B_lgl && C_lgl) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         !A[i] ||
@@ -302,7 +348,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_opposite && B_opposite && !e3) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         !A[i] ||
@@ -312,7 +360,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_opposite && B_lgl && !e3) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         !A[i] ||
@@ -322,7 +372,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_opposite && !e2 && !e3) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         !A[i];
@@ -333,7 +385,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   // // A_lgl
 
   if (A_lgl && useY && useZ) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         A[i] ||
@@ -344,7 +398,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_lgl && useY && C_opposite) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         A[i] ||
@@ -355,7 +411,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_lgl && useY && C_lgl) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         A[i] ||
@@ -367,7 +425,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 
   // e3 = false
   if (A_lgl && useY && !e3) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         A[i] ||
@@ -378,7 +438,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 
   // B_lgl
   if (A_lgl && B_opposite && useZ) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         A[i] ||
@@ -389,7 +451,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_lgl && B_lgl && useZ) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         A[i] ||
@@ -400,7 +464,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_lgl && B_opposite && C_opposite) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         A[i] ||
@@ -411,7 +477,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_lgl && B_lgl && C_opposite) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         A[i] ||
@@ -422,7 +490,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_lgl && B_opposite && C_lgl) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         A[i] ||
@@ -433,7 +503,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_lgl && B_lgl && C_lgl) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         A[i] ||
@@ -444,7 +516,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_lgl && B_opposite && !e3) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         A[i] ||
@@ -454,7 +528,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_lgl && B_lgl && !e3) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         A[i] ||
@@ -464,7 +540,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   }
 
   if (A_lgl && !e2 && !e3) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
     for (int i = 0; i < n; ++i) {
       out[i] =
         A[i];
@@ -472,7 +550,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
     return out;
   }
 
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
   for (int i = 0; i < n; ++i) {
     bool oi = false;
 
@@ -535,14 +615,18 @@ LogicalVector and1s(const Vector<RTYPE>& x, int opx,
       case INTSXP:
         if (r1) {
           const int rhs1 = x1[0];
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
           for (R_xlen_t i = 0; i < N; ++i) {
             out[i] = x[i] != rhs1;
           }
           return out;
         }
         if (rn) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
           for (R_xlen_t i = 0; i < N; ++i) {
             out[i] = x[i] != x1[i];
           }
@@ -555,13 +639,17 @@ LogicalVector and1s(const Vector<RTYPE>& x, int opx,
             !R_finite(rhs1) || rhs1 > 2147483647 || rhs < -2147483647 ||
             (rhs1 != ((int)rhs1));
 
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
           for (R_xlen_t i = 0; i < N; ++i) {
             out[i] = isnt_integerish ? TRUE : (x[i] != ((int)(rhs1)));
           }
         }
         if (rn) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
           for (R_xlen_t i = 0; i < N; ++i) {
             const double rhs1 = x1[i];
             const bool isnt_integerish =
@@ -579,14 +667,18 @@ LogicalVector and1s(const Vector<RTYPE>& x, int opx,
       case INTSXP:
         if (r1) {
           const int rhs1 = x1[0];
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
           for (R_xlen_t i = 0; i < N; ++i) {
             out[i] = x[i] != rhs1;
           }
           return out;
         }
         if (rn) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
           for (R_xlen_t i = 0; i < N; ++i) {
             out[i] = x[i] != x1[i];
           }
@@ -596,13 +688,17 @@ LogicalVector and1s(const Vector<RTYPE>& x, int opx,
         // int != dbl
         // if it's not integerish then all true
         if (r1) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
           for (R_xlen_t i = 0; i < N; ++i) {
             out[i] = x[i] != x1[0];
           }
         }
         if (rn) {
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
+#endif
           for (R_xlen_t i = 0; i < N; ++i) {
             const double rhs1 = x1[i];
             out[i] = x[i] != rhs1
@@ -620,7 +716,9 @@ LogicalVector do_and1(SEXP x, int opx,
                       int nThread = 1) {
   R_xlen_t N = x.length();
   Vector<RTYPE> out = no_init(N);
+#if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(n)
+#endif
   for (int i = 0; i < N; ++i) {
     out[i] = (x[i] <= 0) ? 0 : x[i];
   }
