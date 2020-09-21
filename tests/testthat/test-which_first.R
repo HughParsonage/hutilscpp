@@ -1182,6 +1182,17 @@ test_that("do_which_first_xi_yi", {
                first_which(x >= -4L))
   expect_equal(which_first(x > -4L),
                first_which(x > -4L))
+  y <- as.integer(x) + 1L
+  expect_equal(which_first(x >= y),
+               which_first(x >= y))
+  expect_equal(which_first(x > y),
+               which_first(x > y))
+
+  y <- as.integer(x) - 1L
+  expect_equal(which_first(x <= y),
+               which_first(x <= y))
+  expect_equal(which_first(x < y),
+               which_first(x < y))
 })
 
 test_that("do_which_first_xi_yd", {
