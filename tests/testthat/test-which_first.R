@@ -1186,16 +1186,19 @@ test_that("do_which_first_xi_yi", {
 
 test_that("do_which_first_xi_yd", {
   x <- rep(1L, 3)
-  expect_equal(which_first(x != 1),
-               first_which(x != 1))
-  expect_equal(which_first(x >= 1.5),
-               first_which(x >= 1.5))
-  expect_equal(which_first(x > 1.5),
-               first_which(x > 1.5))
-  expect_equal(which_first(x <= -1.5),
-               first_which(x <= -1.5))
-  expect_equal(which_first(x < -1.5),
-               first_which(x < -1.5))
+  z <- as.double(x)
+  expect_equal(which_first(x != z),
+               first_which(x != z))
+  z1.5 <- rep(1.5, 3)
+  expect_equal(which_first(x >= z1.5),
+               first_which(x >= z1.5))
+  expect_equal(which_first(x > z1.5),
+               first_which(x > z1.5))
+  n1.5 <- rep(-1.5, 3)
+  expect_equal(which_first(x <= n1.5),
+               first_which(x <= n1.5))
+  expect_equal(which_first(x < n1.5),
+               first_which(x < n1.5))
 })
 
 test_that("do_which_first_xi_aii", {
