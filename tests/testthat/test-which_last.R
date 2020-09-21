@@ -661,7 +661,7 @@ test_that("do_which_last_xd_ind", {
   x <- c(NA, x, x)
   expect_equal(which_last(x %in% t2),
                last_which(x %in% t2))
-  t2 <- head(t2, 99)
+  t2 <- c(head(t2, 98), NA)
   expect_equal(which_last(x %in% t2),
                last_which(x %in% t2))
 
