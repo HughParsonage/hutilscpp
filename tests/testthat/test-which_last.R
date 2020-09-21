@@ -649,8 +649,27 @@ test_that("do_which_last_xd_ind", {
   x <- c(x, NA, x)
   expect_equal(which_last(x %in% t2),
                last_which(x %in% t2))
+  x <- c(NA, x, x)
+  expect_equal(which_last(x %in% t2),
+               last_which(x %in% t2))
 
 
+})
+
+test_that("do_which_last_xi_add", {
+  x <- rep(5L, 3)
+  expect_equal(which_last(x %between% c(6, 7)),
+               last_which(x %between% c(6, 7)))
+  expect_equal(which_last(x %(between)% c(6, 8)),
+               last_which(x %(between)% c(6, 8)))
+})
+
+test_that("do_which_last_xi_add", {
+  x <- rep(5, 3)
+  expect_equal(which_last(x %between% c(6, 7)),
+               last_which(x %between% c(6, 7)))
+  expect_equal(which_last(x %(between)% c(6, 8)),
+               last_which(x %(between)% c(6, 8)))
 })
 
 
