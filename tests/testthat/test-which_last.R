@@ -635,15 +635,15 @@ test_that("do_which_last_xd_ind", {
   d0 <- double(0)
   tl <- seq(-50, 50, by = 0.5)
   t2 <- c(tl, NA)
-  expect_equal(which_first(x %in% d0),
-               first_which(x %in% d0))
-  expect_equal(which_first(x %in% tl),
-               first_which(x %in% tl))
-  expect_equal(which_first(x %in% t2),
-               first_which(x %in% t2))
+  expect_equal(which_last(x %in% d0),
+               last_which(x %in% d0))
+  expect_equal(which_last(x %in% tl),
+               last_which(x %in% tl))
+  expect_equal(which_last(x %in% t2),
+               last_which(x %in% t2))
   x <- c(-400.5, 400)
-  expect_equal(which_first(x %in% t2),
-               first_which(x %in% t2))
+  expect_equal(which_last(x %in% t2),
+               last_which(x %in% t2))
 })
 
 

@@ -871,6 +871,9 @@ test_that("which_first(lgl lgl)", {
   expect_equal(which_first(x %between% T2),
                first_which(and(x >= T2[1], x <= T2[2])))
   expect_equal(which_first(x %in% T2), which_first(x))
+  T0 <- logical(0)
+  expect_equal(which_first(x %in% T0),
+               first_which(x %in% T0))
 })
 
 test_that("which_first internals", {
@@ -895,6 +898,8 @@ test_that("which_first internals", {
   expect_equal(do_which_first_lgl_lgl_op(c(FALSE, FALSE), c(TRUE, TRUE), do_op2M("%between%")), 0)
 
 })
+
+
 
 test_that("which_firstNA", {
   expect_equal(which_firstNA(1:10), 0)
@@ -1155,6 +1160,11 @@ test_that("do_which_first_xi_ad", {
                first_which(x == 0))
   expect_equal(which_first(w > -10),
                first_which(w > -10))
+  z3 <- integer(3)
+  expect_equal(which_first(z3 != 0),
+               first_which(z3 != 0))
+  expect_equal(which_first(z3 > 0),
+               first_which(z3 > 0))
 })
 
 
@@ -1166,6 +1176,11 @@ test_that("do_which_first_xi_ind", {
                first_which(x %in% d0))
   expect_equal(which_first(x %in% tl),
                first_which(x %in% tl))
+  expect_equal(which_first(x %in% t2),
+               first_which(x %in% t2))
+  x <- c(-400.5, 400)
+  expect_equal(which_first(x %in% t2),
+               first_which(x %in% t2))
 })
 
 test_that("do_which_first_xd_ind", {
