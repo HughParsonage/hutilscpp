@@ -1167,6 +1167,64 @@ test_that("do_which_first_xi_ad", {
                first_which(z3 > 0))
 })
 
+test_that("do_which_first_xd_yd", {
+  x <- c(0, 2.9, 3.5)
+  expect_equal(which_first(x >= 3.9),
+               first_which(x >= 3.9))
+  expect_equal(which_first(x <= -3.9),
+               first_which(x <= -3.9))
+
+})
+
+test_that("do_which_first_xi_yi", {
+  x <- c(-1L, 2L, -3L)
+  expect_equal(which_first(x >= -4L),
+               first_which(x >= -4L))
+  expect_equal(which_first(x > -4L),
+               first_which(x > -4L))
+})
+
+test_that("do_which_first_xi_yd", {
+  x <- rep(1L, 3)
+  expect_equal(which_first(x != 1),
+               first_which(x != 1))
+  expect_equal(which_first(x >= 1.5),
+               first_which(x >= 1.5))
+  expect_equal(which_first(x > 1.5),
+               first_which(x > 1.5))
+  expect_equal(which_first(x <= -1.5),
+               first_which(x <= -1.5))
+  expect_equal(which_first(x < -1.5),
+               first_which(x < -1.5))
+})
+
+test_that("do_which_first_xi_aii", {
+  x <- rep(2L, 3)
+  expect_equal(which_first(x %]between[% c(1L, 3L)),
+               first_which(x %]between[% c(1L, 3L)))
+})
+
+test_that("do_which_first_xi_add", {
+  x <- rep(2L, 3)
+  expect_equal(which_first(x %]between[% c(1, 3)),
+               first_which(x %]between[% c(1, 3)))
+})
+
+test_that("do_which_first_xd_add", {
+  x <- rep(2, 3)
+  expect_equal(which_first(x %]between[% c(1, 3)),
+               first_which(x %]between[% c(1, 3)))
+})
+
+test_that("do_which_first_xi_ai", {
+  x <- rep(7L, 4)
+  expect_equal(which_first(x != 7L),
+               first_which(x != 7L))
+  expect_equal(which_first(x > 7L),
+               first_which(x > 7L))
+  expect_equal(which_first(x <= 6L),
+               first_which(x <= 6L))
+})
 
 test_that("do_which_first_xi_ind", {
   x <- c(-400L, 4L, 5L, 2L)

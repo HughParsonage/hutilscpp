@@ -553,6 +553,9 @@ test_that("which_last(x %in% lgl)", {
                last_which(ttt %in% ttt))
   expect_equal(which_last(fff %in% fff),
                last_which(fff %in% fff))
+  z0 <- logical(0)
+  expect_equal(which_last(x %in% z0),
+               last_which(x %in% z0))
 })
 
 test_that("do_which_last_xi_ini", {
@@ -644,6 +647,11 @@ test_that("do_which_last_xd_ind", {
   x <- c(-400.5, 400)
   expect_equal(which_last(x %in% t2),
                last_which(x %in% t2))
+  x <- c(x, NA, x)
+  expect_equal(which_last(x %in% t2),
+               last_which(x %in% t2))
+
+
 })
 
 
