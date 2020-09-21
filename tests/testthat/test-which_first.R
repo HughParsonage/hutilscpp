@@ -1169,15 +1169,17 @@ test_that("do_which_first_xi_ad", {
 
 test_that("do_which_first_xd_yd", {
   x <- c(0, 2.9, 3.5)
-  expect_equal(which_first(x >= 3.9),
-               first_which(x >= 3.9))
-  expect_equal(which_first(x <= -3.9),
-               first_which(x <= -3.9))
+  y <- x - 1.1
+  expect_equal(which_first(x >= y),
+               first_which(x >= y))
+  expect_equal(which_first(x <= y),
+               first_which(x <= y))
 
-  expect_equal(which_first(x >= 0.9),
-               first_which(x >= 0.9))
-  expect_equal(which_first(x <= 2.9),
-               first_which(x <= 2.9))
+  y <- x + 1
+  expect_equal(which_first(x >= y),
+               first_which(x >= y))
+  expect_equal(which_first(x <= y),
+               first_which(x <= y))
 
 })
 
