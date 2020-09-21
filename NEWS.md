@@ -1,3 +1,11 @@
+## hutilscpp 0.5.1
+
+### Bug fixes:
+* Reverses a performance regression in `which_first`, introduced in version 0.5.0, 
+  caused by an overeliance on compiler optimization. (#20)
+  
+
+
 ## hutilscpp 0.5.0
 
 ### Breaking changes
