@@ -1,5 +1,4 @@
-#include <Rcpp.h>
-using namespace Rcpp;
+#include "cpphutils.h"
 
 // [[Rcpp::export(rng = false)]]
 R_xlen_t sum_isna_int(IntegerVector x, int nThread = 1) {

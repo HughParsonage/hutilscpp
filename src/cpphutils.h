@@ -5,6 +5,7 @@
 #include <omp.h>
 #endif
 
+#include <math.h>
 #include <Rcpp.h>
 using namespace Rcpp;
 

@@ -1,5 +1,4 @@
-#include <Rcpp.h>
-using namespace Rcpp;
+#include "cpphutils.h"
 
 // [[Rcpp::export]]
 DoubleVector do_summary3_dbl(DoubleVector x, DoubleVector y, DoubleVector z,

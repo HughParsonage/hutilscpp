@@ -1,5 +1,4 @@
-#include <Rcpp.h>
-using namespace Rcpp;
+#include "cpphutils.h"
 
 // [[Rcpp::export]]
 LogicalVector do_or3(LogicalVector x, LogicalVector y, LogicalVector z) {

@@ -1,6 +1,4 @@
 #include "cpphutils.h"
-#include <Rcpp.h>
-using namespace Rcpp;
 
 // returns a list of three elements (intended to be passed to an if statement
 // immediately after so no NA_LOGICALs)

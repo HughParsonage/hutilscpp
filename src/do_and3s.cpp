@@ -1,6 +1,4 @@
 #include "cpphutils.h"
-#include <Rcpp.h>
-using namespace Rcpp;
 
 // [[Rcpp::export(rng = false)]]
 LogicalVector do_and3_par(IntegerVector x, int ox, int x1, int x2,

@@ -1,6 +1,4 @@
-#include <Rcpp.h>
-#include <Rinternals.h>
-using namespace Rcpp;
+#include "cpphutils.h"
 
 // [[Rcpp::export]]
 int AnyCharMatch(CharacterVector x, CharacterVector a, bool opposite = false) {

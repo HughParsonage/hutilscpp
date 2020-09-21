@@ -1,5 +1,4 @@
-#include <Rcpp.h>
-using namespace Rcpp;
+#include "cpphutils.h"
 
 // [[Rcpp::export]]
 LogicalVector do_xor2(LogicalVector x, LogicalVector y, bool anyNAx = true, bool anyNAy = true) {

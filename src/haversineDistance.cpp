@@ -1,8 +1,4 @@
-#include <math.h>
-#include <Rcpp.h>
 #include "cpphutils.h"
-
-using namespace Rcpp;
 
 
 // #nocov start

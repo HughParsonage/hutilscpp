@@ -1,6 +1,4 @@
-#include <Rcpp.h>
-using namespace Rcpp;
-
+#include "cpphutils.h"
 
 // [[Rcpp::export]]
 R_xlen_t do_which_true_onwards(LogicalVector x) {

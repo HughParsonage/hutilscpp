@@ -1,5 +1,4 @@
-#include <Rcpp.h>
-using namespace Rcpp;
+#include "cpphutils.h"
 
 // [[Rcpp::export]]
 int anyOutside_int(IntegerVector x, int a, int b, bool nas_present = false, bool na_is_outside = true) {

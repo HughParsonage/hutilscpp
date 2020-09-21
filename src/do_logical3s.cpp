@@ -1,6 +1,4 @@
 #include "cpphutils.h"
-#include <Rcpp.h>
-using namespace Rcpp;
 
 // [[Rcpp::export(rng = false)]]
 LogicalVector do_and3_na(LogicalVector x, LogicalVector y, LogicalVector z,

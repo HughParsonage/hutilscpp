@@ -1,6 +1,4 @@
-#include <Rcpp.h>
-using namespace Rcpp;
-
+#include "cpphutils.h"
 
 // [[Rcpp::export]]
 IntegerVector do_cumsum_reset_logical(LogicalVector x) {

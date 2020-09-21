@@ -1,5 +1,4 @@
-#include <Rcpp.h>
-using namespace Rcpp;
+#include "cpphutils.h"
 
 // [[Rcpp::export]]
 NumericVector squishn(NumericVector x, double a, double b, bool in_place = false) {

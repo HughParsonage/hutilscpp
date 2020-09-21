@@ -1,7 +1,4 @@
 #include "cpphutils.h"
-#include <Rcpp.h>
-using namespace Rcpp;
-#include <omp.h>
 
 constexpr bool ON_TWOS_COMPLEMENT = (-1 == ~0);
 
