@@ -10,5 +10,8 @@ test_that("do_which_in works", {
 test_that("error handling", {
   skip_on_travis()
   skip_on_cran()
+  skip_if_not(is64bit())
+  skip_on_ci()
+  skip_on_covr()
   expect_error(do_which_in(integer(.Machine$integer.max + 1), 1:10), "exceeds")
 })
