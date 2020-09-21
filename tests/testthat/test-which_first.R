@@ -1174,6 +1174,11 @@ test_that("do_which_first_xd_yd", {
   expect_equal(which_first(x <= -3.9),
                first_which(x <= -3.9))
 
+  expect_equal(which_first(x >= 0.9),
+               first_which(x >= 0.9))
+  expect_equal(which_first(x <= 2.9),
+               first_which(x <= 2.9))
+
 })
 
 test_that("do_which_first_xi_yi", {
