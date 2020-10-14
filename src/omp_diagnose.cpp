@@ -9,6 +9,15 @@
 // # nocov start
 
 // [[Rcpp::export(rng = false)]]
+bool has_openmp() {
+#ifdef _OPENMP
+  return true;
+#endif
+  return false;
+}
+
+
+// [[Rcpp::export(rng = false)]]
 List diagnose_omp(int threads_requested,
                   String msg_no_openmp,
                   String msg_threads_neg,
@@ -18,6 +27,7 @@ List diagnose_omp(int threads_requested,
   LogicalVector True(1);
   True[0] = TRUE;
   CharacterVector out(1);
+
 
 #ifndef _OPENMP
   return List::create(False, False, out);

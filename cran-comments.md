@@ -1,4 +1,5 @@
-
+OpenMP regions have been protected with directives. Apologies for the 
+error and late correction.
 
 ## Test environments
 * local Windows 4.0.0
@@ -8,4 +9,6 @@
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 1 note
+
+Note relates to new submission.

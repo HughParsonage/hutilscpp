@@ -1247,6 +1247,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// has_openmp
+bool has_openmp();
+RcppExport SEXP _hutilscpp_has_openmp() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    rcpp_result_gen = Rcpp::wrap(has_openmp());
+    return rcpp_result_gen;
+END_RCPP
+}
 // diagnose_omp
 List diagnose_omp(int threads_requested, String msg_no_openmp, String msg_threads_neg, String msg_unknown_issues, String msg_too_many_threads);
 RcppExport SEXP _hutilscpp_diagnose_omp(SEXP threads_requestedSEXP, SEXP msg_no_openmpSEXP, SEXP msg_threads_negSEXP, SEXP msg_unknown_issuesSEXP, SEXP msg_too_many_threadsSEXP) {
@@ -1683,6 +1692,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_na_and", (DL_FUNC) &_hutilscpp_na_and, 1},
     {"_hutilscpp_do_which3", (DL_FUNC) &_hutilscpp_do_which3, 7},
     {"_hutilscpp_do_which3_mem", (DL_FUNC) &_hutilscpp_do_which3_mem, 4},
+    {"_hutilscpp_has_openmp", (DL_FUNC) &_hutilscpp_has_openmp, 0},
     {"_hutilscpp_diagnose_omp", (DL_FUNC) &_hutilscpp_diagnose_omp, 5},
     {"_hutilscpp_do_firstNonNegativeRadix_int", (DL_FUNC) &_hutilscpp_do_firstNonNegativeRadix_int, 5},
     {"_hutilscpp_do_firstNonNegativeRadix_dbl", (DL_FUNC) &_hutilscpp_do_firstNonNegativeRadix_dbl, 5},

@@ -395,6 +395,10 @@ do_which3_mem <- function(x, y, z, And = TRUE) {
     .Call(`_hutilscpp_do_which3_mem`, x, y, z, And)
 }
 
+has_openmp <- function() {
+    .Call(`_hutilscpp_has_openmp`)
+}
+
 diagnose_omp <- function(threads_requested, msg_no_openmp, msg_threads_neg, msg_unknown_issues, msg_too_many_threads) {
     .Call(`_hutilscpp_diagnose_omp`, threads_requested, msg_no_openmp, msg_threads_neg, msg_unknown_issues, msg_too_many_threads)
 }

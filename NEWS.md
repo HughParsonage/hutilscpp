@@ -3,6 +3,7 @@
 ### Bug fixes:
 * Reverses a performance regression in `which_first`, introduced in version 0.5.0, 
   caused by an overeliance on compiler optimization. (#20)
+* OpenMP regions have been protected so that the package works without OpenMP
   
 
 
