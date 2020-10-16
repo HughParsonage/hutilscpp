@@ -29,7 +29,7 @@ jobs:
         shell: bash
         run: |
           Rscript -e "TRUE || install.packages(c('devtools', 'Rcpp', 'data.table', 'glue', 'hutils', 'magrittr', 'utils', 'bench', 'parallel', 'testthat', 'TeXCheckR', 'withr', 'covr'), repos = 'https://cran.r-project.org', quiet=TRUE)"
-          Rdevel -e "install.packages('devtools', quiet = TRUE, repos = 'https://cran.r-project.org'); devtools::install(quick = TRUE, quiet = TRUE); devtools::test(reporter = ProgressReporter)"
+          Rdevel -e "ip <- function(x) install.packages(x, quiet = TRUE, repos = 'https://cran.r-project.org'); ip('roxygen2'); ip('devtools', quiet = TRUE, repos = 'https://cran.r-project.org'); devtools::install(quick = TRUE, quiet = TRUE); devtools::test(reporter = ProgressReporter)"
       - name: Run tests with sanitizers
         shell: bash
         run: |
