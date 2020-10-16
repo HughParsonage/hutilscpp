@@ -28,8 +28,8 @@ jobs:
       - name: Install packages
         shell: bash
         run: |
-          Rscript -e "install.packages(c('devtools', 'Rcpp', 'data.table', 'glue', 'hutils', 'magrittr', 'utils', 'bench', 'parallel', 'testthat', 'TeXCheckR', 'withr', 'covr'), repos = 'https://cran.r-project.org')"
-          Rdevel -e "devtools::install()"
+          Rscript -e "TRUE || install.packages(c('devtools', 'Rcpp', 'data.table', 'glue', 'hutils', 'magrittr', 'utils', 'bench', 'parallel', 'testthat', 'TeXCheckR', 'withr', 'covr'), repos = 'https://cran.r-project.org', quiet=TRUE)"
+          Rdevel -e "devtools::install(quick = TRUE, quiet = TRUE); devtools::test(reporter = ProgressReporter)"
       - name: Run tests with sanitizers
         shell: bash
         run: |
