@@ -13,3 +13,27 @@ jobs:
       - name: codecov
         run: Rscript -e "covr::codecov()"
     container: rocker/verse:latest
+  test-r-sanitizers:
+    name: r-package (ubuntu-latest, R-devel, GCC ASAN/UBSAN)
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    container:
+      image: rhub/rocker-gcc-san
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 5
+          submodules: true
+      - name: Install packages
+        shell: bash
+        run: |
+          Rscript -e "install.packages(c('devtools', 'Rcpp', 'data.table', 'glue', 'hutils', 'magrittr', 'utils', 'bench', 'parallel', 'testthat', 'TeXCheckR', 'withr', 'covr'), repos = 'https://cran.r-project.org')"
+          Rdevel -e "devtools::install()"
+      - name: Run tests with sanitizers
+        shell: bash
+        run: |
+          cd R-package/tests
+          Rscriptdevel testthat.R 2>&1 > ubsan-tests.log
+          cat ubsan-tests.log
+          exit $(cat ubsan-tests.log | grep "runtime error" | wc -l)
