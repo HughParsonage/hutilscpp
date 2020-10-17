@@ -28,8 +28,11 @@ jobs:
       - name: Install packages
         shell: bash
         run: |
-          Rscript -e "TRUE || install.packages(c('devtools', 'Rcpp', 'data.table', 'glue', 'hutils', 'magrittr', 'utils', 'bench', 'parallel', 'testthat', 'TeXCheckR', 'withr', 'covr'), repos = 'https://cran.r-project.org', quiet=TRUE)"
-          Rdevel -e "ip <- function(x) install.packages(x, quiet = TRUE, repos = 'https://cran.r-project.org'); ip('roxygen2'); ip('devtools', quiet = TRUE, repos = 'https://cran.r-project.org'); devtools::install(quick = TRUE, quiet = TRUE); devtools::test(reporter = ProgressReporter)"
+          Rscript -e "TRUE || install.packages(c('devtools', , 'bench', 'parallel', 'testthat', 'TeXCheckR', 'withr', 'covr'), repos = 'https://cran.r-project.org', quiet=TRUE)"
+          Rdevel -e "ip <- function(x) install.packages(x, quiet = TRUE, repos = 'https://cran.r-project.org'); ip(c('Rcpp', 'data.table', 'glue', 'hutils', 'magrittr', 'utils'))"
+          Rdevel CMD build .
+          Rdevel CMD INSTALL hutilscpp*.tar.gz
+          Rdevel -e "z3 <- integer(3); hutilscpp::which_first(z3 == NaN); hutilscpp::which_first(z3 >= 2147483647.1)"
       - name: Run tests with sanitizers
         shell: bash
         run: |
