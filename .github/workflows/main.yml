@@ -33,4 +33,8 @@ jobs:
           Rdevel CMD build .
           Rdevel CMD INSTALL hutilscpp*.tar.gz
           Rdevel -e "z3 <- integer(3); hutilscpp::which_first(z3 == NaN)"
-          Rdevel -e "z3 <- integer(3); hutilscpp::which_first(z3 == NaN)"
+          Rdevel -e "z3 <- integer(3); hutilscpp::which_first(z3 != NaN)"
+          Rdevel -e "z3 <- integer(3); hutilscpp::which_first(z3 >= 2147483647.1)"
+          Rdevel -e "z3 <- integer(3); hutilscpp::first_which(z3 >= 2147483647.1)"
+          Rdevel -e "z3 <- integer(3); hutilscpp::which_last(z3 >= -2147483647.1)"
+          Rdevel -e "z3 <- c(0L, 1:9); hutilscpp::which_last(z3 >= -2147483647.1)"
