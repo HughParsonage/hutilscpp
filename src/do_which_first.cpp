@@ -712,7 +712,7 @@ R_xlen_t do_which_first_xi_ad(IntegerVector x,
   }
   int e = 0;
   if (!do_is_safe2int(ad)) {
-    if (op == OP_EQ || op == OP_IN) {
+    if (op == OP_EQ || op == OP_IN || ISNAN(ad)) {
       return 0;
     }
     if (op == OP_NE) {
@@ -767,7 +767,14 @@ R_xlen_t do_which_first_xi_ad(IntegerVector x,
       e -= (ad < 0);
     }
   }
-  const int a = ((int)ad) + e;
+  double ade = ((ad < 0) ? ceil(ad) : floor(ad)) + e;
+  if (ade >= INT_MAX) {
+    ade = INT_MAX;
+  } 
+  if (ade <= -INT_MAX) {
+    ade = -INT_MAX;
+  }
+  const int a = (int)ade;
 
   switch(op) {
   case OP_NE:
@@ -818,8 +825,7 @@ R_xlen_t do_which_first_xi_ad(IntegerVector x,
 
 // [[Rcpp::export(rng = false)]]
 R_xlen_t do_which_first__(SEXP x, int op, SEXP y,
-                          R_xlen_t nx,
-                          R_xlen_t ny,
+                          int ny,
                           int y1i,
                           int y2i,
                           double y1d,
