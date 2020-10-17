@@ -29,12 +29,12 @@ jobs:
         shell: bash
         run: |
           Rscript -e "TRUE || install.packages(c('devtools', , 'bench', 'parallel', 'testthat', 'TeXCheckR', 'withr', 'covr'), repos = 'https://cran.r-project.org', quiet=TRUE)"
-          Rdevel -e "ip <- function(x) install.packages(x, quiet = TRUE, repos = 'https://cran.r-project.org'); ip(c('Rcpp', 'data.table', 'glue', 'hutils', 'magrittr'))"
+          Rdevel -e -q "ip <- function(x) install.packages(x, quiet = TRUE, repos = 'https://cran.r-project.org'); ip(c('Rcpp', 'data.table', 'glue', 'hutils', 'magrittr'))"
           Rdevel CMD build .
           Rdevel CMD INSTALL hutilscpp*.tar.gz
-          Rdevel -e "z3 <- integer(3); hutilscpp::which_first(z3 == NaN)"
-          Rdevel -e "z3 <- integer(3); hutilscpp::which_first(z3 != NaN)"
-          Rdevel -e "z3 <- integer(3); hutilscpp::which_first(z3 >= 2147483647.1)"
-          Rdevel -e "z3 <- integer(3); hutilscpp::first_which(z3 >= 2147483647.1)"
-          Rdevel -e "z3 <- integer(3); hutilscpp::which_last(z3 >= -2147483647.1)"
-          Rdevel -e "z3 <- c(0L, 1:9); hutilscpp::which_last(z3 >= -2147483647.1)"
+          Rdevel -e -q "z3 <- integer(3); hutilscpp::which_first(z3 == NaN)"
+          Rdevel -e -q "z3 <- integer(3); hutilscpp::which_first(z3 != NaN)"
+          Rdevel -e -q "z3 <- integer(3); hutilscpp::which_first(z3 >= 2147483647.1)"
+          Rdevel -e -q "z3 <- integer(3); hutilscpp:::first_which(z3 >= 2147483647.1)"
+          Rdevel -e -q "z3 <- integer(3); hutilscpp::which_last(z3 >= -2147483647.1)"
+          Rdevel -e -q "z3 <- c(0L, 1:9); hutilscpp::which_last(z3 >= -2147483647.1)"
