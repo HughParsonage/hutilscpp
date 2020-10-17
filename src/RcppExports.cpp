@@ -631,20 +631,19 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_which_first__
-R_xlen_t do_which_first__(SEXP x, int op, SEXP y, R_xlen_t nx, R_xlen_t ny, int y1i, int y2i, double y1d, double y2d);
-RcppExport SEXP _hutilscpp_do_which_first__(SEXP xSEXP, SEXP opSEXP, SEXP ySEXP, SEXP nxSEXP, SEXP nySEXP, SEXP y1iSEXP, SEXP y2iSEXP, SEXP y1dSEXP, SEXP y2dSEXP) {
+R_xlen_t do_which_first__(SEXP x, int op, SEXP y, int ny, int y1i, int y2i, double y1d, double y2d);
+RcppExport SEXP _hutilscpp_do_which_first__(SEXP xSEXP, SEXP opSEXP, SEXP ySEXP, SEXP nySEXP, SEXP y1iSEXP, SEXP y2iSEXP, SEXP y1dSEXP, SEXP y2dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type op(opSEXP);
     Rcpp::traits::input_parameter< SEXP >::type y(ySEXP);
-    Rcpp::traits::input_parameter< R_xlen_t >::type nx(nxSEXP);
-    Rcpp::traits::input_parameter< R_xlen_t >::type ny(nySEXP);
+    Rcpp::traits::input_parameter< int >::type ny(nySEXP);
     Rcpp::traits::input_parameter< int >::type y1i(y1iSEXP);
     Rcpp::traits::input_parameter< int >::type y2i(y2iSEXP);
     Rcpp::traits::input_parameter< double >::type y1d(y1dSEXP);
     Rcpp::traits::input_parameter< double >::type y2d(y2dSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_first__(x, op, y, nx, ny, y1i, y2i, y1d, y2d));
+    rcpp_result_gen = Rcpp::wrap(do_which_first__(x, op, y, ny, y1i, y2i, y1d, y2d));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -800,20 +799,19 @@ BEGIN_RCPP
 END_RCPP
 }
 // do_which_last__
-R_xlen_t do_which_last__(SEXP x, int op, SEXP y, R_xlen_t nx, R_xlen_t ny, int y1i, int y2i, double y1d, double y2d);
-RcppExport SEXP _hutilscpp_do_which_last__(SEXP xSEXP, SEXP opSEXP, SEXP ySEXP, SEXP nxSEXP, SEXP nySEXP, SEXP y1iSEXP, SEXP y2iSEXP, SEXP y1dSEXP, SEXP y2dSEXP) {
+R_xlen_t do_which_last__(SEXP x, int op, SEXP y, int ny, int y1i, int y2i, double y1d, double y2d);
+RcppExport SEXP _hutilscpp_do_which_last__(SEXP xSEXP, SEXP opSEXP, SEXP ySEXP, SEXP nySEXP, SEXP y1iSEXP, SEXP y2iSEXP, SEXP y1dSEXP, SEXP y2dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type op(opSEXP);
     Rcpp::traits::input_parameter< SEXP >::type y(ySEXP);
-    Rcpp::traits::input_parameter< R_xlen_t >::type nx(nxSEXP);
-    Rcpp::traits::input_parameter< R_xlen_t >::type ny(nySEXP);
+    Rcpp::traits::input_parameter< int >::type ny(nySEXP);
     Rcpp::traits::input_parameter< int >::type y1i(y1iSEXP);
     Rcpp::traits::input_parameter< int >::type y2i(y2iSEXP);
     Rcpp::traits::input_parameter< double >::type y1d(y1dSEXP);
     Rcpp::traits::input_parameter< double >::type y2d(y2dSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_last__(x, op, y, nx, ny, y1i, y2i, y1d, y2d));
+    rcpp_result_gen = Rcpp::wrap(do_which_last__(x, op, y, ny, y1i, y2i, y1d, y2d));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1643,7 +1641,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which_firstNA", (DL_FUNC) &_hutilscpp_do_which_firstNA, 1},
     {"_hutilscpp_do_which_lastNA", (DL_FUNC) &_hutilscpp_do_which_lastNA, 1},
     {"_hutilscpp_do_which_first_lgl_lgl_op", (DL_FUNC) &_hutilscpp_do_which_first_lgl_lgl_op, 4},
-    {"_hutilscpp_do_which_first__", (DL_FUNC) &_hutilscpp_do_which_first__, 9},
+    {"_hutilscpp_do_which_first__", (DL_FUNC) &_hutilscpp_do_which_first__, 8},
     {"_hutilscpp_do_which_first_xi_ini", (DL_FUNC) &_hutilscpp_do_which_first_xi_ini, 2},
     {"_hutilscpp_dblTable2int", (DL_FUNC) &_hutilscpp_dblTable2int, 1},
     {"_hutilscpp_do_which_first_xi_ind", (DL_FUNC) &_hutilscpp_do_which_first_xi_ind, 2},
@@ -1657,7 +1655,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which_last_xi_yd", (DL_FUNC) &_hutilscpp_do_which_last_xi_yd, 3},
     {"_hutilscpp_do_which_last_xd_yi", (DL_FUNC) &_hutilscpp_do_which_last_xd_yi, 3},
     {"_hutilscpp_do_which_last_xd_add", (DL_FUNC) &_hutilscpp_do_which_last_xd_add, 4},
-    {"_hutilscpp_do_which_last__", (DL_FUNC) &_hutilscpp_do_which_last__, 9},
+    {"_hutilscpp_do_which_last__", (DL_FUNC) &_hutilscpp_do_which_last__, 8},
     {"_hutilscpp_do_which_last_in_lgl", (DL_FUNC) &_hutilscpp_do_which_last_in_lgl, 4},
     {"_hutilscpp_do_which_last_xi_ini", (DL_FUNC) &_hutilscpp_do_which_last_xi_ini, 2},
     {"_hutilscpp_do_which_last_xi_ind", (DL_FUNC) &_hutilscpp_do_which_last_xi_ind, 2},

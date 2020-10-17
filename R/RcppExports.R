@@ -193,8 +193,8 @@ do_which_first_lgl_lgl_op <- function(x, y, op, reverse = FALSE) {
     .Call(`_hutilscpp_do_which_first_lgl_lgl_op`, x, y, op, reverse)
 }
 
-do_which_first__ <- function(x, op, y, nx, ny, y1i, y2i, y1d, y2d) {
-    .Call(`_hutilscpp_do_which_first__`, x, op, y, nx, ny, y1i, y2i, y1d, y2d)
+do_which_first__ <- function(x, op, y, ny, y1i, y2i, y1d, y2d) {
+    .Call(`_hutilscpp_do_which_first__`, x, op, y, ny, y1i, y2i, y1d, y2d)
 }
 
 do_which_first_xi_ini <- function(x, y) {
@@ -249,8 +249,8 @@ do_which_last_xd_add <- function(x, op, a1, a2) {
     .Call(`_hutilscpp_do_which_last_xd_add`, x, op, a1, a2)
 }
 
-do_which_last__ <- function(x, op, y, nx, ny, y1i, y2i, y1d, y2d) {
-    .Call(`_hutilscpp_do_which_last__`, x, op, y, nx, ny, y1i, y2i, y1d, y2d)
+do_which_last__ <- function(x, op, y, ny, y1i, y2i, y1d, y2d) {
+    .Call(`_hutilscpp_do_which_last__`, x, op, y, ny, y1i, y2i, y1d, y2d)
 }
 
 do_which_last_in_lgl <- function(x, anyNA_, any_, nall_) {

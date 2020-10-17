@@ -684,6 +684,20 @@ test_that("do_which_last_xi_add", {
                last_which(x %(between)% c(6, 8)))
 })
 
+test_that("do_which_last_xi_ad", {
+
+  z3 <- integer(3)
+  # Just outside int range
+  expect_equal(which_last(z3 >= 2147483647.1),
+               last_which(z3 >= 2147483647.1))
+  expect_equal(which_last(z3 <= 2147483647.1),
+               last_which(z3 <= 2147483647.1))
+  expect_equal(which_last(z3 >= -2147483647.1),
+               last_which(z3 >= -2147483647.1))
+  expect_equal(which_last(z3 <= -2147483647.1),
+               last_which(z3 <= -2147483647.1))
+})
+
 
 
 

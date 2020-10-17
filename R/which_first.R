@@ -282,7 +282,7 @@ which_first <- function(expr,
       }
       if (ny == 2L) {
         # Otherwise will be redirected to between switch
-        ny <- NA_integer_
+        ny <- 3L
       }
     }
 
@@ -294,18 +294,17 @@ which_first <- function(expr,
       y1d <- y1i <- rhs_eval[1L]
       y2d <- y2i <- rhs_eval[2L]
     }
+
     if (reverse) {
       o <- do_which_last__(lhs_eval, op, rhs_eval,
-                           nx = nx,
-                           ny = ny,
+                           ny = qd2i(ny),
                            y1i = qd2i(y1i),
                            y2i = qd2i(y2i),
                            y1d = y1d,
                            y2d = y2d)
     } else {
       o <- do_which_first__(lhs_eval, op, rhs_eval,
-                            nx = nx,
-                            ny = ny,
+                            ny = qd2i(ny),
                             y1i = qd2i(y1i),
                             y2i = qd2i(y2i),
                             y1d = y1d,

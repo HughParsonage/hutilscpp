@@ -1165,6 +1165,17 @@ test_that("do_which_first_xi_ad", {
                first_which(z3 != 0))
   expect_equal(which_first(z3 > 0),
                first_which(z3 > 0))
+
+  # Just outside int range
+  expect_equal(which_first(z3 >= 2147483647.1),
+               first_which(z3 >= 2147483647.1))
+  expect_equal(which_first(z3 <= 2147483647.1),
+               first_which(z3 <= 2147483647.1))
+  expect_equal(which_first(z3 >= -2147483647.1),
+               first_which(z3 >= -2147483647.1))
+  expect_equal(which_first(z3 <= -2147483647.1),
+               first_which(z3 <= -2147483647.1))
+
 })
 
 test_that("do_which_first_xd_yd", {
