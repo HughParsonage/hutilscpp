@@ -1,3 +1,7 @@
+## hutilscpp 0.5.2
+* Attempt fix of UBSAN error in which_first
+
+
 ## hutilscpp 0.5.1
 
 ### Bug fixes:

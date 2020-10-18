@@ -86,3 +86,18 @@ IntegerVector allocate_with_root(R_xlen_t N,
   return out;
 }
 
+/*
+/./ [[Rcpp::export(rng = false)]]
+IntegerVector all_integers(int nThread = 1) {
+  IntegerVector out = no_init(4294967296);
+#pragma omp parallel for num_threads(nThread)
+  for (unsigned int i = 0; i < 4294967295; ++i) {
+    int outi = static_cast<int>(i);
+    out[i] = outi;
+  }
+  out[4294967295] = -1;
+  return out;
+}
+*/
+
+
