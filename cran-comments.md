@@ -1,5 +1,5 @@
-OpenMP regions have been protected with directives. Apologies for the 
-error and late correction.
+Probable UBSAN error arising from doubles cast as ints now fixed by
+special-casing NaN input in do_which_first__.
 
 ## Test environments
 * local Windows 4.0.0
@@ -11,4 +11,4 @@ error and late correction.
 
 0 errors | 0 warnings | 1 note
 
-Note relates to new submission.
+Note relates to recent submission. UBSAN error seemed urgent.
