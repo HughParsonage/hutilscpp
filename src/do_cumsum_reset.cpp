@@ -2,7 +2,7 @@
 
 #if (__GNUC__ > 7) || \
 ((__GNUC__ == 7) && (__GNUC_MINOR__ > 3))
-#define BUILTIN_MUL_OVERFLOW_EXIST
+#define BUILTIN_ADD_OVERFLOW_EXIST
 #endif
 
 // [[Rcpp::export]]
@@ -147,7 +147,7 @@ IntegerVector add_(IntegerVector x, IntegerVector y) {
   IntegerVector out = no_init(N);
   for (R_xlen_t i = 0; i < N; ++i) {
 
-#ifdef BUILTIN_MUL_OVERFLOW_EXIST
+#ifdef BUILTIN_ADD_OVERFLOW_EXIST
     int p = 0;
     bool did_overflow = __builtin_sadd_overflow(x[i], y[i], &p);
 #else
