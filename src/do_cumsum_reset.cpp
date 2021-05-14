@@ -107,3 +107,95 @@ IntegerVector do_cumsum_reset_sorted_int(IntegerVector x) {
   return out;
 }
 
+// [[Rcpp::export(rng = false)]]
+IntegerVector do_cumsum_reset_where(IntegerVector x,
+                                    IntegerVector y,
+                                    int o,
+                                    int a) {
+  R_xlen_t N = x.length();
+  if (N != y.length() || N == 0) {
+    stop("Internal error(do_cumsum_reset_where): length(x) != length(y)");
+  }
+  IntegerVector out = no_init(N);
+  out[0] = single_ox_x1_x2(y[0], o, a, a) ? 0 : x[0];
+  for (R_xlen_t i = 1; i < N; ++i) {
+    if (single_ox_x1_x2(y[i], o, a, a) || x[i] == NA_INTEGER) {
+      out[i] = out[i - 1];
+      continue;
+    }
+
+    // avoid overflow here
+    int64_t w = (int64_t)out[i - 1];
+    w += x[i];
+    if (w >= INT_MAX || w <= INT_MIN) {
+      out[i] = NA_INTEGER;
+      continue;
+    }
+    out[i] = (int)w;
+  }
+  return out;
+}
+
+// [[Rcpp::export(rng = false)]]
+IntegerVector add_(IntegerVector x, IntegerVector y) {
+  R_xlen_t N = x.length();
+  IntegerVector out = no_init(N);
+  for (R_xlen_t i = 0; i < N; ++i) {
+    int p = 0;
+    bool did_overflow = __builtin_sadd_overflow(x[i], y[i], &p);
+    if (did_overflow) {
+      out[i] = NA_INTEGER;
+    } else {
+      out[i] = p;
+    }
+  }
+  return out;
+}
+
+
+
+
+// [[Rcpp::export(rng = false)]]
+IntegerVector add2_(IntegerVector x, IntegerVector y) {
+  R_xlen_t N = x.length();
+  IntegerVector out = no_init(N);
+  for (R_xlen_t i = 0; i < N; ++i) {
+    int64_t p = x[i];
+    p += y[i];
+    bool did_overflow =
+      p >= INT_MAX || p <= -INT_MAX || x[i] == NA_INTEGER || y[i] == NA_INTEGER;
+    if (did_overflow) {
+      out[i] = NA_INTEGER;
+    } else {
+      out[i] = p;
+    }
+  }
+  return out;
+}
+
+
+int R_integer_plus(int x, int y) {
+  if (x == NA_INTEGER || y == NA_INTEGER)
+    return NA_INTEGER;
+
+  if (((y > 0) && (x > (INT_MAX - y))) ||
+      ((y < 0) && (x < (INT_MIN - y)))) {
+    return NA_INTEGER;
+  }
+  return x + y;
+}
+
+// [[Rcpp::export(rng = false)]]
+IntegerVector add3_(IntegerVector x, IntegerVector y) {
+  R_xlen_t N = x.length();
+  IntegerVector out = no_init(N);
+  for (R_xlen_t i = 0; i < N; ++i) {
+    out[i] = R_integer_plus(x[i], y[i]);
+  }
+  return out;
+}
+
+
+
+
+

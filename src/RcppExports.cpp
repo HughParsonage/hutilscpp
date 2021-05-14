@@ -278,6 +278,52 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// do_cumsum_reset_where
+IntegerVector do_cumsum_reset_where(IntegerVector x, IntegerVector y, int o, int a);
+RcppExport SEXP _hutilscpp_do_cumsum_reset_where(SEXP xSEXP, SEXP ySEXP, SEXP oSEXP, SEXP aSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< int >::type o(oSEXP);
+    Rcpp::traits::input_parameter< int >::type a(aSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_cumsum_reset_where(x, y, o, a));
+    return rcpp_result_gen;
+END_RCPP
+}
+// add_
+IntegerVector add_(IntegerVector x, IntegerVector y);
+RcppExport SEXP _hutilscpp_add_(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(add_(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// add2_
+IntegerVector add2_(IntegerVector x, IntegerVector y);
+RcppExport SEXP _hutilscpp_add2_(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(add2_(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// add3_
+IntegerVector add3_(IntegerVector x, IntegerVector y);
+RcppExport SEXP _hutilscpp_add3_(SEXP xSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(add3_(x, y));
+    return rcpp_result_gen;
+END_RCPP
+}
 // do_divisible
 LogicalVector do_divisible(IntegerVector x, int d, int nThread);
 RcppExport SEXP _hutilscpp_do_divisible(SEXP xSEXP, SEXP dSEXP, SEXP nThreadSEXP) {
@@ -688,6 +734,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DoubleVector >::type y(ySEXP);
     Rcpp::traits::input_parameter< bool >::type y_has_na(y_has_naSEXP);
     rcpp_result_gen = Rcpp::wrap(do_which_first_xd_ind(x, y, y_has_na));
+    return rcpp_result_gen;
+END_RCPP
+}
+// do_which_isna_int
+IntegerVector do_which_isna_int(IntegerVector x, bool isnt);
+RcppExport SEXP _hutilscpp_do_which_isna_int(SEXP xSEXP, SEXP isntSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< bool >::type isnt(isntSEXP);
+    rcpp_result_gen = Rcpp::wrap(do_which_isna_int(x, isnt));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1612,6 +1669,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_duplicated_sorted_int", (DL_FUNC) &_hutilscpp_do_duplicated_sorted_int, 1},
     {"_hutilscpp_do_duplicated_sorted_dbl", (DL_FUNC) &_hutilscpp_do_duplicated_sorted_dbl, 1},
     {"_hutilscpp_do_cumsum_reset_sorted_int", (DL_FUNC) &_hutilscpp_do_cumsum_reset_sorted_int, 1},
+    {"_hutilscpp_do_cumsum_reset_where", (DL_FUNC) &_hutilscpp_do_cumsum_reset_where, 4},
+    {"_hutilscpp_add_", (DL_FUNC) &_hutilscpp_add_, 2},
+    {"_hutilscpp_add2_", (DL_FUNC) &_hutilscpp_add2_, 2},
+    {"_hutilscpp_add3_", (DL_FUNC) &_hutilscpp_add3_, 2},
     {"_hutilscpp_do_divisible", (DL_FUNC) &_hutilscpp_do_divisible, 3},
     {"_hutilscpp_do_divisible2", (DL_FUNC) &_hutilscpp_do_divisible2, 2},
     {"_hutilscpp_do_divisible16", (DL_FUNC) &_hutilscpp_do_divisible16, 2},
@@ -1646,6 +1707,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_dblTable2int", (DL_FUNC) &_hutilscpp_dblTable2int, 1},
     {"_hutilscpp_do_which_first_xi_ind", (DL_FUNC) &_hutilscpp_do_which_first_xi_ind, 2},
     {"_hutilscpp_do_which_first_xd_ind", (DL_FUNC) &_hutilscpp_do_which_first_xd_ind, 3},
+    {"_hutilscpp_do_which_isna_int", (DL_FUNC) &_hutilscpp_do_which_isna_int, 2},
     {"_hutilscpp_do_which_isnt_integerish", (DL_FUNC) &_hutilscpp_do_which_isnt_integerish, 1},
     {"_hutilscpp_do_which_last_xd_ad", (DL_FUNC) &_hutilscpp_do_which_last_xd_ad, 3},
     {"_hutilscpp_do_which_last_xi_ai", (DL_FUNC) &_hutilscpp_do_which_last_xi_ai, 3},

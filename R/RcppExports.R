@@ -77,6 +77,22 @@ do_cumsum_reset_sorted_int <- function(x) {
     .Call(`_hutilscpp_do_cumsum_reset_sorted_int`, x)
 }
 
+do_cumsum_reset_where <- function(x, y, o, a) {
+    .Call(`_hutilscpp_do_cumsum_reset_where`, x, y, o, a)
+}
+
+add_ <- function(x, y) {
+    .Call(`_hutilscpp_add_`, x, y)
+}
+
+add2_ <- function(x, y) {
+    .Call(`_hutilscpp_add2_`, x, y)
+}
+
+add3_ <- function(x, y) {
+    .Call(`_hutilscpp_add3_`, x, y)
+}
+
 do_divisible <- function(x, d, nThread = 1L) {
     .Call(`_hutilscpp_do_divisible`, x, d, nThread)
 }
@@ -211,6 +227,10 @@ do_which_first_xi_ind <- function(x, yd) {
 
 do_which_first_xd_ind <- function(x, y, y_has_na) {
     .Call(`_hutilscpp_do_which_first_xd_ind`, x, y, y_has_na)
+}
+
+do_which_isna_int <- function(x, isnt = FALSE) {
+    .Call(`_hutilscpp_do_which_isna_int`, x, isnt)
 }
 
 do_which_isnt_integerish <- function(x) {
