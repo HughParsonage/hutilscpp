@@ -1,5 +1,10 @@
 #include "cpphutils.h"
 
+#if (__GNUC__ > 7) || \
+((__GNUC__ == 7) && (__GNUC_MINOR__ > 3))
+#define BUILTIN_MUL_OVERFLOW_EXIST
+#endif
+
 // [[Rcpp::export]]
 IntegerVector do_cumsum_reset_logical(LogicalVector x) {
   R_xlen_t N = x.size();
@@ -141,29 +146,16 @@ IntegerVector add_(IntegerVector x, IntegerVector y) {
   R_xlen_t N = x.length();
   IntegerVector out = no_init(N);
   for (R_xlen_t i = 0; i < N; ++i) {
+
+#ifdef BUILTIN_MUL_OVERFLOW_EXIST
     int p = 0;
     bool did_overflow = __builtin_sadd_overflow(x[i], y[i], &p);
-    if (did_overflow) {
-      out[i] = NA_INTEGER;
-    } else {
-      out[i] = p;
-    }
-  }
-  return out;
-}
-
-
-
-
-// [[Rcpp::export(rng = false)]]
-IntegerVector add2_(IntegerVector x, IntegerVector y) {
-  R_xlen_t N = x.length();
-  IntegerVector out = no_init(N);
-  for (R_xlen_t i = 0; i < N; ++i) {
+#else
     int64_t p = x[i];
     p += y[i];
     bool did_overflow =
       p >= INT_MAX || p <= -INT_MAX || x[i] == NA_INTEGER || y[i] == NA_INTEGER;
+#endif
     if (did_overflow) {
       out[i] = NA_INTEGER;
     } else {
@@ -174,26 +166,12 @@ IntegerVector add2_(IntegerVector x, IntegerVector y) {
 }
 
 
-int R_integer_plus(int x, int y) {
-  if (x == NA_INTEGER || y == NA_INTEGER)
-    return NA_INTEGER;
 
-  if (((y > 0) && (x > (INT_MAX - y))) ||
-      ((y < 0) && (x < (INT_MIN - y)))) {
-    return NA_INTEGER;
-  }
-  return x + y;
-}
 
-// [[Rcpp::export(rng = false)]]
-IntegerVector add3_(IntegerVector x, IntegerVector y) {
-  R_xlen_t N = x.length();
-  IntegerVector out = no_init(N);
-  for (R_xlen_t i = 0; i < N; ++i) {
-    out[i] = R_integer_plus(x[i], y[i]);
-  }
-  return out;
-}
+
+
+
+
 
 
 
