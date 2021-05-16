@@ -4,6 +4,7 @@
 #include <R.h>
 #define USE_RINTERNALS
 #include <Rinternals.h>
+#include <Rversion.h>
 // #include <signal.h> // the debugging machinery + breakpoint aidee
 // raise(SIGINT);
 #include <stdint.h> // for uint64_t rather than unsigned long long
@@ -42,21 +43,6 @@ unsigned char nth_char(int x, int n);
 char digit2char(int d);
 int n_digits0(unsigned int x);
 
-
-#define return_false do {                                      \
-            SEXP ans = PROTECT(allocVector(LGLSXP, 1));        \
-            LOGICAL(ans)[0] = FALSE;                           \
-            UNPROTECT(1);                                      \
-            return ans;                                        \
-} while (0)
-
-#define return_true do {                                      \
-SEXP ans = PROTECT(allocVector(LGLSXP, 1));                    \
-LOGICAL(ans)[0] = TRUE;                                       \
-UNPROTECT(1);                                                  \
-return ans;                                                    \
-} while (0)                                                    \
-
 int do_op2M(SEXP op);
 
 // character
@@ -64,9 +50,9 @@ SEXP do_pad0(SEXP x, const int w);
 
 float ssqrt_fast(float x);
 unsigned int radix_find(int a, unsigned int x0, unsigned int x1, const int * k1, unsigned int * tbl);
-void radix_find_range(int a, 
+void radix_find_range(int a,
                       const int * k1,
-                      unsigned int * tbl, 
+                      unsigned int * tbl,
                       unsigned int N,
                       unsigned int * R);
 void linear_find_range(int x, const int * k1, R_xlen_t * R, const R_xlen_t N);
@@ -78,5 +64,5 @@ void Vminmax_i(int minmax[], int * x, R_xlen_t N, int nthreads);
 
 // sortedness
 bool sorted_int(const int * xp, R_xlen_t N, int nThreads);
-  
+
 #endif

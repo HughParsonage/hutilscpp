@@ -5,19 +5,6 @@
 
 using namespace Rcpp;
 
-// AnyCharMatch
-int AnyCharMatch(CharacterVector x, CharacterVector a, bool opposite);
-RcppExport SEXP _hutilscpp_AnyCharMatch(SEXP xSEXP, SEXP aSEXP, SEXP oppositeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type a(aSEXP);
-    Rcpp::traits::input_parameter< bool >::type opposite(oppositeSEXP);
-    rcpp_result_gen = Rcpp::wrap(AnyCharMatch(x, a, opposite));
-    return rcpp_result_gen;
-END_RCPP
-}
 // Implies
 LogicalVector Implies(LogicalVector x, LogicalVector y, bool anyNAx, bool anyNAy);
 RcppExport SEXP _hutilscpp_Implies(SEXP xSEXP, SEXP ySEXP, SEXP anyNAxSEXP, SEXP anyNAySEXP) {
@@ -29,96 +16,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type anyNAx(anyNAxSEXP);
     Rcpp::traits::input_parameter< bool >::type anyNAy(anyNAySEXP);
     rcpp_result_gen = Rcpp::wrap(Implies(x, y, anyNAx, anyNAy));
-    return rcpp_result_gen;
-END_RCPP
-}
-// is_altrep
-bool is_altrep(SEXP x);
-RcppExport SEXP _hutilscpp_is_altrep(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(is_altrep(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// allocate0_int
-IntegerVector allocate0_int(R_xlen_t N, int nThread);
-RcppExport SEXP _hutilscpp_allocate0_int(SEXP NSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< R_xlen_t >::type N(NSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(allocate0_int(N, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// allocate0_dbl
-DoubleVector allocate0_dbl(R_xlen_t N, int nThread);
-RcppExport SEXP _hutilscpp_allocate0_dbl(SEXP NSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< R_xlen_t >::type N(NSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(allocate0_dbl(N, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// allocate0_except
-IntegerVector allocate0_except(R_xlen_t N, DoubleVector India, IntegerVector Victor, int nThread);
-RcppExport SEXP _hutilscpp_allocate0_except(SEXP NSEXP, SEXP IndiaSEXP, SEXP VictorSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< R_xlen_t >::type N(NSEXP);
-    Rcpp::traits::input_parameter< DoubleVector >::type India(IndiaSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type Victor(VictorSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(allocate0_except(N, India, Victor, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// allocate_with_root
-IntegerVector allocate_with_root(R_xlen_t N, int a, R_xlen_t r, bool left, bool do_pmin, int nThread);
-RcppExport SEXP _hutilscpp_allocate_with_root(SEXP NSEXP, SEXP aSEXP, SEXP rSEXP, SEXP leftSEXP, SEXP do_pminSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< R_xlen_t >::type N(NSEXP);
-    Rcpp::traits::input_parameter< int >::type a(aSEXP);
-    Rcpp::traits::input_parameter< R_xlen_t >::type r(rSEXP);
-    Rcpp::traits::input_parameter< bool >::type left(leftSEXP);
-    Rcpp::traits::input_parameter< bool >::type do_pmin(do_pminSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(allocate_with_root(N, a, r, left, do_pmin, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// anyOutside_int
-int anyOutside_int(IntegerVector x, int a, int b, bool nas_present, bool na_is_outside);
-RcppExport SEXP _hutilscpp_anyOutside_int(SEXP xSEXP, SEXP aSEXP, SEXP bSEXP, SEXP nas_presentSEXP, SEXP na_is_outsideSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type a(aSEXP);
-    Rcpp::traits::input_parameter< int >::type b(bSEXP);
-    Rcpp::traits::input_parameter< bool >::type nas_present(nas_presentSEXP);
-    Rcpp::traits::input_parameter< bool >::type na_is_outside(na_is_outsideSEXP);
-    rcpp_result_gen = Rcpp::wrap(anyOutside_int(x, a, b, nas_present, na_is_outside));
-    return rcpp_result_gen;
-END_RCPP
-}
-// anyOutside_dbl
-int anyOutside_dbl(DoubleVector x, double a, double b, bool nas_present, bool na_is_outside);
-RcppExport SEXP _hutilscpp_anyOutside_dbl(SEXP xSEXP, SEXP aSEXP, SEXP bSEXP, SEXP nas_presentSEXP, SEXP na_is_outsideSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type a(aSEXP);
-    Rcpp::traits::input_parameter< double >::type b(bSEXP);
-    Rcpp::traits::input_parameter< bool >::type nas_present(nas_presentSEXP);
-    Rcpp::traits::input_parameter< bool >::type na_is_outside(na_is_outsideSEXP);
-    rcpp_result_gen = Rcpp::wrap(anyOutside_dbl(x, a, b, nas_present, na_is_outside));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -299,28 +196,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
     rcpp_result_gen = Rcpp::wrap(add_(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// add2_
-IntegerVector add2_(IntegerVector x, IntegerVector y);
-RcppExport SEXP _hutilscpp_add2_(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(add2_(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// add3_
-IntegerVector add3_(IntegerVector x, IntegerVector y);
-RcppExport SEXP _hutilscpp_add3_(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(add3_(x, y));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1646,19 +1521,20 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP Callocate_with_root(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Callocate0_dbl(SEXP, SEXP);
+RcppExport SEXP Callocate0_except(SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Callocate0_int(SEXP, SEXP);
+RcppExport SEXP CAnyCharMatch(SEXP, SEXP, SEXP);
+RcppExport SEXP CanyOutside(SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Ccumsum_reset(SEXP, SEXP);
+RcppExport SEXP Cis_altrep(SEXP);
+RcppExport SEXP Cwhich_isnt_int(SEXP);
 RcppExport SEXP do_c_pmax(SEXP, SEXP, SEXP);
 RcppExport SEXP do_c_pminmax(SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_hutilscpp_AnyCharMatch", (DL_FUNC) &_hutilscpp_AnyCharMatch, 3},
     {"_hutilscpp_Implies", (DL_FUNC) &_hutilscpp_Implies, 4},
-    {"_hutilscpp_is_altrep", (DL_FUNC) &_hutilscpp_is_altrep, 1},
-    {"_hutilscpp_allocate0_int", (DL_FUNC) &_hutilscpp_allocate0_int, 2},
-    {"_hutilscpp_allocate0_dbl", (DL_FUNC) &_hutilscpp_allocate0_dbl, 2},
-    {"_hutilscpp_allocate0_except", (DL_FUNC) &_hutilscpp_allocate0_except, 4},
-    {"_hutilscpp_allocate_with_root", (DL_FUNC) &_hutilscpp_allocate_with_root, 6},
-    {"_hutilscpp_anyOutside_int", (DL_FUNC) &_hutilscpp_anyOutside_int, 5},
-    {"_hutilscpp_anyOutside_dbl", (DL_FUNC) &_hutilscpp_anyOutside_dbl, 5},
     {"_hutilscpp_do_range_dbl", (DL_FUNC) &_hutilscpp_do_range_dbl, 3},
     {"_hutilscpp_do_range_int", (DL_FUNC) &_hutilscpp_do_range_int, 3},
     {"_hutilscpp_do_and3_par", (DL_FUNC) &_hutilscpp_do_and3_par, 17},
@@ -1671,8 +1547,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_cumsum_reset_sorted_int", (DL_FUNC) &_hutilscpp_do_cumsum_reset_sorted_int, 1},
     {"_hutilscpp_do_cumsum_reset_where", (DL_FUNC) &_hutilscpp_do_cumsum_reset_where, 4},
     {"_hutilscpp_add_", (DL_FUNC) &_hutilscpp_add_, 2},
-    {"_hutilscpp_add2_", (DL_FUNC) &_hutilscpp_add2_, 2},
-    {"_hutilscpp_add3_", (DL_FUNC) &_hutilscpp_add3_, 2},
     {"_hutilscpp_do_divisible", (DL_FUNC) &_hutilscpp_do_divisible, 3},
     {"_hutilscpp_do_divisible2", (DL_FUNC) &_hutilscpp_do_divisible2, 2},
     {"_hutilscpp_do_divisible16", (DL_FUNC) &_hutilscpp_do_divisible16, 2},
@@ -1780,8 +1654,17 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_where_square_bracket_opens", (DL_FUNC) &_hutilscpp_where_square_bracket_opens, 2},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
-    {"do_c_pmax",    (DL_FUNC) &do_c_pmax,    3},
-    {"do_c_pminmax", (DL_FUNC) &do_c_pminmax, 3},
+    {"Callocate_with_root", (DL_FUNC) &Callocate_with_root, 6},
+    {"Callocate0_dbl",      (DL_FUNC) &Callocate0_dbl,      2},
+    {"Callocate0_except",   (DL_FUNC) &Callocate0_except,   4},
+    {"Callocate0_int",      (DL_FUNC) &Callocate0_int,      2},
+    {"CAnyCharMatch",       (DL_FUNC) &CAnyCharMatch,       3},
+    {"CanyOutside",         (DL_FUNC) &CanyOutside,         5},
+    {"Ccumsum_reset",       (DL_FUNC) &Ccumsum_reset,       2},
+    {"Cis_altrep",          (DL_FUNC) &Cis_altrep,          1},
+    {"Cwhich_isnt_int",     (DL_FUNC) &Cwhich_isnt_int,     1},
+    {"do_c_pmax",           (DL_FUNC) &do_c_pmax,           3},
+    {"do_c_pminmax",        (DL_FUNC) &do_c_pminmax,        3},
     {NULL, NULL, 0}
 };
 

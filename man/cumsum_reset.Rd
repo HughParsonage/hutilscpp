@@ -7,13 +7,17 @@
 cumsum_reset(x, y = as.integer(x))
 }
 \arguments{
-\item{x}{A logical vector indicating when the sum should \emph{continue}.}
+\item{x}{A logical vector indicating when the sum should \emph{continue}.
+Missing values in \code{x} is an error.}
 
 \item{y}{Optional: a numeric vector the same length as \code{x} to cumulatively sum.}
 }
 \value{
-If \code{y} is a double vector, a double vector of cumulative sums,
-resetting whenever \code{x} is \code{FALSE}; otherwise an integer vector.
+A vector of cumulative sums,
+resetting whenever \code{x} is \code{FALSE}.
+The return type is double if \code{y} is double; otherwise an integer vector. Integer
+overflow wraps around, rather than being promoted to double type, as this
+function is intended for 'shortish' runs of cumulative sums.
 
 If \code{length(x) == 0}, \code{y} is returned (i.e. \code{integer(0)} or \code{double(0)}.
 }
