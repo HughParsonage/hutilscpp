@@ -4,6 +4,7 @@
 #' @importFrom utils hasName
 #' @importFrom utils head
 #' @importFrom utils ls.str
+#' @importFrom utils packageName
 #' @importFrom glue glue
 #' @importFrom hutils %<->%
 #' @importFrom hutils NOR
