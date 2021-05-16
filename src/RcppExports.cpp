@@ -107,98 +107,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_cumsum_reset_logical
-IntegerVector do_cumsum_reset_logical(LogicalVector x);
-RcppExport SEXP _hutilscpp_do_cumsum_reset_logical(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_cumsum_reset_logical(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_cumsum_reset_integer
-IntegerVector do_cumsum_reset_integer(LogicalVector x, IntegerVector y);
-RcppExport SEXP _hutilscpp_do_cumsum_reset_integer(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(do_cumsum_reset_integer(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_cumsum_reset_double
-NumericVector do_cumsum_reset_double(LogicalVector x, NumericVector y);
-RcppExport SEXP _hutilscpp_do_cumsum_reset_double(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(do_cumsum_reset_double(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_duplicated_sorted_int
-LogicalVector do_duplicated_sorted_int(IntegerVector x);
-RcppExport SEXP _hutilscpp_do_duplicated_sorted_int(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_duplicated_sorted_int(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_duplicated_sorted_dbl
-LogicalVector do_duplicated_sorted_dbl(DoubleVector x);
-RcppExport SEXP _hutilscpp_do_duplicated_sorted_dbl(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_duplicated_sorted_dbl(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_cumsum_reset_sorted_int
-IntegerVector do_cumsum_reset_sorted_int(IntegerVector x);
-RcppExport SEXP _hutilscpp_do_cumsum_reset_sorted_int(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_cumsum_reset_sorted_int(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_cumsum_reset_where
-IntegerVector do_cumsum_reset_where(IntegerVector x, IntegerVector y, int o, int a);
-RcppExport SEXP _hutilscpp_do_cumsum_reset_where(SEXP xSEXP, SEXP ySEXP, SEXP oSEXP, SEXP aSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type o(oSEXP);
-    Rcpp::traits::input_parameter< int >::type a(aSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_cumsum_reset_where(x, y, o, a));
-    return rcpp_result_gen;
-END_RCPP
-}
-// add_
-IntegerVector add_(IntegerVector x, IntegerVector y);
-RcppExport SEXP _hutilscpp_add_(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(add_(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_divisible
 LogicalVector do_divisible(IntegerVector x, int d, int nThread);
 RcppExport SEXP _hutilscpp_do_divisible(SEXP xSEXP, SEXP dSEXP, SEXP nThreadSEXP) {
@@ -1528,6 +1436,8 @@ RcppExport SEXP Callocate0_int(SEXP, SEXP);
 RcppExport SEXP CAnyCharMatch(SEXP, SEXP, SEXP);
 RcppExport SEXP CanyOutside(SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Ccumsum_reset(SEXP, SEXP);
+RcppExport SEXP Ccumsum_reset_sorted_int(SEXP);
+RcppExport SEXP Ccumsum_reset_where(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cis_altrep(SEXP);
 RcppExport SEXP Cwhich_isnt_int(SEXP);
 RcppExport SEXP do_c_pmax(SEXP, SEXP, SEXP);
@@ -1539,14 +1449,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_range_int", (DL_FUNC) &_hutilscpp_do_range_int, 3},
     {"_hutilscpp_do_and3_par", (DL_FUNC) &_hutilscpp_do_and3_par, 17},
     {"_hutilscpp_do_sum3s_par", (DL_FUNC) &_hutilscpp_do_sum3s_par, 26},
-    {"_hutilscpp_do_cumsum_reset_logical", (DL_FUNC) &_hutilscpp_do_cumsum_reset_logical, 1},
-    {"_hutilscpp_do_cumsum_reset_integer", (DL_FUNC) &_hutilscpp_do_cumsum_reset_integer, 2},
-    {"_hutilscpp_do_cumsum_reset_double", (DL_FUNC) &_hutilscpp_do_cumsum_reset_double, 2},
-    {"_hutilscpp_do_duplicated_sorted_int", (DL_FUNC) &_hutilscpp_do_duplicated_sorted_int, 1},
-    {"_hutilscpp_do_duplicated_sorted_dbl", (DL_FUNC) &_hutilscpp_do_duplicated_sorted_dbl, 1},
-    {"_hutilscpp_do_cumsum_reset_sorted_int", (DL_FUNC) &_hutilscpp_do_cumsum_reset_sorted_int, 1},
-    {"_hutilscpp_do_cumsum_reset_where", (DL_FUNC) &_hutilscpp_do_cumsum_reset_where, 4},
-    {"_hutilscpp_add_", (DL_FUNC) &_hutilscpp_add_, 2},
     {"_hutilscpp_do_divisible", (DL_FUNC) &_hutilscpp_do_divisible, 3},
     {"_hutilscpp_do_divisible2", (DL_FUNC) &_hutilscpp_do_divisible2, 2},
     {"_hutilscpp_do_divisible16", (DL_FUNC) &_hutilscpp_do_divisible16, 2},
@@ -1654,17 +1556,19 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_where_square_bracket_opens", (DL_FUNC) &_hutilscpp_where_square_bracket_opens, 2},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},
     {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
-    {"Callocate_with_root", (DL_FUNC) &Callocate_with_root, 6},
-    {"Callocate0_dbl",      (DL_FUNC) &Callocate0_dbl,      2},
-    {"Callocate0_except",   (DL_FUNC) &Callocate0_except,   4},
-    {"Callocate0_int",      (DL_FUNC) &Callocate0_int,      2},
-    {"CAnyCharMatch",       (DL_FUNC) &CAnyCharMatch,       3},
-    {"CanyOutside",         (DL_FUNC) &CanyOutside,         5},
-    {"Ccumsum_reset",       (DL_FUNC) &Ccumsum_reset,       2},
-    {"Cis_altrep",          (DL_FUNC) &Cis_altrep,          1},
-    {"Cwhich_isnt_int",     (DL_FUNC) &Cwhich_isnt_int,     1},
-    {"do_c_pmax",           (DL_FUNC) &do_c_pmax,           3},
-    {"do_c_pminmax",        (DL_FUNC) &do_c_pminmax,        3},
+    {"Callocate_with_root",      (DL_FUNC) &Callocate_with_root,      6},
+    {"Callocate0_dbl",           (DL_FUNC) &Callocate0_dbl,           2},
+    {"Callocate0_except",        (DL_FUNC) &Callocate0_except,        4},
+    {"Callocate0_int",           (DL_FUNC) &Callocate0_int,           2},
+    {"CAnyCharMatch",            (DL_FUNC) &CAnyCharMatch,            3},
+    {"CanyOutside",              (DL_FUNC) &CanyOutside,              5},
+    {"Ccumsum_reset",            (DL_FUNC) &Ccumsum_reset,            2},
+    {"Ccumsum_reset_sorted_int", (DL_FUNC) &Ccumsum_reset_sorted_int, 1},
+    {"Ccumsum_reset_where",      (DL_FUNC) &Ccumsum_reset_where,      4},
+    {"Cis_altrep",               (DL_FUNC) &Cis_altrep,               1},
+    {"Cwhich_isnt_int",          (DL_FUNC) &Cwhich_isnt_int,          1},
+    {"do_c_pmax",                (DL_FUNC) &do_c_pmax,                3},
+    {"do_c_pminmax",             (DL_FUNC) &do_c_pminmax,             3},
     {NULL, NULL, 0}
 };
 

@@ -46,3 +46,18 @@ cumsum_reset <- function(x, y = as.integer(x)) {
 }
 
 
+cumsum_reset_where <- function(where, y, .parent_nframes = 1L) {
+  sexpr <- substitute(where)
+  isBinaryW <- is_binary_sexp(sexpr, .parent_nframes = .parent_nframes + 1L)
+  if (isBinaryW) {
+    x <- eval.parent(sexpr[[2]], n = .parent_nframes)
+    o <- attr(isBinaryW, "M")
+    rhs_eval <- attr(isBinaryW, "rhs_eval")
+    ans <- .Call("Ccumsum_reset_where", x, y, o, rhs_eval, PACKAGE = packageName())
+    if (!is.null(ans)) {
+      return(ans)
+    }
+  }
+  cumsum_reset(where, y)
+}
+

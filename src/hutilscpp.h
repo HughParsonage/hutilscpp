@@ -33,6 +33,9 @@
 
 extern int tens[10];
 
+bool dsingle_ox_x1_x2(double x, int oix, double x1, double x2);
+bool isingle_ox_x1_x2(int x, int oix, int x1, int x2);
+
 // character
 bool all_digits_4_12(const char * xi);
 bool all_digits(const char * xi, size_t nchari);

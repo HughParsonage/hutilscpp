@@ -21,38 +21,6 @@ do_sum3s_par <- function(x, ox, x1, x2, xd, xd1, xd2, y, oy, y1, y2, yd, yd1, yd
     .Call(`_hutilscpp_do_sum3s_par`, x, ox, x1, x2, xd, xd1, xd2, y, oy, y1, y2, yd, yd1, yd2, z, oz, z1, z2, zd, zd1, zd2, A, B, C, ampersand, nThread)
 }
 
-do_cumsum_reset_logical <- function(x) {
-    .Call(`_hutilscpp_do_cumsum_reset_logical`, x)
-}
-
-do_cumsum_reset_integer <- function(x, y) {
-    .Call(`_hutilscpp_do_cumsum_reset_integer`, x, y)
-}
-
-do_cumsum_reset_double <- function(x, y) {
-    .Call(`_hutilscpp_do_cumsum_reset_double`, x, y)
-}
-
-do_duplicated_sorted_int <- function(x) {
-    .Call(`_hutilscpp_do_duplicated_sorted_int`, x)
-}
-
-do_duplicated_sorted_dbl <- function(x) {
-    .Call(`_hutilscpp_do_duplicated_sorted_dbl`, x)
-}
-
-do_cumsum_reset_sorted_int <- function(x) {
-    .Call(`_hutilscpp_do_cumsum_reset_sorted_int`, x)
-}
-
-do_cumsum_reset_where <- function(x, y, o, a) {
-    .Call(`_hutilscpp_do_cumsum_reset_where`, x, y, o, a)
-}
-
-add_ <- function(x, y) {
-    .Call(`_hutilscpp_add_`, x, y)
-}
-
 do_divisible <- function(x, d, nThread = 1L) {
     .Call(`_hutilscpp_do_divisible`, x, d, nThread)
 }
