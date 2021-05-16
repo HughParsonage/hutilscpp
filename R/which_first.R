@@ -113,7 +113,7 @@ which_first <- function(expr,
   }
   if (!is.call(sexpr) ||
       length(sexpr) != 3L ||
-      !(op <- do_op2M(operator <- as.character(sexpr[[1L]])))) {
+      isFALSE(op <- op2M(operator <- as.character(sexpr[[1L]])))) {
     o <- .which_first(expr, verbose = verbose, reverse = reverse)
     return(o)
   }
