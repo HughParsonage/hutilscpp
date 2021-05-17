@@ -6,5 +6,5 @@
 
 xor2 <- function(x, y, anyNAx = TRUE, anyNAy = TRUE) {
   stopifnot(length(x) == length(y))
-  do_xor2(x, y, anyNAx = !isFALSE(anyNAx), anyNAy = !isFALSE(anyNAy))
+  x != y
 }
