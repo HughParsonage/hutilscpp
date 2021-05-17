@@ -55,10 +55,6 @@ test_that("non-finite values", {
   expect_equal(wh, which((c(NA, 1, 2, Inf, -Inf, 7, 8, 8) %% 2) == 0))
 })
 
-test_that("NA", {
-  expect_equal(do_are_even(c(NA, 1L, 2L), double(0), 0L), c(NA, FALSE, TRUE))
-  expect_equal(do_are_even(integer(0), c(NA, 1, 2), 0L), c(NA, FALSE, TRUE))
-})
 
 test_that("large", {
   skip_if_not_installed("withr")
