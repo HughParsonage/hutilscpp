@@ -1,3 +1,7 @@
+## hutilscpp 0.6.0
+* New functions:
+  - `Implies`
+
 ## hutilscpp 0.5.2
 * Attempt fix of UBSAN error in which_first
 
