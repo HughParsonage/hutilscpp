@@ -31,15 +31,14 @@ are_even <- function(x,
                      nThread = getOption("hutilscpp.nThread", 1L)) {
   check_TF(keep_nas)
   check_omp(nThread)
-  if (!keep_nas && is.integer(x)) {
-    return(do_divisible2(x, nThread = nThread))
+  if (!is.numeric(x)) {
+    stop("`x` was not an integer or double.")
+  }
+  if (is.integer(x)) {
+    return(.Call("Cdivisible2", x, nThread, FALSE))
   }
 
   wb <- 0L
-
-  if (is.integer(x)) {
-    return(do_are_even(x, double(0), wb, nThread))
-  }
   if (is.double(x)) {
     if (AND(check_integerish,
             wb <- which_isnt_integerish(x))) {
@@ -47,7 +46,7 @@ are_even <- function(x,
               wb, " = ", x[wb], " was not an integer value. ",
               "Will be coerced to integer.")
     }
-    do_are_even(integer(0), x, wb, nThread)
+    return(.Call("Cdivisible2", x, nThread, FALSE))
   } else {
     stop("`x` was not an integer or double.")
   }
@@ -60,7 +59,7 @@ which_are_even <- function(x, check_integerish = TRUE) {
   }
   wb <- 0L
   if (is.integer(x)) {
-    return(do_which_even(x, double(0), wb))
+    return(.Call("Cwhich_even", x, PACKAGE = packageName()))
   }
   if (is.double(x)) {
     if (AND(check_integerish,
@@ -69,9 +68,10 @@ which_are_even <- function(x, check_integerish = TRUE) {
               wb, " = ", x[wb], " was not an integer value. ",
               "Will be coerced to integer: ", as.integer(x[wb]), ".")
     }
-    return(do_which_even(integer(0), x, wb))
+    return(.Call("Cwhich_even", x, PACKAGE = packageName()))
   } else {
     stop("`x` was not an integer or double.")
   }
 }
+
 

@@ -2,10 +2,13 @@
 % Please edit documentation in R/divisible.R
 \name{divisible}
 \alias{divisible}
+\alias{divisible2}
 \alias{divisible16}
-\title{Divisible}
+\title{Divisibility}
 \usage{
 divisible(x, d, nThread = getOption("hutilscpp.nThread", 1L))
+
+divisible2(x, nThread = getOption("hutilscpp.nThread", 1L))
 
 divisible16(x, nThread = getOption("hutilscpp.nThread", 1L))
 }
@@ -19,8 +22,9 @@ divisible16(x, nThread = getOption("hutilscpp.nThread", 1L))
 \value{
 Logical vector: \code{TRUE} where \code{x} is divisible by \code{d}.
 
-\code{divisible16} is short for (and quicker than) \code{divisble(x, 16)}.
+\code{divisible2},\code{divisible16} are short for (and quicker than)
+\code{divisible(x, 2)} and \code{divisble(x, 16)}.
 }
 \description{
-Divisible
+Divisibility
 }

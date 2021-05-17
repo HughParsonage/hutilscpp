@@ -21,26 +21,6 @@ do_sum3s_par <- function(x, ox, x1, x2, xd, xd1, xd2, y, oy, y1, y2, yd, yd1, yd
     .Call(`_hutilscpp_do_sum3s_par`, x, ox, x1, x2, xd, xd1, xd2, y, oy, y1, y2, yd, yd1, yd2, z, oz, z1, z2, zd, zd1, zd2, A, B, C, ampersand, nThread)
 }
 
-do_divisible <- function(x, d, nThread = 1L) {
-    .Call(`_hutilscpp_do_divisible`, x, d, nThread)
-}
-
-do_divisible2 <- function(x, nThread = 1L) {
-    .Call(`_hutilscpp_do_divisible2`, x, nThread)
-}
-
-do_divisible16 <- function(x, nThread = 1L) {
-    .Call(`_hutilscpp_do_divisible16`, x, nThread)
-}
-
-do_are_even <- function(x, y, wb = 0L, nThread = 1L) {
-    .Call(`_hutilscpp_do_are_even`, x, y, wb, nThread)
-}
-
-do_which_even <- function(x, y, wb = 0L) {
-    .Call(`_hutilscpp_do_which_even`, x, y, wb)
-}
-
 do_and3_na <- function(x, y, z, nThread = 1L, na_value = 0L, maxCall = 3L) {
     .Call(`_hutilscpp_do_and3_na`, x, y, z, nThread, na_value, maxCall)
 }

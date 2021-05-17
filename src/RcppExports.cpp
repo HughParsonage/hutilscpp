@@ -107,68 +107,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_divisible
-LogicalVector do_divisible(IntegerVector x, int d, int nThread);
-RcppExport SEXP _hutilscpp_do_divisible(SEXP xSEXP, SEXP dSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type d(dSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_divisible(x, d, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_divisible2
-LogicalVector do_divisible2(IntegerVector x, int nThread);
-RcppExport SEXP _hutilscpp_do_divisible2(SEXP xSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_divisible2(x, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_divisible16
-LogicalVector do_divisible16(IntegerVector x, int nThread);
-RcppExport SEXP _hutilscpp_do_divisible16(SEXP xSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_divisible16(x, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_are_even
-LogicalVector do_are_even(IntegerVector x, DoubleVector y, int wb, int nThread);
-RcppExport SEXP _hutilscpp_do_are_even(SEXP xSEXP, SEXP ySEXP, SEXP wbSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DoubleVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type wb(wbSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_are_even(x, y, wb, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_even
-IntegerVector do_which_even(IntegerVector x, DoubleVector y, int wb);
-RcppExport SEXP _hutilscpp_do_which_even(SEXP xSEXP, SEXP ySEXP, SEXP wbSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DoubleVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type wb(wbSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_even(x, y, wb));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_and3_na
 LogicalVector do_and3_na(LogicalVector x, LogicalVector y, LogicalVector z, int nThread, int na_value, int maxCall);
 RcppExport SEXP _hutilscpp_do_and3_na(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP nThreadSEXP, SEXP na_valueSEXP, SEXP maxCallSEXP) {
@@ -1438,7 +1376,11 @@ RcppExport SEXP CanyOutside(SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Ccumsum_reset(SEXP, SEXP);
 RcppExport SEXP Ccumsum_reset_sorted_int(SEXP);
 RcppExport SEXP Ccumsum_reset_where(SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Cdivisible(SEXP, SEXP, SEXP);
+RcppExport SEXP Cdivisible16(SEXP, SEXP);
+RcppExport SEXP Cdivisible2(SEXP, SEXP, SEXP);
 RcppExport SEXP Cis_altrep(SEXP);
+RcppExport SEXP Cwhich_even(SEXP);
 RcppExport SEXP Cwhich_isnt_int(SEXP);
 RcppExport SEXP do_c_pmax(SEXP, SEXP, SEXP);
 RcppExport SEXP do_c_pminmax(SEXP, SEXP, SEXP);
@@ -1449,11 +1391,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_range_int", (DL_FUNC) &_hutilscpp_do_range_int, 3},
     {"_hutilscpp_do_and3_par", (DL_FUNC) &_hutilscpp_do_and3_par, 17},
     {"_hutilscpp_do_sum3s_par", (DL_FUNC) &_hutilscpp_do_sum3s_par, 26},
-    {"_hutilscpp_do_divisible", (DL_FUNC) &_hutilscpp_do_divisible, 3},
-    {"_hutilscpp_do_divisible2", (DL_FUNC) &_hutilscpp_do_divisible2, 2},
-    {"_hutilscpp_do_divisible16", (DL_FUNC) &_hutilscpp_do_divisible16, 2},
-    {"_hutilscpp_do_are_even", (DL_FUNC) &_hutilscpp_do_are_even, 4},
-    {"_hutilscpp_do_which_even", (DL_FUNC) &_hutilscpp_do_which_even, 3},
     {"_hutilscpp_do_and3_na", (DL_FUNC) &_hutilscpp_do_and3_na, 6},
     {"_hutilscpp_do_which2_yr", (DL_FUNC) &_hutilscpp_do_which2_yr, 13},
     {"_hutilscpp_do_which_in", (DL_FUNC) &_hutilscpp_do_which_in, 2},
@@ -1565,7 +1502,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"Ccumsum_reset",            (DL_FUNC) &Ccumsum_reset,            2},
     {"Ccumsum_reset_sorted_int", (DL_FUNC) &Ccumsum_reset_sorted_int, 1},
     {"Ccumsum_reset_where",      (DL_FUNC) &Ccumsum_reset_where,      4},
+    {"Cdivisible",               (DL_FUNC) &Cdivisible,               3},
+    {"Cdivisible16",             (DL_FUNC) &Cdivisible16,             2},
+    {"Cdivisible2",              (DL_FUNC) &Cdivisible2,              3},
     {"Cis_altrep",               (DL_FUNC) &Cis_altrep,               1},
+    {"Cwhich_even",              (DL_FUNC) &Cwhich_even,              1},
     {"Cwhich_isnt_int",          (DL_FUNC) &Cwhich_isnt_int,          1},
     {"do_c_pmax",                (DL_FUNC) &do_c_pmax,                3},
     {"do_c_pminmax",             (DL_FUNC) &do_c_pminmax,             3},
