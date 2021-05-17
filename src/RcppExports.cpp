@@ -19,32 +19,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_range_dbl
-DoubleVector do_range_dbl(NumericVector x, double halt_if_min, double halt_if_max);
-RcppExport SEXP _hutilscpp_do_range_dbl(SEXP xSEXP, SEXP halt_if_minSEXP, SEXP halt_if_maxSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type halt_if_min(halt_if_minSEXP);
-    Rcpp::traits::input_parameter< double >::type halt_if_max(halt_if_maxSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_range_dbl(x, halt_if_min, halt_if_max));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_range_int
-DoubleVector do_range_int(IntegerVector x, int halt_if_min, int halt_if_max);
-RcppExport SEXP _hutilscpp_do_range_int(SEXP xSEXP, SEXP halt_if_minSEXP, SEXP halt_if_maxSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type halt_if_min(halt_if_minSEXP);
-    Rcpp::traits::input_parameter< int >::type halt_if_max(halt_if_maxSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_range_int(x, halt_if_min, halt_if_max));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_and3_par
 LogicalVector do_and3_par(IntegerVector x, int ox, int x1, int x2, IntegerVector y, int oy, int y1, int y2, IntegerVector z, int oz, int z1, int z2, LogicalVector A, LogicalVector B, LogicalVector C, CharacterVector nom, int nThread);
 RcppExport SEXP _hutilscpp_do_and3_par(SEXP xSEXP, SEXP oxSEXP, SEXP x1SEXP, SEXP x2SEXP, SEXP ySEXP, SEXP oySEXP, SEXP y1SEXP, SEXP y2SEXP, SEXP zSEXP, SEXP ozSEXP, SEXP z1SEXP, SEXP z2SEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP nomSEXP, SEXP nThreadSEXP) {
@@ -267,17 +241,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< CharacterVector >::type nom(nomSEXP);
     Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
     rcpp_result_gen = Rcpp::wrap(do_or3_par(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_range_dbl_simple
-DoubleVector do_range_dbl_simple(DoubleVector x);
-RcppExport SEXP _hutilscpp_do_range_dbl_simple(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_range_dbl_simple(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1380,6 +1343,7 @@ RcppExport SEXP Cdivisible(SEXP, SEXP, SEXP);
 RcppExport SEXP Cdivisible16(SEXP, SEXP);
 RcppExport SEXP Cdivisible2(SEXP, SEXP, SEXP);
 RcppExport SEXP Cis_altrep(SEXP);
+RcppExport SEXP Crange(SEXP);
 RcppExport SEXP Cwhich_even(SEXP);
 RcppExport SEXP Cwhich_isnt_int(SEXP);
 RcppExport SEXP do_c_pmax(SEXP, SEXP, SEXP);
@@ -1387,8 +1351,6 @@ RcppExport SEXP do_c_pminmax(SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_Implies", (DL_FUNC) &_hutilscpp_Implies, 4},
-    {"_hutilscpp_do_range_dbl", (DL_FUNC) &_hutilscpp_do_range_dbl, 3},
-    {"_hutilscpp_do_range_int", (DL_FUNC) &_hutilscpp_do_range_int, 3},
     {"_hutilscpp_do_and3_par", (DL_FUNC) &_hutilscpp_do_and3_par, 17},
     {"_hutilscpp_do_sum3s_par", (DL_FUNC) &_hutilscpp_do_sum3s_par, 26},
     {"_hutilscpp_do_and3_na", (DL_FUNC) &_hutilscpp_do_and3_na, 6},
@@ -1403,7 +1365,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_par_in_hash_dbl", (DL_FUNC) &_hutilscpp_do_par_in_hash_dbl, 3},
     {"_hutilscpp_do_op2M", (DL_FUNC) &_hutilscpp_do_op2M, 1},
     {"_hutilscpp_do_or3_par", (DL_FUNC) &_hutilscpp_do_or3_par, 17},
-    {"_hutilscpp_do_range_dbl_simple", (DL_FUNC) &_hutilscpp_do_range_dbl_simple, 1},
     {"_hutilscpp_do_which_first", (DL_FUNC) &_hutilscpp_do_which_first, 1},
     {"_hutilscpp_do_which_last", (DL_FUNC) &_hutilscpp_do_which_last, 1},
     {"_hutilscpp_do_which_first_false", (DL_FUNC) &_hutilscpp_do_which_first_false, 1},
@@ -1506,6 +1467,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cdivisible16",             (DL_FUNC) &Cdivisible16,             2},
     {"Cdivisible2",              (DL_FUNC) &Cdivisible2,              3},
     {"Cis_altrep",               (DL_FUNC) &Cis_altrep,               1},
+    {"Crange",                   (DL_FUNC) &Crange,                   1},
     {"Cwhich_even",              (DL_FUNC) &Cwhich_even,              1},
     {"Cwhich_isnt_int",          (DL_FUNC) &Cwhich_isnt_int,          1},
     {"do_c_pmax",                (DL_FUNC) &do_c_pmax,                3},

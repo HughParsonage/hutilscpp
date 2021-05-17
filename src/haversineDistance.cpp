@@ -159,24 +159,30 @@ IntegerVector EmptiestQuarter (NumericVector x,
                                double miny = 1,
                                double maxy = -1) {
   NumericVector x_range(4);
+  R_xlen_t N = x.size();
   x_range[0] = minx, x_range[1] = maxx;
   if (minx > maxx) {
-    x_range = NumericVector(do_range_dbl(x));
-    minx = x_range[0];
-    maxx = x_range[1];
+    minx = x[0];
+    maxx = x[0];
+    for (R_xlen_t i = 1; i < N; ++i) {
+      minx = (x[i] < minx) ? x[i] : minx;
+      maxy = (x[i] > maxx) ? x[i] : maxx;
+    }
   }
   NumericVector y_range(4);
   y_range[0] = miny, y_range[1] = maxy;
   if (miny > maxy) {
-    y_range = NumericVector(do_range_dbl(y));
-    miny = y_range[0];
-    maxy = y_range[1];
+    miny = y[0];
+    maxy = y[0];
+    for (R_xlen_t i = 1; i < N; ++i) {
+      miny = (y[i] < miny) ? y[i] : miny;
+      maxy = (y[i] > maxy) ? y[i] : maxy;
+    }
   }
-
 
   double xcentre = minx + (maxx - minx) / 2;
   double ycentre = miny + (maxy - miny) / 2;
-  R_xlen_t N = x.size();
+
   int q = -1;
   int o = -1;
 
@@ -240,16 +246,14 @@ IntegerVector theEmptiestQuarters (NumericVector x,
   NumericVector x_range(4);
   x_range[0] = minx, x_range[1] = maxx;
   if (minx > maxx) {
-    x_range = NumericVector(do_range_dbl(x));
-    minx = x_range[0];
-    maxx = x_range[1];
+    minx = min(x);
+    maxx = max(x);
   }
   NumericVector y_range(4);
   y_range[0] = miny, y_range[1] = maxy;
   if (miny > maxy) {
-    y_range = NumericVector(do_range_dbl(y));
-    miny = y_range[0];
-    maxy = y_range[1];
+    miny = min(y);
+    maxy = max(y);
   }
   IntegerVector out(depth);
   double x0 =0;
