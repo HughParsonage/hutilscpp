@@ -5,14 +5,6 @@ Implies <- function(x, y, anyNAx = TRUE, anyNAy = TRUE) {
     .Call(`_hutilscpp_Implies`, x, y, anyNAx, anyNAy)
 }
 
-do_range_dbl <- function(x, halt_if_min = 1, halt_if_max = -1) {
-    .Call(`_hutilscpp_do_range_dbl`, x, halt_if_min, halt_if_max)
-}
-
-do_range_int <- function(x, halt_if_min = 1L, halt_if_max = -1L) {
-    .Call(`_hutilscpp_do_range_int`, x, halt_if_min, halt_if_max)
-}
-
 do_and3_par <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread = 1L) {
     .Call(`_hutilscpp_do_and3_par`, x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread)
 }
@@ -67,10 +59,6 @@ do_op2M <- function(x) {
 
 do_or3_par <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread = 1L) {
     .Call(`_hutilscpp_do_or3_par`, x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread)
-}
-
-do_range_dbl_simple <- function(x) {
-    .Call(`_hutilscpp_do_range_dbl_simple`, x)
 }
 
 do_which_first <- function(x) {
