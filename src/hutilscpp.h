@@ -31,6 +31,8 @@
 #define OP_BO 9
 #define OP_BC 10
 
+#define NA_INT -2147483648
+
 extern int tens[10];
 
 bool dsingle_ox_x1_x2(double x, int oix, double x1, double x2);
