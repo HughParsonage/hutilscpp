@@ -5,20 +5,6 @@
 
 using namespace Rcpp;
 
-// Implies
-LogicalVector Implies(LogicalVector x, LogicalVector y, bool anyNAx, bool anyNAy);
-RcppExport SEXP _hutilscpp_Implies(SEXP xSEXP, SEXP ySEXP, SEXP anyNAxSEXP, SEXP anyNAySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< bool >::type anyNAx(anyNAxSEXP);
-    Rcpp::traits::input_parameter< bool >::type anyNAy(anyNAySEXP);
-    rcpp_result_gen = Rcpp::wrap(Implies(x, y, anyNAx, anyNAy));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_and3_par
 LogicalVector do_and3_par(IntegerVector x, int ox, int x1, int x2, IntegerVector y, int oy, int y1, int y2, IntegerVector z, int oz, int z1, int z2, LogicalVector A, LogicalVector B, LogicalVector C, CharacterVector nom, int nThread);
 RcppExport SEXP _hutilscpp_do_and3_par(SEXP xSEXP, SEXP oxSEXP, SEXP x1SEXP, SEXP x2SEXP, SEXP ySEXP, SEXP oySEXP, SEXP y1SEXP, SEXP y2SEXP, SEXP zSEXP, SEXP ozSEXP, SEXP z1SEXP, SEXP z2SEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP nomSEXP, SEXP nThreadSEXP) {
@@ -1328,6 +1314,7 @@ RcppExport SEXP Ccumsum_reset_where(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cdivisible(SEXP, SEXP, SEXP);
 RcppExport SEXP Cdivisible16(SEXP, SEXP);
 RcppExport SEXP Cdivisible2(SEXP, SEXP, SEXP);
+RcppExport SEXP CImplies(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cis_altrep(SEXP);
 RcppExport SEXP Crange(SEXP);
 RcppExport SEXP Cwhich_even(SEXP);
@@ -1336,7 +1323,6 @@ RcppExport SEXP do_c_pmax(SEXP, SEXP, SEXP);
 RcppExport SEXP do_c_pminmax(SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_hutilscpp_Implies", (DL_FUNC) &_hutilscpp_Implies, 4},
     {"_hutilscpp_do_and3_par", (DL_FUNC) &_hutilscpp_do_and3_par, 17},
     {"_hutilscpp_do_sum3s_par", (DL_FUNC) &_hutilscpp_do_sum3s_par, 26},
     {"_hutilscpp_do_and3_na", (DL_FUNC) &_hutilscpp_do_and3_na, 6},
@@ -1451,6 +1437,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cdivisible",               (DL_FUNC) &Cdivisible,               3},
     {"Cdivisible16",             (DL_FUNC) &Cdivisible16,             2},
     {"Cdivisible2",              (DL_FUNC) &Cdivisible2,              3},
+    {"CImplies",                 (DL_FUNC) &CImplies,                 4},
     {"Cis_altrep",               (DL_FUNC) &Cis_altrep,               1},
     {"Crange",                   (DL_FUNC) &Crange,                   1},
     {"Cwhich_even",              (DL_FUNC) &Cwhich_even,              1},

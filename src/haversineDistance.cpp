@@ -166,7 +166,7 @@ IntegerVector EmptiestQuarter (NumericVector x,
     maxx = x[0];
     for (R_xlen_t i = 1; i < N; ++i) {
       minx = (x[i] < minx) ? x[i] : minx;
-      maxy = (x[i] > maxx) ? x[i] : maxx;
+      maxx = (x[i] > maxx) ? x[i] : maxx;
     }
   }
   NumericVector y_range(4);
