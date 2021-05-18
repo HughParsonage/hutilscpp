@@ -267,30 +267,6 @@ squishi <- function(x, a, b, in_place = FALSE) {
     .Call(`_hutilscpp_squishi`, x, a, b, in_place)
 }
 
-sum_isna_int <- function(x, nThread = 1L) {
-    .Call(`_hutilscpp_sum_isna_int`, x, nThread)
-}
-
-sum_isna_dbl <- function(x, nThread = 1L) {
-    .Call(`_hutilscpp_sum_isna_dbl`, x, nThread)
-}
-
-sum_isna_complx <- function(x, nThread = 1L) {
-    .Call(`_hutilscpp_sum_isna_complx`, x, nThread)
-}
-
-sum_isna_char <- function(x, nThread = 1L) {
-    .Call(`_hutilscpp_sum_isna_char`, x, nThread)
-}
-
-sum_isfalse <- function(x, nThread = 1L) {
-    .Call(`_hutilscpp_sum_isfalse`, x, nThread)
-}
-
-sum_isna_logi <- function(x, nThread = 1L) {
-    .Call(`_hutilscpp_sum_isna_logi`, x, nThread)
-}
-
 do_summary3_dbl <- function(x, y, z, in_place = FALSE, do_max = TRUE) {
     .Call(`_hutilscpp_do_summary3_dbl`, x, y, z, in_place, do_max)
 }

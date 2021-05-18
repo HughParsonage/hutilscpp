@@ -42,6 +42,8 @@ bool isingle_ox_x1_x2(int x, int oix, int x1, int x2);
 
 bool do_is_safe2int(double x);
 
+R_xlen_t sum_isna(SEXP x, SEXP nthreads) ;
+
 // character
 bool all_digits_4_12(const char * xi);
 bool all_digits(const char * xi, size_t nchari);

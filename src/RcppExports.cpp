@@ -864,72 +864,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// sum_isna_int
-R_xlen_t sum_isna_int(IntegerVector x, int nThread);
-RcppExport SEXP _hutilscpp_sum_isna_int(SEXP xSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(sum_isna_int(x, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sum_isna_dbl
-R_xlen_t sum_isna_dbl(DoubleVector x, int nThread);
-RcppExport SEXP _hutilscpp_sum_isna_dbl(SEXP xSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(sum_isna_dbl(x, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sum_isna_complx
-R_xlen_t sum_isna_complx(ComplexVector x, int nThread);
-RcppExport SEXP _hutilscpp_sum_isna_complx(SEXP xSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< ComplexVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(sum_isna_complx(x, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sum_isna_char
-R_xlen_t sum_isna_char(CharacterVector x, int nThread);
-RcppExport SEXP _hutilscpp_sum_isna_char(SEXP xSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(sum_isna_char(x, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sum_isfalse
-R_xlen_t sum_isfalse(LogicalVector x, int nThread);
-RcppExport SEXP _hutilscpp_sum_isfalse(SEXP xSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(sum_isfalse(x, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sum_isna_logi
-R_xlen_t sum_isna_logi(LogicalVector x, int nThread);
-RcppExport SEXP _hutilscpp_sum_isna_logi(SEXP xSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(sum_isna_logi(x, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_summary3_dbl
 DoubleVector do_summary3_dbl(DoubleVector x, DoubleVector y, DoubleVector z, bool in_place, bool do_max);
 RcppExport SEXP _hutilscpp_do_summary3_dbl(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP in_placeSEXP, SEXP do_maxSEXP) {
@@ -1057,6 +991,7 @@ RcppExport SEXP Cdivisible2(SEXP, SEXP, SEXP);
 RcppExport SEXP CImplies(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cis_altrep(SEXP);
 RcppExport SEXP Crange(SEXP);
+RcppExport SEXP Csum_isna(SEXP, SEXP);
 RcppExport SEXP Cwhich_even(SEXP);
 RcppExport SEXP Cwhich_first(SEXP);
 RcppExport SEXP Cwhich_first__(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
@@ -1142,12 +1077,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_pminpmax", (DL_FUNC) &_hutilscpp_do_pminpmax, 8},
     {"_hutilscpp_squishn", (DL_FUNC) &_hutilscpp_squishn, 4},
     {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 4},
-    {"_hutilscpp_sum_isna_int", (DL_FUNC) &_hutilscpp_sum_isna_int, 2},
-    {"_hutilscpp_sum_isna_dbl", (DL_FUNC) &_hutilscpp_sum_isna_dbl, 2},
-    {"_hutilscpp_sum_isna_complx", (DL_FUNC) &_hutilscpp_sum_isna_complx, 2},
-    {"_hutilscpp_sum_isna_char", (DL_FUNC) &_hutilscpp_sum_isna_char, 2},
-    {"_hutilscpp_sum_isfalse", (DL_FUNC) &_hutilscpp_sum_isfalse, 2},
-    {"_hutilscpp_sum_isna_logi", (DL_FUNC) &_hutilscpp_sum_isna_logi, 2},
     {"_hutilscpp_do_summary3_dbl", (DL_FUNC) &_hutilscpp_do_summary3_dbl, 5},
     {"_hutilscpp_do_summary3_int", (DL_FUNC) &_hutilscpp_do_summary3_int, 5},
     {"_hutilscpp_test_single_ox_x1_x2", (DL_FUNC) &_hutilscpp_test_single_ox_x1_x2, 4},
@@ -1172,6 +1101,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"CImplies",                 (DL_FUNC) &CImplies,                 4},
     {"Cis_altrep",               (DL_FUNC) &Cis_altrep,               1},
     {"Crange",                   (DL_FUNC) &Crange,                   1},
+    {"Csum_isna",                (DL_FUNC) &Csum_isna,                2},
     {"Cwhich_even",              (DL_FUNC) &Cwhich_even,              1},
     {"Cwhich_first",             (DL_FUNC) &Cwhich_first,             1},
     {"Cwhich_first__",           (DL_FUNC) &Cwhich_first__,           8},
