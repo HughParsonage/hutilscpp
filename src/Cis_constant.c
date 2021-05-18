@@ -109,5 +109,115 @@ SEXP Cis_constant(SEXP x, SEXP nthreads) {
   return R_NilValue;
 }
 
+R_xlen_t isntConstant_int(const int * x, R_xlen_t N) {
+  if (N <= 1) {
+    return 0;
+  }
+  int x0 = x[0];
+  for (R_xlen_t i = 1; i < N; ++i) {
+    if (x[i] != x0) {
+      return i + 1;
+    }
+  }
+  return 0;
+}
+
+R_xlen_t isntConstant_dbl(const double * x, R_xlen_t N) {
+  if (N <= 1) {
+    return 0;
+  }
+  double x0 = x[0];
+  if (ISNAN(x0)) {
+    for (R_xlen_t i = 1; i < N; ++i) {
+      if (!ISNAN(x[i])) {
+        return i + 1;
+      }
+    }
+    return 0;
+  }
+  for (R_xlen_t i = 1; i < N; ++i) {
+    if (x[i] != x0) {
+      return i + 1;
+    }
+  }
+  return 0;
+}
+
+R_xlen_t isntConstant_chr(SEXP x) {
+  R_xlen_t N = xlength(x);
+  if (N <= 1) {
+    return 0;
+  }
+  if (STRING_ELT(x, 0) == NA_STRING) {
+    for (R_xlen_t i = 1; i < N; ++i) {
+      if (STRING_ELT(x, i) != NA_STRING) {
+        return i + 1;
+      }
+    }
+    return 0;
+  }
+  const char * x0 = CHAR(STRING_ELT(x, 0));
+  int n0 = strlen(x0);
+  for (R_xlen_t i = 1; i < N; ++i) {
+    const char * xi = CHAR(STRING_ELT(x, i));
+    if (!string_equaln(x0, n0, xi)) {
+      return i + 1;
+    }
+  }
+  return 0;
+}
+
+R_xlen_t isntConstant_complex(SEXP x) {
+  R_xlen_t N = xlength(x);
+  if (N <= 1) {
+    return 0;
+  }
+  const Rcomplex x0 = COMPLEX_ELT(x, 0);
+  const double r0 = x0.r;
+  const double i0 = x0.i;
+  for (R_xlen_t i = 1; i < N; ++i) {
+    Rcomplex xi = COMPLEX_ELT(x, i);
+    double ri = xi.r;
+    double ii = xi.i;
+    if (ri != r0 || ii != i0) {
+      return i + 1;
+    }
+  }
+  return 0;
+}
+
+R_xlen_t isntConstant_raw(const Rbyte * xp, R_xlen_t N) {
+  if (N <= 1) {
+    return 0;
+  }
+  const Rbyte x0 = xp[0];
+  for (R_xlen_t i = 1; i < N; ++i) {
+    if (xp[i] != x0) {
+      return i + 1;
+    }
+  }
+  return 0;
+}
+
+SEXP Cisnt_constant(SEXP x) {
+  R_xlen_t N = xlength(x);
+  if (N <= 1) {
+    return ScalarInteger(0);
+  }
+  switch(TYPEOF(x)) {
+  case LGLSXP:
+  case INTSXP:
+    return ScalarLength(isntConstant_int(INTEGER(x), N));
+  case REALSXP:
+    return ScalarLength(isntConstant_dbl(REAL(x), N));
+  case STRSXP:
+    return ScalarLength(isntConstant_chr(x));
+  case CPLXSXP:
+      return ScalarLength(isntConstant_complex(x));
+  case RAWSXP:
+    return ScalarLength(isntConstant_raw(RAW(x), N));
+  }
+  return R_NilValue;
+}
 
 

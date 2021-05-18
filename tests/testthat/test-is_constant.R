@@ -156,10 +156,10 @@ test_that("isntConstant other type", {
 })
 
 test_that("do_isntConstant(LGL)", {
-  expect_equal(do_isntConstant(NULL), 0L)
-  expect_equal(do_isntConstant(TRUE), 0L)
-  expect_equal(do_isntConstant(c(TRUE, FALSE)), 2L)
-  expect_equal(do_isntConstant(c(TRUE, TRUE)), 0L)
+  expect_equal(isntConstant(NULL), 0L)
+  expect_equal(isntConstant(TRUE), 0L)
+  expect_equal(isntConstant(c(TRUE, FALSE)), 2L)
+  expect_equal(isntConstant(c(TRUE, TRUE)), 0L)
 })
 
 test_that("hutilsc original", {

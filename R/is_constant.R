@@ -103,11 +103,11 @@ is_constant <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
          "Such objects are not supported.")
   }
   check_omp(nThread)
-  if (is.double(x) && is.na(x[1])) {
-    return(all_na_real(x, nThread = nThread))
+  ans <- .Call("Cis_constant", x, nThread, PACKAGE = packageName())
+  if (is.null(ans)) {
+    return(identical(rep_len(x[1], length(x)), x))
   }
-
-  .Call("Cis_constant", x, nThread)
+  ans
 }
 
 #' @rdname is_constant
@@ -145,5 +145,15 @@ isntConstant <- function(x) {
     }
   }
 
-  do_isntConstant(x)
+  ans <- .Call("Cisnt_constant", x, PACKAGE = packageName())
+  if (is.null(ans)) {
+    x1 <- x[1L]
+    for (i in seq_along(ans)) {
+      if (x[i] != x1) {
+        return(i)
+      }
+    }
+    return(0L)
+  }
+  ans
 }

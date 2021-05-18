@@ -468,48 +468,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// all_na_real
-bool all_na_real(DoubleVector x, int nThread);
-RcppExport SEXP _hutilscpp_all_na_real(SEXP xSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(all_na_real(x, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_isntConstant_dbl
-R_xlen_t do_isntConstant_dbl(DoubleVector x);
-RcppExport SEXP _hutilscpp_do_isntConstant_dbl(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_isntConstant_dbl(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_is_constant
-bool do_is_constant(SEXP x, int nThread);
-RcppExport SEXP _hutilscpp_do_is_constant(SEXP xSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_is_constant(x, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_isntConstant
-R_xlen_t do_isntConstant(SEXP x);
-RcppExport SEXP _hutilscpp_do_isntConstant(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_isntConstant(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // is_safe2int
 int is_safe2int(DoubleVector x);
 RcppExport SEXP _hutilscpp_is_safe2int(SEXP xSEXP) {
@@ -893,6 +851,7 @@ RcppExport SEXP CImplies(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cis_altrep(SEXP);
 RcppExport SEXP Cis_constant(SEXP, SEXP);
 RcppExport SEXP Cis_sorted(SEXP, SEXP);
+RcppExport SEXP Cisnt_constant(SEXP);
 RcppExport SEXP Cisnt_sorted(SEXP, SEXP);
 RcppExport SEXP Crange(SEXP);
 RcppExport SEXP CStringEqual(SEXP, SEXP);
@@ -950,10 +909,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_theEmptiestQuarters", (DL_FUNC) &_hutilscpp_theEmptiestQuarters, 7},
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
     {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 11},
-    {"_hutilscpp_all_na_real", (DL_FUNC) &_hutilscpp_all_na_real, 2},
-    {"_hutilscpp_do_isntConstant_dbl", (DL_FUNC) &_hutilscpp_do_isntConstant_dbl, 1},
-    {"_hutilscpp_do_is_constant", (DL_FUNC) &_hutilscpp_do_is_constant, 2},
-    {"_hutilscpp_do_isntConstant", (DL_FUNC) &_hutilscpp_do_isntConstant, 1},
     {"_hutilscpp_is_safe2int", (DL_FUNC) &_hutilscpp_is_safe2int, 1},
     {"_hutilscpp_force_as_integer", (DL_FUNC) &_hutilscpp_force_as_integer, 2},
     {"_hutilscpp_do_or3", (DL_FUNC) &_hutilscpp_do_or3, 3},
@@ -999,6 +954,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cis_altrep",               (DL_FUNC) &Cis_altrep,               1},
     {"Cis_constant",             (DL_FUNC) &Cis_constant,             2},
     {"Cis_sorted",               (DL_FUNC) &Cis_sorted,               2},
+    {"Cisnt_constant",           (DL_FUNC) &Cisnt_constant,           1},
     {"Cisnt_sorted",             (DL_FUNC) &Cisnt_sorted,             2},
     {"Crange",                   (DL_FUNC) &Crange,                   1},
     {"CStringEqual",             (DL_FUNC) &CStringEqual,             2},
