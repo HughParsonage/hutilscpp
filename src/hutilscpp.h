@@ -45,6 +45,7 @@ bool do_is_safe2int(double x);
 R_xlen_t sum_isna(SEXP x, SEXP nthreads) ;
 
 // character
+bool string_equaln(const char * x, int nx, const char * y);
 bool all_digits_4_12(const char * xi);
 bool all_digits(const char * xi, size_t nchari);
 int char2int(const char * x, int s);
