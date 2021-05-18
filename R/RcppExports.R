@@ -251,7 +251,3 @@ extractMandatory <- function(x, command, nCommands) {
     .Call(`_hutilscpp_extractMandatory`, x, command, nCommands)
 }
 
-do_which_true_onwards <- function(x) {
-    .Call(`_hutilscpp_do_which_true_onwards`, x)
-}
-

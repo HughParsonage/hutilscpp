@@ -795,17 +795,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_which_true_onwards
-R_xlen_t do_which_true_onwards(LogicalVector x);
-RcppExport SEXP _hutilscpp_do_which_true_onwards(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_true_onwards(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 RcppExport SEXP Callocate_with_root(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Callocate0_dbl(SEXP, SEXP);
@@ -846,6 +835,7 @@ RcppExport SEXP Cwhich_last_in_lgl(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_last_notFALSE(SEXP);
 RcppExport SEXP Cwhich_last_notTRUE(SEXP);
 RcppExport SEXP Cwhich_lastNA(SEXP);
+RcppExport SEXP Cwhich_true_onwards(SEXP);
 RcppExport SEXP do_c_pmax(SEXP, SEXP, SEXP);
 RcppExport SEXP do_c_pminmax(SEXP, SEXP, SEXP);
 
@@ -908,7 +898,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_is_space", (DL_FUNC) &_hutilscpp_is_space, 1},
     {"_hutilscpp_where_square_bracket_opens", (DL_FUNC) &_hutilscpp_where_square_bracket_opens, 2},
     {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},
-    {"_hutilscpp_do_which_true_onwards", (DL_FUNC) &_hutilscpp_do_which_true_onwards, 1},
     {"Callocate_with_root",      (DL_FUNC) &Callocate_with_root,      6},
     {"Callocate0_dbl",           (DL_FUNC) &Callocate0_dbl,           2},
     {"Callocate0_except",        (DL_FUNC) &Callocate0_except,        4},
@@ -948,6 +937,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cwhich_last_notFALSE",     (DL_FUNC) &Cwhich_last_notFALSE,     1},
     {"Cwhich_last_notTRUE",      (DL_FUNC) &Cwhich_last_notTRUE,      1},
     {"Cwhich_lastNA",            (DL_FUNC) &Cwhich_lastNA,            1},
+    {"Cwhich_true_onwards",      (DL_FUNC) &Cwhich_true_onwards,      1},
     {"do_c_pmax",                (DL_FUNC) &do_c_pmax,                3},
     {"do_c_pminmax",             (DL_FUNC) &do_c_pminmax,             3},
     {NULL, NULL, 0}
