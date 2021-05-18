@@ -31,7 +31,7 @@ jobs:
           Rdevel -q -e "ip <- function(x) install.packages(x, quiet = TRUE, repos = 'https://cran.r-project.org'); ip(c('Rcpp', 'data.table', 'glue', 'hutils', 'magrittr'))"
           Rdevel CMD build .
           Rdevel CMD INSTALL hutilscpp*.tar.gz
-          Rdevel -q -e "file.size(system.file("src", "hutilscpp.dll", package = "hutilscpp")) / 1024"
+          Rdevel -q -e "file.size(system.file("src", "hutilscpp.dll", package = 'hutilscpp')) / 1024"
           Rdevel -q -e "z3 <- integer(3); hutilscpp::which_first(z3 == NaN)"
           Rdevel -q -e "z3 <- integer(3); hutilscpp::which_first(z3 != NaN)"
           Rdevel -q -e "z3 <- integer(3); hutilscpp::which_first(z3 >= 2147483647.1)"
