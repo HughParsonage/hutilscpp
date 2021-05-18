@@ -35,3 +35,8 @@ isntSorted <- function(x, asc = NA) {
   }
   ans
 }
+
+
+string_equals <- function(x, y) {
+  .Call("CStringEqual", x, y, PACKAGE = packageName())
+}

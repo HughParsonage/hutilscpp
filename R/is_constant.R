@@ -102,10 +102,12 @@ is_constant <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
     stop("`x` was not atomic. ",
          "Such objects are not supported.")
   }
+  check_omp(nThread)
   if (is.double(x) && is.na(x[1])) {
     return(all_na_real(x, nThread = nThread))
   }
-  do_is_constant(x, nThread = nThread)
+
+  .Call("Cis_constant", x, nThread)
 }
 
 #' @rdname is_constant

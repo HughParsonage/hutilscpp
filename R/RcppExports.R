@@ -159,38 +159,6 @@ force_as_integer <- function(x, na_code) {
     .Call(`_hutilscpp_force_as_integer`, x, na_code)
 }
 
-is_sorted_ascending_dbl <- function(x) {
-    .Call(`_hutilscpp_is_sorted_ascending_dbl`, x)
-}
-
-is_sorted_descending_dbl <- function(x) {
-    .Call(`_hutilscpp_is_sorted_descending_dbl`, x)
-}
-
-is_sorted_ascending_int <- function(x) {
-    .Call(`_hutilscpp_is_sorted_ascending_int`, x)
-}
-
-is_sorted_descending_int <- function(x) {
-    .Call(`_hutilscpp_is_sorted_descending_int`, x)
-}
-
-is_sorted_int <- function(x) {
-    .Call(`_hutilscpp_is_sorted_int`, x)
-}
-
-do_isntSorted_int <- function(x) {
-    .Call(`_hutilscpp_do_isntSorted_int`, x)
-}
-
-is_sorted_dbl <- function(x) {
-    .Call(`_hutilscpp_is_sorted_dbl`, x)
-}
-
-do_isntSorted_dbl <- function(x) {
-    .Call(`_hutilscpp_do_isntSorted_dbl`, x)
-}
-
 do_or3 <- function(x, y, z) {
     .Call(`_hutilscpp_do_or3`, x, y, z)
 }

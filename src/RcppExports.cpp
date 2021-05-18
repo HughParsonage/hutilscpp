@@ -531,94 +531,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// is_sorted_ascending_dbl
-bool is_sorted_ascending_dbl(DoubleVector x);
-RcppExport SEXP _hutilscpp_is_sorted_ascending_dbl(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(is_sorted_ascending_dbl(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// is_sorted_descending_dbl
-bool is_sorted_descending_dbl(DoubleVector x);
-RcppExport SEXP _hutilscpp_is_sorted_descending_dbl(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(is_sorted_descending_dbl(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// is_sorted_ascending_int
-bool is_sorted_ascending_int(IntegerVector x);
-RcppExport SEXP _hutilscpp_is_sorted_ascending_int(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(is_sorted_ascending_int(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// is_sorted_descending_int
-bool is_sorted_descending_int(IntegerVector x);
-RcppExport SEXP _hutilscpp_is_sorted_descending_int(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(is_sorted_descending_int(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// is_sorted_int
-bool is_sorted_int(IntegerVector x);
-RcppExport SEXP _hutilscpp_is_sorted_int(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(is_sorted_int(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_isntSorted_int
-R_xlen_t do_isntSorted_int(IntegerVector x);
-RcppExport SEXP _hutilscpp_do_isntSorted_int(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_isntSorted_int(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// is_sorted_dbl
-bool is_sorted_dbl(DoubleVector x);
-RcppExport SEXP _hutilscpp_is_sorted_dbl(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(is_sorted_dbl(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_isntSorted_dbl
-R_xlen_t do_isntSorted_dbl(DoubleVector x);
-RcppExport SEXP _hutilscpp_do_isntSorted_dbl(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_isntSorted_dbl(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_or3
 LogicalVector do_or3(LogicalVector x, LogicalVector y, LogicalVector z);
 RcppExport SEXP _hutilscpp_do_or3(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
@@ -979,9 +891,11 @@ RcppExport SEXP Cdivisible16(SEXP, SEXP);
 RcppExport SEXP Cdivisible2(SEXP, SEXP, SEXP);
 RcppExport SEXP CImplies(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cis_altrep(SEXP);
+RcppExport SEXP Cis_constant(SEXP, SEXP);
 RcppExport SEXP Cis_sorted(SEXP, SEXP);
 RcppExport SEXP Cisnt_sorted(SEXP, SEXP);
 RcppExport SEXP Crange(SEXP);
+RcppExport SEXP CStringEqual(SEXP, SEXP);
 RcppExport SEXP Csum_isna(SEXP, SEXP);
 RcppExport SEXP Cwhich_even(SEXP);
 RcppExport SEXP Cwhich_first(SEXP);
@@ -1042,14 +956,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_isntConstant", (DL_FUNC) &_hutilscpp_do_isntConstant, 1},
     {"_hutilscpp_is_safe2int", (DL_FUNC) &_hutilscpp_is_safe2int, 1},
     {"_hutilscpp_force_as_integer", (DL_FUNC) &_hutilscpp_force_as_integer, 2},
-    {"_hutilscpp_is_sorted_ascending_dbl", (DL_FUNC) &_hutilscpp_is_sorted_ascending_dbl, 1},
-    {"_hutilscpp_is_sorted_descending_dbl", (DL_FUNC) &_hutilscpp_is_sorted_descending_dbl, 1},
-    {"_hutilscpp_is_sorted_ascending_int", (DL_FUNC) &_hutilscpp_is_sorted_ascending_int, 1},
-    {"_hutilscpp_is_sorted_descending_int", (DL_FUNC) &_hutilscpp_is_sorted_descending_int, 1},
-    {"_hutilscpp_is_sorted_int", (DL_FUNC) &_hutilscpp_is_sorted_int, 1},
-    {"_hutilscpp_do_isntSorted_int", (DL_FUNC) &_hutilscpp_do_isntSorted_int, 1},
-    {"_hutilscpp_is_sorted_dbl", (DL_FUNC) &_hutilscpp_is_sorted_dbl, 1},
-    {"_hutilscpp_do_isntSorted_dbl", (DL_FUNC) &_hutilscpp_do_isntSorted_dbl, 1},
     {"_hutilscpp_do_or3", (DL_FUNC) &_hutilscpp_do_or3, 3},
     {"_hutilscpp_do_and3", (DL_FUNC) &_hutilscpp_do_and3, 3},
     {"_hutilscpp_na_and", (DL_FUNC) &_hutilscpp_na_and, 1},
@@ -1091,9 +997,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cdivisible2",              (DL_FUNC) &Cdivisible2,              3},
     {"CImplies",                 (DL_FUNC) &CImplies,                 4},
     {"Cis_altrep",               (DL_FUNC) &Cis_altrep,               1},
+    {"Cis_constant",             (DL_FUNC) &Cis_constant,             2},
     {"Cis_sorted",               (DL_FUNC) &Cis_sorted,               2},
     {"Cisnt_sorted",             (DL_FUNC) &Cisnt_sorted,             2},
     {"Crange",                   (DL_FUNC) &Crange,                   1},
+    {"CStringEqual",             (DL_FUNC) &CStringEqual,             2},
     {"Csum_isna",                (DL_FUNC) &Csum_isna,                2},
     {"Cwhich_even",              (DL_FUNC) &Cwhich_even,              1},
     {"Cwhich_first",             (DL_FUNC) &Cwhich_first,             1},
