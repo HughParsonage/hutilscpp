@@ -928,11 +928,11 @@ R_xlen_t do_which_first_xi_add(const int * x, int op, double a1, double a2, R_xl
 }
 
 R_xlen_t which_first__(SEXP xx, SEXP opp, SEXP yy,
-                        SEXP nyy,
-                        SEXP y1ii,
-                        SEXP y2ii,
-                        SEXP y1dd,
-                        SEXP y2dd) {
+                       SEXP nyy,
+                       SEXP y1ii,
+                       SEXP y2ii,
+                       SEXP y1dd,
+                       SEXP y2dd) {
 
   const int op = asInteger(opp);
   const int ny = asInteger(nyy);
@@ -943,6 +943,9 @@ R_xlen_t which_first__(SEXP xx, SEXP opp, SEXP yy,
 
   R_xlen_t Nx = xlength(xx);
   R_xlen_t Ny = xlength(yy);
+  if (ny > 2 && Nx != Ny) {
+    error("Internal error(which_first__): ny > 2 && Nx != Ny."); // # nocov
+  }
 
   if (TYPEOF(xx) == INTSXP && TYPEOF(yy) == INTSXP) {
 

@@ -242,6 +242,8 @@ test_that("LHS logical length-one", {
 })
 
 test_that("RHS NA", {
+  skip_if_not_installed("withr")
+  withr::with_options(list(hutilscpp_suppressWarning = FALSE), {
   x <- c(NA, NA)
   expect_error(which_first(x > NA),
                regexp = "This is not supported for operator '>'.",
@@ -268,7 +270,7 @@ test_that("RHS NA", {
                  regexp = "`rhs` appears to be logical NA.",
                  fixed = TRUE)
   expect_equal(wf_zisntna, 2L)
-
+  })
 })
 
 test_that("lhs_eval length 0", {

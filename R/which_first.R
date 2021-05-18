@@ -295,6 +295,13 @@ which_first <- function(expr,
       y2d <- y2i <- rhs_eval[2L]
     }
 
+    if (!is.double(y1d)) {
+      y1d <- as.double(y1d)
+    }
+    if (!is.double(y2d)) {
+      y2d <- as.double(y2d)
+    }
+
     if (reverse) {
       o <- do_which_last__(lhs_eval, op, rhs_eval,
                            ny = qd2i(ny),
@@ -303,12 +310,6 @@ which_first <- function(expr,
                            y1d = y1d,
                            y2d = y2d)
     } else {
-      if (!is.double(y1d)) {
-        y1d <- as.double(y1d)
-      }
-      if (!is.double(y2d)) {
-        y2d <- as.double(y2d)
-      }
       o <- do_which_first__(lhs_eval, op, rhs_eval,
                             ny = qd2i(ny),
                             y1i = qd2i(y1i),
@@ -534,6 +535,10 @@ do_which_first_in_lgl <- function(x, anyNA_, any_, nall_) {
   .Call("Cwhich_first_in_lgl", x, anyNA_, any_, nall_, PACKAGE = packageName())
 }
 
+do_which_last_in_lgl <- function(x, anyNA_, any_, nall_) {
+  .Call("Cwhich_last_in_lgl", x, anyNA_, any_, nall_, PACKAGE = packageName())
+}
+
 do_which_firstNA <- function(x) {
   .Call("Cwhich_firstNA", x, PACKAGE = packageName())
 }
@@ -558,4 +563,32 @@ do_which_first_lgl_lgl_op <- function(x, y, op, reverse = FALSE) {
   .Call("Cwhich_first_lgl_lgl_op", x, y, op, reverse, PACKAGE = packageName())
 }
 
-
+do_which_last__ <- function(x, op, y,
+                            ny,
+                            y1i,
+                            y2i,
+                            y1d,
+                            y2d) {
+  Nx <- length(x)
+  Ny <- length(y)
+  if (ny > 2L && Nx != Ny) {
+    stop("Lengths differ.")
+  }
+  stopifnot(is.numeric(x),
+            is.integer(op), length(op) == 1L,
+            is.numeric(y),
+            is.integer(y1i), is.integer(y2i),
+            length(y1i) == 1L,
+            length(y2i) == 1L,
+            is.double(y1d), is.double(y2d),
+            length(y1d) == 1L,
+            length(y2d) == 1L)
+  .Call("Cwhich_last__",
+        x, op, y,
+        ny,
+        y1i,
+        y2i,
+        y1d,
+        y2d,
+        PACKAGE = packageName())
+}
