@@ -46,3 +46,33 @@ test_that("isntSorted", {
   expect_equal(isntSorted(c(40, 30, 00, 10)), 4)
   expect_equal(isntSorted(c(4L, 3L, 0L, 1L)), 4)
 })
+
+test_that("is_sorted asc", {
+  x <- c(0L, 2:4)
+  expect_true(is_sorted(x, asc = TRUE))
+  expect_true(is_sorted(as.double(x), asc = TRUE))
+  expect_false(is_sorted(x, asc = FALSE))
+  expect_false(is_sorted(as.double(x), asc = FALSE))
+  xr <- rev(x)
+  expect_false(is_sorted(xr, asc = TRUE))
+  expect_false(is_sorted(as.double(xr), asc = TRUE))
+  expect_true(is_sorted(xr, asc = FALSE))
+  expect_true(is_sorted(as.double(xr), asc = FALSE))
+})
+
+test_that("isntSorted asc", {
+  x <- c(0L, 2:4)
+  expect_true(!isntSorted(x, asc = TRUE))
+  expect_true(!isntSorted(as.double(x), asc = TRUE))
+  expect_false(!isntSorted(x, asc = FALSE))
+  expect_false(!isntSorted(as.double(x), asc = FALSE))
+  xr <- rev(x)
+  expect_false(!isntSorted(xr, asc = TRUE))
+  expect_false(!isntSorted(as.double(xr), asc = TRUE))
+  expect_true(!isntSorted(xr, asc = FALSE))
+  expect_true(!isntSorted(as.double(xr), asc = FALSE))
+})
+
+
+
+

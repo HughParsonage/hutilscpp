@@ -1,6 +1,7 @@
 ## hutilscpp 0.6.0
 * New functions:
-  - `Implies`
+  - `Implies` for logical implies
+  - `is_sorted` and `isntSorted` for assertions about sorted atomic vectors
 
 ## hutilscpp 0.5.2
 * Attempt fix of UBSAN error in which_first
