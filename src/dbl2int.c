@@ -1,5 +1,9 @@
 #include "hutilsc.h"
 
+bool do_is_safe2int(double x) {
+  return R_finite(x) && x <= 2147483647 && x >= -2147483647 && ((int)x == x);
+}
+
 int dbl_is_int(double x) {
   // 0 if really double
   // 1 if NA

@@ -1,8 +1,4 @@
-#include "hutilsc.h"
-
-SEXP ScalarLength(R_xlen_t o) {
-  return (o < INT_MAX) ? ScalarInteger(o) : ScalarReal(o);
-}
+#include "hutilscpp.h"
 
 SEXP CanyOutside(SEXP xx, SEXP aa, SEXP bb, SEXP nasAbsent, SEXP naIsOutside) {
   if (TYPEOF(xx) != INTSXP && TYPEOF(xx) != REALSXP &&

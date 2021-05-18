@@ -57,54 +57,6 @@ do_or3_par <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom
     .Call(`_hutilscpp_do_or3_par`, x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread)
 }
 
-do_which_first <- function(x) {
-    .Call(`_hutilscpp_do_which_first`, x)
-}
-
-do_which_last <- function(x) {
-    .Call(`_hutilscpp_do_which_last`, x)
-}
-
-do_which_first_false <- function(x) {
-    .Call(`_hutilscpp_do_which_first_false`, x)
-}
-
-do_which_last_false <- function(x) {
-    .Call(`_hutilscpp_do_which_last_false`, x)
-}
-
-do_which_first_notTRUE <- function(x) {
-    .Call(`_hutilscpp_do_which_first_notTRUE`, x)
-}
-
-do_which_last_notTRUE <- function(x) {
-    .Call(`_hutilscpp_do_which_last_notTRUE`, x)
-}
-
-do_which_last_notFALSE <- function(x) {
-    .Call(`_hutilscpp_do_which_last_notFALSE`, x)
-}
-
-do_which_first_in_lgl <- function(x, anyNA_, any_, nall_) {
-    .Call(`_hutilscpp_do_which_first_in_lgl`, x, anyNA_, any_, nall_)
-}
-
-do_which_firstNA <- function(x) {
-    .Call(`_hutilscpp_do_which_firstNA`, x)
-}
-
-do_which_lastNA <- function(x) {
-    .Call(`_hutilscpp_do_which_lastNA`, x)
-}
-
-do_which_first_lgl_lgl_op <- function(x, y, op, reverse = FALSE) {
-    .Call(`_hutilscpp_do_which_first_lgl_lgl_op`, x, y, op, reverse)
-}
-
-do_which_first__ <- function(x, op, y, ny, y1i, y2i, y1d, y2d) {
-    .Call(`_hutilscpp_do_which_first__`, x, op, y, ny, y1i, y2i, y1d, y2d)
-}
-
 do_which_first_xi_ini <- function(x, y) {
     .Call(`_hutilscpp_do_which_first_xi_ini`, x, y)
 }

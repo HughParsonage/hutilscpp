@@ -35,8 +35,12 @@
 
 extern int tens[10];
 
+SEXP ScalarLength(R_xlen_t o);
+
 bool dsingle_ox_x1_x2(double x, int oix, double x1, double x2);
 bool isingle_ox_x1_x2(int x, int oix, int x1, int x2);
+
+bool do_is_safe2int(double x);
 
 // character
 bool all_digits_4_12(const char * xi);
