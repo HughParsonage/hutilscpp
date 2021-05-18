@@ -207,14 +207,6 @@ do_pminpmax <- function(X, Y, do_min = FALSE, in_place = FALSE, keep_nas = FALSE
     .Call(`_hutilscpp_do_pminpmax`, X, Y, do_min, in_place, keep_nas, dbl_ok, swap_xy, nThread)
 }
 
-squishn <- function(x, a, b, in_place = FALSE) {
-    .Call(`_hutilscpp_squishn`, x, a, b, in_place)
-}
-
-squishi <- function(x, a, b, in_place = FALSE) {
-    .Call(`_hutilscpp_squishi`, x, a, b, in_place)
-}
-
 do_summary3_dbl <- function(x, y, z, in_place = FALSE, do_max = TRUE) {
     .Call(`_hutilscpp_do_summary3_dbl`, x, y, z, in_place, do_max)
 }
