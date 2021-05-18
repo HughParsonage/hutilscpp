@@ -695,34 +695,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// squishn
-NumericVector squishn(NumericVector x, double a, double b, bool in_place);
-RcppExport SEXP _hutilscpp_squishn(SEXP xSEXP, SEXP aSEXP, SEXP bSEXP, SEXP in_placeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type a(aSEXP);
-    Rcpp::traits::input_parameter< double >::type b(bSEXP);
-    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
-    rcpp_result_gen = Rcpp::wrap(squishn(x, a, b, in_place));
-    return rcpp_result_gen;
-END_RCPP
-}
-// squishi
-IntegerVector squishi(IntegerVector x, int a, int b, bool in_place);
-RcppExport SEXP _hutilscpp_squishi(SEXP xSEXP, SEXP aSEXP, SEXP bSEXP, SEXP in_placeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type a(aSEXP);
-    Rcpp::traits::input_parameter< int >::type b(bSEXP);
-    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
-    rcpp_result_gen = Rcpp::wrap(squishi(x, a, b, in_place));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_summary3_dbl
 DoubleVector do_summary3_dbl(DoubleVector x, DoubleVector y, DoubleVector z, bool in_place, bool do_max);
 RcppExport SEXP _hutilscpp_do_summary3_dbl(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP in_placeSEXP, SEXP do_maxSEXP) {
@@ -854,6 +826,7 @@ RcppExport SEXP Cis_sorted(SEXP, SEXP);
 RcppExport SEXP Cisnt_constant(SEXP);
 RcppExport SEXP Cisnt_sorted(SEXP, SEXP);
 RcppExport SEXP Crange(SEXP);
+RcppExport SEXP CSquish(SEXP, SEXP);
 RcppExport SEXP CStringEqual(SEXP, SEXP);
 RcppExport SEXP Csum_isna(SEXP, SEXP);
 RcppExport SEXP Cwhich_even(SEXP);
@@ -927,8 +900,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_pmax0_bitwise", (DL_FUNC) &_hutilscpp_do_pmax0_bitwise, 2},
     {"_hutilscpp_do_pmin0_bitwise", (DL_FUNC) &_hutilscpp_do_pmin0_bitwise, 2},
     {"_hutilscpp_do_pminpmax", (DL_FUNC) &_hutilscpp_do_pminpmax, 8},
-    {"_hutilscpp_squishn", (DL_FUNC) &_hutilscpp_squishn, 4},
-    {"_hutilscpp_squishi", (DL_FUNC) &_hutilscpp_squishi, 4},
     {"_hutilscpp_do_summary3_dbl", (DL_FUNC) &_hutilscpp_do_summary3_dbl, 5},
     {"_hutilscpp_do_summary3_int", (DL_FUNC) &_hutilscpp_do_summary3_int, 5},
     {"_hutilscpp_test_single_ox_x1_x2", (DL_FUNC) &_hutilscpp_test_single_ox_x1_x2, 4},
@@ -957,6 +928,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cisnt_constant",           (DL_FUNC) &Cisnt_constant,           1},
     {"Cisnt_sorted",             (DL_FUNC) &Cisnt_sorted,             2},
     {"Crange",                   (DL_FUNC) &Crange,                   1},
+    {"CSquish",                  (DL_FUNC) &CSquish,                  2},
     {"CStringEqual",             (DL_FUNC) &CStringEqual,             2},
     {"Csum_isna",                (DL_FUNC) &Csum_isna,                2},
     {"Cwhich_even",              (DL_FUNC) &Cwhich_even,              1},
