@@ -119,10 +119,6 @@ test_that("hausdorff distance", {
   expect_equal(o, sqrt(0.74))
 })
 
-test_that("is_sorted_ascending", {
-  expect_true(is_sorted_ascending_dbl(c(0, 1.5, 3)))
-  expect_false(is_sorted_ascending_dbl(c(0, 1.5, 3, 1)))
-})
 
 test_that("Emptiest quadrants", {
   skip_if_not_installed("covr")
