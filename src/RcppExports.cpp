@@ -230,139 +230,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_which_first
-R_xlen_t do_which_first(LogicalVector x);
-RcppExport SEXP _hutilscpp_do_which_first(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_first(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_last
-R_xlen_t do_which_last(LogicalVector x);
-RcppExport SEXP _hutilscpp_do_which_last(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_last(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_first_false
-R_xlen_t do_which_first_false(LogicalVector x);
-RcppExport SEXP _hutilscpp_do_which_first_false(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_first_false(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_last_false
-R_xlen_t do_which_last_false(LogicalVector x);
-RcppExport SEXP _hutilscpp_do_which_last_false(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_last_false(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_first_notTRUE
-R_xlen_t do_which_first_notTRUE(LogicalVector x);
-RcppExport SEXP _hutilscpp_do_which_first_notTRUE(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_first_notTRUE(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_last_notTRUE
-R_xlen_t do_which_last_notTRUE(LogicalVector x);
-RcppExport SEXP _hutilscpp_do_which_last_notTRUE(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_last_notTRUE(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_last_notFALSE
-R_xlen_t do_which_last_notFALSE(LogicalVector x);
-RcppExport SEXP _hutilscpp_do_which_last_notFALSE(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_last_notFALSE(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_first_in_lgl
-R_xlen_t do_which_first_in_lgl(LogicalVector x, bool anyNA_, bool any_, bool nall_);
-RcppExport SEXP _hutilscpp_do_which_first_in_lgl(SEXP xSEXP, SEXP anyNA_SEXP, SEXP any_SEXP, SEXP nall_SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< bool >::type anyNA_(anyNA_SEXP);
-    Rcpp::traits::input_parameter< bool >::type any_(any_SEXP);
-    Rcpp::traits::input_parameter< bool >::type nall_(nall_SEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_first_in_lgl(x, anyNA_, any_, nall_));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_firstNA
-R_xlen_t do_which_firstNA(SEXP x);
-RcppExport SEXP _hutilscpp_do_which_firstNA(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_firstNA(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_lastNA
-R_xlen_t do_which_lastNA(SEXP x);
-RcppExport SEXP _hutilscpp_do_which_lastNA(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_lastNA(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_first_lgl_lgl_op
-R_xlen_t do_which_first_lgl_lgl_op(LogicalVector x, LogicalVector y, int op, bool reverse);
-RcppExport SEXP _hutilscpp_do_which_first_lgl_lgl_op(SEXP xSEXP, SEXP ySEXP, SEXP opSEXP, SEXP reverseSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type op(opSEXP);
-    Rcpp::traits::input_parameter< bool >::type reverse(reverseSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_first_lgl_lgl_op(x, y, op, reverse));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which_first__
-R_xlen_t do_which_first__(SEXP x, int op, SEXP y, int ny, int y1i, int y2i, double y1d, double y2d);
-RcppExport SEXP _hutilscpp_do_which_first__(SEXP xSEXP, SEXP opSEXP, SEXP ySEXP, SEXP nySEXP, SEXP y1iSEXP, SEXP y2iSEXP, SEXP y1dSEXP, SEXP y2dSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type op(opSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type ny(nySEXP);
-    Rcpp::traits::input_parameter< int >::type y1i(y1iSEXP);
-    Rcpp::traits::input_parameter< int >::type y2i(y2iSEXP);
-    Rcpp::traits::input_parameter< double >::type y1d(y1dSEXP);
-    Rcpp::traits::input_parameter< double >::type y2d(y2dSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_first__(x, op, y, ny, y1i, y2i, y1d, y2d));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_which_first_xi_ini
 R_xlen_t do_which_first_xi_ini(IntegerVector x, IntegerVector y);
 RcppExport SEXP _hutilscpp_do_which_first_xi_ini(SEXP xSEXP, SEXP ySEXP) {
@@ -1318,7 +1185,19 @@ RcppExport SEXP CImplies(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cis_altrep(SEXP);
 RcppExport SEXP Crange(SEXP);
 RcppExport SEXP Cwhich_even(SEXP);
+RcppExport SEXP Cwhich_first(SEXP);
+RcppExport SEXP Cwhich_first__(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Cwhich_first_false(SEXP);
+RcppExport SEXP Cwhich_first_in_lgl(SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Cwhich_first_lgl_lgl_op(SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Cwhich_first_notTRUE(SEXP);
+RcppExport SEXP Cwhich_firstNA(SEXP);
 RcppExport SEXP Cwhich_isnt_int(SEXP);
+RcppExport SEXP Cwhich_last(SEXP);
+RcppExport SEXP Cwhich_last_false(SEXP);
+RcppExport SEXP Cwhich_last_notFALSE(SEXP);
+RcppExport SEXP Cwhich_last_notTRUE(SEXP);
+RcppExport SEXP Cwhich_lastNA(SEXP);
 RcppExport SEXP do_c_pmax(SEXP, SEXP, SEXP);
 RcppExport SEXP do_c_pminmax(SEXP, SEXP, SEXP);
 
@@ -1337,18 +1216,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_par_in_hash_dbl", (DL_FUNC) &_hutilscpp_do_par_in_hash_dbl, 3},
     {"_hutilscpp_do_op2M", (DL_FUNC) &_hutilscpp_do_op2M, 1},
     {"_hutilscpp_do_or3_par", (DL_FUNC) &_hutilscpp_do_or3_par, 17},
-    {"_hutilscpp_do_which_first", (DL_FUNC) &_hutilscpp_do_which_first, 1},
-    {"_hutilscpp_do_which_last", (DL_FUNC) &_hutilscpp_do_which_last, 1},
-    {"_hutilscpp_do_which_first_false", (DL_FUNC) &_hutilscpp_do_which_first_false, 1},
-    {"_hutilscpp_do_which_last_false", (DL_FUNC) &_hutilscpp_do_which_last_false, 1},
-    {"_hutilscpp_do_which_first_notTRUE", (DL_FUNC) &_hutilscpp_do_which_first_notTRUE, 1},
-    {"_hutilscpp_do_which_last_notTRUE", (DL_FUNC) &_hutilscpp_do_which_last_notTRUE, 1},
-    {"_hutilscpp_do_which_last_notFALSE", (DL_FUNC) &_hutilscpp_do_which_last_notFALSE, 1},
-    {"_hutilscpp_do_which_first_in_lgl", (DL_FUNC) &_hutilscpp_do_which_first_in_lgl, 4},
-    {"_hutilscpp_do_which_firstNA", (DL_FUNC) &_hutilscpp_do_which_firstNA, 1},
-    {"_hutilscpp_do_which_lastNA", (DL_FUNC) &_hutilscpp_do_which_lastNA, 1},
-    {"_hutilscpp_do_which_first_lgl_lgl_op", (DL_FUNC) &_hutilscpp_do_which_first_lgl_lgl_op, 4},
-    {"_hutilscpp_do_which_first__", (DL_FUNC) &_hutilscpp_do_which_first__, 8},
     {"_hutilscpp_do_which_first_xi_ini", (DL_FUNC) &_hutilscpp_do_which_first_xi_ini, 2},
     {"_hutilscpp_dblTable2int", (DL_FUNC) &_hutilscpp_dblTable2int, 1},
     {"_hutilscpp_do_which_first_xi_ind", (DL_FUNC) &_hutilscpp_do_which_first_xi_ind, 2},
@@ -1441,7 +1308,19 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cis_altrep",               (DL_FUNC) &Cis_altrep,               1},
     {"Crange",                   (DL_FUNC) &Crange,                   1},
     {"Cwhich_even",              (DL_FUNC) &Cwhich_even,              1},
+    {"Cwhich_first",             (DL_FUNC) &Cwhich_first,             1},
+    {"Cwhich_first__",           (DL_FUNC) &Cwhich_first__,           8},
+    {"Cwhich_first_false",       (DL_FUNC) &Cwhich_first_false,       1},
+    {"Cwhich_first_in_lgl",      (DL_FUNC) &Cwhich_first_in_lgl,      4},
+    {"Cwhich_first_lgl_lgl_op",  (DL_FUNC) &Cwhich_first_lgl_lgl_op,  4},
+    {"Cwhich_first_notTRUE",     (DL_FUNC) &Cwhich_first_notTRUE,     1},
+    {"Cwhich_firstNA",           (DL_FUNC) &Cwhich_firstNA,           1},
     {"Cwhich_isnt_int",          (DL_FUNC) &Cwhich_isnt_int,          1},
+    {"Cwhich_last",              (DL_FUNC) &Cwhich_last,              1},
+    {"Cwhich_last_false",        (DL_FUNC) &Cwhich_last_false,        1},
+    {"Cwhich_last_notFALSE",     (DL_FUNC) &Cwhich_last_notFALSE,     1},
+    {"Cwhich_last_notTRUE",      (DL_FUNC) &Cwhich_last_notTRUE,      1},
+    {"Cwhich_lastNA",            (DL_FUNC) &Cwhich_lastNA,            1},
     {"do_c_pmax",                (DL_FUNC) &do_c_pmax,                3},
     {"do_c_pminmax",             (DL_FUNC) &do_c_pminmax,             3},
     {NULL, NULL, 0}
