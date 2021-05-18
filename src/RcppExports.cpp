@@ -274,17 +274,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_which_isna_int
-IntegerVector do_which_isna_int(IntegerVector x, bool isnt);
-RcppExport SEXP _hutilscpp_do_which_isna_int(SEXP xSEXP, SEXP isntSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< bool >::type isnt(isntSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_isna_int(x, isnt));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_which_isnt_integerish
 R_xlen_t do_which_isnt_integerish(DoubleVector x);
 RcppExport SEXP _hutilscpp_do_which_isnt_integerish(SEXP xSEXP) {
@@ -1000,6 +989,7 @@ RcppExport SEXP Cwhich_first_in_lgl(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_first_lgl_lgl_op(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_first_notTRUE(SEXP);
 RcppExport SEXP Cwhich_firstNA(SEXP);
+RcppExport SEXP Cwhich_isna(SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_isnt_int(SEXP);
 RcppExport SEXP Cwhich_last(SEXP);
 RcppExport SEXP Cwhich_last__(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
@@ -1030,7 +1020,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_dblTable2int", (DL_FUNC) &_hutilscpp_dblTable2int, 1},
     {"_hutilscpp_do_which_first_xi_ind", (DL_FUNC) &_hutilscpp_do_which_first_xi_ind, 2},
     {"_hutilscpp_do_which_first_xd_ind", (DL_FUNC) &_hutilscpp_do_which_first_xd_ind, 3},
-    {"_hutilscpp_do_which_isna_int", (DL_FUNC) &_hutilscpp_do_which_isna_int, 2},
     {"_hutilscpp_do_which_isnt_integerish", (DL_FUNC) &_hutilscpp_do_which_isnt_integerish, 1},
     {"_hutilscpp_do_which_last_xi_ini", (DL_FUNC) &_hutilscpp_do_which_last_xi_ini, 2},
     {"_hutilscpp_do_which_last_xi_ind", (DL_FUNC) &_hutilscpp_do_which_last_xi_ind, 2},
@@ -1110,6 +1099,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cwhich_first_lgl_lgl_op",  (DL_FUNC) &Cwhich_first_lgl_lgl_op,  4},
     {"Cwhich_first_notTRUE",     (DL_FUNC) &Cwhich_first_notTRUE,     1},
     {"Cwhich_firstNA",           (DL_FUNC) &Cwhich_firstNA,           1},
+    {"Cwhich_isna",              (DL_FUNC) &Cwhich_isna,              3},
     {"Cwhich_isnt_int",          (DL_FUNC) &Cwhich_isnt_int,          1},
     {"Cwhich_last",              (DL_FUNC) &Cwhich_last,              1},
     {"Cwhich_last__",            (DL_FUNC) &Cwhich_last__,            8},

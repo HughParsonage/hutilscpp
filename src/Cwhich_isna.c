@@ -10,7 +10,7 @@ SEXP Cwhich_isna(SEXP x, SEXP Isnt, SEXP nthreads) {
     return allocVector(INTSXP, 0);
   }
   if (n == N) {
-    return allocVector(n <= INTSXP ? INTSXP : REALSXP, N);
+    return R_NilValue; // create altrep at R level
   }
 
   R_xlen_t j = 0;
