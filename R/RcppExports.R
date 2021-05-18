@@ -73,10 +73,6 @@ do_which_first_xd_ind <- function(x, y, y_has_na) {
     .Call(`_hutilscpp_do_which_first_xd_ind`, x, y, y_has_na)
 }
 
-do_which_isna_int <- function(x, isnt = FALSE) {
-    .Call(`_hutilscpp_do_which_isna_int`, x, isnt)
-}
-
 do_which_isnt_integerish <- function(x) {
     .Call(`_hutilscpp_do_which_isnt_integerish`, x)
 }
