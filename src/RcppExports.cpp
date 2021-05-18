@@ -979,6 +979,8 @@ RcppExport SEXP Cdivisible16(SEXP, SEXP);
 RcppExport SEXP Cdivisible2(SEXP, SEXP, SEXP);
 RcppExport SEXP CImplies(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cis_altrep(SEXP);
+RcppExport SEXP Cis_sorted(SEXP, SEXP);
+RcppExport SEXP Cisnt_sorted(SEXP, SEXP);
 RcppExport SEXP Crange(SEXP);
 RcppExport SEXP Csum_isna(SEXP, SEXP);
 RcppExport SEXP Cwhich_even(SEXP);
@@ -1089,6 +1091,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cdivisible2",              (DL_FUNC) &Cdivisible2,              3},
     {"CImplies",                 (DL_FUNC) &CImplies,                 4},
     {"Cis_altrep",               (DL_FUNC) &Cis_altrep,               1},
+    {"Cis_sorted",               (DL_FUNC) &Cis_sorted,               2},
+    {"Cisnt_sorted",             (DL_FUNC) &Cisnt_sorted,             2},
     {"Crange",                   (DL_FUNC) &Crange,                   1},
     {"Csum_isna",                (DL_FUNC) &Csum_isna,                2},
     {"Cwhich_even",              (DL_FUNC) &Cwhich_even,              1},
