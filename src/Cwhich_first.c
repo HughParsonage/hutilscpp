@@ -291,7 +291,7 @@ SEXP Cwhich_lastNA(SEXP x) {
 
 R_xlen_t do_which_first_lgl_lgl_op(SEXP xx, SEXP yy, int op, bool reverse) {
   if (TYPEOF(xx) != LGLSXP || TYPEOF(yy) != LGLSXP) {
-    error("Internal error:(do_which_first_lgl_lgl_op): TYPEOF(x) != LGLSXP && TYPEOF(y) != LGLSXP");
+    return -1;
   }
   R_xlen_t N = xlength(xx), Ny = xlength(yy);
   if (N == 0 || Ny == 0) {
@@ -327,7 +327,8 @@ R_xlen_t do_which_first_lgl_lgl_op(SEXP xx, SEXP yy, int op, bool reverse) {
 
     // Two values, for %between%, we need F,F F,T or T,T
     // otherwise will never occur so return 0 now
-    if (op == OP_BW) {
+    switch(op) {
+    case OP_BW: {
       if (y[0] == TRUE && y[1] == FALSE) {
         return 0;
       }
@@ -356,8 +357,10 @@ R_xlen_t do_which_first_lgl_lgl_op(SEXP xx, SEXP yy, int op, bool reverse) {
       }
       return 0;
     }
-    //
-    for (R_xlen_t k = 0; k < N; ++k) {
+      break;
+    case OP_IN: {
+      //
+      for (R_xlen_t k = 0; k < N; ++k) {
       R_xlen_t i = reverse ? (N - k - 1) : k;
       if (hasNA && x[i] == NA_LOGICAL) {
         return i + 1;
@@ -369,7 +372,11 @@ R_xlen_t do_which_first_lgl_lgl_op(SEXP xx, SEXP yy, int op, bool reverse) {
         return i + 1;
       }
     }
-    return 0;
+      return 0;
+    }
+      break;
+    }
+    return 0; // # nocov
   }
 
   for (R_xlen_t k = 0; k < N; ++k) {
@@ -391,7 +398,7 @@ SEXP Cwhich_first_lgl_lgl_op(SEXP xx, SEXP yy, SEXP opp, SEXP reverse) {
   R_xlen_t Ny = xlength(yy);
   const bool len_eq = Ny == N;
   const bool len1 = Ny == 1;
-  if (!len_eq && !len1 && op != OP_IN && op != OP_BW) {
+  if (!len_eq && !len1 && op != OP_IN && op != OP_BW && op != OP_BO) {
     error("Lengths differ."); // # nocov
   }
   if (op == OP_IN || op == OP_BW) {

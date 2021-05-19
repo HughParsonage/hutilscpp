@@ -79,8 +79,13 @@
 pmaxC <- function(x, a,
                   in_place = FALSE,
                   keep_nas = FALSE,
-                  dbl_ok = TRUE,
+                  dbl_ok = NA,
                   nThread = getOption("hutilscpp.nThread", 1L)) {
+  if (msg_dbl_ok <- anyNA(dbl_ok)) {
+    dbl_ok <- TRUE
+  }
+  check_TF(dbl_ok)
+
   check_TF(in_place)
   check_TF(keep_nas)
   if (!is.atomic(x) || !is.numeric(x)) {
@@ -109,7 +114,7 @@ pmaxC <- function(x, a,
   if (is.null(o)) {
     o <- pmax.int(x, a)
   }
-  if (x_was_integer && is.double(o) && !dbl_ok) {
+  if (x_was_integer && is.double(o) && msg_dbl_ok) {
     message("Output is double")
   }
 
