@@ -814,6 +814,8 @@ RcppExport SEXP Cis_constant(SEXP, SEXP);
 RcppExport SEXP Cis_sorted(SEXP, SEXP);
 RcppExport SEXP Cisnt_constant(SEXP);
 RcppExport SEXP Cisnt_sorted(SEXP, SEXP);
+RcppExport SEXP Cpmax(SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP CpmaxC_in_place(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Crange(SEXP);
 RcppExport SEXP CSquish(SEXP, SEXP);
 RcppExport SEXP CStringEqual(SEXP, SEXP);
@@ -836,8 +838,6 @@ RcppExport SEXP Cwhich_last_notFALSE(SEXP);
 RcppExport SEXP Cwhich_last_notTRUE(SEXP);
 RcppExport SEXP Cwhich_lastNA(SEXP);
 RcppExport SEXP Cwhich_true_onwards(SEXP);
-RcppExport SEXP do_c_pmax(SEXP, SEXP, SEXP);
-RcppExport SEXP do_c_pminmax(SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_and3_par", (DL_FUNC) &_hutilscpp_do_and3_par, 17},
@@ -916,6 +916,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cis_sorted",               (DL_FUNC) &Cis_sorted,               2},
     {"Cisnt_constant",           (DL_FUNC) &Cisnt_constant,           1},
     {"Cisnt_sorted",             (DL_FUNC) &Cisnt_sorted,             2},
+    {"Cpmax",                    (DL_FUNC) &Cpmax,                    4},
+    {"CpmaxC_in_place",          (DL_FUNC) &CpmaxC_in_place,          4},
     {"Crange",                   (DL_FUNC) &Crange,                   1},
     {"CSquish",                  (DL_FUNC) &CSquish,                  2},
     {"CStringEqual",             (DL_FUNC) &CStringEqual,             2},
@@ -938,8 +940,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cwhich_last_notTRUE",      (DL_FUNC) &Cwhich_last_notTRUE,      1},
     {"Cwhich_lastNA",            (DL_FUNC) &Cwhich_lastNA,            1},
     {"Cwhich_true_onwards",      (DL_FUNC) &Cwhich_true_onwards,      1},
-    {"do_c_pmax",                (DL_FUNC) &do_c_pmax,                3},
-    {"do_c_pminmax",             (DL_FUNC) &do_c_pminmax,             3},
     {NULL, NULL, 0}
 };
 
