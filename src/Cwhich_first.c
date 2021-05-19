@@ -306,13 +306,7 @@ R_xlen_t do_which_first_lgl_lgl_op(SEXP xx, SEXP yy, int op, bool reverse) {
 
   const bool len_eq = Ny == N;
   const bool len1 = Ny == 1;
-  if (!len_eq && !len1 && op != OP_IN && op != OP_BW) {
-    error("Lengths differ."); // # nocov
-  }
   if (op == OP_IN || op == OP_BW) {
-    if (op == OP_BW && Ny != 2) {
-      error("%between% expects RHS to be a vector of length-2.");
-    }
     bool hasNA = false;
     bool hasTRUE = false;
     bool hasFALSE = false;
@@ -393,6 +387,21 @@ R_xlen_t do_which_first_lgl_lgl_op(SEXP xx, SEXP yy, int op, bool reverse) {
 SEXP Cwhich_first_lgl_lgl_op(SEXP xx, SEXP yy, SEXP opp, SEXP reverse) {
   const int op = asInteger(opp);
   const bool rev = asLogical(reverse);
+  R_xlen_t N = xlength(xx);
+  R_xlen_t Ny = xlength(yy);
+  const bool len_eq = Ny == N;
+  const bool len1 = Ny == 1;
+  if (!len_eq && !len1 && op != OP_IN && op != OP_BW) {
+    error("Lengths differ."); // # nocov
+  }
+  if (op == OP_IN || op == OP_BW) {
+    if (op == OP_BW && Ny != 2) {
+      error("%between% expects RHS to be a vector of length-2."); // # nocov
+    }
+  }
+  if (TYPEOF(xx) != LGLSXP || TYPEOF(yy) != LGLSXP) {
+    error("Internal error:(Cwhich_first_lgl_lgl_op): TYPEOF(x) != LGLSXP && TYPEOF(y) != LGLSXP"); // # nocov
+  }
   return ScalarLength(do_which_first_lgl_lgl_op(xx, yy, op, rev));
 }
 
