@@ -545,7 +545,10 @@ R_xlen_t which_last__(SEXP xx, SEXP opp, SEXP yy,
   R_xlen_t Nx = xlength(xx);
   R_xlen_t Ny = xlength(yy);
   if (ny > 2 && Nx != Ny) {
-    error("Internal error(which_first__): ny > 2 && Nx != Ny."); // # nocov
+    error("Internal error(which_last__): ny > 2 && Nx != Ny."); // # nocov
+  }
+  if (Nx == 0 || Ny == 0) {
+    error("Internal error(which_last__): Nx == 0 || Ny == 0."); // # nocov
   }
 
   if (TYPEOF(xx) == INTSXP && TYPEOF(yy) == INTSXP) {
@@ -688,6 +691,9 @@ SEXP Cwhich_last_in_lgl(SEXP xx, SEXP anyNA_, SEXP any_, SEXP nall_) {
     error("Internal error(Cwhich_last_in_lgl): TYPEOF(xx) != LGLSXP."); // # nocov
   }
   R_xlen_t N = xlength(xx);
+  if (N == 0) {
+    error("Internal error(Cwhich_last_in_lgl): N == 0."); // # nocov
+  }
   const int * x = LOGICAL(xx);
   return ScalarLength(do_which_last_in_lgl(x, asLogical(anyNA_), asLogical(any_), asLogical(nall_), N));
 }
