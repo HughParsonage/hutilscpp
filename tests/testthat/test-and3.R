@@ -96,62 +96,6 @@ test_that("C++", {
                regexp = "wrong length")
 })
 
-test_that("do_and3_na", {
-  skip_if_not_installed("data.table")
-  skip_if_not_installed("hutils")
-  library(data.table)
-  library(hutils)
-  DT <- CJ(x = c(TRUE, FALSE, NA), y = c(TRUE, FALSE, NA), z = c(TRUE, FALSE, NA))
-  DT[, xf := coalesce(x, FALSE)]
-  DT[, xt := coalesce(x, TRUE)]
-  DT[, yf := coalesce(y, FALSE)]
-  DT[, yt := coalesce(y, TRUE)]
-  DT[, zf := coalesce(z, FALSE)]
-  DT[, zt := coalesce(z, TRUE)]
-  DT[, ans0 := do_and3_na(x, y, z)]
-  DT[, ans1 := do_and3_na(x, y, z, na_value = -1L)]
-  DT[, ans2 := do_and3_na(x, y, z, na_value = +1L)]
-
-  DT[, ans0x := do_and3_na(.BY[[1]], y, z), by = "x"]
-  DT[, ans1x := do_and3_na(.BY[[1]], y, z, na_value = -1L), by = "x"]
-  DT[, ans2x := do_and3_na(.BY[[1]], y, z, na_value = +1L), by = "x"]
-  DT[, expect_identical(ans0, ans0x)]
-  DT[, expect_identical(ans1, ans1x)]
-  DT[, expect_identical(ans2, ans2x)]
-
-  DT[, ans0y := do_and3_na(x, .BY[[1]], z), by = "y"]
-  DT[, ans1y := do_and3_na(x, .BY[[1]], z, na_value = -1L), by = "y"]
-  DT[, ans2y := do_and3_na(x, .BY[[1]], z, na_value = +1L), by = "y"]
-  DT[, expect_identical(ans0, ans0y)]
-  DT[, expect_identical(ans1, ans1y)]
-  DT[, expect_identical(ans2, ans2y)]
-
-  DT[, ans0z := do_and3_na(x, y, .BY[[1]]), by = "z"]
-  DT[, ans1z := do_and3_na(x, y, .BY[[1]], na_value = -1L), by = "z"]
-  DT[, ans2z := do_and3_na(x, y, .BY[[1]], na_value = +1L), by = "z"]
-  DT[, expect_identical(ans0, ans0z)]
-  DT[, expect_identical(ans1, ans1z)]
-  DT[, expect_identical(ans2, ans2z)]
-
-  DT[, ans0xyz := do_and3_na(.BY[[1]], .BY[[2]], .BY[["z"]]), by = c("x", "y", "z")]
-  DT[, expect_identical(ans0, ans0xyz)]
-
-  # default is any NA => FALSE
-  DT[seq_len(.N - 1L), expect_false(any(ans1))]
-
-  expect_equal(do_and3_na(logical(0), logical(0), logical(0)), logical(0))
-})
-
-test_that("prev segfault", {
-  a <- do_and3_na(TRUE, c(TRUE, TRUE), TRUE, maxCall = 5)
-  expect_true(all(a))
-})
-
-test_that("and3_na errors", {
-  expect_error(do_and3_na(TRUE, TRUE, FALSE, maxCall = -1), "maxCall")
-  expect_error(do_and3_na(TRUE, c(TRUE, FALSE), c(TRUE, FALSE, NA), maxCall = 1), "lengths")
-})
-
 
 
 

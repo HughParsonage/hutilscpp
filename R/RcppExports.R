@@ -9,32 +9,12 @@ do_sum3s_par <- function(x, ox, x1, x2, xd, xd1, xd2, y, oy, y1, y2, yd, yd1, yd
     .Call(`_hutilscpp_do_sum3s_par`, x, ox, x1, x2, xd, xd1, xd2, y, oy, y1, y2, yd, yd1, yd2, z, oz, z1, z2, zd, zd1, zd2, A, B, C, ampersand, nThread)
 }
 
-do_and3_na <- function(x, y, z, nThread = 1L, na_value = 0L, maxCall = 3L) {
-    .Call(`_hutilscpp_do_and3_na`, x, y, z, nThread, na_value, maxCall)
-}
-
-do_which2_yr <- function(Year, yr, consider_yr, x, xa, eqx, gtx, ltx, y, ya, eqy, gty, lty) {
-    .Call(`_hutilscpp_do_which2_yr`, Year, yr, consider_yr, x, xa, eqx, gtx, ltx, y, ya, eqy, gty, lty)
-}
-
 do_which_in <- function(x, tbl) {
     .Call(`_hutilscpp_do_which_in`, x, tbl)
 }
 
 test_intersect3_stdint <- function(M = 0L) {
     .Call(`_hutilscpp_test_intersect3_stdint`, M)
-}
-
-do_count_logical <- function(x, nThread = 1L) {
-    .Call(`_hutilscpp_do_count_logical`, x, nThread)
-}
-
-do_count_logical_long <- function(x, nThread = 1L) {
-    .Call(`_hutilscpp_do_count_logical_long`, x, nThread)
-}
-
-do_in_int <- function(x, table) {
-    .Call(`_hutilscpp_do_in_int`, x, table)
 }
 
 do_par_in <- function(x, table, nThread = 1L) {
