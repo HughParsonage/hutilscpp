@@ -16,7 +16,7 @@ pmaxC(
   a,
   in_place = FALSE,
   keep_nas = FALSE,
-  dbl_ok = TRUE,
+  dbl_ok = NA,
   nThread = getOption("hutilscpp.nThread", 1L)
 )
 
