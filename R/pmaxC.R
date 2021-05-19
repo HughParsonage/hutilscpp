@@ -91,28 +91,28 @@ pmaxC <- function(x, a,
   if (amsg <- isnt_number(a, na.bad = TRUE, infinite.bad = TRUE, int.only = !dbl_ok)) {
     stop(attr(amsg, "ErrorMessage"))
   }
+  x_was_integer <- is.integer(x)
   if (is.double(x)) {
     a <- as.double(a)
+  } else if (!dbl_ok) {
+    a <- ensure_integer(a)
+  }
+  if (!length(x)) {
+    return(x)
   }
 
-  if (getOption("use_cpp", FALSE)) {
-  o <- do_pminpmax(x, a,
-                   do_min = FALSE,
-                   in_place = in_place,
-                   keep_nas = keep_nas,
-                   dbl_ok = dbl_ok,
-                   swap_xy = FALSE,
-                   nThread = nThread)
+  if (in_place && is.symbol(substitute(x))) {
+    o <- .Call("CpmaxC_in_place", x, a, keep_nas, nThread, PACKAGE = packageName())
   } else {
-    if (in_place && is.symbol(substitute(x))) {
-      o <- .Call("CpmaxC_in_place", x, a, keep_nas, nThread, PACKAGE = packageName())
-    } else {
-      o <- .Call("Cpmax", x, a, keep_nas, nThread, PACKAGE = packageName())
-    }
-    if (is.null(o)) {
-      o <- pmax.int(x, a)
-    }
+    o <- .Call("Cpmax", x, a, keep_nas, nThread, PACKAGE = packageName())
   }
+  if (is.null(o)) {
+    o <- pmax.int(x, a)
+  }
+  if (x_was_integer && is.double(o) && !dbl_ok) {
+    message("Output is double")
+  }
+
   return(o)
 }
 
