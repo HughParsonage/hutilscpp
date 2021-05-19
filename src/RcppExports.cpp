@@ -67,43 +67,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_and3_na
-LogicalVector do_and3_na(LogicalVector x, LogicalVector y, LogicalVector z, int nThread, int na_value, int maxCall);
-RcppExport SEXP _hutilscpp_do_and3_na(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP nThreadSEXP, SEXP na_valueSEXP, SEXP maxCallSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type z(zSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    Rcpp::traits::input_parameter< int >::type na_value(na_valueSEXP);
-    Rcpp::traits::input_parameter< int >::type maxCall(maxCallSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_and3_na(x, y, z, nThread, na_value, maxCall));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which2_yr
-IntegerVector do_which2_yr(IntegerVector Year, int yr, bool consider_yr, IntegerVector x, int xa, bool eqx, bool gtx, bool ltx, IntegerVector y, int ya, bool eqy, bool gty, bool lty);
-RcppExport SEXP _hutilscpp_do_which2_yr(SEXP YearSEXP, SEXP yrSEXP, SEXP consider_yrSEXP, SEXP xSEXP, SEXP xaSEXP, SEXP eqxSEXP, SEXP gtxSEXP, SEXP ltxSEXP, SEXP ySEXP, SEXP yaSEXP, SEXP eqySEXP, SEXP gtySEXP, SEXP ltySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type Year(YearSEXP);
-    Rcpp::traits::input_parameter< int >::type yr(yrSEXP);
-    Rcpp::traits::input_parameter< bool >::type consider_yr(consider_yrSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type xa(xaSEXP);
-    Rcpp::traits::input_parameter< bool >::type eqx(eqxSEXP);
-    Rcpp::traits::input_parameter< bool >::type gtx(gtxSEXP);
-    Rcpp::traits::input_parameter< bool >::type ltx(ltxSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type ya(yaSEXP);
-    Rcpp::traits::input_parameter< bool >::type eqy(eqySEXP);
-    Rcpp::traits::input_parameter< bool >::type gty(gtySEXP);
-    Rcpp::traits::input_parameter< bool >::type lty(ltySEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which2_yr(Year, yr, consider_yr, x, xa, eqx, gtx, ltx, y, ya, eqy, gty, lty));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_which_in
 IntegerVector do_which_in(IntegerVector x, IntegerVector tbl);
 RcppExport SEXP _hutilscpp_do_which_in(SEXP xSEXP, SEXP tblSEXP) {
@@ -122,39 +85,6 @@ BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< int >::type M(MSEXP);
     rcpp_result_gen = Rcpp::wrap(test_intersect3_stdint(M));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_count_logical
-IntegerVector do_count_logical(LogicalVector x, int nThread);
-RcppExport SEXP _hutilscpp_do_count_logical(SEXP xSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_count_logical(x, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_count_logical_long
-DoubleVector do_count_logical_long(LogicalVector x, int nThread);
-RcppExport SEXP _hutilscpp_do_count_logical_long(SEXP xSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_count_logical_long(x, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_in_int
-bool do_in_int(int x, IntegerVector table);
-RcppExport SEXP _hutilscpp_do_in_int(SEXP xSEXP, SEXP tableSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< int >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type table(tableSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_in_int(x, table));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -802,6 +732,7 @@ RcppExport SEXP Callocate0_except(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Callocate0_int(SEXP, SEXP);
 RcppExport SEXP CAnyCharMatch(SEXP, SEXP, SEXP);
 RcppExport SEXP CanyOutside(SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Ccount_logical(SEXP, SEXP);
 RcppExport SEXP Ccumsum_reset(SEXP, SEXP);
 RcppExport SEXP Ccumsum_reset_sorted_int(SEXP);
 RcppExport SEXP Ccumsum_reset_where(SEXP, SEXP, SEXP, SEXP);
@@ -842,13 +773,8 @@ RcppExport SEXP Cwhich_true_onwards(SEXP);
 static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_and3_par", (DL_FUNC) &_hutilscpp_do_and3_par, 17},
     {"_hutilscpp_do_sum3s_par", (DL_FUNC) &_hutilscpp_do_sum3s_par, 26},
-    {"_hutilscpp_do_and3_na", (DL_FUNC) &_hutilscpp_do_and3_na, 6},
-    {"_hutilscpp_do_which2_yr", (DL_FUNC) &_hutilscpp_do_which2_yr, 13},
     {"_hutilscpp_do_which_in", (DL_FUNC) &_hutilscpp_do_which_in, 2},
     {"_hutilscpp_test_intersect3_stdint", (DL_FUNC) &_hutilscpp_test_intersect3_stdint, 1},
-    {"_hutilscpp_do_count_logical", (DL_FUNC) &_hutilscpp_do_count_logical, 2},
-    {"_hutilscpp_do_count_logical_long", (DL_FUNC) &_hutilscpp_do_count_logical_long, 2},
-    {"_hutilscpp_do_in_int", (DL_FUNC) &_hutilscpp_do_in_int, 2},
     {"_hutilscpp_do_par_in", (DL_FUNC) &_hutilscpp_do_par_in, 3},
     {"_hutilscpp_do_par_in_hash_int", (DL_FUNC) &_hutilscpp_do_par_in_hash_int, 3},
     {"_hutilscpp_do_par_in_hash_dbl", (DL_FUNC) &_hutilscpp_do_par_in_hash_dbl, 3},
@@ -904,6 +830,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Callocate0_int",           (DL_FUNC) &Callocate0_int,           2},
     {"CAnyCharMatch",            (DL_FUNC) &CAnyCharMatch,            3},
     {"CanyOutside",              (DL_FUNC) &CanyOutside,              5},
+    {"Ccount_logical",           (DL_FUNC) &Ccount_logical,           2},
     {"Ccumsum_reset",            (DL_FUNC) &Ccumsum_reset,            2},
     {"Ccumsum_reset_sorted_int", (DL_FUNC) &Ccumsum_reset_sorted_int, 1},
     {"Ccumsum_reset_where",      (DL_FUNC) &Ccumsum_reset_where,      4},
