@@ -120,6 +120,48 @@ SEXP Callocate0_except(SEXP NN, SEXP Ind, SEXP Vic, SEXP nthread) {
   }
   UNPROTECT(1);
   return ans;
-
-
 }
+
+SEXP IntegerN(R_xlen_t N) {
+  SEXP ans = PROTECT(allocVector(INTSXP, N));
+  int * ansp = INTEGER(ans);
+  for (R_xlen_t i = 0; i < N; ++i) {
+    ansp[i] = 0;
+  }
+  UNPROTECT(1);
+  return ans;
+}
+
+SEXP IntegerNNA(R_xlen_t N) {
+  SEXP ans = PROTECT(allocVector(INTSXP, N));
+  int * ansp = INTEGER(ans);
+  for (R_xlen_t i = 0; i < N; ++i) {
+    ansp[i] = NA_INTEGER;
+  }
+  UNPROTECT(1);
+  return ans;
+}
+
+SEXP DoubleN(R_xlen_t N) {
+  SEXP ans = PROTECT(allocVector(REALSXP, N));
+  int * ansp = INTEGER(ans);
+  for (R_xlen_t i = 0; i < N; ++i) {
+    ansp[i] = 0;
+  }
+  UNPROTECT(1);
+  return ans;
+}
+
+SEXP DoubleNNA(R_xlen_t N) {
+  SEXP ans = PROTECT(allocVector(REALSXP, N));
+  int * ansp = INTEGER(ans);
+  for (R_xlen_t i = 0; i < N; ++i) {
+    ansp[i] = NA_REAL;
+  }
+  UNPROTECT(1);
+  return ans;
+}
+
+
+
+

@@ -35,12 +35,19 @@
 
 extern int tens[10];
 
+// allocate
+SEXP IntegerN(R_xlen_t N);
+SEXP IntegerNNA(R_xlen_t N);
+SEXP DoubleN(R_xlen_t N);
+SEXP DoubleNNA(R_xlen_t N);
+
 SEXP ScalarLength(R_xlen_t o);
 
 bool dsingle_ox_x1_x2(double x, int oix, double x1, double x2);
 bool isingle_ox_x1_x2(int x, int oix, int x1, int x2);
 
 bool do_is_safe2int(double x);
+int dbl_is_int(double x);
 
 R_xlen_t sum_isna(SEXP x, SEXP nthreads) ;
 

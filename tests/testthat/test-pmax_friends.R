@@ -122,10 +122,7 @@ test_that("benchmark", {
 
 
 
-test_that("pmax pure c error", {
-  expect_error(.Call("do_c_pmax", 1:5 + 0, 1:2 + 0, 1), regexp = "a did not have length 1")
-  expect_error(.Call("do_c_pmax", 1:5 + 0, 1, 1:2 + 0), regexp = "b did not have length 1")
-})
+
 
 test_that("pmaxV x already dominates", {
   w <- c(1L, 5L, 2L, .Machine$integer.max - 2L, 0L)

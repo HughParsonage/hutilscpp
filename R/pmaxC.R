@@ -95,6 +95,7 @@ pmaxC <- function(x, a,
     a <- as.double(a)
   }
 
+  if (getOption("use_cpp", FALSE)) {
   o <- do_pminpmax(x, a,
                    do_min = FALSE,
                    in_place = in_place,
@@ -102,6 +103,16 @@ pmaxC <- function(x, a,
                    dbl_ok = dbl_ok,
                    swap_xy = FALSE,
                    nThread = nThread)
+  } else {
+    if (in_place && is.symbol(substitute(x))) {
+      o <- .Call("CpmaxC_in_place", x, a, keep_nas, nThread, PACKAGE = packageName())
+    } else {
+      o <- .Call("Cpmax", x, a, keep_nas, nThread, PACKAGE = packageName())
+    }
+    if (is.null(o)) {
+      o <- pmax.int(x, a)
+    }
+  }
   return(o)
 }
 
