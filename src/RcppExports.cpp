@@ -769,6 +769,7 @@ RcppExport SEXP Cwhich_last_notFALSE(SEXP);
 RcppExport SEXP Cwhich_last_notTRUE(SEXP);
 RcppExport SEXP Cwhich_lastNA(SEXP);
 RcppExport SEXP Cwhich_true_onwards(SEXP);
+RcppExport SEXP fmatch(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_and3_par", (DL_FUNC) &_hutilscpp_do_and3_par, 17},
@@ -867,6 +868,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cwhich_last_notTRUE",      (DL_FUNC) &Cwhich_last_notTRUE,      1},
     {"Cwhich_lastNA",            (DL_FUNC) &Cwhich_lastNA,            1},
     {"Cwhich_true_onwards",      (DL_FUNC) &Cwhich_true_onwards,      1},
+    {"fmatch",                   (DL_FUNC) &fmatch,                   6},
     {NULL, NULL, 0}
 };
 

@@ -107,6 +107,8 @@ qd2i <- function(x) {
   }
 }
 
+
+
 # nocov start
 is64bit <- function() .Machine$sizeof.pointer == 8L
 

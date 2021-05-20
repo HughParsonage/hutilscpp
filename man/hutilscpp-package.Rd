@@ -24,5 +24,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Hugh Parsonage \email{hugh.parsonage@gmail.com}
 
+Other contributors:
+\itemize{
+  \item Simon Urbanek (fastmatch components) [contributor]
+}
+
 }
 \keyword{internal}
