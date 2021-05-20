@@ -304,7 +304,6 @@ R_xlen_t do_which_first_lgl_lgl_op(SEXP xx, SEXP yy, int op, bool reverse) {
   const int * x = LOGICAL(xx);
   const int * y = LOGICAL(yy);
 
-  const bool len_eq = Ny == N;
   const bool len1 = Ny == 1;
   if (op == OP_IN || op == OP_BW) {
     bool hasNA = false;
