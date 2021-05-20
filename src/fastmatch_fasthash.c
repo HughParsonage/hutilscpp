@@ -15,7 +15,7 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  */
-
+#include "hutilscpp.h"
 #include "common.h"
 
 /* for malloc/free since we handle our hash table memory separately from R */
@@ -47,7 +47,7 @@ typedef struct hash {
 static hash_t *new_hash(SEXPTYPE type, hash_index_t len) {
     hash_t *h;
     int k = 8; /* force a minimal size of 256 */
-    hash_index_t m = 1 << k;    
+    hash_index_t m = 1 << k;
     hash_index_t max_load;
     SEXP keys;
     while (m < len) { m *= 2; k++; }
@@ -360,8 +360,8 @@ SEXP mk_hash(SEXP x, SEXP sGetIndex, SEXP sValueEst, SEXP vals) {
     /* FIXME: determine the proper hash size */
     if (!val_est) val_est = XLENGTH(x);
     /* check for overflow */
-    if (val_est * 2 > val_est) val_est *= 2; 
-    
+    if (val_est * 2 > val_est) val_est *= 2;
+
     h = new_hash(TYPEOF(x), val_est);
     a = PROTECT(R_MakeExternalPtr(h, R_NilValue, R_NilValue));
     Rf_setAttrib(a, R_ClassSymbol, Rf_mkString("fasthash"));
@@ -369,7 +369,7 @@ SEXP mk_hash(SEXP x, SEXP sGetIndex, SEXP sValueEst, SEXP vals) {
 	Rf_setAttrib(a, install("index"), six);
     R_RegisterCFinalizer(a, hash_fin);
     np++;
-    
+
 #if HASH_VERBOSE
     Rprintf(" - creating new hash for type %d\n", type);
 #endif
@@ -440,7 +440,7 @@ SEXP get_values(SEXP ht, SEXP x) {
 
     if (!h->vals)
 	Rf_error("This is not a key/value hash table");
-    
+
     /* implicitly convert factors/POSIXlt to character */
     if (OBJECT(x)) {
 	if (inherits(x, "factor")) {
@@ -456,12 +456,12 @@ SEXP get_values(SEXP ht, SEXP x) {
     /* we only support INT/REAL/STR */
     if (type != INTSXP && type != REALSXP && type != STRSXP && type != VECSXP)
 	Rf_error("Currently supported types are integer, real, chracter vectors and lists");
-    
+
     {
 	R_xlen_t i, n = XLENGTH(x);
 	res = PROTECT(allocVector(VECSXP, n));
 	np++;
-	
+
 	if (type == INTSXP) {
 	    int *iv = INTEGER(x);
 	    for (i = 0; i < n; i++)

@@ -2,6 +2,7 @@
 * New functions:
   - `Implies` for logical implies
   - `is_sorted` and `isntSorted` for assertions about sorted atomic vectors
+  - `fmatchp`, `finp` experimental parallel hashing functions
 
 ## hutilscpp 0.5.2
 * Attempt fix of UBSAN error in which_first

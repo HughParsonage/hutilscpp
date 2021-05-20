@@ -6,7 +6,7 @@ Authors@R:
            family = "Parsonage",
            role = c("aut", "cre"),
            email = "hugh.parsonage@gmail.com"),
-      persons(given = "Simon", 
+      person(given = "Simon", 
               family = "Urbanek",
               role = "ctb",
               comment = "fastmatch components"))
