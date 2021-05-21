@@ -62,7 +62,6 @@ unsigned char nth_char(int x, int n);
 char digit2char(int d);
 int n_digits0(unsigned int x);
 
-int do_op2M(SEXP op);
 
 // character
 SEXP do_pad0(SEXP x, const int w);
