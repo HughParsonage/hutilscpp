@@ -1,15 +1,18 @@
-#include "hutilsc.h"
+#include "hutilscpp.h"
 
 bool do_is_safe2int(double x) {
-  return R_finite(x) && x <= 2147483647 && x >= -2147483647 && ((int)x == x);
+  return !ISNAN(x) && x <= 2147483647 && x >= -2147483647 && ((int)x == x);
 }
 
+//' @noRd
+//' @param x Candidate vector.
+//' @return
+//'   0 if unsafe to coerce to integer
+//'   1 if   safe to coerce to integer and _zero_ NAs in output
+//'   2 if   safe to coerce to integer but _some_ NAs in output
 int dbl_is_int(double x) {
-  // 0 if really double
-  // 1 if NA
-  // 2 if normal int
   if (ISNAN(x)) {
-    return 1;
+    return 2;
   }
   if (x > 2147483647 || x < -2147483647) {
     return 0;
@@ -18,9 +21,8 @@ int dbl_is_int(double x) {
   if (xi != x) {
     return 0;
   }
-  return 2;
+  return 1;
 }
-
 
 
 int dbl2int(double x) {
@@ -30,31 +32,90 @@ int dbl2int(double x) {
   return (int)x;
 }
 
-
-SEXP Cwhich_isnt_int(SEXP x) {
-  if (TYPEOF(x) != REALSXP) {
-    error("Internal error(do_ensure_int): TYPEOF(x) != REALSXP"); // # nocov
+SEXP Cwhich_isnt_integerish(SEXP xx) {
+  if (TYPEOF(xx) == INTSXP) {
+    return ScalarInteger(0);
   }
-  R_xlen_t N = xlength(x);
-  const double * xp = REAL(x);
-  // Just verify that all is ok
-  R_xlen_t which_not_ok = 0;
+  if (TYPEOF(xx) != REALSXP) {
+    return ScalarInteger(1);
+  }
+  R_xlen_t N = xlength(xx);
+  const double * xp = REAL(xx);
   for (R_xlen_t i = 0; i < N; ++i) {
-    double xi = xp[i];
-    if (ISNAN(xi)) {
-      continue;
-    }
-    if (xi > 2147483647 || xi < -2147483647) {
-      which_not_ok = i + 1;
-      break;
-    }
-    int ii = (int)xi;
-    if (ii != xi) {
-      which_not_ok = i + 1;
-      break;
+    if (!do_is_safe2int(xp[i])) {
+      return ScalarLength(i + 1);
     }
   }
-  return (which_not_ok < INT_MAX) ? ScalarInteger(which_not_ok) : ScalarReal(which_not_ok);
+  return ScalarInteger(0);
 }
 
+SEXP Cis_safe2int(SEXP x) {
+  if (TYPEOF(x) == INTSXP) {
+    return ScalarInteger(2);
+  }
+  if (TYPEOF(x) != REALSXP) {
+    return ScalarInteger(0);
+  }
+  R_xlen_t n = xlength(x);
+  int out = 1; // Purpose of loop is to contradict this
+  double * xp = REAL(x);
+  for (R_xlen_t i = 0; i < n; ++i) {
+    double xi = xp[i];
+    // (int)NaN is UBD
+
+    if (!ISNAN(xi) && xi <= 2147483647 && xi >= -2147483647) {
+      int xint = (int)xi;
+      if (xint != xi) {
+        out = 0; // integer not possible
+        break;
+      }
+      continue;
+    }
+    if (R_IsNA(xi) || R_IsNaN(xi)) {
+      out = 2; // out = 1 no longer possible
+      continue;
+    }
+    if (!R_finite(xi)) {
+      out = 0;
+    }
+    if (xi > 2147483647) {
+      out = 0;
+      break;
+    } else if (xi + 2147483647 <= 0) {
+      out = 0;
+      break;
+    }
+  }
+  return ScalarInteger(out);
+}
+
+SEXP Cforce_as_integer(SEXP xx, SEXP Na_code) {
+  if (TYPEOF(xx) != REALSXP || TYPEOF(Na_code) != INTSXP) {
+    return R_NilValue;
+  }
+  int na_code = asInteger(Na_code);
+  if (na_code < 0 || na_code > 2) {
+    na_code = asReal(Cis_safe2int(xx));
+  }
+  if (na_code != 1 && na_code != 2) {
+    error("Internal error(Cforce_as_integer): na_code = 0 so cannot return IntegerVector safely.");
+  }
+  R_xlen_t N = xlength(xx);
+  const double * x = REAL(xx);
+  SEXP out = PROTECT(allocVector(INTSXP, N));
+  int * restrict outp = INTEGER(out);
+  // (int) non-finites are UBD
+  switch(na_code) {
+  case 1:
+    for (R_xlen_t i = 0; i < N; ++i) {
+      outp[i] = (int)x[i];
+    }
+  case 2:
+    for (R_xlen_t i = 0; i < N; ++i) {
+      outp[i] = (R_finite(x[i])) ? (int)x[i] : NA_INTEGER;
+    }
+  }
+  UNPROTECT(1);
+  return out;
+}
 

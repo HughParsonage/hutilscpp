@@ -30,10 +30,11 @@ whichs <- function(exprA, .env = parent.frame(), nThread = getOption("hutilscpp.
   if (opm < 1 || opm > 6 || is.double(lhs)) {
     return(which(exprA))
   }
-  do_whichs_16(opm,
-               lhs,
-               rhs,
-               nThread = nThread)
+  ans <- .Call("Cwhich_16", opm, lhs, rhs, nThread, PACKAGE = packageName())
+  if (is.null(ans)) {
+    return(which(exprA))
+  }
+  ans
 }
 
 

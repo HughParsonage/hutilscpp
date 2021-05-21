@@ -541,15 +541,7 @@ R_xlen_t which_last__(SEXP xx, SEXP opp, SEXP yy,
   const int y2i = asInteger(y2ii);
   const double y1d = asReal(y1dd);
   const double y2d = asReal(y2dd);
-
   R_xlen_t Nx = xlength(xx);
-  R_xlen_t Ny = xlength(yy);
-  if (ny > 2 && Nx != Ny) {
-    error("Internal error(which_last__): ny > 2 && Nx != Ny."); // # nocov
-  }
-  if (Nx == 0 || Ny == 0) {
-    error("Internal error(which_last__): Nx == 0 || Ny == 0."); // # nocov
-  }
 
   if (TYPEOF(xx) == INTSXP && TYPEOF(yy) == INTSXP) {
     const int * x = INTEGER(xx);
@@ -704,6 +696,15 @@ SEXP Cwhich_last__(SEXP xx, SEXP opp, SEXP yy,
                     SEXP y2ii,
                     SEXP y1dd,
                     SEXP y2dd) {
+  int ny = asInteger(nyy);
+  R_xlen_t Nx = xlength(xx);
+  R_xlen_t Ny = xlength(yy);
+  if (ny > 2 && Nx != Ny) {
+    error("Internal error(which_last__): ny > 2 && Nx != Ny."); // # nocov
+  }
+  if (Nx == 0 || Ny == 0) {
+    error("Internal error(which_last__): Nx == 0 || Ny == 0."); // # nocov
+  }
   return ScalarLength(which_last__(xx, opp, yy,
                                     nyy,
                                     y1ii,

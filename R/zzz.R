@@ -3,6 +3,9 @@
   if (is.null(getOption("hutilscpp.nThread"))) {
     options("hutilscpp.nThread" = 1L)
   }
+  if (is.double(nThread <- getOption("hutilscpp.nThread"))) {
+    options("hutilscpp.nThread" = as.integer(nThread))
+  }
   invisible(NULL)
 }
 

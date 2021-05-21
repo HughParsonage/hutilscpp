@@ -53,10 +53,6 @@ do_which_first_xd_ind <- function(x, y, y_has_na) {
     .Call(`_hutilscpp_do_which_first_xd_ind`, x, y, y_has_na)
 }
 
-do_which_isnt_integerish <- function(x) {
-    .Call(`_hutilscpp_do_which_isnt_integerish`, x)
-}
-
 do_which_last_xi_ini <- function(x, y) {
     .Call(`_hutilscpp_do_which_last_xi_ini`, x, y)
 }
@@ -67,10 +63,6 @@ do_which_last_xi_ind <- function(x, yd) {
 
 do_which_last_xd_ind <- function(x, y, y_has_na) {
     .Call(`_hutilscpp_do_which_last_xd_ind`, x, y, y_has_na)
-}
-
-do_whichs_16 <- function(op, x, y, nThread = 1L) {
-    .Call(`_hutilscpp_do_whichs_16`, op, x, y, nThread)
 }
 
 showValue <- function(what, x) {
@@ -109,20 +101,6 @@ match_min_Haversine <- function(lat1, lon1, lat2, lon2, tabl, cartR = -1, dist0_
     .Call(`_hutilscpp_match_min_Haversine`, lat1, lon1, lat2, lon2, tabl, cartR, dist0_km, verify_cartR, do_verify_box, excl_self, ncores)
 }
 
-#' @noRd
-#' @param x Candidate vector.
-#' @return
-#'   0 if unsafe to coerce to integer
-#'   1 if   safe to coerce to integer and _zero_ NAs in output
-#'   2 if   safe to coerce to integer but _some_ NAs in output
-is_safe2int <- function(x) {
-    .Call(`_hutilscpp_is_safe2int`, x)
-}
-
-force_as_integer <- function(x, na_code) {
-    .Call(`_hutilscpp_force_as_integer`, x, na_code)
-}
-
 do_or3 <- function(x, y, z) {
     .Call(`_hutilscpp_do_or3`, x, y, z)
 }
@@ -149,42 +127,6 @@ has_openmp <- function() {
 
 diagnose_omp <- function(threads_requested, msg_no_openmp, msg_threads_neg, msg_unknown_issues, msg_too_many_threads) {
     .Call(`_hutilscpp_diagnose_omp`, threads_requested, msg_no_openmp, msg_threads_neg, msg_unknown_issues, msg_too_many_threads)
-}
-
-do_firstNonNegativeRadix_int <- function(x, mini = 0L, maxi = -1L, desc = FALSE, depth = 0L) {
-    .Call(`_hutilscpp_do_firstNonNegativeRadix_int`, x, mini, maxi, desc, depth)
-}
-
-do_firstNonNegativeRadix_dbl <- function(x, mini = 0L, maxi = -1L, desc = FALSE, depth = 0L) {
-    .Call(`_hutilscpp_do_firstNonNegativeRadix_dbl`, x, mini, maxi, desc, depth)
-}
-
-do_pmax0_radix_sorted_dbl <- function(x, in_place = FALSE, nThread = 1L) {
-    .Call(`_hutilscpp_do_pmax0_radix_sorted_dbl`, x, in_place, nThread)
-}
-
-do_pmin0_radix_sorted_dbl <- function(x, in_place = FALSE, nThread = 1L) {
-    .Call(`_hutilscpp_do_pmin0_radix_sorted_dbl`, x, in_place, nThread)
-}
-
-do_pmax0_radix_sorted_int <- function(x, in_place = FALSE, nThread = 1L) {
-    .Call(`_hutilscpp_do_pmax0_radix_sorted_int`, x, in_place, nThread)
-}
-
-do_pmin0_radix_sorted_int <- function(x, in_place = FALSE, nThread = 1L) {
-    .Call(`_hutilscpp_do_pmin0_radix_sorted_int`, x, in_place, nThread)
-}
-
-do_pmax0_bitwise <- function(x, nThread = 1L) {
-    .Call(`_hutilscpp_do_pmax0_bitwise`, x, nThread)
-}
-
-do_pmin0_bitwise <- function(x, nThread = 1L) {
-    .Call(`_hutilscpp_do_pmin0_bitwise`, x, nThread)
-}
-
-do_pminpmax <- function(X, Y, do_min = FALSE, in_place = FALSE, keep_nas = FALSE, dbl_ok = FALSE, swap_xy = FALSE, nThread = 1L) {
-    .Call(`_hutilscpp_do_pminpmax`, X, Y, do_min, in_place, keep_nas, dbl_ok, swap_xy, nThread)
 }
 
 do_summary3_dbl <- function(x, y, z, in_place = FALSE, do_max = TRUE) {
