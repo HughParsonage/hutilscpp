@@ -63,7 +63,8 @@ SEXP Cwhich_16(SEXP opp, SEXP x, SEXP y, SEXP nthreads) {
     UNPROTECT(1);
     return allocVector(INTSXP, 0);
   }
-  SEXP o = PROTECT(allocVector(INTSXP, n));
+
+  SEXP o = PROTECT(allocVector(INTSXP, j));
   int * restrict oo = INTEGER(o);
   for (int i = 0; i < j; ++i) {
     oo[i] = outp[i];
