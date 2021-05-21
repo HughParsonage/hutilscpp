@@ -499,63 +499,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// validate_nchar1
-int validate_nchar1(CharacterVector x, bool return_size);
-RcppExport SEXP _hutilscpp_validate_nchar1(SEXP xSEXP, SEXP return_sizeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< bool >::type return_size(return_sizeSEXP);
-    rcpp_result_gen = Rcpp::wrap(validate_nchar1(x, return_size));
-    return rcpp_result_gen;
-END_RCPP
-}
-// max_charsize
-int max_charsize(CharacterVector x);
-RcppExport SEXP _hutilscpp_max_charsize(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(max_charsize(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// is_space
-bool is_space(CharacterVector x);
-RcppExport SEXP _hutilscpp_is_space(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(is_space(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// where_square_bracket_opens
-R_xlen_t where_square_bracket_opens(CharacterVector x, R_xlen_t i);
-RcppExport SEXP _hutilscpp_where_square_bracket_opens(SEXP xSEXP, SEXP iSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< R_xlen_t >::type i(iSEXP);
-    rcpp_result_gen = Rcpp::wrap(where_square_bracket_opens(x, i));
-    return rcpp_result_gen;
-END_RCPP
-}
-// extractMandatory
-List extractMandatory(CharacterVector x, CharacterVector command, int nCommands);
-RcppExport SEXP _hutilscpp_extractMandatory(SEXP xSEXP, SEXP commandSEXP, SEXP nCommandsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type command(commandSEXP);
-    Rcpp::traits::input_parameter< int >::type nCommands(nCommandsSEXP);
-    rcpp_result_gen = Rcpp::wrap(extractMandatory(x, command, nCommands));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 RcppExport SEXP Callocate_with_root(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Callocate0_dbl(SEXP, SEXP);
@@ -570,6 +513,7 @@ RcppExport SEXP Ccumsum_reset_where(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cdivisible(SEXP, SEXP, SEXP);
 RcppExport SEXP Cdivisible16(SEXP, SEXP);
 RcppExport SEXP Cdivisible2(SEXP, SEXP, SEXP);
+RcppExport SEXP CextractMandatory(SEXP, SEXP, SEXP);
 RcppExport SEXP CfirstNonNegativeRadix(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cforce_as_integer(SEXP, SEXP);
 RcppExport SEXP CImplies(SEXP, SEXP, SEXP, SEXP);
@@ -593,6 +537,7 @@ RcppExport SEXP Crange(SEXP);
 RcppExport SEXP CSquish(SEXP, SEXP);
 RcppExport SEXP CStringEqual(SEXP, SEXP);
 RcppExport SEXP Csum_isna(SEXP, SEXP);
+RcppExport SEXP Cwhere_square_bracket_opens(SEXP, SEXP);
 RcppExport SEXP Cwhich_16(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_even(SEXP);
 RcppExport SEXP Cwhich_first(SEXP);
@@ -649,67 +594,64 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_summary3_dbl", (DL_FUNC) &_hutilscpp_do_summary3_dbl, 5},
     {"_hutilscpp_do_summary3_int", (DL_FUNC) &_hutilscpp_do_summary3_int, 5},
     {"_hutilscpp_test_single_ox_x1_x2", (DL_FUNC) &_hutilscpp_test_single_ox_x1_x2, 4},
-    {"_hutilscpp_validate_nchar1", (DL_FUNC) &_hutilscpp_validate_nchar1, 2},
-    {"_hutilscpp_max_charsize", (DL_FUNC) &_hutilscpp_max_charsize, 1},
-    {"_hutilscpp_is_space", (DL_FUNC) &_hutilscpp_is_space, 1},
-    {"_hutilscpp_where_square_bracket_opens", (DL_FUNC) &_hutilscpp_where_square_bracket_opens, 2},
-    {"_hutilscpp_extractMandatory", (DL_FUNC) &_hutilscpp_extractMandatory, 3},
-    {"Callocate_with_root",      (DL_FUNC) &Callocate_with_root,      6},
-    {"Callocate0_dbl",           (DL_FUNC) &Callocate0_dbl,           2},
-    {"Callocate0_except",        (DL_FUNC) &Callocate0_except,        4},
-    {"Callocate0_int",           (DL_FUNC) &Callocate0_int,           2},
-    {"CAnyCharMatch",            (DL_FUNC) &CAnyCharMatch,            3},
-    {"CanyOutside",              (DL_FUNC) &CanyOutside,              5},
-    {"Ccount_logical",           (DL_FUNC) &Ccount_logical,           2},
-    {"Ccumsum_reset",            (DL_FUNC) &Ccumsum_reset,            2},
-    {"Ccumsum_reset_sorted_int", (DL_FUNC) &Ccumsum_reset_sorted_int, 1},
-    {"Ccumsum_reset_where",      (DL_FUNC) &Ccumsum_reset_where,      4},
-    {"Cdivisible",               (DL_FUNC) &Cdivisible,               3},
-    {"Cdivisible16",             (DL_FUNC) &Cdivisible16,             2},
-    {"Cdivisible2",              (DL_FUNC) &Cdivisible2,              3},
-    {"CfirstNonNegativeRadix",   (DL_FUNC) &CfirstNonNegativeRadix,   4},
-    {"Cforce_as_integer",        (DL_FUNC) &Cforce_as_integer,        2},
-    {"CImplies",                 (DL_FUNC) &CImplies,                 4},
-    {"Cis_altrep",               (DL_FUNC) &Cis_altrep,               1},
-    {"Cis_constant",             (DL_FUNC) &Cis_constant,             2},
-    {"Cis_safe2int",             (DL_FUNC) &Cis_safe2int,             1},
-    {"Cis_sorted",               (DL_FUNC) &Cis_sorted,               2},
-    {"Cisnt_constant",           (DL_FUNC) &Cisnt_constant,           1},
-    {"Cisnt_sorted",             (DL_FUNC) &Cisnt_sorted,             2},
-    {"Cpmax",                    (DL_FUNC) &Cpmax,                    4},
-    {"Cpmax0_bitwise",           (DL_FUNC) &Cpmax0_bitwise,           3},
-    {"Cpmax0_radix_sorted_dbl",  (DL_FUNC) &Cpmax0_radix_sorted_dbl,  3},
-    {"Cpmax0_radix_sorted_int",  (DL_FUNC) &Cpmax0_radix_sorted_int,  3},
-    {"CpmaxC_in_place",          (DL_FUNC) &CpmaxC_in_place,          4},
-    {"Cpmin",                    (DL_FUNC) &Cpmin,                    4},
-    {"Cpmin0_bitwise",           (DL_FUNC) &Cpmin0_bitwise,           3},
-    {"Cpmin0_radix_sorted_dbl",  (DL_FUNC) &Cpmin0_radix_sorted_dbl,  3},
-    {"Cpmin0_radix_sorted_int",  (DL_FUNC) &Cpmin0_radix_sorted_int,  3},
-    {"CpminC_in_place",          (DL_FUNC) &CpminC_in_place,          4},
-    {"Crange",                   (DL_FUNC) &Crange,                   1},
-    {"CSquish",                  (DL_FUNC) &CSquish,                  2},
-    {"CStringEqual",             (DL_FUNC) &CStringEqual,             2},
-    {"Csum_isna",                (DL_FUNC) &Csum_isna,                2},
-    {"Cwhich_16",                (DL_FUNC) &Cwhich_16,                4},
-    {"Cwhich_even",              (DL_FUNC) &Cwhich_even,              1},
-    {"Cwhich_first",             (DL_FUNC) &Cwhich_first,             1},
-    {"Cwhich_first__",           (DL_FUNC) &Cwhich_first__,           8},
-    {"Cwhich_first_false",       (DL_FUNC) &Cwhich_first_false,       1},
-    {"Cwhich_first_in_lgl",      (DL_FUNC) &Cwhich_first_in_lgl,      4},
-    {"Cwhich_first_lgl_lgl_op",  (DL_FUNC) &Cwhich_first_lgl_lgl_op,  4},
-    {"Cwhich_first_notTRUE",     (DL_FUNC) &Cwhich_first_notTRUE,     1},
-    {"Cwhich_firstNA",           (DL_FUNC) &Cwhich_firstNA,           1},
-    {"Cwhich_isna",              (DL_FUNC) &Cwhich_isna,              3},
-    {"Cwhich_isnt_integerish",   (DL_FUNC) &Cwhich_isnt_integerish,   1},
-    {"Cwhich_last",              (DL_FUNC) &Cwhich_last,              1},
-    {"Cwhich_last__",            (DL_FUNC) &Cwhich_last__,            8},
-    {"Cwhich_last_false",        (DL_FUNC) &Cwhich_last_false,        1},
-    {"Cwhich_last_in_lgl",       (DL_FUNC) &Cwhich_last_in_lgl,       4},
-    {"Cwhich_last_notFALSE",     (DL_FUNC) &Cwhich_last_notFALSE,     1},
-    {"Cwhich_last_notTRUE",      (DL_FUNC) &Cwhich_last_notTRUE,      1},
-    {"Cwhich_lastNA",            (DL_FUNC) &Cwhich_lastNA,            1},
-    {"Cwhich_true_onwards",      (DL_FUNC) &Cwhich_true_onwards,      1},
-    {"fmatch",                   (DL_FUNC) &fmatch,                   6},
+    {"Callocate_with_root",         (DL_FUNC) &Callocate_with_root,         6},
+    {"Callocate0_dbl",              (DL_FUNC) &Callocate0_dbl,              2},
+    {"Callocate0_except",           (DL_FUNC) &Callocate0_except,           4},
+    {"Callocate0_int",              (DL_FUNC) &Callocate0_int,              2},
+    {"CAnyCharMatch",               (DL_FUNC) &CAnyCharMatch,               3},
+    {"CanyOutside",                 (DL_FUNC) &CanyOutside,                 5},
+    {"Ccount_logical",              (DL_FUNC) &Ccount_logical,              2},
+    {"Ccumsum_reset",               (DL_FUNC) &Ccumsum_reset,               2},
+    {"Ccumsum_reset_sorted_int",    (DL_FUNC) &Ccumsum_reset_sorted_int,    1},
+    {"Ccumsum_reset_where",         (DL_FUNC) &Ccumsum_reset_where,         4},
+    {"Cdivisible",                  (DL_FUNC) &Cdivisible,                  3},
+    {"Cdivisible16",                (DL_FUNC) &Cdivisible16,                2},
+    {"Cdivisible2",                 (DL_FUNC) &Cdivisible2,                 3},
+    {"CextractMandatory",           (DL_FUNC) &CextractMandatory,           3},
+    {"CfirstNonNegativeRadix",      (DL_FUNC) &CfirstNonNegativeRadix,      4},
+    {"Cforce_as_integer",           (DL_FUNC) &Cforce_as_integer,           2},
+    {"CImplies",                    (DL_FUNC) &CImplies,                    4},
+    {"Cis_altrep",                  (DL_FUNC) &Cis_altrep,                  1},
+    {"Cis_constant",                (DL_FUNC) &Cis_constant,                2},
+    {"Cis_safe2int",                (DL_FUNC) &Cis_safe2int,                1},
+    {"Cis_sorted",                  (DL_FUNC) &Cis_sorted,                  2},
+    {"Cisnt_constant",              (DL_FUNC) &Cisnt_constant,              1},
+    {"Cisnt_sorted",                (DL_FUNC) &Cisnt_sorted,                2},
+    {"Cpmax",                       (DL_FUNC) &Cpmax,                       4},
+    {"Cpmax0_bitwise",              (DL_FUNC) &Cpmax0_bitwise,              3},
+    {"Cpmax0_radix_sorted_dbl",     (DL_FUNC) &Cpmax0_radix_sorted_dbl,     3},
+    {"Cpmax0_radix_sorted_int",     (DL_FUNC) &Cpmax0_radix_sorted_int,     3},
+    {"CpmaxC_in_place",             (DL_FUNC) &CpmaxC_in_place,             4},
+    {"Cpmin",                       (DL_FUNC) &Cpmin,                       4},
+    {"Cpmin0_bitwise",              (DL_FUNC) &Cpmin0_bitwise,              3},
+    {"Cpmin0_radix_sorted_dbl",     (DL_FUNC) &Cpmin0_radix_sorted_dbl,     3},
+    {"Cpmin0_radix_sorted_int",     (DL_FUNC) &Cpmin0_radix_sorted_int,     3},
+    {"CpminC_in_place",             (DL_FUNC) &CpminC_in_place,             4},
+    {"Crange",                      (DL_FUNC) &Crange,                      1},
+    {"CSquish",                     (DL_FUNC) &CSquish,                     2},
+    {"CStringEqual",                (DL_FUNC) &CStringEqual,                2},
+    {"Csum_isna",                   (DL_FUNC) &Csum_isna,                   2},
+    {"Cwhere_square_bracket_opens", (DL_FUNC) &Cwhere_square_bracket_opens, 2},
+    {"Cwhich_16",                   (DL_FUNC) &Cwhich_16,                   4},
+    {"Cwhich_even",                 (DL_FUNC) &Cwhich_even,                 1},
+    {"Cwhich_first",                (DL_FUNC) &Cwhich_first,                1},
+    {"Cwhich_first__",              (DL_FUNC) &Cwhich_first__,              8},
+    {"Cwhich_first_false",          (DL_FUNC) &Cwhich_first_false,          1},
+    {"Cwhich_first_in_lgl",         (DL_FUNC) &Cwhich_first_in_lgl,         4},
+    {"Cwhich_first_lgl_lgl_op",     (DL_FUNC) &Cwhich_first_lgl_lgl_op,     4},
+    {"Cwhich_first_notTRUE",        (DL_FUNC) &Cwhich_first_notTRUE,        1},
+    {"Cwhich_firstNA",              (DL_FUNC) &Cwhich_firstNA,              1},
+    {"Cwhich_isna",                 (DL_FUNC) &Cwhich_isna,                 3},
+    {"Cwhich_isnt_integerish",      (DL_FUNC) &Cwhich_isnt_integerish,      1},
+    {"Cwhich_last",                 (DL_FUNC) &Cwhich_last,                 1},
+    {"Cwhich_last__",               (DL_FUNC) &Cwhich_last__,               8},
+    {"Cwhich_last_false",           (DL_FUNC) &Cwhich_last_false,           1},
+    {"Cwhich_last_in_lgl",          (DL_FUNC) &Cwhich_last_in_lgl,          4},
+    {"Cwhich_last_notFALSE",        (DL_FUNC) &Cwhich_last_notFALSE,        1},
+    {"Cwhich_last_notTRUE",         (DL_FUNC) &Cwhich_last_notTRUE,         1},
+    {"Cwhich_lastNA",               (DL_FUNC) &Cwhich_lastNA,               1},
+    {"Cwhich_true_onwards",         (DL_FUNC) &Cwhich_true_onwards,         1},
+    {"fmatch",                      (DL_FUNC) &fmatch,                      6},
     {NULL, NULL, 0}
 };
 

@@ -137,35 +137,3 @@ test_single_ox_x1_x2 <- function(x, op, x1, x2) {
     .Call(`_hutilscpp_test_single_ox_x1_x2`, x, op, x1, x2)
 }
 
-#' @name where_square_bracket_opens
-#' @param x Character vector of characters.
-#' @param i position of closing bracket.
-#'
-#' @return
-#' -1 if x[i] does not closing bracket
-#'  0 if bracket never closes
-#'  j the location of the closing brace
-#'
-#' @noRd
-NULL
-
-validate_nchar1 <- function(x, return_size = FALSE) {
-    .Call(`_hutilscpp_validate_nchar1`, x, return_size)
-}
-
-max_charsize <- function(x) {
-    .Call(`_hutilscpp_max_charsize`, x)
-}
-
-is_space <- function(x) {
-    .Call(`_hutilscpp_is_space`, x)
-}
-
-where_square_bracket_opens <- function(x, i = 0L) {
-    .Call(`_hutilscpp_where_square_bracket_opens`, x, i)
-}
-
-extractMandatory <- function(x, command, nCommands) {
-    .Call(`_hutilscpp_extractMandatory`, x, command, nCommands)
-}
-
