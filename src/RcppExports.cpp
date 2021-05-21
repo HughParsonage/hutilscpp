@@ -204,16 +204,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_which_isnt_integerish
-R_xlen_t do_which_isnt_integerish(DoubleVector x);
-RcppExport SEXP _hutilscpp_do_which_isnt_integerish(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_isnt_integerish(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_which_last_xi_ini
 R_xlen_t do_which_last_xi_ini(IntegerVector x, IntegerVector y);
 RcppExport SEXP _hutilscpp_do_which_last_xi_ini(SEXP xSEXP, SEXP ySEXP) {
@@ -245,19 +235,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DoubleVector >::type y(ySEXP);
     Rcpp::traits::input_parameter< bool >::type y_has_na(y_has_naSEXP);
     rcpp_result_gen = Rcpp::wrap(do_which_last_xd_ind(x, y, y_has_na));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_whichs_16
-IntegerVector do_whichs_16(int op, IntegerVector x, IntegerVector y, int nThread);
-RcppExport SEXP _hutilscpp_do_whichs_16(SEXP opSEXP, SEXP xSEXP, SEXP ySEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< int >::type op(opSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_whichs_16(op, x, y, nThread));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -398,27 +375,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// is_safe2int
-int is_safe2int(DoubleVector x);
-RcppExport SEXP _hutilscpp_is_safe2int(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(is_safe2int(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// force_as_integer
-IntegerVector force_as_integer(DoubleVector x, int na_code);
-RcppExport SEXP _hutilscpp_force_as_integer(SEXP xSEXP, SEXP na_codeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type na_code(na_codeSEXP);
-    rcpp_result_gen = Rcpp::wrap(force_as_integer(x, na_code));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_or3
 LogicalVector do_or3(LogicalVector x, LogicalVector y, LogicalVector z);
 RcppExport SEXP _hutilscpp_do_or3(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
@@ -507,121 +463,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< String >::type msg_unknown_issues(msg_unknown_issuesSEXP);
     Rcpp::traits::input_parameter< String >::type msg_too_many_threads(msg_too_many_threadsSEXP);
     rcpp_result_gen = Rcpp::wrap(diagnose_omp(threads_requested, msg_no_openmp, msg_threads_neg, msg_unknown_issues, msg_too_many_threads));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_firstNonNegativeRadix_int
-R_xlen_t do_firstNonNegativeRadix_int(IntegerVector x, R_xlen_t mini, R_xlen_t maxi, bool desc, int depth);
-RcppExport SEXP _hutilscpp_do_firstNonNegativeRadix_int(SEXP xSEXP, SEXP miniSEXP, SEXP maxiSEXP, SEXP descSEXP, SEXP depthSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< R_xlen_t >::type mini(miniSEXP);
-    Rcpp::traits::input_parameter< R_xlen_t >::type maxi(maxiSEXP);
-    Rcpp::traits::input_parameter< bool >::type desc(descSEXP);
-    Rcpp::traits::input_parameter< int >::type depth(depthSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_firstNonNegativeRadix_int(x, mini, maxi, desc, depth));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_firstNonNegativeRadix_dbl
-R_xlen_t do_firstNonNegativeRadix_dbl(DoubleVector x, R_xlen_t mini, R_xlen_t maxi, bool desc, int depth);
-RcppExport SEXP _hutilscpp_do_firstNonNegativeRadix_dbl(SEXP xSEXP, SEXP miniSEXP, SEXP maxiSEXP, SEXP descSEXP, SEXP depthSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< R_xlen_t >::type mini(miniSEXP);
-    Rcpp::traits::input_parameter< R_xlen_t >::type maxi(maxiSEXP);
-    Rcpp::traits::input_parameter< bool >::type desc(descSEXP);
-    Rcpp::traits::input_parameter< int >::type depth(depthSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_firstNonNegativeRadix_dbl(x, mini, maxi, desc, depth));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_pmax0_radix_sorted_dbl
-DoubleVector do_pmax0_radix_sorted_dbl(DoubleVector x, bool in_place, int nThread);
-RcppExport SEXP _hutilscpp_do_pmax0_radix_sorted_dbl(SEXP xSEXP, SEXP in_placeSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_pmax0_radix_sorted_dbl(x, in_place, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_pmin0_radix_sorted_dbl
-DoubleVector do_pmin0_radix_sorted_dbl(DoubleVector x, bool in_place, int nThread);
-RcppExport SEXP _hutilscpp_do_pmin0_radix_sorted_dbl(SEXP xSEXP, SEXP in_placeSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_pmin0_radix_sorted_dbl(x, in_place, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_pmax0_radix_sorted_int
-IntegerVector do_pmax0_radix_sorted_int(IntegerVector x, bool in_place, int nThread);
-RcppExport SEXP _hutilscpp_do_pmax0_radix_sorted_int(SEXP xSEXP, SEXP in_placeSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_pmax0_radix_sorted_int(x, in_place, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_pmin0_radix_sorted_int
-IntegerVector do_pmin0_radix_sorted_int(IntegerVector x, bool in_place, int nThread);
-RcppExport SEXP _hutilscpp_do_pmin0_radix_sorted_int(SEXP xSEXP, SEXP in_placeSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_pmin0_radix_sorted_int(x, in_place, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_pmax0_bitwise
-IntegerVector do_pmax0_bitwise(IntegerVector x, int nThread);
-RcppExport SEXP _hutilscpp_do_pmax0_bitwise(SEXP xSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_pmax0_bitwise(x, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_pmin0_bitwise
-IntegerVector do_pmin0_bitwise(IntegerVector x, int nThread);
-RcppExport SEXP _hutilscpp_do_pmin0_bitwise(SEXP xSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_pmin0_bitwise(x, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_pminpmax
-SEXP do_pminpmax(SEXP X, SEXP Y, bool do_min, bool in_place, bool keep_nas, bool dbl_ok, bool swap_xy, int nThread);
-RcppExport SEXP _hutilscpp_do_pminpmax(SEXP XSEXP, SEXP YSEXP, SEXP do_minSEXP, SEXP in_placeSEXP, SEXP keep_nasSEXP, SEXP dbl_okSEXP, SEXP swap_xySEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< SEXP >::type X(XSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type Y(YSEXP);
-    Rcpp::traits::input_parameter< bool >::type do_min(do_minSEXP);
-    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
-    Rcpp::traits::input_parameter< bool >::type keep_nas(keep_nasSEXP);
-    Rcpp::traits::input_parameter< bool >::type dbl_ok(dbl_okSEXP);
-    Rcpp::traits::input_parameter< bool >::type swap_xy(swap_xySEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_pminpmax(X, Y, do_min, in_place, keep_nas, dbl_ok, swap_xy, nThread));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -739,18 +580,30 @@ RcppExport SEXP Ccumsum_reset_where(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cdivisible(SEXP, SEXP, SEXP);
 RcppExport SEXP Cdivisible16(SEXP, SEXP);
 RcppExport SEXP Cdivisible2(SEXP, SEXP, SEXP);
+RcppExport SEXP CfirstNonNegativeRadix(SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Cforce_as_integer(SEXP, SEXP);
 RcppExport SEXP CImplies(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cis_altrep(SEXP);
 RcppExport SEXP Cis_constant(SEXP, SEXP);
+RcppExport SEXP Cis_safe2int(SEXP);
 RcppExport SEXP Cis_sorted(SEXP, SEXP);
 RcppExport SEXP Cisnt_constant(SEXP);
 RcppExport SEXP Cisnt_sorted(SEXP, SEXP);
 RcppExport SEXP Cpmax(SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Cpmax0_bitwise(SEXP, SEXP, SEXP);
+RcppExport SEXP Cpmax0_radix_sorted_dbl(SEXP, SEXP, SEXP);
+RcppExport SEXP Cpmax0_radix_sorted_int(SEXP, SEXP, SEXP);
 RcppExport SEXP CpmaxC_in_place(SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Cpmin(SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Cpmin0_bitwise(SEXP, SEXP, SEXP);
+RcppExport SEXP Cpmin0_radix_sorted_dbl(SEXP, SEXP, SEXP);
+RcppExport SEXP Cpmin0_radix_sorted_int(SEXP, SEXP, SEXP);
+RcppExport SEXP CpminC_in_place(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Crange(SEXP);
 RcppExport SEXP CSquish(SEXP, SEXP);
 RcppExport SEXP CStringEqual(SEXP, SEXP);
 RcppExport SEXP Csum_isna(SEXP, SEXP);
+RcppExport SEXP Cwhich_16(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_even(SEXP);
 RcppExport SEXP Cwhich_first(SEXP);
 RcppExport SEXP Cwhich_first__(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
@@ -760,7 +613,7 @@ RcppExport SEXP Cwhich_first_lgl_lgl_op(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_first_notTRUE(SEXP);
 RcppExport SEXP Cwhich_firstNA(SEXP);
 RcppExport SEXP Cwhich_isna(SEXP, SEXP, SEXP);
-RcppExport SEXP Cwhich_isnt_int(SEXP);
+RcppExport SEXP Cwhich_isnt_integerish(SEXP);
 RcppExport SEXP Cwhich_last(SEXP);
 RcppExport SEXP Cwhich_last__(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_last_false(SEXP);
@@ -785,11 +638,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_dblTable2int", (DL_FUNC) &_hutilscpp_dblTable2int, 1},
     {"_hutilscpp_do_which_first_xi_ind", (DL_FUNC) &_hutilscpp_do_which_first_xi_ind, 2},
     {"_hutilscpp_do_which_first_xd_ind", (DL_FUNC) &_hutilscpp_do_which_first_xd_ind, 3},
-    {"_hutilscpp_do_which_isnt_integerish", (DL_FUNC) &_hutilscpp_do_which_isnt_integerish, 1},
     {"_hutilscpp_do_which_last_xi_ini", (DL_FUNC) &_hutilscpp_do_which_last_xi_ini, 2},
     {"_hutilscpp_do_which_last_xi_ind", (DL_FUNC) &_hutilscpp_do_which_last_xi_ind, 2},
     {"_hutilscpp_do_which_last_xd_ind", (DL_FUNC) &_hutilscpp_do_which_last_xd_ind, 3},
-    {"_hutilscpp_do_whichs_16", (DL_FUNC) &_hutilscpp_do_whichs_16, 4},
     {"_hutilscpp_showValue", (DL_FUNC) &_hutilscpp_showValue, 2},
     {"_hutilscpp_haversine_distance", (DL_FUNC) &_hutilscpp_haversine_distance, 5},
     {"_hutilscpp_haversineDistance", (DL_FUNC) &_hutilscpp_haversineDistance, 5},
@@ -799,8 +650,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_theEmptiestQuarters", (DL_FUNC) &_hutilscpp_theEmptiestQuarters, 7},
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
     {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 11},
-    {"_hutilscpp_is_safe2int", (DL_FUNC) &_hutilscpp_is_safe2int, 1},
-    {"_hutilscpp_force_as_integer", (DL_FUNC) &_hutilscpp_force_as_integer, 2},
     {"_hutilscpp_do_or3", (DL_FUNC) &_hutilscpp_do_or3, 3},
     {"_hutilscpp_do_and3", (DL_FUNC) &_hutilscpp_do_and3, 3},
     {"_hutilscpp_na_and", (DL_FUNC) &_hutilscpp_na_and, 1},
@@ -808,15 +657,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which3_mem", (DL_FUNC) &_hutilscpp_do_which3_mem, 4},
     {"_hutilscpp_has_openmp", (DL_FUNC) &_hutilscpp_has_openmp, 0},
     {"_hutilscpp_diagnose_omp", (DL_FUNC) &_hutilscpp_diagnose_omp, 5},
-    {"_hutilscpp_do_firstNonNegativeRadix_int", (DL_FUNC) &_hutilscpp_do_firstNonNegativeRadix_int, 5},
-    {"_hutilscpp_do_firstNonNegativeRadix_dbl", (DL_FUNC) &_hutilscpp_do_firstNonNegativeRadix_dbl, 5},
-    {"_hutilscpp_do_pmax0_radix_sorted_dbl", (DL_FUNC) &_hutilscpp_do_pmax0_radix_sorted_dbl, 3},
-    {"_hutilscpp_do_pmin0_radix_sorted_dbl", (DL_FUNC) &_hutilscpp_do_pmin0_radix_sorted_dbl, 3},
-    {"_hutilscpp_do_pmax0_radix_sorted_int", (DL_FUNC) &_hutilscpp_do_pmax0_radix_sorted_int, 3},
-    {"_hutilscpp_do_pmin0_radix_sorted_int", (DL_FUNC) &_hutilscpp_do_pmin0_radix_sorted_int, 3},
-    {"_hutilscpp_do_pmax0_bitwise", (DL_FUNC) &_hutilscpp_do_pmax0_bitwise, 2},
-    {"_hutilscpp_do_pmin0_bitwise", (DL_FUNC) &_hutilscpp_do_pmin0_bitwise, 2},
-    {"_hutilscpp_do_pminpmax", (DL_FUNC) &_hutilscpp_do_pminpmax, 8},
     {"_hutilscpp_do_summary3_dbl", (DL_FUNC) &_hutilscpp_do_summary3_dbl, 5},
     {"_hutilscpp_do_summary3_int", (DL_FUNC) &_hutilscpp_do_summary3_int, 5},
     {"_hutilscpp_test_single_ox_x1_x2", (DL_FUNC) &_hutilscpp_test_single_ox_x1_x2, 4},
@@ -838,18 +678,30 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cdivisible",               (DL_FUNC) &Cdivisible,               3},
     {"Cdivisible16",             (DL_FUNC) &Cdivisible16,             2},
     {"Cdivisible2",              (DL_FUNC) &Cdivisible2,              3},
+    {"CfirstNonNegativeRadix",   (DL_FUNC) &CfirstNonNegativeRadix,   4},
+    {"Cforce_as_integer",        (DL_FUNC) &Cforce_as_integer,        2},
     {"CImplies",                 (DL_FUNC) &CImplies,                 4},
     {"Cis_altrep",               (DL_FUNC) &Cis_altrep,               1},
     {"Cis_constant",             (DL_FUNC) &Cis_constant,             2},
+    {"Cis_safe2int",             (DL_FUNC) &Cis_safe2int,             1},
     {"Cis_sorted",               (DL_FUNC) &Cis_sorted,               2},
     {"Cisnt_constant",           (DL_FUNC) &Cisnt_constant,           1},
     {"Cisnt_sorted",             (DL_FUNC) &Cisnt_sorted,             2},
     {"Cpmax",                    (DL_FUNC) &Cpmax,                    4},
+    {"Cpmax0_bitwise",           (DL_FUNC) &Cpmax0_bitwise,           3},
+    {"Cpmax0_radix_sorted_dbl",  (DL_FUNC) &Cpmax0_radix_sorted_dbl,  3},
+    {"Cpmax0_radix_sorted_int",  (DL_FUNC) &Cpmax0_radix_sorted_int,  3},
     {"CpmaxC_in_place",          (DL_FUNC) &CpmaxC_in_place,          4},
+    {"Cpmin",                    (DL_FUNC) &Cpmin,                    4},
+    {"Cpmin0_bitwise",           (DL_FUNC) &Cpmin0_bitwise,           3},
+    {"Cpmin0_radix_sorted_dbl",  (DL_FUNC) &Cpmin0_radix_sorted_dbl,  3},
+    {"Cpmin0_radix_sorted_int",  (DL_FUNC) &Cpmin0_radix_sorted_int,  3},
+    {"CpminC_in_place",          (DL_FUNC) &CpminC_in_place,          4},
     {"Crange",                   (DL_FUNC) &Crange,                   1},
     {"CSquish",                  (DL_FUNC) &CSquish,                  2},
     {"CStringEqual",             (DL_FUNC) &CStringEqual,             2},
     {"Csum_isna",                (DL_FUNC) &Csum_isna,                2},
+    {"Cwhich_16",                (DL_FUNC) &Cwhich_16,                4},
     {"Cwhich_even",              (DL_FUNC) &Cwhich_even,              1},
     {"Cwhich_first",             (DL_FUNC) &Cwhich_first,             1},
     {"Cwhich_first__",           (DL_FUNC) &Cwhich_first__,           8},
@@ -859,7 +711,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cwhich_first_notTRUE",     (DL_FUNC) &Cwhich_first_notTRUE,     1},
     {"Cwhich_firstNA",           (DL_FUNC) &Cwhich_firstNA,           1},
     {"Cwhich_isna",              (DL_FUNC) &Cwhich_isna,              3},
-    {"Cwhich_isnt_int",          (DL_FUNC) &Cwhich_isnt_int,          1},
+    {"Cwhich_isnt_integerish",   (DL_FUNC) &Cwhich_isnt_integerish,   1},
     {"Cwhich_last",              (DL_FUNC) &Cwhich_last,              1},
     {"Cwhich_last__",            (DL_FUNC) &Cwhich_last__,            8},
     {"Cwhich_last_false",        (DL_FUNC) &Cwhich_last_false,        1},

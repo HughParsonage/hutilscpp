@@ -83,8 +83,8 @@ test_that("firstNonnegativeRadix corners", {
   expect_lte(firstNonNegativeRadix(-x, maxi = 5), 5)
 
   # Check bad arguments to mini
-  expect_equal(do_firstNonNegativeRadix_int(1:5, mini = -2L), 0)
-  expect_equal(do_firstNonNegativeRadix_dbl(1:5, mini = -2L), 0)
+  expect_equal(firstNonNegativeRadix(1:5, mini = -2L), 0)
+  expect_equal(firstNonNegativeRadix(1:5 + 0, mini = -2L), 0)
 
 })
 
@@ -139,7 +139,7 @@ test_that("do_pmin0s", {
   x <- sort(x)
   expect_equal(do_pmin0_radix_sorted_dbl(x), pmin(x, 0L))
 
-  x <- hutilscpp_rev(x)
+  x <- rev(x)
 
   expect_equal(pmin0(x), pmin(x, 0L))
   x <- sort(x)

@@ -40,6 +40,17 @@ R_xlen_t do_which_first_xi_ini(IntegerVector x, IntegerVector y) {
   return 0;
 }
 
+int cpp_type_safe2int(double x) {
+  if (ISNAN(x)) {
+    return 2;
+  }
+  if (x < -2147483647 || x > 2147483647) {
+    return 0;
+  }
+  int xi = (int)x;
+  return (xi == x) ? 1 : 0;
+}
+
 // [[Rcpp::export(rng = false)]]
 IntegerVector dblTable2int(DoubleVector table) {
   R_xlen_t N = table.length();
@@ -48,7 +59,7 @@ IntegerVector dblTable2int(DoubleVector table) {
 
   for (R_xlen_t i = 0; i < N; ++i) {
     double xd = table[i];
-    switch(type_safe2int(xd)) {
+    switch(cpp_type_safe2int(xd)) {
     case 2:
       o.insert(NA_INTEGER);
       break;

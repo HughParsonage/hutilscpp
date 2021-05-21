@@ -13,9 +13,11 @@ test_that("Error handling", {
 })
 
 test_that("in_place = TRUE", {
+  out <- "foo" # ensure out inside pmaxV is assigned
   x <- copy(1:10)
   pmaxV(x, x + 1L, in_place = TRUE)
   expect_equal(x, 2:11)
+  expect_equal(out, "foo")
 })
 
 test_that("swap_xy", {

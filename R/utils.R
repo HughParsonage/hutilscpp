@@ -78,12 +78,11 @@ isFALSE <- function(x) {
 }
 
 
-firstNonNegativeRadix <- function(x, ...) {
-  if (is.double(x)) {
-    do_firstNonNegativeRadix_dbl(x, ...)
-  } else {
-    do_firstNonNegativeRadix_int(x, ...)
-  }
+firstNonNegativeRadix <- function(x, mini = 0L, maxi = -1L, desc = FALSE) {
+  .Call("CfirstNonNegativeRadix",
+        x,
+        mini, maxi, desc,
+        PACKAGE = packageName())
 }
 
 g <- glue::glue
@@ -95,6 +94,22 @@ is_wholer <- function(dbl) {
   dbl >= -2147483647 &&
   dbl <= 2147483647 &&
   dbl == as.integer(dbl)
+}
+
+
+is_safe2int <- function(x) {
+  .Call("Cis_safe2int", x, PACKAGE = packageName())
+}
+
+force_as_integer <- function(x, na_code = NULL) {
+  if (is.null(na_code)) {
+    na_code <- is_safe2int(x)
+  }
+  ans <- .Call("Cforce_as_integer", x, na_code, PACKAGE = packageName())
+  if (is.null(ans)) {
+    return(as.double(x)) # nocov
+  }
+  ans
 }
 
 # quiet double to int -- when passed to a C++ function that
