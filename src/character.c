@@ -136,6 +136,30 @@ R_xlen_t where_square_bracket_opens(SEXP x, R_xlen_t i) {
   return 0;
 }
 
+SEXP Cwhere_square_bracket_opens(SEXP xx, SEXP ii) {
+  if (TYPEOF(xx) != STRSXP) {
+    return R_NilValue;
+  }
+  R_xlen_t N = xlength(xx);
+  int i = asInteger(ii);
+  if (i < 0 || i >= N) {
+    return ScalarInteger(-1);
+  }
+  char xi = CHAR(STRING_ELT(xx, i))[0];
+  if (xi != STOP_SQBRK) {
+    return ScalarInteger(-1);
+  }
+  int depth = 0;
+  for (int k = i; k >= 0; --k) {
+    char xk = CHAR(STRING_ELT(xx, k))[0];
+    depth += (xk == STOP_SQBRK) - (xk == OPEN_SQBRK);
+    if (depth == 0) {
+      return ScalarInteger(k);
+    }
+  }
+  return ScalarInteger(0);
+}
+
 SEXP CextractMandatory(SEXP x, SEXP command, SEXP NCommands) {
   if (TYPEOF(NCommands) != INTSXP) {
     error("TYPEOF(NCommands) != INTSXP."); // # nocov
@@ -156,11 +180,11 @@ SEXP CextractMandatory(SEXP x, SEXP command, SEXP NCommands) {
   int command_no = 0;
 
   SEXP support = PROTECT(allocVector(STRSXP, N));
-  SEXP CommandNo = PROTECT(allocVector(INTSXP, N));
+  SEXP CommandNo = PROTECT(allocVector(INTSXP, nCommands));
   int * commandNo = INTEGER(CommandNo);
-  SEXP CommandOpeners = PROTECT(allocVector(INTSXP, N));
+  SEXP CommandOpeners = PROTECT(allocVector(INTSXP, nCommands));
   int * commandOpeners = INTEGER(CommandOpeners);
-  SEXP CommandClosers = PROTECT(allocVector(INTSXP, N));
+  SEXP CommandClosers = PROTECT(allocVector(INTSXP, nCommands));
   int * commandClosers = INTEGER(CommandClosers);
   const char * command0 = CHAR(STRING_ELT(command, 0));
   char xk = '\0';
