@@ -878,28 +878,6 @@ test_that("which_first(lgl lgl)", {
                first_which(x %in% T0))
 })
 
-test_that("which_first internals", {
-  expect_equal(do_which_first_notTRUE(c(FALSE)), 1L)
-  expect_equal(do_which_first_notTRUE(c(TRUE)), 0L)
-  expect_equal(do_which_first_notTRUE(c(TRUE, TRUE)), 0L)
-  expect_equal(do_which_first_notTRUE(c(NA)), 1L)
-
-  all_lgls <- c(TRUE, FALSE, NA)
-  expect_equal(do_which_first_lgl_lgl_op(logical(0), logical(0), 1, TRUE), 0)
-  expect_error(do_which_first_lgl_lgl_op(logical(5), logical(3), do_op2M("%between%")))
-               # regex = "length.(2|two)")
-  expect_equal(do_which_first_lgl_lgl_op(logical(11), all_lgls, do_op2M("%in%")), 1)
-  expect_equal(do_which_first_lgl_lgl_op(logical(11), all_lgls, do_op2M("%in%"), TRUE), 11)
-  expect_equal(do_which_first_lgl_lgl_op(logical(11), TRUE, do_op2M("%in%")), 0)
-  expect_equal(do_which_first_lgl_lgl_op(logical(11), FALSE, do_op2M("%in%")), 1)
-  expect_equal(do_which_first_lgl_lgl_op(logical(11), c(TRUE, FALSE), do_op2M("%between%")), 0)
-  expect_equal(do_which_first_lgl_lgl_op(c(TRUE, NA), c(FALSE, NA), do_op2M("%in%")), 2)
-  expect_equal(do_which_first_lgl_lgl_op(c(TRUE, TRUE), c(TRUE, FALSE), do_op2M("%between%")), 0)
-  expect_equal(do_which_first_lgl_lgl_op(c(TRUE, TRUE), c(TRUE, TRUE), do_op2M("%in%")), 1)
-  expect_equal(do_which_first_lgl_lgl_op(c(FALSE, TRUE), c(TRUE, TRUE), do_op2M("%in%")), 2)
-  expect_equal(do_which_first_lgl_lgl_op(c(FALSE, FALSE), c(TRUE, TRUE), do_op2M("%between%")), 0)
-
-})
 
 
 

@@ -1,15 +1,3 @@
-test_that("op2M agrees with do_op2M", {
-  the_operators <-
-    c("!=", "==", ">=",
-      "<=", ">", "<",
-      "%in%",
-      "%between%",
-      "%(between)%",
-      "%]between[%")
-
-  expect_identical(sapply(the_operators, op2M),
-                   sapply(the_operators, do_op2M))
-})
 
 
 test_that("single_ox_x1_x2 works", {

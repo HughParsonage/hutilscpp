@@ -29,10 +29,6 @@ do_par_in_hash_dbl <- function(x, table, nThread = 1L) {
     .Call(`_hutilscpp_do_par_in_hash_dbl`, x, table, nThread)
 }
 
-do_op2M <- function(x) {
-    .Call(`_hutilscpp_do_op2M`, x)
-}
-
 do_or3_par <- function(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread = 1L) {
     .Call(`_hutilscpp_do_or3_par`, x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread)
 }
