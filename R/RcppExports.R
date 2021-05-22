@@ -85,26 +85,6 @@ match_min_Haversine <- function(lat1, lon1, lat2, lon2, tabl, cartR = -1, dist0_
     .Call(`_hutilscpp_match_min_Haversine`, lat1, lon1, lat2, lon2, tabl, cartR, dist0_km, verify_cartR, do_verify_box, excl_self, ncores)
 }
 
-do_or3 <- function(x, y, z) {
-    .Call(`_hutilscpp_do_or3`, x, y, z)
-}
-
-do_and3 <- function(x, y, z) {
-    .Call(`_hutilscpp_do_and3`, x, y, z)
-}
-
-na_and <- function(x) {
-    .Call(`_hutilscpp_na_and`, x)
-}
-
-do_which3 <- function(x, y, z, And = TRUE, anyNAx = TRUE, anyNAy = TRUE, anyNAz = TRUE) {
-    .Call(`_hutilscpp_do_which3`, x, y, z, And, anyNAx, anyNAy, anyNAz)
-}
-
-do_which3_mem <- function(x, y, z, And = TRUE) {
-    .Call(`_hutilscpp_do_which3_mem`, x, y, z, And)
-}
-
 has_openmp <- function() {
     .Call(`_hutilscpp_has_openmp`)
 }
