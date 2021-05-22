@@ -620,19 +620,20 @@ SEXP Csum3s_par(SEXP xx, SEXP oxx, SEXP x11, SEXP x22,
                 SEXP CC,
                 SEXP Aampersand,
                 SEXP nthreads) {
-  // ampersand TRUE => sum_and3,  FALSE  => sum_or3
+
   if (TYPEOF(nthreads) != INTSXP ||
       xlength(nthreads) != 1L) {
     return R_NilValue;
   }
+  // ampersand TRUE => sum_and3,  FALSE  => sum_or3
   const bool ampersand = asLogical(Aampersand);
   int nThread = asInteger(nthreads);
   const int * x = INTEGER(xx);
   const int * y = INTEGER(yy);
   const int * z = INTEGER(zz);
-  const double * xd = REAL(xx);
-  const double * yd = REAL(yy);
-  const double * zd = REAL(zz);
+  const double * xd = REAL(xxd);
+  const double * yd = REAL(yyd);
+  const double * zd = REAL(zzd);
   const int ox = asInteger(oxx);
   const int oy = asInteger(oyy);
   const int oz = asInteger(ozz);
