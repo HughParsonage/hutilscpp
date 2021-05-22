@@ -220,29 +220,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// has_openmp
-bool has_openmp();
-RcppExport SEXP _hutilscpp_has_openmp() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    rcpp_result_gen = Rcpp::wrap(has_openmp());
-    return rcpp_result_gen;
-END_RCPP
-}
-// diagnose_omp
-List diagnose_omp(int threads_requested, String msg_no_openmp, String msg_threads_neg, String msg_unknown_issues, String msg_too_many_threads);
-RcppExport SEXP _hutilscpp_diagnose_omp(SEXP threads_requestedSEXP, SEXP msg_no_openmpSEXP, SEXP msg_threads_negSEXP, SEXP msg_unknown_issuesSEXP, SEXP msg_too_many_threadsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< int >::type threads_requested(threads_requestedSEXP);
-    Rcpp::traits::input_parameter< String >::type msg_no_openmp(msg_no_openmpSEXP);
-    Rcpp::traits::input_parameter< String >::type msg_threads_neg(msg_threads_negSEXP);
-    Rcpp::traits::input_parameter< String >::type msg_unknown_issues(msg_unknown_issuesSEXP);
-    Rcpp::traits::input_parameter< String >::type msg_too_many_threads(msg_too_many_threadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(diagnose_omp(threads_requested, msg_no_openmp, msg_threads_neg, msg_unknown_issues, msg_too_many_threads));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 RcppExport SEXP Callocate_with_root(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Callocate0_dbl(SEXP, SEXP);
@@ -256,6 +233,7 @@ RcppExport SEXP Ccount_logical(SEXP, SEXP);
 RcppExport SEXP Ccumsum_reset(SEXP, SEXP);
 RcppExport SEXP Ccumsum_reset_sorted_int(SEXP);
 RcppExport SEXP Ccumsum_reset_where(SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Cdiagnose_omp(SEXP);
 RcppExport SEXP Cdivisible(SEXP, SEXP, SEXP);
 RcppExport SEXP Cdivisible16(SEXP, SEXP);
 RcppExport SEXP Cdivisible2(SEXP, SEXP, SEXP);
@@ -330,8 +308,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_theEmptiestQuarters", (DL_FUNC) &_hutilscpp_theEmptiestQuarters, 7},
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
     {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 11},
-    {"_hutilscpp_has_openmp", (DL_FUNC) &_hutilscpp_has_openmp, 0},
-    {"_hutilscpp_diagnose_omp", (DL_FUNC) &_hutilscpp_diagnose_omp, 5},
     {"Callocate_with_root",         (DL_FUNC) &Callocate_with_root,          6},
     {"Callocate0_dbl",              (DL_FUNC) &Callocate0_dbl,               2},
     {"Callocate0_except",           (DL_FUNC) &Callocate0_except,            4},
@@ -344,6 +320,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Ccumsum_reset",               (DL_FUNC) &Ccumsum_reset,                2},
     {"Ccumsum_reset_sorted_int",    (DL_FUNC) &Ccumsum_reset_sorted_int,     1},
     {"Ccumsum_reset_where",         (DL_FUNC) &Ccumsum_reset_where,          4},
+    {"Cdiagnose_omp",               (DL_FUNC) &Cdiagnose_omp,                1},
     {"Cdivisible",                  (DL_FUNC) &Cdivisible,                   3},
     {"Cdivisible16",                (DL_FUNC) &Cdivisible16,                 2},
     {"Cdivisible2",                 (DL_FUNC) &Cdivisible2,                  3},

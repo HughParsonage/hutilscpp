@@ -65,11 +65,3 @@ match_min_Haversine <- function(lat1, lon1, lat2, lon2, tabl, cartR = -1, dist0_
     .Call(`_hutilscpp_match_min_Haversine`, lat1, lon1, lat2, lon2, tabl, cartR, dist0_km, verify_cartR, do_verify_box, excl_self, ncores)
 }
 
-has_openmp <- function() {
-    .Call(`_hutilscpp_has_openmp`)
-}
-
-diagnose_omp <- function(threads_requested, msg_no_openmp, msg_threads_neg, msg_unknown_issues, msg_too_many_threads) {
-    .Call(`_hutilscpp_diagnose_omp`, threads_requested, msg_no_openmp, msg_threads_neg, msg_unknown_issues, msg_too_many_threads)
-}
-
