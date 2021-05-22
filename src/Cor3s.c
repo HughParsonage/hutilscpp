@@ -1,25 +1,42 @@
-#include "cpphutils.h"
+#include "hutilscpp.h"
 
-// [[Rcpp::export(rng = false)]]
-LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
-                         IntegerVector y, int oy, int y1, int y2,
-                         IntegerVector z, int oz, int z1, int z2,
-                         LogicalVector A,
-                         LogicalVector B,
-                         LogicalVector C,
-                         CharacterVector nom,
-                         int nThread = 1) {
-  int nx = x.length();
-  int nA = A.length();
-  int n = (nx > nA) ? nx : nA;
-  bool useX = x.length() == n;
-  bool useY = y.length() == n;
-  bool useZ = z.length() == n;
+
+SEXP Cor3_par(SEXP xx, SEXP oxx, SEXP x11, SEXP x22,
+              SEXP yy, SEXP oyy, SEXP y11, SEXP y22,
+              SEXP zz, SEXP ozz, SEXP z11, SEXP z22,
+              SEXP AA,
+              SEXP BB,
+              SEXP CC,
+              SEXP nthreads) {
+  int nThread = asInteger(nthreads);
+  const int * x = INTEGER(xx);
+  const int * y = INTEGER(yy);
+  const int * z = INTEGER(zz);
+  const int ox = asInteger(oxx);
+  const int oy = asInteger(oyy);
+  const int oz = asInteger(ozz);
+  const int x1 = asInteger(x11);
+  const int y1 = asInteger(y11);
+  const int z1 = asInteger(z11);
+  const int x2 = asInteger(x22);
+  const int y2 = asInteger(y22);
+  const int z2 = asInteger(z22);
+
+  const int * A = LOGICAL(AA);
+  const int * B = LOGICAL(BB);
+  const int * C = LOGICAL(CC);
+
+  R_xlen_t nx = xlength(xx);
+  R_xlen_t nA = xlength(AA);
+  R_xlen_t n = (nx > nA) ? nx : nA;
+  bool useX = xlength(xx) == n;
+  bool useY = xlength(yy) == n;
+  bool useZ = xlength(zz) == n;
 
   // Which variables are bare logicals
-  bool A_lgl = A.length() == n;
-  bool B_lgl = B.length() == n;
-  bool C_lgl = C.length() == n;
+  bool A_lgl = xlength(AA) == n;
+  bool B_lgl = xlength(BB) == n;
+  bool C_lgl = xlength(CC) == n;
 
   // Is the 1st, 2nd, 3rd expression usable or should we just set it to false?
   bool e1 = useX || A_lgl;
@@ -32,20 +49,21 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
   bool C_opposite = C_lgl && oz == 1;
 
   if (useX && A_lgl) {
-    stop("Internal error: useX && A_lgl"); // # nocov
+    error("Internal error: useX && A_lgl"); // # nocov
   }
   if (useY && B_lgl) {
-    stop("Internal error: useY && B_lgl"); // # nocov
+    error("Internal error: useY && B_lgl"); // # nocov
   }
   if (useZ && C_lgl) {
-    stop("Internal error: useZ && C_lgl"); // # nocov
+    error("Internal error: useZ && C_lgl"); // # nocov
   }
 
   if (!e1 && !e2 && !e3) {
-    return LogicalVector(n); // # nocov
+    return LogicalN(n); // # nocov
   }
 
-  LogicalVector out = no_init(n);
+  SEXP ans = PROTECT(allocVector(LGLSXP, n));
+  int * out = LOGICAL(ans);
 
   if (useX && useY && useZ) {
 #if defined _OPENMP && _OPENMP >= 201511
@@ -53,11 +71,11 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 #endif
     for (int i = 0; i < n; ++i) {
       out[i] =
-        single_ox_x1_x2(x[i], ox, x1, x2) ||
-        single_ox_x1_x2(y[i], oy, y1, y2) ||
-        single_ox_x1_x2(z[i], oz, z1, z2);
+        isingle_ox_x1_x2(x[i], ox, x1, x2) ||
+        isingle_ox_x1_x2(y[i], oy, y1, y2) ||
+        isingle_ox_x1_x2(z[i], oz, z1, z2);
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (useX && useY && C_opposite) {
@@ -66,11 +84,11 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 #endif
     for (int i = 0; i < n; ++i) {
       out[i] =
-        single_ox_x1_x2(x[i], ox, x1, x2) ||
-        single_ox_x1_x2(y[i], oy, y1, y2) ||
+        isingle_ox_x1_x2(x[i], ox, x1, x2) ||
+        isingle_ox_x1_x2(y[i], oy, y1, y2) ||
         !C[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (useX && useY && C_lgl) {
@@ -79,11 +97,11 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 #endif
     for (int i = 0; i < n; ++i) {
       out[i] =
-        single_ox_x1_x2(x[i], ox, x1, x2) ||
-        single_ox_x1_x2(y[i], oy, y1, y2) ||
+        isingle_ox_x1_x2(x[i], ox, x1, x2) ||
+        isingle_ox_x1_x2(y[i], oy, y1, y2) ||
         C[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   // e3 = false
@@ -93,10 +111,10 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 #endif
     for (int i = 0; i < n; ++i) {
       out[i] =
-        single_ox_x1_x2(x[i], ox, x1, x2) ||
-        single_ox_x1_x2(y[i], oy, y1, y2);
+        isingle_ox_x1_x2(x[i], ox, x1, x2) ||
+        isingle_ox_x1_x2(y[i], oy, y1, y2);
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   // B_lgl (but B_opposite must always precede!)
@@ -106,11 +124,11 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 #endif
     for (int i = 0; i < n; ++i) {
       out[i] =
-        single_ox_x1_x2(x[i], ox, x1, x2) ||
+        isingle_ox_x1_x2(x[i], ox, x1, x2) ||
         !B[i] ||
-        single_ox_x1_x2(z[i], oz, z1, z2);
+        isingle_ox_x1_x2(z[i], oz, z1, z2);
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (useX && B_lgl && useZ) {
@@ -119,11 +137,11 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 #endif
     for (int i = 0; i < n; ++i) {
       out[i] =
-        single_ox_x1_x2(x[i], ox, x1, x2) ||
+        isingle_ox_x1_x2(x[i], ox, x1, x2) ||
         B[i] ||
-        single_ox_x1_x2(z[i], oz, z1, z2);
+        isingle_ox_x1_x2(z[i], oz, z1, z2);
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (useX && B_opposite && C_opposite) {
@@ -132,11 +150,11 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 #endif
     for (int i = 0; i < n; ++i) {
       out[i] =
-        single_ox_x1_x2(x[i], ox, x1, x2) ||
+        isingle_ox_x1_x2(x[i], ox, x1, x2) ||
         !B[i] ||
         !C[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (useX && B_lgl && C_opposite) {
@@ -145,11 +163,11 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 #endif
     for (int i = 0; i < n; ++i) {
       out[i] =
-        single_ox_x1_x2(x[i], ox, x1, x2) ||
+        isingle_ox_x1_x2(x[i], ox, x1, x2) ||
         B[i] ||
         !C[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (useX && B_opposite && C_lgl) {
@@ -158,11 +176,11 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 #endif
     for (int i = 0; i < n; ++i) {
       out[i] =
-        single_ox_x1_x2(x[i], ox, x1, x2) ||
+        isingle_ox_x1_x2(x[i], ox, x1, x2) ||
         !B[i] ||
         C[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (useX && B_lgl && C_lgl) {
@@ -171,11 +189,11 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 #endif
     for (int i = 0; i < n; ++i) {
       out[i] =
-        single_ox_x1_x2(x[i], ox, x1, x2) ||
+        isingle_ox_x1_x2(x[i], ox, x1, x2) ||
         B[i] ||
         C[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (useX && B_opposite && !e3) {
@@ -184,10 +202,10 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 #endif
     for (int i = 0; i < n; ++i) {
       out[i] =
-        single_ox_x1_x2(x[i], ox, x1, x2) ||
+        isingle_ox_x1_x2(x[i], ox, x1, x2) ||
         !B[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (useX && B_lgl && !e3) {
@@ -196,10 +214,10 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 #endif
     for (int i = 0; i < n; ++i) {
       out[i] =
-        single_ox_x1_x2(x[i], ox, x1, x2) ||
+        isingle_ox_x1_x2(x[i], ox, x1, x2) ||
         B[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (useX && !e2 && !e3) {
@@ -208,9 +226,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 #endif
     for (int i = 0; i < n; ++i) {
       out[i] =
-        single_ox_x1_x2(x[i], ox, x1, x2);
+        isingle_ox_x1_x2(x[i], ox, x1, x2);
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
   // // A_opposite
 
@@ -221,10 +239,10 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
     for (int i = 0; i < n; ++i) {
       out[i] =
         !A[i] ||
-        single_ox_x1_x2(y[i], oy, y1, y2) ||
-        single_ox_x1_x2(z[i], oz, z1, z2);
+        isingle_ox_x1_x2(y[i], oy, y1, y2) ||
+        isingle_ox_x1_x2(z[i], oz, z1, z2);
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_opposite && useY && C_opposite) {
@@ -234,10 +252,10 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
     for (int i = 0; i < n; ++i) {
       out[i] =
         !A[i] ||
-        single_ox_x1_x2(y[i], oy, y1, y2) ||
+        isingle_ox_x1_x2(y[i], oy, y1, y2) ||
         !C[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_opposite && useY && C_lgl) {
@@ -247,10 +265,10 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
     for (int i = 0; i < n; ++i) {
       out[i] =
         !A[i] ||
-        single_ox_x1_x2(y[i], oy, y1, y2) ||
+        isingle_ox_x1_x2(y[i], oy, y1, y2) ||
         C[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   // e3 = false
@@ -261,9 +279,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
     for (int i = 0; i < n; ++i) {
       out[i] =
         !A[i] ||
-        single_ox_x1_x2(y[i], oy, y1, y2);
+        isingle_ox_x1_x2(y[i], oy, y1, y2);
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   // B_lgl
@@ -275,9 +293,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
       out[i] =
         !A[i] ||
         !B[i] ||
-        single_ox_x1_x2(z[i], oz, z1, z2);
+        isingle_ox_x1_x2(z[i], oz, z1, z2);
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_opposite && B_lgl && useZ) {
@@ -288,9 +306,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
       out[i] =
         !A[i] ||
         B[i] ||
-        single_ox_x1_x2(z[i], oz, z1, z2);
+        isingle_ox_x1_x2(z[i], oz, z1, z2);
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_opposite && B_opposite && C_opposite) {
@@ -303,7 +321,7 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
         !B[i] ||
         !C[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_opposite && B_lgl && C_opposite) {
@@ -316,7 +334,7 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
         B[i] ||
         !C[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_opposite && B_opposite && C_lgl) {
@@ -329,7 +347,7 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
         !B[i] ||
         C[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_opposite && B_lgl && C_lgl) {
@@ -342,7 +360,7 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
         B[i] ||
         C[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_opposite && B_opposite && !e3) {
@@ -354,7 +372,7 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
         !A[i] ||
         !B[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_opposite && B_lgl && !e3) {
@@ -366,7 +384,7 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
         !A[i] ||
         B[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_opposite && !e2 && !e3) {
@@ -377,7 +395,7 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
       out[i] =
         !A[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   // // A_lgl
@@ -389,10 +407,10 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
     for (int i = 0; i < n; ++i) {
       out[i] =
         A[i] ||
-        single_ox_x1_x2(y[i], oy, y1, y2) ||
-        single_ox_x1_x2(z[i], oz, z1, z2);
+        isingle_ox_x1_x2(y[i], oy, y1, y2) ||
+        isingle_ox_x1_x2(z[i], oz, z1, z2);
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_lgl && useY && C_opposite) {
@@ -402,10 +420,10 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
     for (int i = 0; i < n; ++i) {
       out[i] =
         A[i] ||
-        single_ox_x1_x2(y[i], oy, y1, y2) ||
+        isingle_ox_x1_x2(y[i], oy, y1, y2) ||
         !C[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_lgl && useY && C_lgl) {
@@ -415,10 +433,10 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
     for (int i = 0; i < n; ++i) {
       out[i] =
         A[i] ||
-        single_ox_x1_x2(y[i], oy, y1, y2) ||
+        isingle_ox_x1_x2(y[i], oy, y1, y2) ||
         C[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   // e3 = false
@@ -429,9 +447,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
     for (int i = 0; i < n; ++i) {
       out[i] =
         A[i] ||
-        single_ox_x1_x2(y[i], oy, y1, y2);
+        isingle_ox_x1_x2(y[i], oy, y1, y2);
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   // B_lgl
@@ -443,9 +461,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
       out[i] =
         A[i] ||
         !B[i] ||
-        single_ox_x1_x2(z[i], oz, z1, z2);
+        isingle_ox_x1_x2(z[i], oz, z1, z2);
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_lgl && B_lgl && useZ) {
@@ -456,9 +474,9 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
       out[i] =
         A[i] ||
         B[i] ||
-        single_ox_x1_x2(z[i], oz, z1, z2);
+        isingle_ox_x1_x2(z[i], oz, z1, z2);
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_lgl && B_opposite && C_opposite) {
@@ -471,7 +489,7 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
         !B[i] ||
         !C[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_lgl && B_lgl && C_opposite) {
@@ -484,7 +502,7 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
         B[i] ||
         !C[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_lgl && B_opposite && C_lgl) {
@@ -497,7 +515,7 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
         !B[i] ||
         C[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_lgl && B_lgl && C_lgl) {
@@ -510,7 +528,7 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
         B[i] ||
         C[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_lgl && B_opposite && !e3) {
@@ -522,7 +540,7 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
         A[i] ||
         !B[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_lgl && B_lgl && !e3) {
@@ -534,7 +552,7 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
         A[i] ||
         B[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
   if (A_lgl && !e2 && !e3) {
@@ -545,7 +563,7 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
       out[i] =
         A[i];
     }
-    return out;
+    UNPROTECT(1); return ans;
   }
 
 #if defined _OPENMP && _OPENMP >= 201511
@@ -556,7 +574,7 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
 
     // 1st expression
     if (e1) {
-      oi = useX ? single_ox_x1_x2(x[i], ox, x1, x2) : (A_opposite ? !A[i] : A[i]);
+      oi = useX ? isingle_ox_x1_x2(x[i], ox, x1, x2) : (A_opposite ? !A[i] : A[i]);
       if (oi) {
         out[i] = oi;
         continue;
@@ -566,7 +584,7 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
     // 2nd expression
     // #nocov start
     if (e2) {
-      oi = useY ? single_ox_x1_x2(y[i], oy, y1, y2) : (B_opposite ? !B[i] : B[i]);
+      oi = useY ? isingle_ox_x1_x2(y[i], oy, y1, y2) : (B_opposite ? !B[i] : B[i]);
       if (oi) {
         out[i] = TRUE;
         continue;
@@ -575,7 +593,7 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
     // #nocov end
     // 3rd expression
     if (e3) {
-      oi = useZ ? single_ox_x1_x2(z[i], oz, z1, z2) : (C_opposite ? !C[i] : C[i]);
+      oi = useZ ? isingle_ox_x1_x2(z[i], oz, z1, z2) : (C_opposite ? !C[i] : C[i]);
       if (oi) {
         out[i] = TRUE;
         continue;
@@ -585,145 +603,11 @@ LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2,
     out[i] = FALSE;
 
   }
-  return out;
+  UNPROTECT(1);
+  return ans;
 }
 
-/*
-namespace h3a {
 
-template <int RTYPE>
-LogicalVector and1s(const Vector<RTYPE>& x, int opx,
-                    const Vector<RTYPE>& x1,
-                    const Vector<RTYPE>& x2,
-                    int nThread) {
-  R_xlen_t N = x.length();
-  R_xlen_t nx1 = x1.length();
-
-  const bool r1 = nx1 == 1;
-  const bool rn = nx1 == N;
-
-
-  LogicalVector out = no_init(N);
-
-  switch(opx) {
-  case 1:
-    switch(TYPEOF(x)) {
-    case INTSXP:
-      switch(TYPEOF(x1)) {
-      case INTSXP:
-        if (r1) {
-          const int rhs1 = x1[0];
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-          for (R_xlen_t i = 0; i < N; ++i) {
-            out[i] = x[i] != rhs1;
-          }
-          return out;
-        }
-        if (rn) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-          for (R_xlen_t i = 0; i < N; ++i) {
-            out[i] = x[i] != x1[i];
-          }
-          return out;
-        }
-      case REALSXP:
-        if (r1) {
-          const double rhs1 = x1[0];
-          const bool isnt_integerish =
-            !R_finite(rhs1) || rhs1 > 2147483647 || rhs < -2147483647 ||
-            (rhs1 != ((int)rhs1));
-
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-          for (R_xlen_t i = 0; i < N; ++i) {
-            out[i] = isnt_integerish ? TRUE : (x[i] != ((int)(rhs1)));
-          }
-        }
-        if (rn) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-          for (R_xlen_t i = 0; i < N; ++i) {
-            const double rhs1 = x1[i];
-            const bool isnt_integerish =
-              !R_finite(rhs1) || rhs1 > 2147483647 || rhs < -2147483647 ||
-              (rhs1 != ((int)rhs1));
-            out[i] = isnt_integerish ? TRUE : (x[i] != ((int)(rhs1)));
-          }
-        }
-      }
-
-
-
-    case REALSXP:
-      switch(TYPEOF(x1)) {
-      case INTSXP:
-        if (r1) {
-          const int rhs1 = x1[0];
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-          for (R_xlen_t i = 0; i < N; ++i) {
-            out[i] = x[i] != rhs1;
-          }
-          return out;
-        }
-        if (rn) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-          for (R_xlen_t i = 0; i < N; ++i) {
-            out[i] = x[i] != x1[i];
-          }
-          return out;
-        }
-      case REALSXP:
-        // int != dbl
-        // if it's not integerish then all true
-        if (r1) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-          for (R_xlen_t i = 0; i < N; ++i) {
-            out[i] = x[i] != x1[0];
-          }
-        }
-        if (rn) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-          for (R_xlen_t i = 0; i < N; ++i) {
-            const double rhs1 = x1[i];
-            out[i] = x[i] != rhs1
-          }
-        }
-      }
-    }
-  }
-  return Rcpp::LogicalVector();
-}
-// [[Rcpp::export(rng = false)]]
-LogicalVector do_and1(SEXP x, int opx,
-                      SEXP x1,
-                      SEXP x2,
-                      int nThread = 1) {
-  R_xlen_t N = x.length();
-  Vector<RTYPE> out = no_init(N);
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(n)
-#endif
-  for (int i = 0; i < N; ++i) {
-    out[i] = (x[i] <= 0) ? 0 : x[i];
-  }
-  return out;
-}
-}
-*/
 
 
 

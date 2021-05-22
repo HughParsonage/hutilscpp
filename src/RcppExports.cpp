@@ -62,32 +62,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_or3_par
-LogicalVector do_or3_par(IntegerVector x, int ox, int x1, int x2, IntegerVector y, int oy, int y1, int y2, IntegerVector z, int oz, int z1, int z2, LogicalVector A, LogicalVector B, LogicalVector C, CharacterVector nom, int nThread);
-RcppExport SEXP _hutilscpp_do_or3_par(SEXP xSEXP, SEXP oxSEXP, SEXP x1SEXP, SEXP x2SEXP, SEXP ySEXP, SEXP oySEXP, SEXP y1SEXP, SEXP y2SEXP, SEXP zSEXP, SEXP ozSEXP, SEXP z1SEXP, SEXP z2SEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP nomSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ox(oxSEXP);
-    Rcpp::traits::input_parameter< int >::type x1(x1SEXP);
-    Rcpp::traits::input_parameter< int >::type x2(x2SEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type oy(oySEXP);
-    Rcpp::traits::input_parameter< int >::type y1(y1SEXP);
-    Rcpp::traits::input_parameter< int >::type y2(y2SEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type z(zSEXP);
-    Rcpp::traits::input_parameter< int >::type oz(ozSEXP);
-    Rcpp::traits::input_parameter< int >::type z1(z1SEXP);
-    Rcpp::traits::input_parameter< int >::type z2(z2SEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type A(ASEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type B(BSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type C(CSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type nom(nomSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_or3_par(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_which_first_xi_ini
 R_xlen_t do_which_first_xi_ini(IntegerVector x, IntegerVector y);
 RcppExport SEXP _hutilscpp_do_which_first_xi_ini(SEXP xSEXP, SEXP ySEXP) {
@@ -419,6 +393,7 @@ RcppExport SEXP Cis_safe2int(SEXP);
 RcppExport SEXP Cis_sorted(SEXP, SEXP);
 RcppExport SEXP Cisnt_constant(SEXP);
 RcppExport SEXP Cisnt_sorted(SEXP, SEXP);
+RcppExport SEXP Cor3_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cpmax(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cpmax0_bitwise(SEXP, SEXP, SEXP);
 RcppExport SEXP Cpmax0_radix_sorted_dbl(SEXP, SEXP, SEXP);
@@ -463,7 +438,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_par_in", (DL_FUNC) &_hutilscpp_do_par_in, 3},
     {"_hutilscpp_do_par_in_hash_int", (DL_FUNC) &_hutilscpp_do_par_in_hash_int, 3},
     {"_hutilscpp_do_par_in_hash_dbl", (DL_FUNC) &_hutilscpp_do_par_in_hash_dbl, 3},
-    {"_hutilscpp_do_or3_par", (DL_FUNC) &_hutilscpp_do_or3_par, 17},
     {"_hutilscpp_do_which_first_xi_ini", (DL_FUNC) &_hutilscpp_do_which_first_xi_ini, 2},
     {"_hutilscpp_dblTable2int", (DL_FUNC) &_hutilscpp_dblTable2int, 1},
     {"_hutilscpp_do_which_first_xi_ind", (DL_FUNC) &_hutilscpp_do_which_first_xi_ind, 2},
@@ -511,6 +485,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cis_sorted",                  (DL_FUNC) &Cis_sorted,                   2},
     {"Cisnt_constant",              (DL_FUNC) &Cisnt_constant,               1},
     {"Cisnt_sorted",                (DL_FUNC) &Cisnt_sorted,                 2},
+    {"Cor3_par",                    (DL_FUNC) &Cor3_par,                    16},
     {"Cpmax",                       (DL_FUNC) &Cpmax,                        4},
     {"Cpmax0_bitwise",              (DL_FUNC) &Cpmax0_bitwise,               3},
     {"Cpmax0_radix_sorted_dbl",     (DL_FUNC) &Cpmax0_radix_sorted_dbl,      3},
