@@ -21,6 +21,7 @@ allocate0_except <- function(N, India, Victor, nThread = 1L) {
   }
   stopifnot(is.integer(India) || isTRUE(all.equal(floor(India), India)))
   Victor <- ensure_integer(Victor)
+  nThread <- check_omp(nThread)
   .Call("Callocate0_except", N, India, Victor, nThread, PACKAGE = packageName())
 }
 
