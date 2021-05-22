@@ -400,3 +400,33 @@ or3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
 }
 
 
+do_and3_par <- function(x, ox, x1, x2,
+                        y, oy, y1, y2,
+                        z, oz, z1, z2,
+                        A, B, C, nom,
+                        nThread = 1L) {
+  stopifnot(is.integer(x),
+            is.integer(ox),
+            is.integer(x1),
+            is.integer(x2),
+            is.integer(y),
+            is.integer(oy),
+            is.integer(y1),
+            is.integer(y2),
+            is.integer(z),
+            is.integer(oz),
+            is.integer(z1),
+            is.integer(z2),
+            is.logical(A),
+            is.logical(B),
+            is.logical(C))
+  nThread <- check_omp(nThread)
+  .Call("Cand3s_par",
+        x, ox, x1, x2,
+        y, oy, y1, y2,
+        z, oz, z1, z2,
+        A, B, C,
+        nThread,
+        PACKAGE = packageName())
+}
+

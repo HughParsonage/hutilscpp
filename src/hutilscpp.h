@@ -36,6 +36,7 @@
 extern int tens[10];
 
 // allocate
+SEXP LogicalN(R_xlen_t N);
 SEXP IntegerN(R_xlen_t N);
 SEXP IntegerNNA(R_xlen_t N);
 SEXP DoubleN(R_xlen_t N);
