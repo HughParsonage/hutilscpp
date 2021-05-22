@@ -31,7 +31,7 @@ SEXP Cdiagnose_omp(SEXP Threads_requested) {
 
 
 #ifndef _OPENMP
-  return List::create(False, False, out);
+  return ScalarInteger(0);
 #endif
 
   int n_procs = 1;
