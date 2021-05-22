@@ -94,7 +94,6 @@ SEXP Callocate0_except(SEXP NN, SEXP Ind, SEXP Vic, SEXP nthread) {
   R_xlen_t tn = xlength(Ind);
   R_xlen_t vn = xlength(Vic);
 
-  const int * India = INTEGER(Ind);
   const int * Victor = INTEGER(Vic);
   SEXP ans = PROTECT(allocVector(INTSXP, N));
   int * ansp = INTEGER(ans);

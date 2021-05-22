@@ -221,13 +221,16 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP Callocate_with_root(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP CAnyCharMatch(SEXP, SEXP, SEXP);
+RcppExport SEXP CImplies(SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP CSquish(SEXP, SEXP);
+RcppExport SEXP CStringEqual(SEXP, SEXP);
 RcppExport SEXP Callocate0_dbl(SEXP, SEXP);
 RcppExport SEXP Callocate0_except(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Callocate0_int(SEXP, SEXP);
+RcppExport SEXP Callocate_with_root(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cand3(SEXP, SEXP, SEXP);
 RcppExport SEXP Cand3s_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-RcppExport SEXP CAnyCharMatch(SEXP, SEXP, SEXP);
 RcppExport SEXP CanyOutside(SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Ccount_logical(SEXP, SEXP);
 RcppExport SEXP Ccumsum_reset(SEXP, SEXP);
@@ -240,7 +243,7 @@ RcppExport SEXP Cdivisible2(SEXP, SEXP, SEXP);
 RcppExport SEXP CextractMandatory(SEXP, SEXP, SEXP);
 RcppExport SEXP CfirstNonNegativeRadix(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cforce_as_integer(SEXP, SEXP);
-RcppExport SEXP CImplies(SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Chas_openmp();
 RcppExport SEXP Cis_altrep(SEXP);
 RcppExport SEXP Cis_constant(SEXP, SEXP);
 RcppExport SEXP Cis_safe2int(SEXP);
@@ -262,33 +265,31 @@ RcppExport SEXP Cpmin0_radix_sorted_dbl(SEXP, SEXP, SEXP);
 RcppExport SEXP Cpmin0_radix_sorted_int(SEXP, SEXP, SEXP);
 RcppExport SEXP CpminC_in_place(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Crange(SEXP);
-RcppExport SEXP CSquish(SEXP, SEXP);
-RcppExport SEXP CStringEqual(SEXP, SEXP);
-RcppExport SEXP Csum_isna(SEXP, SEXP);
 RcppExport SEXP Csum3s_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Csum_isna(SEXP, SEXP);
 RcppExport SEXP Csummary3(SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhere_square_bracket_opens(SEXP, SEXP);
+RcppExport SEXP Cwhich3(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Cwhich3_mem(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_16(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_even(SEXP);
 RcppExport SEXP Cwhich_first(SEXP);
+RcppExport SEXP Cwhich_firstNA(SEXP);
 RcppExport SEXP Cwhich_first__(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_first_false(SEXP);
 RcppExport SEXP Cwhich_first_in_lgl(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_first_lgl_lgl_op(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_first_notTRUE(SEXP);
-RcppExport SEXP Cwhich_firstNA(SEXP);
 RcppExport SEXP Cwhich_isna(SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_isnt_integerish(SEXP);
 RcppExport SEXP Cwhich_last(SEXP);
+RcppExport SEXP Cwhich_lastNA(SEXP);
 RcppExport SEXP Cwhich_last__(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_last_false(SEXP);
 RcppExport SEXP Cwhich_last_in_lgl(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_last_notFALSE(SEXP);
 RcppExport SEXP Cwhich_last_notTRUE(SEXP);
-RcppExport SEXP Cwhich_lastNA(SEXP);
 RcppExport SEXP Cwhich_true_onwards(SEXP);
-RcppExport SEXP Cwhich3(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-RcppExport SEXP Cwhich3_mem(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP fmatch(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
@@ -308,13 +309,16 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_theEmptiestQuarters", (DL_FUNC) &_hutilscpp_theEmptiestQuarters, 7},
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
     {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 11},
-    {"Callocate_with_root",         (DL_FUNC) &Callocate_with_root,          6},
+    {"CAnyCharMatch",               (DL_FUNC) &CAnyCharMatch,                3},
+    {"CImplies",                    (DL_FUNC) &CImplies,                     4},
+    {"CSquish",                     (DL_FUNC) &CSquish,                      2},
+    {"CStringEqual",                (DL_FUNC) &CStringEqual,                 2},
     {"Callocate0_dbl",              (DL_FUNC) &Callocate0_dbl,               2},
     {"Callocate0_except",           (DL_FUNC) &Callocate0_except,            4},
     {"Callocate0_int",              (DL_FUNC) &Callocate0_int,               2},
+    {"Callocate_with_root",         (DL_FUNC) &Callocate_with_root,          6},
     {"Cand3",                       (DL_FUNC) &Cand3,                        3},
     {"Cand3s_par",                  (DL_FUNC) &Cand3s_par,                  16},
-    {"CAnyCharMatch",               (DL_FUNC) &CAnyCharMatch,                3},
     {"CanyOutside",                 (DL_FUNC) &CanyOutside,                  5},
     {"Ccount_logical",              (DL_FUNC) &Ccount_logical,               2},
     {"Ccumsum_reset",               (DL_FUNC) &Ccumsum_reset,                2},
@@ -327,7 +331,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"CextractMandatory",           (DL_FUNC) &CextractMandatory,            3},
     {"CfirstNonNegativeRadix",      (DL_FUNC) &CfirstNonNegativeRadix,       4},
     {"Cforce_as_integer",           (DL_FUNC) &Cforce_as_integer,            2},
-    {"CImplies",                    (DL_FUNC) &CImplies,                     4},
+    {"Chas_openmp",                 (DL_FUNC) &Chas_openmp,                  0},
     {"Cis_altrep",                  (DL_FUNC) &Cis_altrep,                   1},
     {"Cis_constant",                (DL_FUNC) &Cis_constant,                 2},
     {"Cis_safe2int",                (DL_FUNC) &Cis_safe2int,                 1},
@@ -349,33 +353,31 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cpmin0_radix_sorted_int",     (DL_FUNC) &Cpmin0_radix_sorted_int,      3},
     {"CpminC_in_place",             (DL_FUNC) &CpminC_in_place,              4},
     {"Crange",                      (DL_FUNC) &Crange,                       1},
-    {"CSquish",                     (DL_FUNC) &CSquish,                      2},
-    {"CStringEqual",                (DL_FUNC) &CStringEqual,                 2},
-    {"Csum_isna",                   (DL_FUNC) &Csum_isna,                    2},
     {"Csum3s_par",                  (DL_FUNC) &Csum3s_par,                  26},
+    {"Csum_isna",                   (DL_FUNC) &Csum_isna,                    2},
     {"Csummary3",                   (DL_FUNC) &Csummary3,                    5},
     {"Cwhere_square_bracket_opens", (DL_FUNC) &Cwhere_square_bracket_opens,  2},
+    {"Cwhich3",                     (DL_FUNC) &Cwhich3,                      7},
+    {"Cwhich3_mem",                 (DL_FUNC) &Cwhich3_mem,                  4},
     {"Cwhich_16",                   (DL_FUNC) &Cwhich_16,                    4},
     {"Cwhich_even",                 (DL_FUNC) &Cwhich_even,                  1},
     {"Cwhich_first",                (DL_FUNC) &Cwhich_first,                 1},
+    {"Cwhich_firstNA",              (DL_FUNC) &Cwhich_firstNA,               1},
     {"Cwhich_first__",              (DL_FUNC) &Cwhich_first__,               8},
     {"Cwhich_first_false",          (DL_FUNC) &Cwhich_first_false,           1},
     {"Cwhich_first_in_lgl",         (DL_FUNC) &Cwhich_first_in_lgl,          4},
     {"Cwhich_first_lgl_lgl_op",     (DL_FUNC) &Cwhich_first_lgl_lgl_op,      4},
     {"Cwhich_first_notTRUE",        (DL_FUNC) &Cwhich_first_notTRUE,         1},
-    {"Cwhich_firstNA",              (DL_FUNC) &Cwhich_firstNA,               1},
     {"Cwhich_isna",                 (DL_FUNC) &Cwhich_isna,                  3},
     {"Cwhich_isnt_integerish",      (DL_FUNC) &Cwhich_isnt_integerish,       1},
     {"Cwhich_last",                 (DL_FUNC) &Cwhich_last,                  1},
+    {"Cwhich_lastNA",               (DL_FUNC) &Cwhich_lastNA,                1},
     {"Cwhich_last__",               (DL_FUNC) &Cwhich_last__,                8},
     {"Cwhich_last_false",           (DL_FUNC) &Cwhich_last_false,            1},
     {"Cwhich_last_in_lgl",          (DL_FUNC) &Cwhich_last_in_lgl,           4},
     {"Cwhich_last_notFALSE",        (DL_FUNC) &Cwhich_last_notFALSE,         1},
     {"Cwhich_last_notTRUE",         (DL_FUNC) &Cwhich_last_notTRUE,          1},
-    {"Cwhich_lastNA",               (DL_FUNC) &Cwhich_lastNA,                1},
     {"Cwhich_true_onwards",         (DL_FUNC) &Cwhich_true_onwards,          1},
-    {"Cwhich3",                     (DL_FUNC) &Cwhich3,                      7},
-    {"Cwhich3_mem",                 (DL_FUNC) &Cwhich3_mem,                  4},
     {"fmatch",                      (DL_FUNC) &fmatch,                       6},
     {NULL, NULL, 0}
 };

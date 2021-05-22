@@ -23,3 +23,7 @@ check_omp <- function(nThread) {
   as.integer(nThread) # nocov
 }
 
+has_openmp <- function() {
+  .Call("Chas_openmp", PACKAGE = packageName())
+}
+
