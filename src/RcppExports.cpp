@@ -277,74 +277,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_or3
-LogicalVector do_or3(LogicalVector x, LogicalVector y, LogicalVector z);
-RcppExport SEXP _hutilscpp_do_or3(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type z(zSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_or3(x, y, z));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_and3
-LogicalVector do_and3(LogicalVector x, LogicalVector y, LogicalVector z);
-RcppExport SEXP _hutilscpp_do_and3(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type z(zSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_and3(x, y, z));
-    return rcpp_result_gen;
-END_RCPP
-}
-// na_and
-LogicalVector na_and(LogicalVector x);
-RcppExport SEXP _hutilscpp_na_and(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(na_and(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which3
-List do_which3(LogicalVector x, LogicalVector y, LogicalVector z, bool And, bool anyNAx, bool anyNAy, bool anyNAz);
-RcppExport SEXP _hutilscpp_do_which3(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP AndSEXP, SEXP anyNAxSEXP, SEXP anyNAySEXP, SEXP anyNAzSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type z(zSEXP);
-    Rcpp::traits::input_parameter< bool >::type And(AndSEXP);
-    Rcpp::traits::input_parameter< bool >::type anyNAx(anyNAxSEXP);
-    Rcpp::traits::input_parameter< bool >::type anyNAy(anyNAySEXP);
-    Rcpp::traits::input_parameter< bool >::type anyNAz(anyNAzSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which3(x, y, z, And, anyNAx, anyNAy, anyNAz));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_which3_mem
-IntegerVector do_which3_mem(LogicalVector x, LogicalVector y, LogicalVector z, bool And);
-RcppExport SEXP _hutilscpp_do_which3_mem(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP AndSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< LogicalVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type z(zSEXP);
-    Rcpp::traits::input_parameter< bool >::type And(AndSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which3_mem(x, y, z, And));
-    return rcpp_result_gen;
-END_RCPP
-}
 // has_openmp
 bool has_openmp();
 RcppExport SEXP _hutilscpp_has_openmp() {
@@ -373,6 +305,7 @@ RcppExport SEXP Callocate_with_root(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Callocate0_dbl(SEXP, SEXP);
 RcppExport SEXP Callocate0_except(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Callocate0_int(SEXP, SEXP);
+RcppExport SEXP Cand3(SEXP, SEXP, SEXP);
 RcppExport SEXP Cand3s_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP CAnyCharMatch(SEXP, SEXP, SEXP);
 RcppExport SEXP CanyOutside(SEXP, SEXP, SEXP, SEXP, SEXP);
@@ -393,6 +326,8 @@ RcppExport SEXP Cis_safe2int(SEXP);
 RcppExport SEXP Cis_sorted(SEXP, SEXP);
 RcppExport SEXP Cisnt_constant(SEXP);
 RcppExport SEXP Cisnt_sorted(SEXP, SEXP);
+RcppExport SEXP Cna_and(SEXP);
+RcppExport SEXP Cor3(SEXP, SEXP, SEXP);
 RcppExport SEXP Cor3_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cpmax(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cpmax0_bitwise(SEXP, SEXP, SEXP);
@@ -430,6 +365,8 @@ RcppExport SEXP Cwhich_last_notFALSE(SEXP);
 RcppExport SEXP Cwhich_last_notTRUE(SEXP);
 RcppExport SEXP Cwhich_lastNA(SEXP);
 RcppExport SEXP Cwhich_true_onwards(SEXP);
+RcppExport SEXP Cwhich3(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Cwhich3_mem(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP fmatch(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
@@ -454,17 +391,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_theEmptiestQuarters", (DL_FUNC) &_hutilscpp_theEmptiestQuarters, 7},
     {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
     {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 11},
-    {"_hutilscpp_do_or3", (DL_FUNC) &_hutilscpp_do_or3, 3},
-    {"_hutilscpp_do_and3", (DL_FUNC) &_hutilscpp_do_and3, 3},
-    {"_hutilscpp_na_and", (DL_FUNC) &_hutilscpp_na_and, 1},
-    {"_hutilscpp_do_which3", (DL_FUNC) &_hutilscpp_do_which3, 7},
-    {"_hutilscpp_do_which3_mem", (DL_FUNC) &_hutilscpp_do_which3_mem, 4},
     {"_hutilscpp_has_openmp", (DL_FUNC) &_hutilscpp_has_openmp, 0},
     {"_hutilscpp_diagnose_omp", (DL_FUNC) &_hutilscpp_diagnose_omp, 5},
     {"Callocate_with_root",         (DL_FUNC) &Callocate_with_root,          6},
     {"Callocate0_dbl",              (DL_FUNC) &Callocate0_dbl,               2},
     {"Callocate0_except",           (DL_FUNC) &Callocate0_except,            4},
     {"Callocate0_int",              (DL_FUNC) &Callocate0_int,               2},
+    {"Cand3",                       (DL_FUNC) &Cand3,                        3},
     {"Cand3s_par",                  (DL_FUNC) &Cand3s_par,                  16},
     {"CAnyCharMatch",               (DL_FUNC) &CAnyCharMatch,                3},
     {"CanyOutside",                 (DL_FUNC) &CanyOutside,                  5},
@@ -485,6 +418,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cis_sorted",                  (DL_FUNC) &Cis_sorted,                   2},
     {"Cisnt_constant",              (DL_FUNC) &Cisnt_constant,               1},
     {"Cisnt_sorted",                (DL_FUNC) &Cisnt_sorted,                 2},
+    {"Cna_and",                     (DL_FUNC) &Cna_and,                      1},
+    {"Cor3",                        (DL_FUNC) &Cor3,                         3},
     {"Cor3_par",                    (DL_FUNC) &Cor3_par,                    16},
     {"Cpmax",                       (DL_FUNC) &Cpmax,                        4},
     {"Cpmax0_bitwise",              (DL_FUNC) &Cpmax0_bitwise,               3},
@@ -522,6 +457,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cwhich_last_notTRUE",         (DL_FUNC) &Cwhich_last_notTRUE,          1},
     {"Cwhich_lastNA",               (DL_FUNC) &Cwhich_lastNA,                1},
     {"Cwhich_true_onwards",         (DL_FUNC) &Cwhich_true_onwards,          1},
+    {"Cwhich3",                     (DL_FUNC) &Cwhich3,                      7},
+    {"Cwhich3_mem",                 (DL_FUNC) &Cwhich3_mem,                  4},
     {"fmatch",                      (DL_FUNC) &fmatch,                       6},
     {NULL, NULL, 0}
 };
