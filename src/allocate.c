@@ -122,6 +122,16 @@ SEXP Callocate0_except(SEXP NN, SEXP Ind, SEXP Vic, SEXP nthread) {
   return ans;
 }
 
+SEXP LogicalN(R_xlen_t N) {
+  SEXP ans = PROTECT(allocVector(LGLSXP, N));
+  int * ansp = LOGICAL(ans);
+  for (R_xlen_t i = 0; i < N; ++i) {
+    ansp[i] = 0;
+  }
+  UNPROTECT(1);
+  return ans;
+}
+
 SEXP IntegerN(R_xlen_t N) {
   SEXP ans = PROTECT(allocVector(INTSXP, N));
   int * ansp = INTEGER(ans);

@@ -5,68 +5,6 @@
 
 using namespace Rcpp;
 
-// do_and3_par
-LogicalVector do_and3_par(IntegerVector x, int ox, int x1, int x2, IntegerVector y, int oy, int y1, int y2, IntegerVector z, int oz, int z1, int z2, LogicalVector A, LogicalVector B, LogicalVector C, CharacterVector nom, int nThread);
-RcppExport SEXP _hutilscpp_do_and3_par(SEXP xSEXP, SEXP oxSEXP, SEXP x1SEXP, SEXP x2SEXP, SEXP ySEXP, SEXP oySEXP, SEXP y1SEXP, SEXP y2SEXP, SEXP zSEXP, SEXP ozSEXP, SEXP z1SEXP, SEXP z2SEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP nomSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ox(oxSEXP);
-    Rcpp::traits::input_parameter< int >::type x1(x1SEXP);
-    Rcpp::traits::input_parameter< int >::type x2(x2SEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type oy(oySEXP);
-    Rcpp::traits::input_parameter< int >::type y1(y1SEXP);
-    Rcpp::traits::input_parameter< int >::type y2(y2SEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type z(zSEXP);
-    Rcpp::traits::input_parameter< int >::type oz(ozSEXP);
-    Rcpp::traits::input_parameter< int >::type z1(z1SEXP);
-    Rcpp::traits::input_parameter< int >::type z2(z2SEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type A(ASEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type B(BSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type C(CSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type nom(nomSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_and3_par(x, ox, x1, x2, y, oy, y1, y2, z, oz, z1, z2, A, B, C, nom, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_sum3s_par
-R_xlen_t do_sum3s_par(IntegerVector x, int ox, int x1, int x2, DoubleVector xd, double xd1, double xd2, IntegerVector y, int oy, int y1, int y2, DoubleVector yd, double yd1, double yd2, IntegerVector z, int oz, int z1, int z2, DoubleVector zd, double zd1, double zd2, LogicalVector A, LogicalVector B, LogicalVector C, bool ampersand, int nThread);
-RcppExport SEXP _hutilscpp_do_sum3s_par(SEXP xSEXP, SEXP oxSEXP, SEXP x1SEXP, SEXP x2SEXP, SEXP xdSEXP, SEXP xd1SEXP, SEXP xd2SEXP, SEXP ySEXP, SEXP oySEXP, SEXP y1SEXP, SEXP y2SEXP, SEXP ydSEXP, SEXP yd1SEXP, SEXP yd2SEXP, SEXP zSEXP, SEXP ozSEXP, SEXP z1SEXP, SEXP z2SEXP, SEXP zdSEXP, SEXP zd1SEXP, SEXP zd2SEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP ampersandSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ox(oxSEXP);
-    Rcpp::traits::input_parameter< int >::type x1(x1SEXP);
-    Rcpp::traits::input_parameter< int >::type x2(x2SEXP);
-    Rcpp::traits::input_parameter< DoubleVector >::type xd(xdSEXP);
-    Rcpp::traits::input_parameter< double >::type xd1(xd1SEXP);
-    Rcpp::traits::input_parameter< double >::type xd2(xd2SEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< int >::type oy(oySEXP);
-    Rcpp::traits::input_parameter< int >::type y1(y1SEXP);
-    Rcpp::traits::input_parameter< int >::type y2(y2SEXP);
-    Rcpp::traits::input_parameter< DoubleVector >::type yd(ydSEXP);
-    Rcpp::traits::input_parameter< double >::type yd1(yd1SEXP);
-    Rcpp::traits::input_parameter< double >::type yd2(yd2SEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type z(zSEXP);
-    Rcpp::traits::input_parameter< int >::type oz(ozSEXP);
-    Rcpp::traits::input_parameter< int >::type z1(z1SEXP);
-    Rcpp::traits::input_parameter< int >::type z2(z2SEXP);
-    Rcpp::traits::input_parameter< DoubleVector >::type zd(zdSEXP);
-    Rcpp::traits::input_parameter< double >::type zd1(zd1SEXP);
-    Rcpp::traits::input_parameter< double >::type zd2(zd2SEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type A(ASEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type B(BSEXP);
-    Rcpp::traits::input_parameter< LogicalVector >::type C(CSEXP);
-    Rcpp::traits::input_parameter< bool >::type ampersand(ampersandSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_sum3s_par(x, ox, x1, x2, xd, xd1, xd2, y, oy, y1, y2, yd, yd1, yd2, z, oz, z1, z2, zd, zd1, zd2, A, B, C, ampersand, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_which_in
 IntegerVector do_which_in(IntegerVector x, IntegerVector tbl);
 RcppExport SEXP _hutilscpp_do_which_in(SEXP xSEXP, SEXP tblSEXP) {
@@ -461,6 +399,7 @@ RcppExport SEXP Callocate_with_root(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Callocate0_dbl(SEXP, SEXP);
 RcppExport SEXP Callocate0_except(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Callocate0_int(SEXP, SEXP);
+RcppExport SEXP Cand3s_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP CAnyCharMatch(SEXP, SEXP, SEXP);
 RcppExport SEXP CanyOutside(SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Ccount_logical(SEXP, SEXP);
@@ -494,6 +433,7 @@ RcppExport SEXP Crange(SEXP);
 RcppExport SEXP CSquish(SEXP, SEXP);
 RcppExport SEXP CStringEqual(SEXP, SEXP);
 RcppExport SEXP Csum_isna(SEXP, SEXP);
+RcppExport SEXP Csum3s_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Csummary3(SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhere_square_bracket_opens(SEXP, SEXP);
 RcppExport SEXP Cwhich_16(SEXP, SEXP, SEXP, SEXP);
@@ -518,8 +458,6 @@ RcppExport SEXP Cwhich_true_onwards(SEXP);
 RcppExport SEXP fmatch(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_hutilscpp_do_and3_par", (DL_FUNC) &_hutilscpp_do_and3_par, 17},
-    {"_hutilscpp_do_sum3s_par", (DL_FUNC) &_hutilscpp_do_sum3s_par, 26},
     {"_hutilscpp_do_which_in", (DL_FUNC) &_hutilscpp_do_which_in, 2},
     {"_hutilscpp_test_intersect3_stdint", (DL_FUNC) &_hutilscpp_test_intersect3_stdint, 1},
     {"_hutilscpp_do_par_in", (DL_FUNC) &_hutilscpp_do_par_in, 3},
@@ -549,65 +487,67 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which3_mem", (DL_FUNC) &_hutilscpp_do_which3_mem, 4},
     {"_hutilscpp_has_openmp", (DL_FUNC) &_hutilscpp_has_openmp, 0},
     {"_hutilscpp_diagnose_omp", (DL_FUNC) &_hutilscpp_diagnose_omp, 5},
-    {"Callocate_with_root",         (DL_FUNC) &Callocate_with_root,         6},
-    {"Callocate0_dbl",              (DL_FUNC) &Callocate0_dbl,              2},
-    {"Callocate0_except",           (DL_FUNC) &Callocate0_except,           4},
-    {"Callocate0_int",              (DL_FUNC) &Callocate0_int,              2},
-    {"CAnyCharMatch",               (DL_FUNC) &CAnyCharMatch,               3},
-    {"CanyOutside",                 (DL_FUNC) &CanyOutside,                 5},
-    {"Ccount_logical",              (DL_FUNC) &Ccount_logical,              2},
-    {"Ccumsum_reset",               (DL_FUNC) &Ccumsum_reset,               2},
-    {"Ccumsum_reset_sorted_int",    (DL_FUNC) &Ccumsum_reset_sorted_int,    1},
-    {"Ccumsum_reset_where",         (DL_FUNC) &Ccumsum_reset_where,         4},
-    {"Cdivisible",                  (DL_FUNC) &Cdivisible,                  3},
-    {"Cdivisible16",                (DL_FUNC) &Cdivisible16,                2},
-    {"Cdivisible2",                 (DL_FUNC) &Cdivisible2,                 3},
-    {"CextractMandatory",           (DL_FUNC) &CextractMandatory,           3},
-    {"CfirstNonNegativeRadix",      (DL_FUNC) &CfirstNonNegativeRadix,      4},
-    {"Cforce_as_integer",           (DL_FUNC) &Cforce_as_integer,           2},
-    {"CImplies",                    (DL_FUNC) &CImplies,                    4},
-    {"Cis_altrep",                  (DL_FUNC) &Cis_altrep,                  1},
-    {"Cis_constant",                (DL_FUNC) &Cis_constant,                2},
-    {"Cis_safe2int",                (DL_FUNC) &Cis_safe2int,                1},
-    {"Cis_sorted",                  (DL_FUNC) &Cis_sorted,                  2},
-    {"Cisnt_constant",              (DL_FUNC) &Cisnt_constant,              1},
-    {"Cisnt_sorted",                (DL_FUNC) &Cisnt_sorted,                2},
-    {"Cpmax",                       (DL_FUNC) &Cpmax,                       4},
-    {"Cpmax0_bitwise",              (DL_FUNC) &Cpmax0_bitwise,              3},
-    {"Cpmax0_radix_sorted_dbl",     (DL_FUNC) &Cpmax0_radix_sorted_dbl,     3},
-    {"Cpmax0_radix_sorted_int",     (DL_FUNC) &Cpmax0_radix_sorted_int,     3},
-    {"CpmaxC_in_place",             (DL_FUNC) &CpmaxC_in_place,             4},
-    {"Cpmin",                       (DL_FUNC) &Cpmin,                       4},
-    {"Cpmin0_bitwise",              (DL_FUNC) &Cpmin0_bitwise,              3},
-    {"Cpmin0_radix_sorted_dbl",     (DL_FUNC) &Cpmin0_radix_sorted_dbl,     3},
-    {"Cpmin0_radix_sorted_int",     (DL_FUNC) &Cpmin0_radix_sorted_int,     3},
-    {"CpminC_in_place",             (DL_FUNC) &CpminC_in_place,             4},
-    {"Crange",                      (DL_FUNC) &Crange,                      1},
-    {"CSquish",                     (DL_FUNC) &CSquish,                     2},
-    {"CStringEqual",                (DL_FUNC) &CStringEqual,                2},
-    {"Csum_isna",                   (DL_FUNC) &Csum_isna,                   2},
-    {"Csummary3",                   (DL_FUNC) &Csummary3,                   5},
-    {"Cwhere_square_bracket_opens", (DL_FUNC) &Cwhere_square_bracket_opens, 2},
-    {"Cwhich_16",                   (DL_FUNC) &Cwhich_16,                   4},
-    {"Cwhich_even",                 (DL_FUNC) &Cwhich_even,                 1},
-    {"Cwhich_first",                (DL_FUNC) &Cwhich_first,                1},
-    {"Cwhich_first__",              (DL_FUNC) &Cwhich_first__,              8},
-    {"Cwhich_first_false",          (DL_FUNC) &Cwhich_first_false,          1},
-    {"Cwhich_first_in_lgl",         (DL_FUNC) &Cwhich_first_in_lgl,         4},
-    {"Cwhich_first_lgl_lgl_op",     (DL_FUNC) &Cwhich_first_lgl_lgl_op,     4},
-    {"Cwhich_first_notTRUE",        (DL_FUNC) &Cwhich_first_notTRUE,        1},
-    {"Cwhich_firstNA",              (DL_FUNC) &Cwhich_firstNA,              1},
-    {"Cwhich_isna",                 (DL_FUNC) &Cwhich_isna,                 3},
-    {"Cwhich_isnt_integerish",      (DL_FUNC) &Cwhich_isnt_integerish,      1},
-    {"Cwhich_last",                 (DL_FUNC) &Cwhich_last,                 1},
-    {"Cwhich_last__",               (DL_FUNC) &Cwhich_last__,               8},
-    {"Cwhich_last_false",           (DL_FUNC) &Cwhich_last_false,           1},
-    {"Cwhich_last_in_lgl",          (DL_FUNC) &Cwhich_last_in_lgl,          4},
-    {"Cwhich_last_notFALSE",        (DL_FUNC) &Cwhich_last_notFALSE,        1},
-    {"Cwhich_last_notTRUE",         (DL_FUNC) &Cwhich_last_notTRUE,         1},
-    {"Cwhich_lastNA",               (DL_FUNC) &Cwhich_lastNA,               1},
-    {"Cwhich_true_onwards",         (DL_FUNC) &Cwhich_true_onwards,         1},
-    {"fmatch",                      (DL_FUNC) &fmatch,                      6},
+    {"Callocate_with_root",         (DL_FUNC) &Callocate_with_root,          6},
+    {"Callocate0_dbl",              (DL_FUNC) &Callocate0_dbl,               2},
+    {"Callocate0_except",           (DL_FUNC) &Callocate0_except,            4},
+    {"Callocate0_int",              (DL_FUNC) &Callocate0_int,               2},
+    {"Cand3s_par",                  (DL_FUNC) &Cand3s_par,                  16},
+    {"CAnyCharMatch",               (DL_FUNC) &CAnyCharMatch,                3},
+    {"CanyOutside",                 (DL_FUNC) &CanyOutside,                  5},
+    {"Ccount_logical",              (DL_FUNC) &Ccount_logical,               2},
+    {"Ccumsum_reset",               (DL_FUNC) &Ccumsum_reset,                2},
+    {"Ccumsum_reset_sorted_int",    (DL_FUNC) &Ccumsum_reset_sorted_int,     1},
+    {"Ccumsum_reset_where",         (DL_FUNC) &Ccumsum_reset_where,          4},
+    {"Cdivisible",                  (DL_FUNC) &Cdivisible,                   3},
+    {"Cdivisible16",                (DL_FUNC) &Cdivisible16,                 2},
+    {"Cdivisible2",                 (DL_FUNC) &Cdivisible2,                  3},
+    {"CextractMandatory",           (DL_FUNC) &CextractMandatory,            3},
+    {"CfirstNonNegativeRadix",      (DL_FUNC) &CfirstNonNegativeRadix,       4},
+    {"Cforce_as_integer",           (DL_FUNC) &Cforce_as_integer,            2},
+    {"CImplies",                    (DL_FUNC) &CImplies,                     4},
+    {"Cis_altrep",                  (DL_FUNC) &Cis_altrep,                   1},
+    {"Cis_constant",                (DL_FUNC) &Cis_constant,                 2},
+    {"Cis_safe2int",                (DL_FUNC) &Cis_safe2int,                 1},
+    {"Cis_sorted",                  (DL_FUNC) &Cis_sorted,                   2},
+    {"Cisnt_constant",              (DL_FUNC) &Cisnt_constant,               1},
+    {"Cisnt_sorted",                (DL_FUNC) &Cisnt_sorted,                 2},
+    {"Cpmax",                       (DL_FUNC) &Cpmax,                        4},
+    {"Cpmax0_bitwise",              (DL_FUNC) &Cpmax0_bitwise,               3},
+    {"Cpmax0_radix_sorted_dbl",     (DL_FUNC) &Cpmax0_radix_sorted_dbl,      3},
+    {"Cpmax0_radix_sorted_int",     (DL_FUNC) &Cpmax0_radix_sorted_int,      3},
+    {"CpmaxC_in_place",             (DL_FUNC) &CpmaxC_in_place,              4},
+    {"Cpmin",                       (DL_FUNC) &Cpmin,                        4},
+    {"Cpmin0_bitwise",              (DL_FUNC) &Cpmin0_bitwise,               3},
+    {"Cpmin0_radix_sorted_dbl",     (DL_FUNC) &Cpmin0_radix_sorted_dbl,      3},
+    {"Cpmin0_radix_sorted_int",     (DL_FUNC) &Cpmin0_radix_sorted_int,      3},
+    {"CpminC_in_place",             (DL_FUNC) &CpminC_in_place,              4},
+    {"Crange",                      (DL_FUNC) &Crange,                       1},
+    {"CSquish",                     (DL_FUNC) &CSquish,                      2},
+    {"CStringEqual",                (DL_FUNC) &CStringEqual,                 2},
+    {"Csum_isna",                   (DL_FUNC) &Csum_isna,                    2},
+    {"Csum3s_par",                  (DL_FUNC) &Csum3s_par,                  26},
+    {"Csummary3",                   (DL_FUNC) &Csummary3,                    5},
+    {"Cwhere_square_bracket_opens", (DL_FUNC) &Cwhere_square_bracket_opens,  2},
+    {"Cwhich_16",                   (DL_FUNC) &Cwhich_16,                    4},
+    {"Cwhich_even",                 (DL_FUNC) &Cwhich_even,                  1},
+    {"Cwhich_first",                (DL_FUNC) &Cwhich_first,                 1},
+    {"Cwhich_first__",              (DL_FUNC) &Cwhich_first__,               8},
+    {"Cwhich_first_false",          (DL_FUNC) &Cwhich_first_false,           1},
+    {"Cwhich_first_in_lgl",         (DL_FUNC) &Cwhich_first_in_lgl,          4},
+    {"Cwhich_first_lgl_lgl_op",     (DL_FUNC) &Cwhich_first_lgl_lgl_op,      4},
+    {"Cwhich_first_notTRUE",        (DL_FUNC) &Cwhich_first_notTRUE,         1},
+    {"Cwhich_firstNA",              (DL_FUNC) &Cwhich_firstNA,               1},
+    {"Cwhich_isna",                 (DL_FUNC) &Cwhich_isna,                  3},
+    {"Cwhich_isnt_integerish",      (DL_FUNC) &Cwhich_isnt_integerish,       1},
+    {"Cwhich_last",                 (DL_FUNC) &Cwhich_last,                  1},
+    {"Cwhich_last__",               (DL_FUNC) &Cwhich_last__,                8},
+    {"Cwhich_last_false",           (DL_FUNC) &Cwhich_last_false,            1},
+    {"Cwhich_last_in_lgl",          (DL_FUNC) &Cwhich_last_in_lgl,           4},
+    {"Cwhich_last_notFALSE",        (DL_FUNC) &Cwhich_last_notFALSE,         1},
+    {"Cwhich_last_notTRUE",         (DL_FUNC) &Cwhich_last_notTRUE,          1},
+    {"Cwhich_lastNA",               (DL_FUNC) &Cwhich_lastNA,                1},
+    {"Cwhich_true_onwards",         (DL_FUNC) &Cwhich_true_onwards,          1},
+    {"fmatch",                      (DL_FUNC) &fmatch,                       6},
     {NULL, NULL, 0}
 };
 
