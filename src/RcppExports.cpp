@@ -456,49 +456,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// do_summary3_dbl
-DoubleVector do_summary3_dbl(DoubleVector x, DoubleVector y, DoubleVector z, bool in_place, bool do_max);
-RcppExport SEXP _hutilscpp_do_summary3_dbl(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP in_placeSEXP, SEXP do_maxSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DoubleVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< DoubleVector >::type z(zSEXP);
-    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
-    Rcpp::traits::input_parameter< bool >::type do_max(do_maxSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_summary3_dbl(x, y, z, in_place, do_max));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_summary3_int
-IntegerVector do_summary3_int(IntegerVector x, IntegerVector y, IntegerVector z, bool in_place, bool do_max);
-RcppExport SEXP _hutilscpp_do_summary3_int(SEXP xSEXP, SEXP ySEXP, SEXP zSEXP, SEXP in_placeSEXP, SEXP do_maxSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type z(zSEXP);
-    Rcpp::traits::input_parameter< bool >::type in_place(in_placeSEXP);
-    Rcpp::traits::input_parameter< bool >::type do_max(do_maxSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_summary3_int(x, y, z, in_place, do_max));
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_single_ox_x1_x2
-bool test_single_ox_x1_x2(SEXP x, int op, SEXP x1, SEXP x2);
-RcppExport SEXP _hutilscpp_test_single_ox_x1_x2(SEXP xSEXP, SEXP opSEXP, SEXP x1SEXP, SEXP x2SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type op(opSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type x1(x1SEXP);
-    Rcpp::traits::input_parameter< SEXP >::type x2(x2SEXP);
-    rcpp_result_gen = Rcpp::wrap(test_single_ox_x1_x2(x, op, x1, x2));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 RcppExport SEXP Callocate_with_root(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Callocate0_dbl(SEXP, SEXP);
@@ -537,6 +494,7 @@ RcppExport SEXP Crange(SEXP);
 RcppExport SEXP CSquish(SEXP, SEXP);
 RcppExport SEXP CStringEqual(SEXP, SEXP);
 RcppExport SEXP Csum_isna(SEXP, SEXP);
+RcppExport SEXP Csummary3(SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhere_square_bracket_opens(SEXP, SEXP);
 RcppExport SEXP Cwhich_16(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_even(SEXP);
@@ -591,9 +549,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which3_mem", (DL_FUNC) &_hutilscpp_do_which3_mem, 4},
     {"_hutilscpp_has_openmp", (DL_FUNC) &_hutilscpp_has_openmp, 0},
     {"_hutilscpp_diagnose_omp", (DL_FUNC) &_hutilscpp_diagnose_omp, 5},
-    {"_hutilscpp_do_summary3_dbl", (DL_FUNC) &_hutilscpp_do_summary3_dbl, 5},
-    {"_hutilscpp_do_summary3_int", (DL_FUNC) &_hutilscpp_do_summary3_int, 5},
-    {"_hutilscpp_test_single_ox_x1_x2", (DL_FUNC) &_hutilscpp_test_single_ox_x1_x2, 4},
     {"Callocate_with_root",         (DL_FUNC) &Callocate_with_root,         6},
     {"Callocate0_dbl",              (DL_FUNC) &Callocate0_dbl,              2},
     {"Callocate0_except",           (DL_FUNC) &Callocate0_except,           4},
@@ -631,6 +586,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"CSquish",                     (DL_FUNC) &CSquish,                     2},
     {"CStringEqual",                (DL_FUNC) &CStringEqual,                2},
     {"Csum_isna",                   (DL_FUNC) &Csum_isna,                   2},
+    {"Csummary3",                   (DL_FUNC) &Csummary3,                   5},
     {"Cwhere_square_bracket_opens", (DL_FUNC) &Cwhere_square_bracket_opens, 2},
     {"Cwhich_16",                   (DL_FUNC) &Cwhich_16,                   4},
     {"Cwhich_even",                 (DL_FUNC) &Cwhich_even,                 1},

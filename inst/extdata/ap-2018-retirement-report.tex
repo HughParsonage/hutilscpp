@@ -1,0 +1,98 @@
+\documentclass{grattan}
+% Comments are deployed by the % sign; everything after % is ignored by the compiler.
+% Please do not put comments before \documentclass as these are reserved for TeX directives.
+% add_to_dictionary: ASIC ASFA ANU Accurium AIST Canstar HSBC Intrust Mercer MLC Tribeca Verante Willis recontribution recontribute HES HILDA Milliman CIPRs CRA OECD equivalisation ACOSS AWOTE MTAWE inflator color SG CSRI tertile sizers EET mis
+
+% stop_if_present: GRIM
+
+\addbibresource{bib/retirement.bib}
+
+% release: true 
+
+
+\newcommand*{\hl}[1]{\textbf{\textcolor{red}{#1}}}
+
+
+% Allow multi-row
+\usepackage{multirow}
+
+
+% Shift Tables of... up
+    % TOC: to fit on single page
+    \setlength{\cftbeforetoctitleskip}{0em}
+    % Shifting does not benefit TOF or TOT
+    %% \setlength{\cftbeforeloftitleskip}{0em}
+    %% \setlength{\cftbeforelottitleskip}{0em}
+    
+% >100 pages, allow for this in Tables
+    \makeatletter
+    \renewcommand{\@pnumwidth}{1.2em} 
+    \makeatother
+
+% editorial_author_only: Hugh Parsonage
+% add_author_to_recommended_citation: Tony Chen
+
+
+\author{John Daley and Brendan Coates}
+\title{Money in retirement: More than enough}
+
+\GrattanReportNumber{2018-17}
+
+\acknowledgements{%
+This report was written by John Daley, Brendan Coates, Trent Wiltshire, Owain Emslie and Jonathan Nolan. Tony Chen, Cécile Bartholomeeusen,  William Young, Peter Robertson, Hugh Parsonage, Diana Hourani and Josh Lipp provided valuable research assistance and made substantial contributions to the report. 
+
+The opinions in this report are those of the authors and do not necessarily represent the views of Grattan Institute’s founding members, affiliates, individual board members, reference group members or reviewers. Any remaining errors or omissions are the responsibility of the authors.
+
+This paper uses unit record data from the Household, Income and Labour Dynamics in Australia (HILDA) Survey. The HILDA Project was initiated and is funded by the Australian Government Department of Social Services (DSS) and is managed by the Melbourne Institute of Applied Economic and Social Research (Melbourne Institute). The findings and views reported in this paper, however, are those of the author and should not be attributed to either DSS or the Melbourne Institute.
+
+Grattan Institute is an independent think-tank focused on Australian public policy.
+Our work is independent, practical and rigorous.
+We aim to improve policy outcomes by engaging with both decision makers and the community.
+
+For further information on the Institute's programs, or to join our mailing list, please go to: \textcolor{blue}{\url{http://www.grattan.edu.au/}}.
+
+
+
+{\footnotesize
+This report may be cited as:
+Daley, J., Coates, B., Wiltshire, T., Emslie, O., Nolan, J., and Chen, T\@. (2018). \emph{\mytitle}. Grattan Institute.
+
+ISBN: 978-0-6483311-7-9
+
+All material published or otherwise created by Grattan Institute is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License\par
+}
+}
+
+
+
+
+\begin{document}
+
+\input{tex/Overview}
+\input{tex/recommendations}
+
+\contentspage
+\listoffigures
+\listoftables
+
+
+\input{tex/Chapter1}
+\input{tex/Chapter2}
+\input{tex/Chapter3}
+\input{tex/Chapter4}
+\input{tex/Chapter5}
+\input{tex/Chapter6}
+\input{tex/Chapter7}
+\input{tex/Chapter8}
+\input{tex/Chapter9}
+\input{tex/Chapter10}
+\input{tex/Appendix_Pillars}
+\input{tex/Appendix_Surveys}
+\input{tex/Appendix_GRIP}
+\input{tex/Appendix_Sensitivities}
+
+
+
+\printbibliography
+
+\end{document}

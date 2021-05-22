@@ -80,6 +80,20 @@ void ftc2(int * U0, int * U1, const int * k1, int N);
 int maxXY(const int * x, const int * y, R_xlen_t Nx, R_xlen_t Ny, bool sx, bool sy);
 void Vminmax_i(int minmax[], int * x, R_xlen_t N, int nthreads);
 
+int minii(int a, int b);
+int mini3(int a, int b, int c);
+int maxii(int a, int b);
+int maxi3(int a, int b, int c);
+
+double minid(int a, double b);
+double maxid(int a, double b);
+
+double mindd(double a, double b);
+double maxdd(double a, double b);
+
+double mind3(double a, double b, double c);
+double maxd3(double a, double b, double c);
+
 // sortedness
 bool sorted_int(const int * xp, R_xlen_t N, int nThreads);
 

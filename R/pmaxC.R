@@ -317,13 +317,13 @@ pmin3 <- function(x, y, z, in_place = FALSE) {
 
 .pminpmax3 <- function(x, y, z, in_place = FALSE, do_max) {
   check_TF(in_place)
+  check_TF(do_max)
   lx <- length(x)
+  nThread <- check_omp(getOption("hutilscpp.nThread", 1L))
   if (length(y) == lx && length(z) == lx) {
-    if (is.integer(x) && is.integer(y) && is.integer(z)) {
-      return(do_summary3_int(x, y, z, in_place, do_max = do_max))
-    }
-    if (is.double(x) && is.double(y) && is.double(z)) {
-      return(do_summary3_dbl(x, y, z, in_place, do_max = do_max))
+    out <- .Call("Csummary3", x, y, z, ifelse(do_max, "max", "min"), nThread, PACKAGE = packageName())
+    if (!is.null(out)) {
+      return(out)
     }
   }
   if (!is.numeric(x) || !is.numeric(y) || !is.numeric(z)) {
@@ -361,10 +361,28 @@ pmin3 <- function(x, y, z, in_place = FALSE) {
              " was not equal to the integer equivalent. ")
       }
     }
-    return(do_summary3_int(x, y, z, in_place = in_place, do_max = do_max))
+
+    out <- .Call("Csummary3", x, as.integer(y), as.integer(z), ifelse(do_max, "max", "min"), nThread, PACKAGE = packageName())
+    if (is.null(out)) {
+      if (do_max) {
+        return(pmax.int(x, pmax.int(y, z)))
+      } else {
+        return(pmin.int(x, pmin.int(y, z)))
+      }
+    }
+    return(out)
   }
   if (is.double(x) && is.numeric(y) && is.numeric(z)) {
-    return(do_summary3_dbl(x, as.double(y), as.double(z), in_place = in_place, do_max = do_max))
+    nThread <- check_omp(getOption("hutilscpp.nThread", 1L))
+    out <- .Call("Csummary3", x, as.double(y), as.double(z), ifelse(do_max, "max", "min"), nThread, PACKAGE = packageName())
+    if (is.null(out)) {
+      if (do_max) {
+        return(pmax.int(x, pmax.int(y, z)))
+      } else {
+        return(pmin.int(x, pmin.int(y, z)))
+      }
+    }
+    return(out)
   }
   # nocov begin
   if (do_max) {

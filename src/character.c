@@ -98,6 +98,7 @@ bool is_space(SEXP x) {
   return x00 == SPACE;
 }
 
+
 //' @name where_square_bracket_opens
 //' @param x Character vector of characters.
 //' @param i position of closing bracket.
@@ -137,8 +138,12 @@ R_xlen_t where_square_bracket_opens(SEXP x, R_xlen_t i) {
 }
 
 SEXP Cwhere_square_bracket_opens(SEXP xx, SEXP ii) {
-  if (TYPEOF(xx) != STRSXP) {
+  if (TYPEOF(xx) != STRSXP || xlength(xx) >= INT_MAX) {
     return R_NilValue;
+  }
+  int validate_char1 = validate_nchar1(xx, false);
+  if (validate_char1) {
+    error("x contains multiple characters at position %d.", validate_char1);
   }
   R_xlen_t N = xlength(xx);
   int i = asInteger(ii);
@@ -161,6 +166,9 @@ SEXP Cwhere_square_bracket_opens(SEXP xx, SEXP ii) {
 }
 
 SEXP CextractMandatory(SEXP x, SEXP command, SEXP NCommands) {
+  if (TYPEOF(x) != STRSXP || xlength(x) >= INT_MAX) {
+    return R_NilValue;
+  }
   if (TYPEOF(NCommands) != INTSXP) {
     error("TYPEOF(NCommands) != INTSXP."); // # nocov
   }
@@ -176,20 +184,28 @@ SEXP CextractMandatory(SEXP x, SEXP command, SEXP NCommands) {
   int opt_group = 0;
   int cj = 0;
 
-
   int command_no = 0;
 
+  int n_protect = 0;
   SEXP support = PROTECT(allocVector(STRSXP, N));
-  SEXP CommandNo = PROTECT(allocVector(INTSXP, nCommands));
+  ++n_protect;
+  SEXP CommandNo = PROTECT(IntegerN(nCommands));
+  ++n_protect;
   int * commandNo = INTEGER(CommandNo);
-  SEXP CommandOpeners = PROTECT(allocVector(INTSXP, nCommands));
+  SEXP CommandOpeners = PROTECT(IntegerN(nCommands));
+  ++n_protect;
   int * commandOpeners = INTEGER(CommandOpeners);
-  SEXP CommandClosers = PROTECT(allocVector(INTSXP, nCommands));
+  SEXP CommandClosers = PROTECT(IntegerN(nCommands));
+  ++n_protect;
   int * commandClosers = INTEGER(CommandClosers);
   const char * command0 = CHAR(STRING_ELT(command, 0));
+
   char xk = '\0';
   for (R_xlen_t i = 0; i < N; ++i) {
     int k = 0;
+    if (length(STRING_ELT(x, i)) == 0) {
+      continue;
+    }
     const char * xi = CHAR(STRING_ELT(x, i));
     if (string_equal(xi, command0)) {
       for (int ci = 1; ci < command_len; ++ci) {
@@ -229,6 +245,9 @@ SEXP CextractMandatory(SEXP x, SEXP command, SEXP NCommands) {
               // just keep moving forward until we get out of the current
               // optional group.
               ++k;
+              if (length(STRING_ELT(x, k)) != 1) {
+                continue;
+              }
               xk = CHAR(STRING_ELT(x, k))[0];
               if (xk == ']') {
                 --rel_opt_group;
@@ -238,6 +257,9 @@ SEXP CextractMandatory(SEXP x, SEXP command, SEXP NCommands) {
                   ++rel_group;
                   while (rel_group && k < N - 1) {
                     ++k;
+                    if (length(STRING_ELT(x, k)) != 1) {
+                      continue;
+                    }
                     xk = CHAR(STRING_ELT(x, k))[0];
                     if (xk == '}') {
                       --rel_group;
@@ -260,7 +282,7 @@ SEXP CextractMandatory(SEXP x, SEXP command, SEXP NCommands) {
           if (k >= N) { // in case the document is not well-formed.
             break;
           }
-          xk = CHAR(STRING_ELT(x, k))[0];
+          xk = (length(STRING_ELT(x, k)) != 1) ? '\0' : CHAR(STRING_ELT(x, k))[0];
           within_brace = (rel_group == 0) && xk == '{';
 
           // abc{xyz} but not abcd{xyz}
@@ -275,12 +297,13 @@ SEXP CextractMandatory(SEXP x, SEXP command, SEXP NCommands) {
 
           // #nocov start
           if (command_no >= nCommands) {
-            error("command_no overflow");
+            UNPROTECT(n_protect);
+            error("command_no overflow, k = %d, command_no = %d, nCommands = %d", k, command_no, nCommands);
           }
           // #nocov end
           // R indexing
           commandNo[command_no] = command_no + 1;
-          xk = CHAR(STRING_ELT(x, k))[0];
+          xk = length(STRING_ELT(x, k)) != 1 ? '\0' : CHAR(STRING_ELT(x, k))[0];
           if (xk == '{') {
             ++rel_group;
           } else {
@@ -303,10 +326,11 @@ SEXP CextractMandatory(SEXP x, SEXP command, SEXP NCommands) {
   }
 
   SEXP out = PROTECT(allocVector(VECSXP, 3));
+  ++n_protect;
   SET_VECTOR_ELT(out, 0, support);
   SET_VECTOR_ELT(out, 1, CommandOpeners);
   SET_VECTOR_ELT(out, 2, CommandClosers);
-  UNPROTECT(5);
+  UNPROTECT(n_protect);
   return out;
 }
 

@@ -125,15 +125,3 @@ diagnose_omp <- function(threads_requested, msg_no_openmp, msg_threads_neg, msg_
     .Call(`_hutilscpp_diagnose_omp`, threads_requested, msg_no_openmp, msg_threads_neg, msg_unknown_issues, msg_too_many_threads)
 }
 
-do_summary3_dbl <- function(x, y, z, in_place = FALSE, do_max = TRUE) {
-    .Call(`_hutilscpp_do_summary3_dbl`, x, y, z, in_place, do_max)
-}
-
-do_summary3_int <- function(x, y, z, in_place = FALSE, do_max = TRUE) {
-    .Call(`_hutilscpp_do_summary3_int`, x, y, z, in_place, do_max)
-}
-
-test_single_ox_x1_x2 <- function(x, op, x1, x2) {
-    .Call(`_hutilscpp_test_single_ox_x1_x2`, x, op, x1, x2)
-}
-
