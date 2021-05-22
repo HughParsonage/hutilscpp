@@ -15,7 +15,7 @@
 #'
 #' @export
 fmatchp <- function(x, table, nomatch = NA_integer_, nThread = getOption("hutilscpp.nThread", 1L), fin = FALSE) {
-  check_omp(nThread)
+  nThread <- check_omp(nThread)
   stopifnot(is.integer(nomatch))
   check_TF(fin)
   .Call("fmatch", x, table, nomatch, FALSE, fin, nThread, PACKAGE = packageName())
@@ -24,7 +24,9 @@ fmatchp <- function(x, table, nomatch = NA_integer_, nThread = getOption("hutils
 #' @rdname fmatchp
 #' @export
 finp <- function(x, table, nThread = getOption("hutilscpp.nThread", 1L)) {
-  stopifnot(is.integer(x), is.integer(table))
-  nThread <- ensure_integer(nThread)
+  nThread <- check_omp(nThread)
   fmatchp(x, table, nomatch = 0L, nThread = nThread, fin = TRUE)
 }
+
+do_par_in_hash_int <- finp
+do_par_in_hash_dbl <- finp

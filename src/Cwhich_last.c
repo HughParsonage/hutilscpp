@@ -530,11 +530,11 @@ R_xlen_t do_which_last_xd_add(const double * x, int op, double a1, double a2, R_
 
 
 R_xlen_t which_last__(SEXP xx, SEXP opp, SEXP yy,
-                         SEXP nyy,
-                         SEXP y1ii,
-                         SEXP y2ii,
-                         SEXP y1dd,
-                         SEXP y2dd) {
+                      SEXP nyy,
+                      SEXP y1ii,
+                      SEXP y2ii,
+                      SEXP y1dd,
+                      SEXP y2dd) {
   const int op = asInteger(opp);
   const int ny = asInteger(nyy);
   const int y1i = asInteger(y1ii);
@@ -706,11 +706,11 @@ SEXP Cwhich_last__(SEXP xx, SEXP opp, SEXP yy,
     error("Internal error(which_last__): Nx == 0 || Ny == 0."); // # nocov
   }
   return ScalarLength(which_last__(xx, opp, yy,
-                                    nyy,
-                                    y1ii,
-                                    y2ii,
-                                    y1dd,
-                                    y2dd));
+                                   nyy,
+                                   y1ii,
+                                   y2ii,
+                                   y1dd,
+                                   y2dd));
 }
 
 

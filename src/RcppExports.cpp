@@ -5,63 +5,6 @@
 
 using namespace Rcpp;
 
-// do_which_in
-IntegerVector do_which_in(IntegerVector x, IntegerVector tbl);
-RcppExport SEXP _hutilscpp_do_which_in(SEXP xSEXP, SEXP tblSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type tbl(tblSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_which_in(x, tbl));
-    return rcpp_result_gen;
-END_RCPP
-}
-// test_intersect3_stdint
-bool test_intersect3_stdint(int M);
-RcppExport SEXP _hutilscpp_test_intersect3_stdint(SEXP MSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< int >::type M(MSEXP);
-    rcpp_result_gen = Rcpp::wrap(test_intersect3_stdint(M));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_par_in
-LogicalVector do_par_in(IntegerVector x, IntegerVector table, int nThread);
-RcppExport SEXP _hutilscpp_do_par_in(SEXP xSEXP, SEXP tableSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type table(tableSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_par_in(x, table, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_par_in_hash_int
-LogicalVector do_par_in_hash_int(IntegerVector x, IntegerVector table, int nThread);
-RcppExport SEXP _hutilscpp_do_par_in_hash_int(SEXP xSEXP, SEXP tableSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type table(tableSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_par_in_hash_int(x, table, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
-// do_par_in_hash_dbl
-LogicalVector do_par_in_hash_dbl(DoubleVector x, DoubleVector table, int nThread);
-RcppExport SEXP _hutilscpp_do_par_in_hash_dbl(SEXP xSEXP, SEXP tableSEXP, SEXP nThreadSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DoubleVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DoubleVector >::type table(tableSEXP);
-    Rcpp::traits::input_parameter< int >::type nThread(nThreadSEXP);
-    rcpp_result_gen = Rcpp::wrap(do_par_in_hash_dbl(x, table, nThread));
-    return rcpp_result_gen;
-END_RCPP
-}
 // do_which_first_xi_ini
 R_xlen_t do_which_first_xi_ini(IntegerVector x, IntegerVector y);
 RcppExport SEXP _hutilscpp_do_which_first_xi_ini(SEXP xSEXP, SEXP ySEXP) {
@@ -329,6 +272,7 @@ RcppExport SEXP Cisnt_sorted(SEXP, SEXP);
 RcppExport SEXP Cna_and(SEXP);
 RcppExport SEXP Cor3(SEXP, SEXP, SEXP);
 RcppExport SEXP Cor3_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Cpar_in_int(SEXP, SEXP, SEXP);
 RcppExport SEXP Cpmax(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cpmax0_bitwise(SEXP, SEXP, SEXP);
 RcppExport SEXP Cpmax0_radix_sorted_dbl(SEXP, SEXP, SEXP);
@@ -370,11 +314,6 @@ RcppExport SEXP Cwhich3_mem(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP fmatch(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_hutilscpp_do_which_in", (DL_FUNC) &_hutilscpp_do_which_in, 2},
-    {"_hutilscpp_test_intersect3_stdint", (DL_FUNC) &_hutilscpp_test_intersect3_stdint, 1},
-    {"_hutilscpp_do_par_in", (DL_FUNC) &_hutilscpp_do_par_in, 3},
-    {"_hutilscpp_do_par_in_hash_int", (DL_FUNC) &_hutilscpp_do_par_in_hash_int, 3},
-    {"_hutilscpp_do_par_in_hash_dbl", (DL_FUNC) &_hutilscpp_do_par_in_hash_dbl, 3},
     {"_hutilscpp_do_which_first_xi_ini", (DL_FUNC) &_hutilscpp_do_which_first_xi_ini, 2},
     {"_hutilscpp_dblTable2int", (DL_FUNC) &_hutilscpp_dblTable2int, 1},
     {"_hutilscpp_do_which_first_xi_ind", (DL_FUNC) &_hutilscpp_do_which_first_xi_ind, 2},
@@ -421,6 +360,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cna_and",                     (DL_FUNC) &Cna_and,                      1},
     {"Cor3",                        (DL_FUNC) &Cor3,                         3},
     {"Cor3_par",                    (DL_FUNC) &Cor3_par,                    16},
+    {"Cpar_in_int",                 (DL_FUNC) &Cpar_in_int,                  3},
     {"Cpmax",                       (DL_FUNC) &Cpmax,                        4},
     {"Cpmax0_bitwise",              (DL_FUNC) &Cpmax0_bitwise,               3},
     {"Cpmax0_radix_sorted_dbl",     (DL_FUNC) &Cpmax0_radix_sorted_dbl,      3},

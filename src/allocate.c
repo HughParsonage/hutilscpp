@@ -88,7 +88,7 @@ SEXP Callocate_with_root(SEXP NN, SEXP aa, SEXP rr, SEXP lleft, SEXP ddo_pmin, S
 SEXP Callocate0_except(SEXP NN, SEXP Ind, SEXP Vic, SEXP nthread) {
   R_xlen_t N = isReal(NN) ? asReal(NN) : asInteger(NN);
   int nThread = asInteger(nthread);
-  if (TYPEOF(Ind) != INTSXP || TYPEOF(Vic) != INTSXP) {
+  if ((TYPEOF(Ind) != INTSXP && TYPEOF(Ind) != REALSXP) || TYPEOF(Vic) != INTSXP) {
     error("Internal error(Callocate0_except): wrong types"); // # nocov
   }
   R_xlen_t tn = xlength(Ind);
@@ -110,8 +110,17 @@ SEXP Callocate0_except(SEXP NN, SEXP Ind, SEXP Vic, SEXP nthread) {
     UNPROTECT(1); // # nocov
     return ans; // # nocov
   }
+  R_xlen_t i = 0;
   for (R_xlen_t j = 0; j < tn; ++j) {
-    R_xlen_t i = India[j];
+
+    switch(TYPEOF(Ind)) {
+    case INTSXP:
+      i = INTEGER(Ind)[j];
+      break;
+    case REALSXP:
+      i = REAL(Ind)[j];
+      break;
+    }
     if (i < 0 || i >= N) {
       continue; // # nocov
     }

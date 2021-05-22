@@ -19,7 +19,7 @@ allocate0_except <- function(N, India, Victor, nThread = 1L) {
   if ((res <- isnt_number(N)) || (res <- isnt_number(nThread))) {
     stop(attr(res, "ErrorMessage"))
   }
-  India <- ensure_integer(India)
+  stopifnot(is.integer(India) || isTRUE(all.equal(floor(India), India)))
   Victor <- ensure_integer(Victor)
   .Call("Callocate0_except", N, India, Victor, nThread, PACKAGE = packageName())
 }
