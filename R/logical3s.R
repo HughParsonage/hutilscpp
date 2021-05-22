@@ -460,4 +460,14 @@ do_or3_par <- function(x, ox, x1, x2,
         PACKAGE = packageName())
 }
 
+do_par_in <- function(x, tbl, nThread = 1L) {
+  nThread <- check_omp(nThread)
+  if (is.integer(x) && is.integer(tbl)) {
+    .Call("Cpar_in_int", x, tbl, nThread, PACKAGE = packageName())
+  } else {
+    x %in% tbl
+  }
+}
+
+
 
