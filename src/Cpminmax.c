@@ -1,42 +1,6 @@
 #include "hutilscpp.h"
 
-int minii(int a, int b) {
-  return (a < b) ? a : b;
-}
-int mini3(int a, int b, int c) {
-  return minii(minii(a, b),
-               minii(a, c));
-}
-int maxii(int a, int b) {
-  return (a < b) ? b : a;
-}
-int maxi3(int a, int b, int c) {
-  return maxii(maxii(a, b),
-               maxii(a, c));
-}
 
-double minid(int a, double b) {
-  return (a < b) ? a : b;
-}
-double maxid(int a, double b) {
-  return (a < b) ? b : a;
-}
-
-double mindd(double a, double b) {
-  return (a < b) ? a : b;
-}
-double maxdd(double a, double b) {
-  return (a < b) ? b : a;
-}
-
-double mind3(double a, double b, double c) {
-  return mindd(mindd(a, b),
-               mindd(a, c));
-}
-double maxd3(double a, double b, double c) {
-  return maxdd(maxdd(a, b),
-               maxdd(a, c));
-}
 
 R_xlen_t do_firstNonNegativeRadix_int(const int * x,
                                       R_xlen_t xsize,

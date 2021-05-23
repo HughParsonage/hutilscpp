@@ -29,39 +29,3 @@ do_which_last_xd_ind <- function(x, y, y_has_na) {
     .Call(`_hutilscpp_do_which_last_xd_ind`, x, y, y_has_na)
 }
 
-showValue <- function(what, x) {
-    invisible(.Call(`_hutilscpp_showValue`, what, x))
-}
-
-haversine_distance <- function(olat1, olon1, olat2, olon2, unitless = FALSE) {
-    .Call(`_hutilscpp_haversine_distance`, olat1, olon1, olat2, olon2, unitless)
-}
-
-haversineDistance <- function(lat1, lon1, lat2, lon2, unitless = FALSE) {
-    .Call(`_hutilscpp_haversineDistance`, lat1, lon1, lat2, lon2, unitless)
-}
-
-theEuclidDistance <- function(x1, x2, y1, y2, unitless = FALSE) {
-    .Call(`_hutilscpp_theEuclidDistance`, x1, x2, y1, y2, unitless)
-}
-
-hausdorffEuclid <- function(x, y) {
-    .Call(`_hutilscpp_hausdorffEuclid`, x, y)
-}
-
-EmptiestQuarter <- function(x, y, minx = 1, maxx = -1, miny = 1, maxy = -1) {
-    .Call(`_hutilscpp_EmptiestQuarter`, x, y, minx, maxx, miny, maxy)
-}
-
-theEmptiestQuarters <- function(x, y, minx = 1, maxx = -1, miny = 1, maxy = -1, depth = 4L) {
-    .Call(`_hutilscpp_theEmptiestQuarters`, x, y, minx, maxx, miny, maxy, depth)
-}
-
-which_min_HaversineDistance <- function(lat1, lon1, lat2, lon2, upperBound = 10) {
-    .Call(`_hutilscpp_which_min_HaversineDistance`, lat1, lon1, lat2, lon2, upperBound)
-}
-
-match_min_Haversine <- function(lat1, lon1, lat2, lon2, tabl, cartR = -1, dist0_km = 0.01, verify_cartR = FALSE, do_verify_box = FALSE, excl_self = FALSE, ncores = 1L) {
-    .Call(`_hutilscpp_match_min_Haversine`, lat1, lon1, lat2, lon2, tabl, cartR, dist0_km, verify_cartR, do_verify_box, excl_self, ncores)
-}
-

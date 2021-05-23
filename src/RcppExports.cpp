@@ -83,154 +83,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// showValue
-void showValue(const char* what, double x);
-RcppExport SEXP _hutilscpp_showValue(SEXP whatSEXP, SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const char* >::type what(whatSEXP);
-    Rcpp::traits::input_parameter< double >::type x(xSEXP);
-    showValue(what, x);
-    return R_NilValue;
-END_RCPP
-}
-// haversine_distance
-double haversine_distance(double olat1, double olon1, double olat2, double olon2, bool unitless);
-RcppExport SEXP _hutilscpp_haversine_distance(SEXP olat1SEXP, SEXP olon1SEXP, SEXP olat2SEXP, SEXP olon2SEXP, SEXP unitlessSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type olat1(olat1SEXP);
-    Rcpp::traits::input_parameter< double >::type olon1(olon1SEXP);
-    Rcpp::traits::input_parameter< double >::type olat2(olat2SEXP);
-    Rcpp::traits::input_parameter< double >::type olon2(olon2SEXP);
-    Rcpp::traits::input_parameter< bool >::type unitless(unitlessSEXP);
-    rcpp_result_gen = Rcpp::wrap(haversine_distance(olat1, olon1, olat2, olon2, unitless));
-    return rcpp_result_gen;
-END_RCPP
-}
-// haversineDistance
-NumericVector haversineDistance(NumericVector lat1, NumericVector lon1, NumericVector lat2, NumericVector lon2, bool unitless);
-RcppExport SEXP _hutilscpp_haversineDistance(SEXP lat1SEXP, SEXP lon1SEXP, SEXP lat2SEXP, SEXP lon2SEXP, SEXP unitlessSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type lat1(lat1SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type lon1(lon1SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type lat2(lat2SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type lon2(lon2SEXP);
-    Rcpp::traits::input_parameter< bool >::type unitless(unitlessSEXP);
-    rcpp_result_gen = Rcpp::wrap(haversineDistance(lat1, lon1, lat2, lon2, unitless));
-    return rcpp_result_gen;
-END_RCPP
-}
-// theEuclidDistance
-NumericVector theEuclidDistance(NumericVector x1, NumericVector x2, NumericVector y1, NumericVector y2, bool unitless);
-RcppExport SEXP _hutilscpp_theEuclidDistance(SEXP x1SEXP, SEXP x2SEXP, SEXP y1SEXP, SEXP y2SEXP, SEXP unitlessSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x1(x1SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type x2(x2SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type y1(y1SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type y2(y2SEXP);
-    Rcpp::traits::input_parameter< bool >::type unitless(unitlessSEXP);
-    rcpp_result_gen = Rcpp::wrap(theEuclidDistance(x1, x2, y1, y2, unitless));
-    return rcpp_result_gen;
-END_RCPP
-}
-// hausdorffEuclid
-double hausdorffEuclid(NumericVector x, NumericVector y);
-RcppExport SEXP _hutilscpp_hausdorffEuclid(SEXP xSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(hausdorffEuclid(x, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// EmptiestQuarter
-IntegerVector EmptiestQuarter(NumericVector x, NumericVector y, double minx, double maxx, double miny, double maxy);
-RcppExport SEXP _hutilscpp_EmptiestQuarter(SEXP xSEXP, SEXP ySEXP, SEXP minxSEXP, SEXP maxxSEXP, SEXP minySEXP, SEXP maxySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< double >::type minx(minxSEXP);
-    Rcpp::traits::input_parameter< double >::type maxx(maxxSEXP);
-    Rcpp::traits::input_parameter< double >::type miny(minySEXP);
-    Rcpp::traits::input_parameter< double >::type maxy(maxySEXP);
-    rcpp_result_gen = Rcpp::wrap(EmptiestQuarter(x, y, minx, maxx, miny, maxy));
-    return rcpp_result_gen;
-END_RCPP
-}
-// theEmptiestQuarters
-IntegerVector theEmptiestQuarters(NumericVector x, NumericVector y, double minx, double maxx, double miny, double maxy, int depth);
-RcppExport SEXP _hutilscpp_theEmptiestQuarters(SEXP xSEXP, SEXP ySEXP, SEXP minxSEXP, SEXP maxxSEXP, SEXP minySEXP, SEXP maxySEXP, SEXP depthSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
-    Rcpp::traits::input_parameter< double >::type minx(minxSEXP);
-    Rcpp::traits::input_parameter< double >::type maxx(maxxSEXP);
-    Rcpp::traits::input_parameter< double >::type miny(minySEXP);
-    Rcpp::traits::input_parameter< double >::type maxy(maxySEXP);
-    Rcpp::traits::input_parameter< int >::type depth(depthSEXP);
-    rcpp_result_gen = Rcpp::wrap(theEmptiestQuarters(x, y, minx, maxx, miny, maxy, depth));
-    return rcpp_result_gen;
-END_RCPP
-}
-// which_min_HaversineDistance
-int which_min_HaversineDistance(NumericVector lat1, NumericVector lon1, double lat2, double lon2, double upperBound);
-RcppExport SEXP _hutilscpp_which_min_HaversineDistance(SEXP lat1SEXP, SEXP lon1SEXP, SEXP lat2SEXP, SEXP lon2SEXP, SEXP upperBoundSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type lat1(lat1SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type lon1(lon1SEXP);
-    Rcpp::traits::input_parameter< double >::type lat2(lat2SEXP);
-    Rcpp::traits::input_parameter< double >::type lon2(lon2SEXP);
-    Rcpp::traits::input_parameter< double >::type upperBound(upperBoundSEXP);
-    rcpp_result_gen = Rcpp::wrap(which_min_HaversineDistance(lat1, lon1, lat2, lon2, upperBound));
-    return rcpp_result_gen;
-END_RCPP
-}
-// match_min_Haversine
-List match_min_Haversine(NumericVector lat1, NumericVector lon1, NumericVector lat2, NumericVector lon2, IntegerVector tabl, double cartR, double dist0_km, bool verify_cartR, bool do_verify_box, bool excl_self, int ncores);
-RcppExport SEXP _hutilscpp_match_min_Haversine(SEXP lat1SEXP, SEXP lon1SEXP, SEXP lat2SEXP, SEXP lon2SEXP, SEXP tablSEXP, SEXP cartRSEXP, SEXP dist0_kmSEXP, SEXP verify_cartRSEXP, SEXP do_verify_boxSEXP, SEXP excl_selfSEXP, SEXP ncoresSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type lat1(lat1SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type lon1(lon1SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type lat2(lat2SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type lon2(lon2SEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type tabl(tablSEXP);
-    Rcpp::traits::input_parameter< double >::type cartR(cartRSEXP);
-    Rcpp::traits::input_parameter< double >::type dist0_km(dist0_kmSEXP);
-    Rcpp::traits::input_parameter< bool >::type verify_cartR(verify_cartRSEXP);
-    Rcpp::traits::input_parameter< bool >::type do_verify_box(do_verify_boxSEXP);
-    Rcpp::traits::input_parameter< bool >::type excl_self(excl_selfSEXP);
-    Rcpp::traits::input_parameter< int >::type ncores(ncoresSEXP);
-    rcpp_result_gen = Rcpp::wrap(match_min_Haversine(lat1, lon1, lat2, lon2, tabl, cartR, dist0_km, verify_cartR, do_verify_box, excl_self, ncores));
-    return rcpp_result_gen;
-END_RCPP
-}
 
-RcppExport SEXP CAnyCharMatch(SEXP, SEXP, SEXP);
-RcppExport SEXP CImplies(SEXP, SEXP, SEXP, SEXP);
-RcppExport SEXP CSquish(SEXP, SEXP);
-RcppExport SEXP CStringEqual(SEXP, SEXP);
+RcppExport SEXP C_hausdorffEuclid(SEXP, SEXP);
+RcppExport SEXP C_haversineDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP C_match_min_Haversine(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP C_theEmptiestQuarters (SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP C_theEuclidDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP C_which_min_HaversineDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Callocate_with_root(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Callocate0_dbl(SEXP, SEXP);
 RcppExport SEXP Callocate0_except(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Callocate0_int(SEXP, SEXP);
-RcppExport SEXP Callocate_with_root(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cand3(SEXP, SEXP, SEXP);
 RcppExport SEXP Cand3s_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP CAnyCharMatch(SEXP, SEXP, SEXP);
 RcppExport SEXP CanyOutside(SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Ccount_logical(SEXP, SEXP);
 RcppExport SEXP Ccumsum_reset(SEXP, SEXP);
@@ -240,10 +106,12 @@ RcppExport SEXP Cdiagnose_omp(SEXP);
 RcppExport SEXP Cdivisible(SEXP, SEXP, SEXP);
 RcppExport SEXP Cdivisible16(SEXP, SEXP);
 RcppExport SEXP Cdivisible2(SEXP, SEXP, SEXP);
+RcppExport SEXP CEmptiestQuarter(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP CextractMandatory(SEXP, SEXP, SEXP);
 RcppExport SEXP CfirstNonNegativeRadix(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cforce_as_integer(SEXP, SEXP);
 RcppExport SEXP Chas_openmp();
+RcppExport SEXP CImplies(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cis_altrep(SEXP);
 RcppExport SEXP Cis_constant(SEXP, SEXP);
 RcppExport SEXP Cis_safe2int(SEXP);
@@ -265,31 +133,33 @@ RcppExport SEXP Cpmin0_radix_sorted_dbl(SEXP, SEXP, SEXP);
 RcppExport SEXP Cpmin0_radix_sorted_int(SEXP, SEXP, SEXP);
 RcppExport SEXP CpminC_in_place(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Crange(SEXP);
-RcppExport SEXP Csum3s_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP CSquish(SEXP, SEXP);
+RcppExport SEXP CStringEqual(SEXP, SEXP);
 RcppExport SEXP Csum_isna(SEXP, SEXP);
+RcppExport SEXP Csum3s_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Csummary3(SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhere_square_bracket_opens(SEXP, SEXP);
-RcppExport SEXP Cwhich3(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-RcppExport SEXP Cwhich3_mem(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_16(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_even(SEXP);
 RcppExport SEXP Cwhich_first(SEXP);
-RcppExport SEXP Cwhich_firstNA(SEXP);
 RcppExport SEXP Cwhich_first__(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_first_false(SEXP);
 RcppExport SEXP Cwhich_first_in_lgl(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_first_lgl_lgl_op(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_first_notTRUE(SEXP);
+RcppExport SEXP Cwhich_firstNA(SEXP);
 RcppExport SEXP Cwhich_isna(SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_isnt_integerish(SEXP);
 RcppExport SEXP Cwhich_last(SEXP);
-RcppExport SEXP Cwhich_lastNA(SEXP);
 RcppExport SEXP Cwhich_last__(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_last_false(SEXP);
 RcppExport SEXP Cwhich_last_in_lgl(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP Cwhich_last_notFALSE(SEXP);
 RcppExport SEXP Cwhich_last_notTRUE(SEXP);
+RcppExport SEXP Cwhich_lastNA(SEXP);
 RcppExport SEXP Cwhich_true_onwards(SEXP);
+RcppExport SEXP Cwhich3(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP Cwhich3_mem(SEXP, SEXP, SEXP, SEXP);
 RcppExport SEXP fmatch(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
@@ -300,85 +170,83 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hutilscpp_do_which_last_xi_ini", (DL_FUNC) &_hutilscpp_do_which_last_xi_ini, 2},
     {"_hutilscpp_do_which_last_xi_ind", (DL_FUNC) &_hutilscpp_do_which_last_xi_ind, 2},
     {"_hutilscpp_do_which_last_xd_ind", (DL_FUNC) &_hutilscpp_do_which_last_xd_ind, 3},
-    {"_hutilscpp_showValue", (DL_FUNC) &_hutilscpp_showValue, 2},
-    {"_hutilscpp_haversine_distance", (DL_FUNC) &_hutilscpp_haversine_distance, 5},
-    {"_hutilscpp_haversineDistance", (DL_FUNC) &_hutilscpp_haversineDistance, 5},
-    {"_hutilscpp_theEuclidDistance", (DL_FUNC) &_hutilscpp_theEuclidDistance, 5},
-    {"_hutilscpp_hausdorffEuclid", (DL_FUNC) &_hutilscpp_hausdorffEuclid, 2},
-    {"_hutilscpp_EmptiestQuarter", (DL_FUNC) &_hutilscpp_EmptiestQuarter, 6},
-    {"_hutilscpp_theEmptiestQuarters", (DL_FUNC) &_hutilscpp_theEmptiestQuarters, 7},
-    {"_hutilscpp_which_min_HaversineDistance", (DL_FUNC) &_hutilscpp_which_min_HaversineDistance, 5},
-    {"_hutilscpp_match_min_Haversine", (DL_FUNC) &_hutilscpp_match_min_Haversine, 11},
-    {"CAnyCharMatch",               (DL_FUNC) &CAnyCharMatch,                3},
-    {"CImplies",                    (DL_FUNC) &CImplies,                     4},
-    {"CSquish",                     (DL_FUNC) &CSquish,                      2},
-    {"CStringEqual",                (DL_FUNC) &CStringEqual,                 2},
-    {"Callocate0_dbl",              (DL_FUNC) &Callocate0_dbl,               2},
-    {"Callocate0_except",           (DL_FUNC) &Callocate0_except,            4},
-    {"Callocate0_int",              (DL_FUNC) &Callocate0_int,               2},
-    {"Callocate_with_root",         (DL_FUNC) &Callocate_with_root,          6},
-    {"Cand3",                       (DL_FUNC) &Cand3,                        3},
-    {"Cand3s_par",                  (DL_FUNC) &Cand3s_par,                  16},
-    {"CanyOutside",                 (DL_FUNC) &CanyOutside,                  5},
-    {"Ccount_logical",              (DL_FUNC) &Ccount_logical,               2},
-    {"Ccumsum_reset",               (DL_FUNC) &Ccumsum_reset,                2},
-    {"Ccumsum_reset_sorted_int",    (DL_FUNC) &Ccumsum_reset_sorted_int,     1},
-    {"Ccumsum_reset_where",         (DL_FUNC) &Ccumsum_reset_where,          4},
-    {"Cdiagnose_omp",               (DL_FUNC) &Cdiagnose_omp,                1},
-    {"Cdivisible",                  (DL_FUNC) &Cdivisible,                   3},
-    {"Cdivisible16",                (DL_FUNC) &Cdivisible16,                 2},
-    {"Cdivisible2",                 (DL_FUNC) &Cdivisible2,                  3},
-    {"CextractMandatory",           (DL_FUNC) &CextractMandatory,            3},
-    {"CfirstNonNegativeRadix",      (DL_FUNC) &CfirstNonNegativeRadix,       4},
-    {"Cforce_as_integer",           (DL_FUNC) &Cforce_as_integer,            2},
-    {"Chas_openmp",                 (DL_FUNC) &Chas_openmp,                  0},
-    {"Cis_altrep",                  (DL_FUNC) &Cis_altrep,                   1},
-    {"Cis_constant",                (DL_FUNC) &Cis_constant,                 2},
-    {"Cis_safe2int",                (DL_FUNC) &Cis_safe2int,                 1},
-    {"Cis_sorted",                  (DL_FUNC) &Cis_sorted,                   2},
-    {"Cisnt_constant",              (DL_FUNC) &Cisnt_constant,               1},
-    {"Cisnt_sorted",                (DL_FUNC) &Cisnt_sorted,                 2},
-    {"Cna_and",                     (DL_FUNC) &Cna_and,                      1},
-    {"Cor3",                        (DL_FUNC) &Cor3,                         3},
-    {"Cor3_par",                    (DL_FUNC) &Cor3_par,                    16},
-    {"Cpar_in_int",                 (DL_FUNC) &Cpar_in_int,                  3},
-    {"Cpmax",                       (DL_FUNC) &Cpmax,                        4},
-    {"Cpmax0_bitwise",              (DL_FUNC) &Cpmax0_bitwise,               3},
-    {"Cpmax0_radix_sorted_dbl",     (DL_FUNC) &Cpmax0_radix_sorted_dbl,      3},
-    {"Cpmax0_radix_sorted_int",     (DL_FUNC) &Cpmax0_radix_sorted_int,      3},
-    {"CpmaxC_in_place",             (DL_FUNC) &CpmaxC_in_place,              4},
-    {"Cpmin",                       (DL_FUNC) &Cpmin,                        4},
-    {"Cpmin0_bitwise",              (DL_FUNC) &Cpmin0_bitwise,               3},
-    {"Cpmin0_radix_sorted_dbl",     (DL_FUNC) &Cpmin0_radix_sorted_dbl,      3},
-    {"Cpmin0_radix_sorted_int",     (DL_FUNC) &Cpmin0_radix_sorted_int,      3},
-    {"CpminC_in_place",             (DL_FUNC) &CpminC_in_place,              4},
-    {"Crange",                      (DL_FUNC) &Crange,                       1},
-    {"Csum3s_par",                  (DL_FUNC) &Csum3s_par,                  26},
-    {"Csum_isna",                   (DL_FUNC) &Csum_isna,                    2},
-    {"Csummary3",                   (DL_FUNC) &Csummary3,                    5},
-    {"Cwhere_square_bracket_opens", (DL_FUNC) &Cwhere_square_bracket_opens,  2},
-    {"Cwhich3",                     (DL_FUNC) &Cwhich3,                      7},
-    {"Cwhich3_mem",                 (DL_FUNC) &Cwhich3_mem,                  4},
-    {"Cwhich_16",                   (DL_FUNC) &Cwhich_16,                    4},
-    {"Cwhich_even",                 (DL_FUNC) &Cwhich_even,                  1},
-    {"Cwhich_first",                (DL_FUNC) &Cwhich_first,                 1},
-    {"Cwhich_firstNA",              (DL_FUNC) &Cwhich_firstNA,               1},
-    {"Cwhich_first__",              (DL_FUNC) &Cwhich_first__,               8},
-    {"Cwhich_first_false",          (DL_FUNC) &Cwhich_first_false,           1},
-    {"Cwhich_first_in_lgl",         (DL_FUNC) &Cwhich_first_in_lgl,          4},
-    {"Cwhich_first_lgl_lgl_op",     (DL_FUNC) &Cwhich_first_lgl_lgl_op,      4},
-    {"Cwhich_first_notTRUE",        (DL_FUNC) &Cwhich_first_notTRUE,         1},
-    {"Cwhich_isna",                 (DL_FUNC) &Cwhich_isna,                  3},
-    {"Cwhich_isnt_integerish",      (DL_FUNC) &Cwhich_isnt_integerish,       1},
-    {"Cwhich_last",                 (DL_FUNC) &Cwhich_last,                  1},
-    {"Cwhich_lastNA",               (DL_FUNC) &Cwhich_lastNA,                1},
-    {"Cwhich_last__",               (DL_FUNC) &Cwhich_last__,                8},
-    {"Cwhich_last_false",           (DL_FUNC) &Cwhich_last_false,            1},
-    {"Cwhich_last_in_lgl",          (DL_FUNC) &Cwhich_last_in_lgl,           4},
-    {"Cwhich_last_notFALSE",        (DL_FUNC) &Cwhich_last_notFALSE,         1},
-    {"Cwhich_last_notTRUE",         (DL_FUNC) &Cwhich_last_notTRUE,          1},
-    {"Cwhich_true_onwards",         (DL_FUNC) &Cwhich_true_onwards,          1},
-    {"fmatch",                      (DL_FUNC) &fmatch,                       6},
+    {"C_hausdorffEuclid",             (DL_FUNC) &C_hausdorffEuclid,              2},
+    {"C_haversineDistance",           (DL_FUNC) &C_haversineDistance,            5},
+    {"C_match_min_Haversine",         (DL_FUNC) &C_match_min_Haversine,         11},
+    {"C_theEmptiestQuarters ",        (DL_FUNC) &C_theEmptiestQuarters ,         7},
+    {"C_theEuclidDistance",           (DL_FUNC) &C_theEuclidDistance,            5},
+    {"C_which_min_HaversineDistance", (DL_FUNC) &C_which_min_HaversineDistance,  5},
+    {"Callocate_with_root",           (DL_FUNC) &Callocate_with_root,            6},
+    {"Callocate0_dbl",                (DL_FUNC) &Callocate0_dbl,                 2},
+    {"Callocate0_except",             (DL_FUNC) &Callocate0_except,              4},
+    {"Callocate0_int",                (DL_FUNC) &Callocate0_int,                 2},
+    {"Cand3",                         (DL_FUNC) &Cand3,                          3},
+    {"Cand3s_par",                    (DL_FUNC) &Cand3s_par,                    16},
+    {"CAnyCharMatch",                 (DL_FUNC) &CAnyCharMatch,                  3},
+    {"CanyOutside",                   (DL_FUNC) &CanyOutside,                    5},
+    {"Ccount_logical",                (DL_FUNC) &Ccount_logical,                 2},
+    {"Ccumsum_reset",                 (DL_FUNC) &Ccumsum_reset,                  2},
+    {"Ccumsum_reset_sorted_int",      (DL_FUNC) &Ccumsum_reset_sorted_int,       1},
+    {"Ccumsum_reset_where",           (DL_FUNC) &Ccumsum_reset_where,            4},
+    {"Cdiagnose_omp",                 (DL_FUNC) &Cdiagnose_omp,                  1},
+    {"Cdivisible",                    (DL_FUNC) &Cdivisible,                     3},
+    {"Cdivisible16",                  (DL_FUNC) &Cdivisible16,                   2},
+    {"Cdivisible2",                   (DL_FUNC) &Cdivisible2,                    3},
+    {"CEmptiestQuarter",              (DL_FUNC) &CEmptiestQuarter,               6},
+    {"CextractMandatory",             (DL_FUNC) &CextractMandatory,              3},
+    {"CfirstNonNegativeRadix",        (DL_FUNC) &CfirstNonNegativeRadix,         4},
+    {"Cforce_as_integer",             (DL_FUNC) &Cforce_as_integer,              2},
+    {"Chas_openmp",                   (DL_FUNC) &Chas_openmp,                    0},
+    {"CImplies",                      (DL_FUNC) &CImplies,                       4},
+    {"Cis_altrep",                    (DL_FUNC) &Cis_altrep,                     1},
+    {"Cis_constant",                  (DL_FUNC) &Cis_constant,                   2},
+    {"Cis_safe2int",                  (DL_FUNC) &Cis_safe2int,                   1},
+    {"Cis_sorted",                    (DL_FUNC) &Cis_sorted,                     2},
+    {"Cisnt_constant",                (DL_FUNC) &Cisnt_constant,                 1},
+    {"Cisnt_sorted",                  (DL_FUNC) &Cisnt_sorted,                   2},
+    {"Cna_and",                       (DL_FUNC) &Cna_and,                        1},
+    {"Cor3",                          (DL_FUNC) &Cor3,                           3},
+    {"Cor3_par",                      (DL_FUNC) &Cor3_par,                      16},
+    {"Cpar_in_int",                   (DL_FUNC) &Cpar_in_int,                    3},
+    {"Cpmax",                         (DL_FUNC) &Cpmax,                          4},
+    {"Cpmax0_bitwise",                (DL_FUNC) &Cpmax0_bitwise,                 3},
+    {"Cpmax0_radix_sorted_dbl",       (DL_FUNC) &Cpmax0_radix_sorted_dbl,        3},
+    {"Cpmax0_radix_sorted_int",       (DL_FUNC) &Cpmax0_radix_sorted_int,        3},
+    {"CpmaxC_in_place",               (DL_FUNC) &CpmaxC_in_place,                4},
+    {"Cpmin",                         (DL_FUNC) &Cpmin,                          4},
+    {"Cpmin0_bitwise",                (DL_FUNC) &Cpmin0_bitwise,                 3},
+    {"Cpmin0_radix_sorted_dbl",       (DL_FUNC) &Cpmin0_radix_sorted_dbl,        3},
+    {"Cpmin0_radix_sorted_int",       (DL_FUNC) &Cpmin0_radix_sorted_int,        3},
+    {"CpminC_in_place",               (DL_FUNC) &CpminC_in_place,                4},
+    {"Crange",                        (DL_FUNC) &Crange,                         1},
+    {"CSquish",                       (DL_FUNC) &CSquish,                        2},
+    {"CStringEqual",                  (DL_FUNC) &CStringEqual,                   2},
+    {"Csum_isna",                     (DL_FUNC) &Csum_isna,                      2},
+    {"Csum3s_par",                    (DL_FUNC) &Csum3s_par,                    26},
+    {"Csummary3",                     (DL_FUNC) &Csummary3,                      5},
+    {"Cwhere_square_bracket_opens",   (DL_FUNC) &Cwhere_square_bracket_opens,    2},
+    {"Cwhich_16",                     (DL_FUNC) &Cwhich_16,                      4},
+    {"Cwhich_even",                   (DL_FUNC) &Cwhich_even,                    1},
+    {"Cwhich_first",                  (DL_FUNC) &Cwhich_first,                   1},
+    {"Cwhich_first__",                (DL_FUNC) &Cwhich_first__,                 8},
+    {"Cwhich_first_false",            (DL_FUNC) &Cwhich_first_false,             1},
+    {"Cwhich_first_in_lgl",           (DL_FUNC) &Cwhich_first_in_lgl,            4},
+    {"Cwhich_first_lgl_lgl_op",       (DL_FUNC) &Cwhich_first_lgl_lgl_op,        4},
+    {"Cwhich_first_notTRUE",          (DL_FUNC) &Cwhich_first_notTRUE,           1},
+    {"Cwhich_firstNA",                (DL_FUNC) &Cwhich_firstNA,                 1},
+    {"Cwhich_isna",                   (DL_FUNC) &Cwhich_isna,                    3},
+    {"Cwhich_isnt_integerish",        (DL_FUNC) &Cwhich_isnt_integerish,         1},
+    {"Cwhich_last",                   (DL_FUNC) &Cwhich_last,                    1},
+    {"Cwhich_last__",                 (DL_FUNC) &Cwhich_last__,                  8},
+    {"Cwhich_last_false",             (DL_FUNC) &Cwhich_last_false,              1},
+    {"Cwhich_last_in_lgl",            (DL_FUNC) &Cwhich_last_in_lgl,             4},
+    {"Cwhich_last_notFALSE",          (DL_FUNC) &Cwhich_last_notFALSE,           1},
+    {"Cwhich_last_notTRUE",           (DL_FUNC) &Cwhich_last_notTRUE,            1},
+    {"Cwhich_lastNA",                 (DL_FUNC) &Cwhich_lastNA,                  1},
+    {"Cwhich_true_onwards",           (DL_FUNC) &Cwhich_true_onwards,            1},
+    {"Cwhich3",                       (DL_FUNC) &Cwhich3,                        7},
+    {"Cwhich3_mem",                   (DL_FUNC) &Cwhich3_mem,                    4},
+    {"fmatch",                        (DL_FUNC) &fmatch,                         6},
     {NULL, NULL, 0}
 };
 

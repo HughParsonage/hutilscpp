@@ -4,17 +4,16 @@ test_that("Error handling", {
   expect_error(haversineDistance(1, 1:2, 1:3, 1:4), regexp = "ength")
   expect_error(haversineDistance(1:2, 1:2, 1:3, 1:4), regexp = "ength")
   expect_error(which_min_HaversineDistance(1, 1:2, 1, 1),
-               regexp = "length(lat1) != length(lat2)",
+               regexp = "ength",
                fixed = TRUE)
   expect_error(match_min_Haversine(1, 1:2, 1, 1, 0L),
-               regexp = "length(lat1) != length(lon1)",
+               regexp = "ength",
                fixed = TRUE)
   expect_error(match_min_Haversine(1, 1, 1:2, 1, 0L),
-               regexp = "length(lat2) != length(lon2)",
+               regexp = "ength",
                fixed = TRUE)
   expect_warning(match_min_Haversine(1, 1, 1:2, 1:2, 0L, excl_self = TRUE),
-                 regexp = "`excl_self = true`, yet lengths of `lat1` and `lat2` differ.",
-                 fixed = TRUE)
+                 regexp = "`excl_self = true`.*ength")
 
 })
 
