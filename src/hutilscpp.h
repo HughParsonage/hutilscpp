@@ -95,6 +95,9 @@ double maxdd(double a, double b);
 double mind3(double a, double b, double c);
 double maxd3(double a, double b, double c);
 
+double Mind(const double * x, R_xlen_t N, int nThread);
+double Maxd(const double * x, R_xlen_t N, int nThread);
+
 // sortedness
 bool sorted_int(const int * xp, R_xlen_t N, int nThreads);
 

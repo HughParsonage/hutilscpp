@@ -1,13 +1,12 @@
-#include "cpphutils.h"
+#include "hutilscpp.h"
 
 
 // #nocov start
-// [[Rcpp::export]]
+
 void showValue(const char* what, double x) {
-  Rcout << " " << what << " \t " << x << std::endl;
   // return 0;
 }
-// #nocov end
+
 
 
 double sinhalfsq (double x) {
@@ -17,9 +16,8 @@ double sinhalfsq (double x) {
   // return (sin(x/2) * sin(x/2));
 }
 
-// [[Rcpp::export]]
-double haversine_distance (double olat1, double olon1, double olat2, double olon2,
-                           bool unitless = false) {
+double haversine_distance(double olat1, double olon1, double olat2, double olon2,
+                          bool unitless) {
   // double pi = 3.1415926535897;
   const double lat1 = olat1 * (M_PI / 180) ;
   const double lat2 = olat2 * (M_PI / 180) ;
@@ -29,9 +27,9 @@ double haversine_distance (double olat1, double olon1, double olat2, double olon
 
 
   // const double delta_lat = (lat1 > lat2) ? (lat1 - lat2) : (lat2 - lat1) ;
-  const double delta_lat = std::fabs(lat1 - lat2);
+  const double delta_lat = fabs(lat1 - lat2);
   // const double delta_lon = (lon1 > lon2) ? (lon1 - lon2) : (lon2 - lon1) ;
-  const double delta_lon = std::fabs(lon1 - lon2);
+  const double delta_lon = fabs(lon1 - lon2);
 
   // 6371 * 2 * asin(sqrt(sin(d_lat / 2)^2 + cos(lat1) * cos(lat2) * sin(d_lon / 2)^2))
   double out = 0;
@@ -51,11 +49,11 @@ double haversine_distance (double olat1, double olon1, double olat2, double olon
   return out;
 }
 
-double do_euclid_dist (double x1,
-                       double x2,
-                       double y1,
-                       double y2,
-                       bool unitless = false) {
+double do_euclid_dist(double x1,
+                      double x2,
+                      double y1,
+                      double y2,
+                      bool unitless) {
   double out = 0;
   double x = x2 - x1;
   double y = y2 - y1;
@@ -68,61 +66,82 @@ double do_euclid_dist (double x1,
 
 // unitless =>
 
-// [[Rcpp::export]]
-NumericVector haversineDistance(NumericVector lat1, NumericVector lon1, NumericVector lat2, NumericVector lon2, bool unitless = false) {
-  R_xlen_t N = lat1.length();
-  if (N != lon1.length() || N != lat2.length() || N != lon2.length()) {
-    stop("Lengths of input vectors differ.");
+SEXP C_haversineDistance(SEXP Lat1,
+                         SEXP Lon1,
+                         SEXP Lat2, SEXP Lon2, SEXP Unitless) {
+  R_xlen_t N = xlength(Lat1);
+  if (N != xlength(Lon1) || N != xlength(Lat2) || N != xlength(Lon2)) {
+    error("Lengths of input vectors differ.");
   }
-  NumericVector out(N);
+  if (TYPEOF(Lat1) != REALSXP ||
+      TYPEOF(Lon1) != REALSXP ||
+      TYPEOF(Lat2) != REALSXP ||
+      TYPEOF(Lon2) != REALSXP ||
+      TYPEOF(Unitless) != LGLSXP) {
+    error("Internal error(haversineDistance): wrong types."); // # nocov
+  }
+
+  const double * lat1 = REAL(Lat1);
+  const double * lat2 = REAL(Lat2);
+  const double * lon1 = REAL(Lon1);
+  const double * lon2 = REAL(Lon2);
+  const bool unitless = asLogical(Unitless);
+  SEXP ans = PROTECT(allocVector(REALSXP, N));
+  double * out = REAL(ans);
   if (unitless) {
     for (R_xlen_t i = 0; i < N; ++i) {
       out[i] = haversine_distance(lat1[i], lon1[i], lat2[i], lon2[i], true);
     }
   } else {
     for (R_xlen_t i = 0; i < N; ++i) {
-      out[i] = haversine_distance(lat1[i], lon1[i], lat2[i], lon2[i]);
+      out[i] = haversine_distance(lat1[i], lon1[i], lat2[i], lon2[i], false);
     }
   }
-  return out;
+  UNPROTECT(1);
+  return ans;
 }
 
 
 
-
-
-// [[Rcpp::export]]
-NumericVector theEuclidDistance (NumericVector x1,
-                                 NumericVector x2,
-                                 NumericVector y1,
-                                 NumericVector y2,
-                                 bool unitless = false) {
-  R_xlen_t N = x1.size();
-  R_xlen_t y1N = y1.size();
-  R_xlen_t x2N = x2.size();
-  R_xlen_t y2N = y2.size();
+SEXP C_theEuclidDistance(SEXP X1,
+                        SEXP X2,
+                        SEXP Y1,
+                        SEXP Y2,
+                        SEXP Unitless) {
+  if (TYPEOF(X1) != REALSXP ||
+      TYPEOF(X2) != REALSXP ||
+      TYPEOF(Y1) != REALSXP ||
+      TYPEOF(Y2) != REALSXP ||
+      TYPEOF(Unitless) != LGLSXP) {
+    error("Internal error(theEuclidDistance): wrong input types."); // # nocov
+  }
+  const bool unitless = asLogical(Unitless);
+  R_xlen_t N = xlength(X1);
+  R_xlen_t y1N = xlength(Y1);
+  R_xlen_t x2N = xlength(X2);
+  R_xlen_t y2N = xlength(Y2);
   if (N != y1N || N != x2N || N != y2N) {
-    stop("x and y lengths differ.");
+    error("x and y lengths differ.");
   }
-  NumericVector out(N);
-  double x1i = 0;
-  double x2i = 0;
-  double y1i = 0;
-  double y2i = 0;
+  SEXP ans = PROTECT(allocVector(REALSXP, N));
+  double * out = REAL(ans);
+  const double * x1 = REAL(X1);
+  const double * x2 = REAL(X2);
+  const double * y1 = REAL(Y1);
+  const double * y2 = REAL(Y2);
   for (R_xlen_t i = 0; i < N; ++i) {
-    x1i = x1[i];
-    x2i = x2[i];
-    y1i = y1[i];
-    y2i = y2[i];
-    out[i] = do_euclid_dist(x1i, x2i, y1i, y2i, unitless);
+    out[i] = do_euclid_dist(x1[i], x2[i], y1[i], y2[i], unitless);
   }
-  return out;
+  UNPROTECT(1);
+  return ans;
 }
 
-// [[Rcpp::export]]
-double hausdorffEuclid (NumericVector x,
-                        NumericVector y) {
-  R_xlen_t N = x.size();
+
+SEXP C_hausdorffEuclid(SEXP xx,
+                      SEXP yy) {
+  R_xlen_t N = xlength(xx);
+  const double * x = REAL(xx);
+  const double * y = REAL(yy);
   double maxmin_dist = 0;
   for (R_xlen_t i = 0; i < N; ++i) {
     double xi = x[i];
@@ -135,7 +154,7 @@ double hausdorffEuclid (NumericVector x,
       double xj = x[j];
       double yj = y[j];
       double dij = 0;
-      dij = do_euclid_dist(xi, xj, yi, yj);
+      dij = do_euclid_dist(xi, xj, yi, yj, false);
       if (min_dist_i == 0 || dij < min_dist_i) {
         min_dist_i = dij;
       }
@@ -144,23 +163,28 @@ double hausdorffEuclid (NumericVector x,
       maxmin_dist = min_dist_i;
     }
   }
-  return maxmin_dist;
+  return ScalarReal(maxmin_dist);
 }
 
 // 00 -> bottom left
 // 01 -> top left
 // 10 -> bottom right
 // 11 -> top right
-// [[Rcpp::export]]
-IntegerVector EmptiestQuarter (NumericVector x,
-                               NumericVector y,
-                               double minx = 1,
-                               double maxx = -1,
-                               double miny = 1,
-                               double maxy = -1) {
-  NumericVector x_range(4);
-  R_xlen_t N = x.size();
-  x_range[0] = minx, x_range[1] = maxx;
+
+
+
+//' @return Integer vector of two elements: first element
+//' 0,1,2,3 depending on which quarter is least populated;
+//' second element, the number of points
+
+void do_EmptiestQuarter(int out[],
+                        const double * x,
+                        const double * y,
+                        int N,
+                        double minx,
+                        double maxx,
+                        double miny,
+                        double maxy) {
   if (minx > maxx) {
     minx = x[0];
     maxx = x[0];
@@ -169,8 +193,6 @@ IntegerVector EmptiestQuarter (NumericVector x,
       maxx = (x[i] > maxx) ? x[i] : maxx;
     }
   }
-  NumericVector y_range(4);
-  y_range[0] = miny, y_range[1] = maxy;
   if (miny > maxy) {
     miny = y[0];
     maxy = y[0];
@@ -189,7 +211,6 @@ IntegerVector EmptiestQuarter (NumericVector x,
   int min_points = N;
   double x0, x1, y0, y1 = 0;
   for (q = 0; q < 4; ++q) {
-
     int q_points = 0;
     switch (q) {
     case 0:
@@ -229,43 +250,68 @@ IntegerVector EmptiestQuarter (NumericVector x,
       o = q;
     }
   }
-  IntegerVector out(2);
   out[0] = o;
   out[1] = min_points;
-  return out;
 }
 
-// [[Rcpp::export]]
-IntegerVector theEmptiestQuarters (NumericVector x,
-                                   NumericVector y,
-                                   double minx = 1,
-                                   double maxx = -1,
-                                   double miny = 1,
-                                   double maxy = -1,
-                                   int depth = 4) {
-  NumericVector x_range(4);
-  x_range[0] = minx, x_range[1] = maxx;
+SEXP CEmptiestQuarter(SEXP xx,
+                      SEXP yy,
+                      SEXP Minx,
+                      SEXP Maxx,
+                      SEXP Miny,
+                      SEXP Maxy) {
+  if (TYPEOF(xx) != REALSXP ||
+      TYPEOF(yy) != REALSXP ||
+      xlength(xx) != xlength(yy) ||
+      xlength(xx) >= INT_MAX ||
+      TYPEOF(Minx) != REALSXP ||
+      TYPEOF(Maxx) != REALSXP ||
+      TYPEOF(Miny) != REALSXP ||
+      TYPEOF(Maxy) != REALSXP) {
+    error("Internal error(CemptiestQuarter): wrong input types."); // # nocov
+  }
+  const double * x = REAL(xx);
+  const double * y = REAL(yy);
+  double minx = asReal(Minx);
+  double maxx = asReal(Maxx);
+  double miny = asReal(Miny);
+  double maxy = asReal(Maxy);
+  int N = xlength(xx);
+  int out[2] = {0, 0};
+
+  do_EmptiestQuarter(out, x, y, N, minx, maxx, miny, maxy);
+  SEXP ans = PROTECT(allocVector(INTSXP, 2));
+  INTEGER(ans)[0] = out[0];
+  INTEGER(ans)[1] = out[1];
+  UNPROTECT(1);
+  return ans;
+}
+
+void theEmptiestQuarters(int out[],
+                         const double * x,
+                         const double * y,
+                         int N,
+                         double minx,
+                         double maxx,
+                         double miny,
+                         double maxy,
+                         int depth) {
   if (minx > maxx) {
-    minx = min(x);
-    maxx = max(x);
+    minx = Mind(x, N, 1);
+    maxx = Maxd(x, N, 1);
   }
-  NumericVector y_range(4);
-  y_range[0] = miny, y_range[1] = maxy;
   if (miny > maxy) {
-    miny = min(y);
-    maxy = max(y);
+    miny = Mind(y, N, 1);
+    maxy = Maxd(y, N, 1);
   }
-  IntegerVector out(depth);
-  double x0 =0;
-  double x1 = 0;
-  double y0 = 0;
-  double y1 = 0;
-  x0 += minx;
-  x1 += maxx;
-  y0 += miny;
-  y1 += maxy;
+  double x0 = minx;
+  double x1 = maxx;
+  double y0 = miny;
+  double y1 = maxy;
   double dx, dy = 0;
-  int o = EmptiestQuarter(x, y, minx, maxx, miny, maxy)[0];
+  int o2[2] = {0, 0};
+  do_EmptiestQuarter(o2, x, y, N, minx, maxx, miny, maxy);
+  int o = o2[0];
   for (R_xlen_t i = 0; i < depth; ++i) {
     out[i] = o;
     dx = x1 - x0;
@@ -290,7 +336,8 @@ IntegerVector theEmptiestQuarters (NumericVector x,
       y0 += dy;
       break;
     }
-    IntegerVector eq = EmptiestQuarter(x, y, x0, x1, y0, y1);
+    int eq[2] = {0, 0};
+    do_EmptiestQuarter(eq, x, y, N, x0, x1, y0, y1);
     o = eq[0];
     int nPoints = eq[1];
     if (nPoints == 0) {
@@ -300,33 +347,52 @@ IntegerVector theEmptiestQuarters (NumericVector x,
       break;
     }
   }
-
-  return out;
 }
 
-// IntegerVector FirstEmptyQtr (NumericVector x,
-//                              NumericVector y,
-//                              double minx = 1,
-//                              double maxx = -1,
-//                              double miny = 1,
-//                              double maxy = -1,
-//                              int depth = 4) {
-//   for (int xp = 1; xp <= depth; ++xp) {
-//     int two_xp = pow(2, xp);
-//     for ()
-//   }
-// }
+SEXP C_theEmptiestQuarters(SEXP x, SEXP y,
+                           SEXP minx,
+                           SEXP maxx,
+                           SEXP miny,
+                           SEXP maxy,
+                           SEXP Depth) {
+  int out[2] = {0, 0};
+  theEmptiestQuarters(out, REAL(x), REAL(y), xlength(x),
+                      asReal(minx),
+                      asReal(maxx),
+                      asReal(miny),
+                      asReal(maxy),
+                      asInteger(Depth));
+  SEXP ans = PROTECT(allocVector(INTSXP, 2));
+  INTEGER(ans)[0] = out[0];
+  INTEGER(ans)[1] = out[1];
+  UNPROTECT(1);
+  return ans;
+}
 
-// [[Rcpp::export]]
-int which_min_HaversineDistance (NumericVector lat1,
-                                 NumericVector lon1,
-                                 double lat2,
-                                 double lon2,
-                                 double upperBound = 10) {
-  R_xlen_t N = lat1.length();
-  if (N != lon1.length()) {
-    stop("length(lat1) != length(lat2).");
+SEXP C_which_min_HaversineDistance(SEXP Lat1,
+                                   SEXP Lon1,
+                                   SEXP lat22,
+                                   SEXP lon22,
+                                   SEXP UpperBound) {
+  if (TYPEOF(Lat1) != REALSXP ||
+      TYPEOF(Lon1) != REALSXP ||
+      TYPEOF(lat22) != REALSXP ||
+      xlength(lat22) != 1 ||
+      TYPEOF(lon22) != REALSXP ||
+      xlength(lon22) != 1 ||
+      TYPEOF(UpperBound) != REALSXP ||
+      xlength(UpperBound) != 1) {
+    error("Internal error(which_min_HaversineDistance): wrong input types."); // # nocov
   }
+  const double upperBound = asReal(UpperBound);
+  R_xlen_t N = xlength(Lat1);
+  if (N != xlength(Lon1)) {
+    error("length(lat1) != length(lat2)."); // # nocov
+  }
+  const double * lat1 = REAL(Lat1);
+  const double * lon1 = REAL(Lon1);
+  const double lat2 = asReal(lat22);
+  const double lon2 = asReal(lon22);
 
   // Find a way to detect upper bound at runtime
   double max_delta_lat = 0;
@@ -336,19 +402,19 @@ int which_min_HaversineDistance (NumericVector lat1,
   if (upperBound > 0) {
     while (max_delta_lat < 2 && new_dist < upperBound) {
       max_delta_lat += 0.001;
-      new_dist = haversine_distance(lat2, lon2, lat2 + max_delta_lat, lon2);
+      new_dist = haversine_distance(lat2, lon2, lat2 + max_delta_lat, lon2, false);
     }
     new_dist = 0;
     while (max_delta_lon < 2 && new_dist < upperBound) {
       max_delta_lon += 0.001;
-      new_dist = haversine_distance(lat2, lon2, lat2, lon2 + max_delta_lon);
+      new_dist = haversine_distance(lat2, lon2, lat2, lon2 + max_delta_lon, false);
     }
   }
 
   int out = 1;
   double cur_dist = 0;
   double min_dist = 50000; // bigger than the circumference of Earth
-  min_dist = haversine_distance(lat1[0], lon1[0], lat2, lon2);
+  min_dist = haversine_distance(lat1[0], lon1[0], lat2, lon2, false);
   double delta_lat = 0;
   double delta_lon = 0;
   bool skip = false;
@@ -368,40 +434,67 @@ int which_min_HaversineDistance (NumericVector lat1,
       }
     }
 
-    cur_dist = haversine_distance(lat1[i], lon1[i], lat2, lon2);
+    cur_dist = haversine_distance(lat1[i], lon1[i], lat2, lon2, false);
     if (cur_dist < min_dist) {
       min_dist = cur_dist;
       out = i + 1;
     }
   }
-  return out;
+  return ScalarInteger(out);
 }
 
-// [[Rcpp::export]]
-List match_min_Haversine (NumericVector lat1,
-                          NumericVector lon1,
-                          NumericVector lat2,
-                          NumericVector lon2,
-                          IntegerVector tabl,
-                          double cartR = -1,
-                          double dist0_km = 0.01,
-                          bool verify_cartR = false,
-                          bool do_verify_box = false,
-                          bool excl_self = false,
-                          int ncores = 1) {
-  int N1 = lat1.length();
-  if (N1 != lon1.length()) {
-    stop("length(lat1) != length(lon1).");
+SEXP C_match_min_Haversine(SEXP Lat1,
+                          SEXP Lon1,
+                          SEXP Lat2,
+                          SEXP Lon2,
+                          SEXP Tabl,
+                          SEXP CartR,
+                          SEXP Dist0_km,
+                          SEXP Verify_cartR,
+                          SEXP Verify_box,
+                          SEXP Excl_self,
+                          SEXP Ncores) {
+  if (TYPEOF(Lat1) != REALSXP ||
+      TYPEOF(Lon1) != REALSXP ||
+      TYPEOF(Lat2) != REALSXP ||
+      TYPEOF(Lon2) != REALSXP ||
+      xlength(Lat1) != xlength(Lon1) ||
+      xlength(Lat2) != xlength(Lon2) ||
+      xlength(Lat2) >= INT_MAX ||
+      xlength(Lat1) >= INT_MAX ||
+      TYPEOF(Tabl) != INTSXP ||
+      xlength(Tabl) >= INT_MAX) {
+    error("Internal error(C_match_min_Haversine): wrong input types."); // # nocov
   }
-  int N2 = lat2.length();
-  if (N2 != lon2.length()) {
-    stop("length(lat2) != length(lon2)");
+  const double * lat1 = REAL(Lat1);
+  const double * lat2 = REAL(Lat2);
+  const double * lon1 = REAL(Lon1);
+  const double * lon2 = REAL(Lon2);
+  const int * tabl = INTEGER(Tabl);
+
+  if (TYPEOF(CartR) != REALSXP ||
+      xlength(CartR) != 1 ||
+      TYPEOF(Dist0_km) != REALSXP ||
+      xlength(Dist0_km) != 1) {
+    error("Internal error(C_match_min_Haversine): wrong input types."); // # nocov
   }
+  const double cartR = asReal(CartR);
+  const double dist0_km = asReal(Dist0_km);
+
+
+  const bool verify_cartR = asLogical(Verify_cartR);
+  const bool do_verify_box = asLogical(Verify_box);
+  const bool excl_self = asLogical(Excl_self);
+  const int ncores = asInteger(Ncores);
+
+  int N1 = length(Lat1);
+  int N2 = length(Lat2);
   if (excl_self && N2 != N1) {
     warning("`excl_self = true`, yet lengths of `lat1` and `lat2` differ. This implies matching positions in lat1,lon1 and lat2,lon2 do not reflect the same points.");
   }
 
-  int N3 = tabl.length();
+  int N3 = length(Tabl);
+
   bool use_tbl = N3 == N2;
 
   double lati = 0;
@@ -409,8 +502,14 @@ List match_min_Haversine (NumericVector lat1,
   double latj = 0;
   double lonj = 0;
 
-  IntegerVector out(N1);
-  NumericVector out2(N1);
+  int n_protect = 0;
+  SEXP Out = PROTECT(allocVector(INTSXP, N1));
+  ++n_protect;
+  int * out = INTEGER(Out);
+
+  SEXP Out2 = PROTECT(allocVector(REALSXP, N1));
+  double * out2 = REAL(Out2);
+  ++n_protect;
 
   // half-equatorial circumference: used as an 'infinity' for
   // min_dist while also available to check we have actually
@@ -423,9 +522,9 @@ List match_min_Haversine (NumericVector lat1,
 
   int k = 0;
 
-  for (R_xlen_t i = 0; i < N1; ++i) {
+  for (int i = 0; i < N1; ++i) {
     if (ncores == 1 && (i % 16) == 0) {
-      Rcpp::checkUserInterrupt();
+      R_CheckUserInterrupt();
     }
     lati = lat1[i];
     loni = lon1[i];
@@ -483,7 +582,7 @@ List match_min_Haversine (NumericVector lat1,
         k += j;
 
         // Calculate the real distance
-        min_dist_km = haversine_distance(lati, loni, latj, lonj);
+        min_dist_km = haversine_distance(lati, loni, latj, lonj, false);
         // If within the "close-enough" distance, break to the next item to geocode.
         if (min_dist_km < dist0_km) {
           break;
@@ -493,7 +592,7 @@ List match_min_Haversine (NumericVector lat1,
 
     if (do_verify_box) {
       // The half-length of the square to check within
-      double box_r = do_euclid_dist(loni, lon2[k], lati, lat2[k]);
+      double box_r = do_euclid_dist(loni, lon2[k], lati, lat2[k], false);
       double cur_dist_km_new = 0;
 
       // Box is around the *target*
@@ -507,7 +606,7 @@ List match_min_Haversine (NumericVector lat1,
             lat2j < box_max_lat &&
             lon2j > box_min_lon &&
             lon2j < box_max_lon) {
-          cur_dist_km_new = haversine_distance(lati, loni, lat2j, lon2j);
+          cur_dist_km_new = haversine_distance(lati, loni, lat2j, lon2j, false);
           if (cur_dist_km_new < min_dist_km) {
             k = 0;
             k += j;
@@ -537,18 +636,23 @@ List match_min_Haversine (NumericVector lat1,
     }
 
     if (use_tbl) {
-      if (k >= tabl.length()) {
-        showValue("k", k); // #nocov
-        showValue("i", i); // #nocov
-        stop("k >= tabl.length"); // #nocov
+      if (k >= N3) {
+        // # nocov start
+        if (i <= INT_MAX && k <= INT_MAX) {
+          error("k >= tabl.length; k = %d; i = %d", k, i);
+        }
+        error("k >= tabl.length");
+        // # nocov start
       }
       out[i] = tabl[k];
       out2[i] = min_dist_km;
     } else {
-      if (k >= lon2.length()) {
-        showValue("k", k); // #nocov
-        showValue("i", i); // #nocov
-        stop("k >= tabl.length"); // #nocov
+      if (k >= N2) {
+        // # nocov start
+        if (i <= INT_MAX && k <= INT_MAX) {
+          error("k >= tabl.length; k = %d; i = %d", k, i);
+        }
+        error("k >= lon2.length");
       }
       ++k;  // for R indexing
       out[i] = k;
@@ -556,8 +660,11 @@ List match_min_Haversine (NumericVector lat1,
     }
   }
 
-  List mat = List::create(Named("pos") = out,
-                          Named("dist") = out2);
+  SEXP mat = PROTECT(allocVector(VECSXP, 2));
+  ++n_protect;
+  SET_VECTOR_ELT(mat, 0, Out);
+  SET_VECTOR_ELT(mat, 1, Out2);
+  UNPROTECT(n_protect);
   return mat;
 }
 
