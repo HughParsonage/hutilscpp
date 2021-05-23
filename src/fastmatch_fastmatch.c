@@ -433,14 +433,14 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP hashOnly, SEXP Fin, SEXP nthread
 #endif
 {
   /* short vector - everything is int */
-  int i = 0, n = LENGTH(x);
+  int n = LENGTH(x);
   int *v = INTEGER(r = allocVector(INTSXP, n));
   if (type == INTSXP) {
     int *k = INTEGER(x);
 #if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
 #endif
-    for (i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
       v[i] = get_hash_int(h, k[i], nmv);
     }
   } else if (type == REALSXP) {
@@ -448,12 +448,12 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP hashOnly, SEXP Fin, SEXP nthread
 #if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
 #endif
-    for (i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
       v[i] = get_hash_real(h, k[i], nmv);
     }
   } else {
     SEXP *k = (SEXP*) DATAPTR(x);
-    for (i = 0; i < n; i++)
+    for (int i = 0; i < n; i++)
       v[i] = get_hash_ptr(h, k[i], nmv);
   }
 }

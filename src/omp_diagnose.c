@@ -26,18 +26,18 @@ SEXP Chas_openmp() {
 // whether to warn
 // messages
 
+#ifndef _OPENMP
+SEXP Cdiagnose_omp(SEXP Threads_requested) {
+  return ScalarInteger(0);
+}
+#endif
+
+#ifdef _OPENMP
 SEXP Cdiagnose_omp(SEXP Threads_requested) {
   int threads_requested = asInteger(Threads_requested);
-
-
-#ifndef _OPENMP
-  return ScalarInteger(0);
-#endif
-
   int n_procs = 1;
-#ifdef _OPENMP
   n_procs = omp_get_num_procs();
-#endif
+
 
   if (threads_requested > 0 && threads_requested <= n_procs) {
     return ScalarInteger(OPENMP_REQUEST_OK);
@@ -54,4 +54,4 @@ SEXP Cdiagnose_omp(SEXP Threads_requested) {
 }
 
 // # nocov end
-
+#endif
