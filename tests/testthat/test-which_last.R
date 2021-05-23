@@ -370,6 +370,7 @@ test_that("which_first long", {
              error = function(e) {
                e$m
              })
+  expect_true(exists("x"))
   skip_if(is.character(x), message = paste0("error during allocation: ", x))
   expect_equal(which_first(x > 2L), 0L)
   expect_equal(which_last(x == 0), length(x))
