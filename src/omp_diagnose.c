@@ -27,31 +27,50 @@ SEXP Chas_openmp() {
 // messages
 
 #ifndef _OPENMP
-SEXP Cdiagnose_omp(SEXP Threads_requested) {
+int diagnose_omp(SEXP Threads_requested) {
   return ScalarInteger(0);
+}
+
+int as_nThread(SEXP x) {
+  return 1;
 }
 #endif
 
 #ifdef _OPENMP
-SEXP Cdiagnose_omp(SEXP Threads_requested) {
-  int threads_requested = asInteger(Threads_requested);
+int diagnose_omp(SEXP Threads_requested) {
+  int threads_requested = asInteger2(Threads_requested);
   int n_procs = 1;
   n_procs = omp_get_num_procs();
 
 
   if (threads_requested > 0 && threads_requested <= n_procs) {
-    return ScalarInteger(OPENMP_REQUEST_OK);
+    return OPENMP_REQUEST_OK;
   }
 
   if (threads_requested < 0) {
-    return ScalarInteger(OPENMP_THREADS_NEGATIVE);
+    return OPENMP_THREADS_NEGATIVE;
   }
   if (threads_requested > n_procs) {
-    return ScalarInteger(OPENMP_THREADS_EXCEEDED);
+    return OPENMP_THREADS_EXCEEDED;
   }
 
-  return ScalarInteger(-1);
+  return -1;
+}
+
+
+
+int as_nThread(SEXP x) {
+  int n_procs = omp_get_num_procs();
+  int threads_requested = asInteger2(x);
+  if (threads_requested > 0 && threads_requested <= n_procs) {
+    return threads_requested;
+  }
+  return 1;
 }
 
 // # nocov end
 #endif
+
+SEXP Cdiagnose_omp(SEXP x) {
+  return ScalarInteger(diagnose_omp(x));
+}

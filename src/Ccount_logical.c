@@ -1,14 +1,10 @@
 #include "hutilscpp.h"
 
 SEXP Ccount_logical(SEXP xx, SEXP nthreads) {
-  if (TYPEOF(xx) != LGLSXP || TYPEOF(nthreads) != INTSXP ||
-      xlength(nthreads) != 1) {
+  if (TYPEOF(xx) != LGLSXP) {
     error("Internal error(Ccount_logical): Wrong types passed."); // # nocov
   }
-  int nThread = asInteger(nthreads);
-  if (nThread < 1) {
-    error("Internal error(Ccount_logical): Negative nthreads passed."); // # nocov
-  }
+  int nThread = as_nThread(nthreads);
   R_xlen_t n = xlength(xx);
   R_xlen_t trues = 0;
   R_xlen_t nas = 0;
@@ -41,7 +37,4 @@ SEXP Ccount_logical(SEXP xx, SEXP nthreads) {
   REAL(o)[2] = nas;
   UNPROTECT(1);
   return o;
-
-
-
 }

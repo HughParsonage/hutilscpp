@@ -45,7 +45,7 @@ R_xlen_t sum_isna_complx(SEXP x) {
 
 R_xlen_t sum_isna(SEXP x, SEXP nthreads) {
   R_xlen_t N = xlength(x);
-  int nThread = asInteger(nthreads);
+  int nThread = as_nThread(nthreads);
   switch(TYPEOF(x)) {
   case LGLSXP:
     return sum_isna_int(LOGICAL(x), N, nThread);

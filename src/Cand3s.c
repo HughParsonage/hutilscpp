@@ -7,7 +7,7 @@ SEXP Cand3s_par(SEXP xx, SEXP oxx, SEXP x11, SEXP x22,
                SEXP BB,
                SEXP CC,
                SEXP nthreads) {
-  int nThread = asInteger(nthreads);
+  int nThread = as_nThread(nthreads);
   const int * x = INTEGER(xx);
   const int * y = INTEGER(yy);
   const int * z = INTEGER(zz);
@@ -621,13 +621,10 @@ SEXP Csum3s_par(SEXP xx, SEXP oxx, SEXP x11, SEXP x22,
                 SEXP Aampersand,
                 SEXP nthreads) {
 
-  if (TYPEOF(nthreads) != INTSXP ||
-      xlength(nthreads) != 1L) {
-    return R_NilValue;
-  }
+
   // ampersand TRUE => sum_and3,  FALSE  => sum_or3
   const bool ampersand = asLogical(Aampersand);
-  int nThread = asInteger(nthreads);
+  int nThread = as_nThread(nthreads);
   const int * x = INTEGER(xx);
   const int * y = INTEGER(yy);
   const int * z = INTEGER(zz);

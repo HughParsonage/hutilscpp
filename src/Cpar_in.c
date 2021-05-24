@@ -11,7 +11,7 @@ SEXP Cpar_in_int(SEXP xx, SEXP yy, SEXP nthreads) {
   int tn = xlength(yy);
   const int * xp = INTEGER(xx);
   const int * yp = INTEGER(yy);
-  int nThread = asInteger(nthreads);
+  int nThread = as_nThread(nthreads);
   SEXP ans = PROTECT(allocVector(LGLSXP, N));
   int * restrict ansp = LOGICAL(ans);
 #if defined _OPENMP && _OPENMP >= 201511
