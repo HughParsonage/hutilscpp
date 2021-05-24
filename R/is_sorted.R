@@ -20,7 +20,7 @@ is_sorted <- function(x, asc = NA) {
             length(asc) == 1L)
   ans <- .Call("Cis_sorted", x, asc, PACKAGE = packageName())
   if (is.null(ans)) {
-    return(!is.unsorted(x))
+    return(!is.unsorted(x)) # nocov
   }
   ans
 }
@@ -31,7 +31,7 @@ isntSorted <- function(x, asc = NA) {
             length(asc) == 1L)
   ans <- .Call("Cisnt_sorted", x, asc, PACKAGE = packageName())
   if (is.null(ans)) {
-    stop("`x` was type ", typeof(x), ", which is not yet supported.")
+    stop("`x` was type ", typeof(x), ", which is not yet supported.") # nocov
   }
   ans
 }
