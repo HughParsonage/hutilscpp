@@ -158,7 +158,7 @@ match_min_Haversine <- function(lat,
                                 lon,
                                 addresses_lat,
                                 addresses_lon,
-                                tabl,
+                                tabl = NULL,
                                 cartR = -1,
                                 dist0_km = 0.01,
                                 verify_cartR = FALSE,
@@ -170,6 +170,9 @@ match_min_Haversine <- function(lat,
   }
   if (length(addresses_lat) != length(addresses_lon)) {
     stop("length(lat2) != length(lon2)")
+  }
+  if (is.null(tabl)) {
+    tabl <- seq_along(lat)
   }
   if (is.integer(lat)) {
     lat <- as.double(lat)
@@ -194,10 +197,10 @@ match_min_Haversine <- function(lat,
             length(addresses_lat) <= .Machine$integer.max)
 
   if (cramsg <- isnt_number(cartR, na.bad = TRUE, infinite.bad = FALSE)) {
-    stop(attr(cramsg, "ErrorMessage"))
+    stop(attr(cramsg, "ErrorMessage")) # nocov
   }
   if (d0amsg <- isnt_number(dist0_km, na.bad = TRUE, infinite.bad = FALSE)) {
-    stop(attr(d0amsg, "ErrorMessage"))
+    stop(attr(d0amsg, "ErrorMessage")) # nocov
   }
   out <- .Call("C_match_min_Haversine",
                lat,
