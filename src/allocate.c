@@ -1,4 +1,4 @@
-#include "hutilsc.h"
+#include "hutilscpp.h"
 
 SEXP Callocate0_int(SEXP N, SEXP nThread) {
   if (xlength(N) != 1 || (TYPEOF(N) != INTSXP && TYPEOF(N) != REALSXP)) {

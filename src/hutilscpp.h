@@ -15,6 +15,11 @@
 #include <omp.h>
 #endif
 
+#if (__GNUC__ > 7) || \
+((__GNUC__ == 7) && (__GNUC_MINOR__ > 3))
+#define BUILTIN_ADD_OVERFLOW_EXIST
+#endif
+
 #define DEBUG 0
 
 // int op = !(eq || gt || lt) ? 0 : (eq ? (gt ? 2 : (lt ? 3 : 1)) : (gt ? 4 : 5));
@@ -54,18 +59,7 @@ R_xlen_t sum_isna(SEXP x, SEXP nthreads) ;
 
 // character
 bool string_equaln(const char * x, int nx, const char * y);
-bool all_digits_4_12(const char * xi);
-bool all_digits(const char * xi, size_t nchari);
-int char2int(const char * x, int s);
-int char12_to_int(const char * x);
-int nth_digit_of(int x, int n);
-unsigned char nth_char(int x, int n);
-char digit2char(int d);
-int n_digits0(unsigned int x);
 
-
-// character
-SEXP do_pad0(SEXP x, const int w);
 
 float ssqrt_fast(float x);
 unsigned int radix_find(int a, unsigned int x0, unsigned int x1, const int * k1, unsigned int * tbl);
