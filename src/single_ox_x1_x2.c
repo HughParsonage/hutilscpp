@@ -1,4 +1,4 @@
-#include "hutilsc.h"
+#include "hutilscpp.h"
 
 bool isingle_ox_x1_x2(int x, int oix, int x1, int x2) {
   switch(oix) {
