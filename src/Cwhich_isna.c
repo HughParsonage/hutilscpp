@@ -21,8 +21,6 @@ SEXP Cwhich_isna(SEXP x, SEXP Isnt, SEXP nthreads) {
     switch(TYPEOF(x)) {
     case LGLSXP: {
       const int * xp = LOGICAL(x);
-      SEXP ans = PROTECT(allocVector(INTSXP, n));
-      int * restrict ansp = INTEGER(ans);
       if (isnt) {
         for (R_xlen_t i = 0; i < N; ++i) {
           ansp[j] = i + 1;
