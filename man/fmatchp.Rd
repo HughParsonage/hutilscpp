@@ -10,7 +10,8 @@ fmatchp(
   table,
   nomatch = NA_integer_,
   nThread = getOption("hutilscpp.nThread", 1L),
-  fin = FALSE
+  fin = FALSE,
+  whichFirst = 0L
 )
 
 finp(x, table, nThread = getOption("hutilscpp.nThread", 1L))
@@ -23,6 +24,10 @@ finp(x, table, nThread = getOption("hutilscpp.nThread", 1L))
 \item{fin}{\code{TRUE | FALSE} Behaviour of return value when value found in
 \code{table}. If \code{FALSE}, return the index of \code{table};
 if \code{TRUE}, return \code{TRUE}.}
+
+\item{whichFirst}{\code{integer(1)} If \code{0L}, not used. If positive,
+returns the index of the first element in \code{x} found in \code{table};
+if negative, returns the last element in \code{x} found in \code{table}.}
 }
 \description{
 \code{fastmatch::fmatch} and logical versions, with parallelization.

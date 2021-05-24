@@ -215,22 +215,39 @@ static double NA_int2real(hash_index_t res) {
 }
 
 /* the only externally visible function to be called from R */
-SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP hashOnly, SEXP Fin, SEXP nthreads) {
+SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP hashOnly, SEXP Fin, SEXP WhichFirst, SEXP nthreads) {
   int nThread = asInteger(nthreads);
+  if (TYPEOF(WhichFirst) != INTSXP ||
+      xlength(WhichFirst) != 1) {
+    error("Internal error(fmatch): WhichFirst not int."); // # nocov
+  }
+  const int whichfirst = asInteger(WhichFirst);
   const bool fin = asLogical(Fin);
   SEXP a;
   SEXPTYPE type;
   hash_t *h = 0;
   int nmv = asInteger(nonmatch), np = 0, y_to_char = 0, y_factor = 0, hash_only = asInteger(hashOnly);
-  if (fin) {
+  if (fin | whichfirst) {
     nmv = 0; // fin should cause 0 in result
   }
   hash_index_t n = XLENGTH(x);
 
   /* edge-cases of 0 length */
-  if (n == 0) return allocVector(INTSXP, 0);
-  if (XLENGTH(y) == 0) { /* empty table -> vector full of nmv */
-  int *ai;
+  if (n == 0) {
+    if (whichfirst) {
+      return ScalarLength(0);
+    }
+    return allocVector(fin ? LGLSXP : INTSXP, 0);
+  }
+  if (XLENGTH(y) == 0) {
+    if (whichfirst) {
+      return ScalarLength(0);
+    }
+    if (fin) {
+      return LogicalN(n);
+    }
+    // empty table -> vector full of nmv
+    int *ai;
     hash_index_t ii;
     a = allocVector(INTSXP, n);
     ai = INTEGER(a);
@@ -347,8 +364,9 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP hashOnly, SEXP Fin, SEXP nthread
   }
 
   { /* query the hash table */
-    SEXP r;
+
     if (fin) {
+      SEXP r;
       /* short vector - everything is int */
       R_xlen_t i = 0, n = xlength(x);
       int *v = LOGICAL(r = allocVector(LGLSXP, n));
@@ -376,60 +394,126 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP hashOnly, SEXP Fin, SEXP nthread
       if (np) UNPROTECT(np);
       return r;
     }
-#ifdef LONG_VECTOR_SUPPORT
-    if (IS_LONG_VEC(x)) {
-      hash_index_t i, n = XLENGTH(x);
-      double *v = REAL(r = allocVector(REALSXP, n));
-      if (nmv == NA_INTEGER) {
-        /* we have to treat nmv = NA differently,
-         because is has to be transformed into
-         NA_REAL in the result. To avoid checking
-         when nmv is different, we have two paths */
+
+    if (whichfirst) {
+      R_xlen_t wo = 0;
+      if (whichfirst > 0) {
+        // which_first
+        R_xlen_t n = xlength(x);
         if (type == INTSXP) {
           int *k = INTEGER(x);
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-          for (i = 0; i < n; i++) {
-            v[i] = NA_int2real(get_hash_int(h, k[i], NA_INTEGER));
+          for (R_xlen_t i = 0; i < n; i++) {
+            if (get_hash_int(h, k[i], nmv) != 0) {
+              wo = i + 1;
+              break;
+            }
           }
         } else if (type == REALSXP) {
           double *k = REAL(x);
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-          for (i = 0; i < n; i++) {
-            v[i] = NA_int2real(get_hash_real(h, k[i], NA_INTEGER));
+          for (R_xlen_t i = 0; i < n; i++) {
+            if (get_hash_real(h, k[i], nmv) != 0) {
+              wo = i + 1;
+              break;
+            }
           }
         } else {
           SEXP *k = (SEXP*) DATAPTR(x);
-          for (i = 0; i < n; i++)
-            v[i] = NA_int2real(get_hash_ptr(h, k[i], NA_INTEGER));
+          for (R_xlen_t i = 0; i < n; i++) {
+            if (get_hash_ptr(h, k[i], nmv) != 0) {
+              wo = i + 1;
+              break;
+            }
+          }
         }
-      } else { /* no need to transcode nmv */
+      } else {
+        // which_last
+        R_xlen_t n = xlength(x);
         if (type == INTSXP) {
           int *k = INTEGER(x);
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-          for (i = 0; i < n; i++) {
-            v[i] = (double) get_hash_int(h, k[i], nmv);
+          for (R_xlen_t i = n - 1; i >= 0; i--) {
+            if (get_hash_int(h, k[i], nmv) != 0) {
+              wo = i + 1;
+              break;
+            }
           }
         } else if (type == REALSXP) {
           double *k = REAL(x);
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-          for (i = 0; i < n; i++) {
-            v[i] = (double) get_hash_real(h, k[i], nmv);
+          for (R_xlen_t i = n - 1; i >= 0; i--) {
+            if (get_hash_real(h, k[i], nmv) != 0) {
+              wo = i + 1;
+              break;
+            }
           }
         } else {
           SEXP *k = (SEXP*) DATAPTR(x);
-          for (i = 0; i < n; i++)
-            v[i] = (double) get_hash_ptr(h, k[i], nmv);
+          for (R_xlen_t i = n - 1; i >= 0; i--) {
+            if (get_hash_ptr(h, k[i], nmv) != 0) {
+              wo = i + 1;
+              break;
+            }
+          }
         }
       }
-    } else
+      if (np) UNPROTECT(np);
+      return ScalarLength(wo);
+    }
+
+
+    SEXP r;
+#ifdef LONG_VECTOR_SUPPORT
+      if (IS_LONG_VEC(x)) {
+        hash_index_t i, n = XLENGTH(x);
+        double *v = REAL(r = allocVector(REALSXP, n));
+        if (nmv == NA_INTEGER) {
+          /* we have to treat nmv = NA differently,
+           because is has to be transformed into
+           NA_REAL in the result. To avoid checking
+           when nmv is different, we have two paths */
+          if (type == INTSXP) {
+            int *k = INTEGER(x);
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread)
+#endif
+            for (i = 0; i < n; i++) {
+              v[i] = NA_int2real(get_hash_int(h, k[i], NA_INTEGER));
+            }
+          } else if (type == REALSXP) {
+            double *k = REAL(x);
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread)
+#endif
+            for (i = 0; i < n; i++) {
+              v[i] = NA_int2real(get_hash_real(h, k[i], NA_INTEGER));
+            }
+          } else {
+            SEXP *k = (SEXP*) DATAPTR(x);
+            for (i = 0; i < n; i++)
+              v[i] = NA_int2real(get_hash_ptr(h, k[i], NA_INTEGER));
+          }
+        } else { /* no need to transcode nmv */
+          if (type == INTSXP) {
+            int *k = INTEGER(x);
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread)
+#endif
+            for (i = 0; i < n; i++) {
+              v[i] = (double) get_hash_int(h, k[i], nmv);
+            }
+          } else if (type == REALSXP) {
+            double *k = REAL(x);
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread)
+#endif
+            for (i = 0; i < n; i++) {
+              v[i] = (double) get_hash_real(h, k[i], nmv);
+            }
+          } else {
+            SEXP *k = (SEXP*) DATAPTR(x);
+            for (i = 0; i < n; i++)
+              v[i] = (double) get_hash_ptr(h, k[i], nmv);
+          }
+        }
+      } else
 #endif
 {
   /* short vector - everything is int */
@@ -457,9 +541,9 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP hashOnly, SEXP Fin, SEXP nthread
       v[i] = get_hash_ptr(h, k[i], nmv);
   }
 }
-    if (np) UNPROTECT(np);
-    return r;
+      if (np) UNPROTECT(np);
+      return r;
+    }
   }
-}
 
 
