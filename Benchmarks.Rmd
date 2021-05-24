@@ -1,0 +1,44 @@
+---
+title: "Benchmarks"
+author: "Hugh Parsonage"
+date: "2021-05-24"
+output: html_document
+---
+
+```{r START}
+cat(as.character(START <- Sys.time()), "\n")
+options(digits = 2)
+options(hutilscpp.nThread = 10L)
+```
+
+```{r pkgInstallation, include = FALSE}
+library(bench)
+library(hutilscpp)
+allocate0_except <- hutilscpp:::allocate0_except
+```
+
+```{r install_time}
+cat(difftime(Sys.time(), START), "\n")
+```
+
+
+```{r x1}
+system_time(x1 <- allocate0_except(2^31 - 2, c(1e8, 21e8), c(1L, -1L)))
+```
+
+## `which_first`
+
+```{r which_firstlast}
+system_time(which_first(x1 != 0))
+system_time(which_last(x1 != 0))
+```
+
+## `and3s`
+
+```{r and3s}
+system_time(and3s(x1 != 23L, x1 >= 0L, x1 == 0L))
+system_time(and3s(x1 != 0L, x1 >= 0L, x1 == 0L))
+```
+
+
+

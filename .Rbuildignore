@@ -7,3 +7,4 @@
 ^hutilscpp\.Rproj$
 ^\.Rproj\.user$
 ^\.github/workflows$
+^Benchmarks\.Rmd$
