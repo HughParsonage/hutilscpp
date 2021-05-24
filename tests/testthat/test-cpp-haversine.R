@@ -68,6 +68,16 @@ test_that("match_min_Haversine", {
 
   expect_identical(match_min_Haversine(lat1, lon1, lat2, lon2, 0L)[[1L]], c(5L, 5L))
   expect_identical(match_min_Haversine(lat1, lon1, lat2, lon2, 101:105)[[1L]], c(5L, 5L) + 100L)
+
+  expect_identical(match_min_Haversine(as.integer(lat1),
+                                       as.integer(lon1),
+                                       lat2,
+                                       lon2),
+                   match_min_Haversine(as.double(as.integer(lat1)),
+                                       as.double(as.integer(lon1)),
+                                       lat2,
+                                       lon2))
+
 })
 
 test_that("match_min_Haversine excl_self", {
