@@ -54,6 +54,7 @@ bool isingle_ox_x1_x2(int x, int oix, int x1, int x2);
 
 bool do_is_safe2int(double x);
 int dbl_is_int(double x);
+int sex2int1(SEXP x);
 
 R_xlen_t sum_isna(SEXP x, SEXP nthreads) ;
 
