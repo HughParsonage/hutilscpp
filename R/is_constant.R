@@ -102,11 +102,13 @@ is_constant <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
     stop("`x` was not atomic. ",
          "Such objects are not supported.")
   }
-  check_omp(nThread)
+  nThread <- check_omp(nThread)
   ans <- .Call("Cis_constant", x, nThread, PACKAGE = packageName())
+  # nocov start
   if (is.null(ans)) {
     return(identical(rep_len(x[1], length(x)), x))
   }
+  # nocov end
   ans
 }
 
@@ -146,6 +148,7 @@ isntConstant <- function(x) {
   }
 
   ans <- .Call("Cisnt_constant", x, PACKAGE = packageName())
+  # nocov start
   if (is.null(ans)) {
     x1 <- x[1L]
     for (i in seq_along(ans)) {
@@ -155,5 +158,6 @@ isntConstant <- function(x) {
     }
     return(0L)
   }
+  # nocov end
   ans
 }
