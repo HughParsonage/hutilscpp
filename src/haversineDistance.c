@@ -1,12 +1,13 @@
 #include "hutilscpp.h"
 
 
-// #nocov start
+// # nocov start
 
 void showValue(const char* what, double x) {
   // return 0;
 }
 
+// # nocov end
 
 
 double sinhalfsq (double x) {
@@ -645,7 +646,7 @@ SEXP C_match_min_Haversine(SEXP Lat1,
           error("k >= tabl.length; k = %d; i = %d", k, i);
         }
         error("k >= tabl.length");
-        // # nocov start
+        // # nocov end
       }
       out[i] = tabl[k];
       out2[i] = min_dist_km;
@@ -656,6 +657,7 @@ SEXP C_match_min_Haversine(SEXP Lat1,
           error("k >= tabl.length; k = %d; i = %d", k, i);
         }
         error("k >= lon2.length");
+        // # nocov end
       }
       ++k;  // for R indexing
       out[i] = k;
