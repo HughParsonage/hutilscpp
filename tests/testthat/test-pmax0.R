@@ -196,6 +196,12 @@ test_that("pmax0 sorted but all negative", {
   expect_equal(pmax0(-10:-1, sorted = TRUE), integer(10))
   expect_equal(pmax0(rep(-1, 10), sorted = TRUE), double(10))
   expect_equal(pmax0(-10:-1 + 0, sorted = TRUE), double(10))
+  z <- c(-10:-1, 0L)
+  zd <- as.double(z)
+  expect_identical(pmax0(z, sorted = TRUE, in_place = TRUE), integer(11))
+  expect_equal(z, integer(11))
+  expect_identical(pmax0(zd, sorted = TRUE, in_place = TRUE), double(11))
+  expect_equal(zd, double(11))
 })
 
 test_that("pmax0 altrep", {
@@ -211,4 +217,5 @@ test_that("pmax0 sorted double", {
   expect_equal(do_pmax0_radix_sorted_dbl(0.25), 0.25)
   expect_equal(do_pmax0_radix_sorted_dbl(-0.25), 0)
 })
+
 
