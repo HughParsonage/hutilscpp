@@ -1,9 +1,6 @@
 #include "hutilscpp.h"
 
 bool is_constant_int(const int * x, R_xlen_t N, int nThread) {
-  if (N <= 1) {
-    return true;
-  }
   const int x0 = x[0];
   char o = true;
 
@@ -17,9 +14,6 @@ bool is_constant_int(const int * x, R_xlen_t N, int nThread) {
 }
 
 bool is_constant_dbl(const double * x, R_xlen_t N, int nThread) {
-  if (N <= 1) {
-    return true;
-  }
   const double x0 = x[0];
   char o = true;
   if (ISNAN(x0)) {
@@ -43,9 +37,6 @@ bool is_constant_dbl(const double * x, R_xlen_t N, int nThread) {
 
 bool is_constant_chr(SEXP x) {
   R_xlen_t N = xlength(x);
-  if (N <= 1) {
-    return true;
-  }
   const char * x0 = CHAR(STRING_ELT(x, 0));
   int n0 = strlen(x0);
 
@@ -60,9 +51,6 @@ bool is_constant_chr(SEXP x) {
 
 bool is_constant_complex(SEXP x) {
   R_xlen_t N = xlength(x);
-  if (N <= 1) {
-    return true;
-  }
   Rcomplex x0 = COMPLEX_ELT(x, 0);
   double r0 = x0.r;
   double i0 = x0.i;
@@ -110,9 +98,6 @@ SEXP Cis_constant(SEXP x, SEXP nthreads) {
 }
 
 R_xlen_t isntConstant_int(const int * x, R_xlen_t N) {
-  if (N <= 1) {
-    return 0;
-  }
   int x0 = x[0];
   for (R_xlen_t i = 1; i < N; ++i) {
     if (x[i] != x0) {
@@ -123,9 +108,6 @@ R_xlen_t isntConstant_int(const int * x, R_xlen_t N) {
 }
 
 R_xlen_t isntConstant_dbl(const double * x, R_xlen_t N) {
-  if (N <= 1) {
-    return 0;
-  }
   double x0 = x[0];
   if (ISNAN(x0)) {
     for (R_xlen_t i = 1; i < N; ++i) {
@@ -145,9 +127,6 @@ R_xlen_t isntConstant_dbl(const double * x, R_xlen_t N) {
 
 R_xlen_t isntConstant_chr(SEXP x) {
   R_xlen_t N = xlength(x);
-  if (N <= 1) {
-    return 0;
-  }
   if (STRING_ELT(x, 0) == NA_STRING) {
     for (R_xlen_t i = 1; i < N; ++i) {
       if (STRING_ELT(x, i) != NA_STRING) {
@@ -169,9 +148,6 @@ R_xlen_t isntConstant_chr(SEXP x) {
 
 R_xlen_t isntConstant_complex(SEXP x) {
   R_xlen_t N = xlength(x);
-  if (N <= 1) {
-    return 0;
-  }
   const Rcomplex x0 = COMPLEX_ELT(x, 0);
   const double r0 = x0.r;
   const double i0 = x0.i;
@@ -187,9 +163,6 @@ R_xlen_t isntConstant_complex(SEXP x) {
 }
 
 R_xlen_t isntConstant_raw(const Rbyte * xp, R_xlen_t N) {
-  if (N <= 1) {
-    return 0;
-  }
   const Rbyte x0 = xp[0];
   for (R_xlen_t i = 1; i < N; ++i) {
     if (xp[i] != x0) {
