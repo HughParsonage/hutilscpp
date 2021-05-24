@@ -246,17 +246,9 @@ which_first <- function(expr,
     if (op == 7L) {
       o <-
         if (reverse) {
-          switch(typeof(lhs_eval),
-                 "integer" = switch(typeof(rhs_eval),
-                                    "integer" = do_which_last_xi_ini(lhs_eval, rhs_eval),
-                                    "double" =  do_which_last_xi_ind(lhs_eval, rhs_eval)),
-                 "double" = do_which_last_xd_ind(lhs_eval, rhs_eval, anyNA(rhs_eval)))
+          fmatchp(lhs_eval, rhs_eval, whichFirst = -1L)
         } else {
-          switch(typeof(lhs_eval),
-                 "integer" = switch(typeof(rhs_eval),
-                                    "integer" = do_which_first_xi_ini(lhs_eval, rhs_eval),
-                                    "double" =  do_which_first_xi_ind(lhs_eval, rhs_eval)),
-                 "double" = do_which_first_xd_ind(lhs_eval, rhs_eval, anyNA(rhs_eval)))
+          fmatchp(lhs_eval, rhs_eval, whichFirst = 1L)
         }
       return(R_xlen_t(o))
     }

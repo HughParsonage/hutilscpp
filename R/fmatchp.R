@@ -6,6 +6,10 @@
 #' \code{table}. If \code{FALSE}, return the index of \code{table};
 #' if \code{TRUE}, return \code{TRUE}.
 #'
+#' @param whichFirst \code{integer(1)} If \code{0L}, not used. If positive,
+#' returns the index of the first element in \code{x} found in \code{table};
+#' if negative, returns the last element in \code{x} found in \code{table}.
+#'
 #' @examples
 #' x <- c(1L, 4:5)
 #' y <- c(2L, 4:5)
@@ -14,11 +18,12 @@
 #' finp(x, y)
 #'
 #' @export
-fmatchp <- function(x, table, nomatch = NA_integer_, nThread = getOption("hutilscpp.nThread", 1L), fin = FALSE) {
+fmatchp <- function(x, table, nomatch = NA_integer_, nThread = getOption("hutilscpp.nThread", 1L), fin = FALSE,
+                    whichFirst = 0L) {
   nThread <- check_omp(nThread)
   stopifnot(is.integer(nomatch))
   check_TF(fin)
-  .Call("fmatch", x, table, nomatch, FALSE, fin, nThread, PACKAGE = packageName())
+  .Call("fmatch", x, table, nomatch, FALSE, fin, whichFirst, nThread, PACKAGE = packageName())
 }
 
 #' @rdname fmatchp
