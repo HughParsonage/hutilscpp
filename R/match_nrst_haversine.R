@@ -231,7 +231,7 @@ EmptiestQuarter <- function(x, y, minx = 1, maxx = -1, miny = 1, maxy = -1) {
 
 theEmptiestQuarters <- function(x, y, minx = 1, maxx = -1, miny = 1, maxy = -1, depth = 4L) {
   ad <- as.double
-  .Call("C_theEmptiestQuarters ", ad(x), ad(y), ad(minx), ad(maxx), ad(miny), ad(maxy), depth, PACKAGE = packageName())
+  .Call("C_theEmptiestQuarters", ad(x), ad(y), ad(minx), ad(maxx), ad(miny), ad(maxy), depth, PACKAGE = packageName())
 }
 
 

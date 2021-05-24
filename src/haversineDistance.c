@@ -359,8 +359,14 @@ SEXP C_theEmptiestQuarters(SEXP x, SEXP y,
   if (TYPEOF(Depth) != INTSXP || asInteger(Depth) > 256) {
     error("Depth is not integer or exceeds 256."); // # nocov
   }
+  if (TYPEOF(x) != REALSXP || TYPEOF(y) != REALSXP) {
+    error("x,y not REAL."); // # nocov
+  }
+  if (xlength(x) >= INT_MAX || xlength(x) != xlength(y)) {
+    error("x,y wrong lengths."); // # nocov
+  }
   int out[256] = {0};
-  theEmptiestQuarters(out, REAL(x), REAL(y), xlength(x),
+  theEmptiestQuarters(out, REAL(x), REAL(y), length(x),
                       asReal(minx),
                       asReal(maxx),
                       asReal(miny),
