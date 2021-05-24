@@ -39,7 +39,6 @@ SEXP CStringEqual(SEXP x, SEXP y) {
   if (xlength(y) == 1) {
     const char * y0 = CHAR(STRING_ELT(y, 0));
     int ny = strlen(y0);
-    Rprintf("ny = %d\n", ny);
     R_xlen_t N = xlength(x);
     for (R_xlen_t i = 0; i < N; ++i) {
       const char * xi = CHAR(STRING_ELT(x, i));
@@ -79,25 +78,6 @@ int validate_nchar1(SEXP x, bool return_size) {
   return 0;
 }
 
-int max_charsize(SEXP x) {
-  if (TYPEOF(x) != STRSXP) {
-    error("Internal error(validate_nchar1): x not a STRSXP."); // # nocov
-  }
-  R_xlen_t N = xlength(x);
-  int o = 0;
-  for (R_xlen_t i = 0; i < N; ++i) {
-    int xis = strlen(CHAR(STRING_ELT(x, i)));
-    o = xis > o ? xis : o;
-  }
-  return o;
-}
-
-bool is_space(SEXP x) {
-  const char * x0 = CHAR(STRING_ELT(x, 0));
-  char x00 = x0[0];
-  return x00 == SPACE;
-}
-
 
 //' @name where_square_bracket_opens
 //' @param x Character vector of characters.
@@ -110,32 +90,6 @@ bool is_space(SEXP x) {
 //'
 //' @noRd
 
-R_xlen_t where_square_bracket_opens(SEXP x, R_xlen_t i) {
-  if (TYPEOF(x) != STRSXP) {
-    error("Internal error(where_square_bracket_opens): TYPEOF(x) != STRSXP."); // # nocov
-  }
-  R_xlen_t N = xlength(x);
-
-  if (i < 0 || i >= N) {
-    return -1;
-  }
-  const char * Xi = CHAR(STRING_ELT(x, i));
-  char xi = Xi[0];
-  if (xi != STOP_SQBRK) {
-    return -1;
-  }
-  int depth = 0;
-  for (R_xlen_t k = i; k >= 0; --k) {
-    const char * Xk = CHAR(STRING_ELT(x, k));
-    char xk = Xk[0];
-    depth += (xk == STOP_SQBRK) - (xk == OPEN_SQBRK);
-    if (depth == 0) {
-      return k;
-    }
-  }
-
-  return 0;
-}
 
 SEXP Cwhere_square_bracket_opens(SEXP xx, SEXP ii) {
   if (TYPEOF(xx) != STRSXP || xlength(xx) >= INT_MAX) {
