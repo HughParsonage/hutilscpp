@@ -57,11 +57,20 @@ test_that("pmin0 sorted", {
   expect_equal(pmin0(x, sorted = TRUE), pmin(5:-6, 0))
 })
 
-test_that("pmin0 sorted but all negative", {
+test_that("pmin0 sorted but all positive", {
   expect_equal(pmin0(rep(1L, 10), sorted = TRUE), integer(10))
   expect_equal(pmin0(10:1, sorted = TRUE), integer(10))
   expect_equal(pmin0(rep(1, 10), sorted = TRUE), double(10))
   expect_equal(pmin0(10:1 + 0, sorted = TRUE), double(10))
+})
+
+test_that("pmin0 sorted but all negative", {
+  z <- c(10:1, 0L)
+  zd <- as.double(z)
+  expect_identical(pmin0(z, sorted = TRUE, in_place = TRUE), integer(11))
+  expect_equal(z, integer(11))
+  expect_identical(pmin0(zd, sorted = TRUE, in_place = TRUE), double(11))
+  expect_equal(zd, double(11))
 })
 
 test_that("pmin0 altrep", {
