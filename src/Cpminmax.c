@@ -199,7 +199,6 @@ SEXP Cpmin0_radix_sorted_dbl(SEXP xx,
       TYPEOF(nthreads) != INTSXP ||
       xlength(nthreads) != 1) {
     error("Cpmin0_radix_sorted_dbl.");
-    return R_NilValue;
   }
   int nThread = asInteger(nthreads);
   R_xlen_t N = xlength(xx);
