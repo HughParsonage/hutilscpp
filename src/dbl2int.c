@@ -32,6 +32,22 @@ int dbl2int(double x) {
   return (int)x;
 }
 
+int sex2int1(SEXP x) {
+  if (xlength(x) != 1) {
+    return NA_INTEGER;
+  }
+  switch(TYPEOF(x)) {
+  case LGLSXP:
+  case INTSXP:
+    return INTEGER_ELT(x, 0);
+  case REALSXP:
+    return dbl2int(REAL_ELT(x, 0));
+  default:
+    return NA_INTEGER;
+  }
+  return NA_INTEGER;
+}
+
 SEXP Cwhich_isnt_integerish(SEXP xx) {
   if (TYPEOF(xx) == INTSXP) {
     return ScalarInteger(0);
