@@ -16,15 +16,16 @@ jobs:
   rcmdchecker:
     name: Rcmdcheck
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@master
+      - name: Install Package Dependencies
+        run: |-
+            Rscript -e "install.packages(c('rcmdcheck', 'remotes'), repos = 'https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
+            Rscript -e "remotes::install_deps(dependencies = TRUE, repos = 'https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
+      - name: Run Check
+        run: Rscript -e "rcmdcheck::rcmdcheck()"
     container: rocker/verse:latest
-    - name: Checkout Repository
-      uses: actions/checkout@master
-    - name: Install Package Dependencies
-      run: |-
-          Rscript -e "install.packages(c('rcmdcheck', 'remotes'), repos = 'https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
-          Rscript -e "remotes::install_deps(dependencies = TRUE, repos = 'https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
-    - name: Run Check
-      run: Rscript -e "rcmdcheck::rcmdcheck()"
   test-r-sanitizers:
     name: r-package (ubuntu-latest, R-devel, GCC ASAN/UBSAN)
     timeout-minutes: 60
