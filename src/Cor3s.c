@@ -8,7 +8,7 @@ SEXP Cor3_par(SEXP xx, SEXP oxx, SEXP x11, SEXP x22,
               SEXP BB,
               SEXP CC,
               SEXP nthreads) {
-  int nThread = asInteger(nthreads);
+  int nThread = as_nThread(nthreads);
   const int * x = INTEGER(xx);
   const int * y = INTEGER(yy);
   const int * z = INTEGER(zz);

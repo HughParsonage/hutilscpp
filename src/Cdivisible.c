@@ -2,9 +2,9 @@
 
 const bool ON_TWOS_COMPLEMENT = (-1 == ~0);
 
-SEXP Cdivisible(SEXP xx, SEXP dd, SEXP nthread) {
+SEXP Cdivisible(SEXP xx, SEXP dd, SEXP nthreads) {
   R_xlen_t N = xlength(xx);
-  int nThread = asInteger(nthread);
+  int nThread = as_nThread(nthreads);
 
   if (TYPEOF(xx) != INTSXP) {
     error("Internal error(Cdivisible): xx not INTSXP.");
@@ -24,7 +24,7 @@ SEXP Cdivisible(SEXP xx, SEXP dd, SEXP nthread) {
   return ans;
 }
 
-SEXP Cdivisible2(SEXP xx, SEXP nthread, SEXP KeepNas) {
+SEXP Cdivisible2(SEXP xx, SEXP nthreads, SEXP KeepNas) {
   R_xlen_t N = xlength(xx);
   // # nocov start
   if (!ON_TWOS_COMPLEMENT) {
@@ -39,7 +39,7 @@ SEXP Cdivisible2(SEXP xx, SEXP nthread, SEXP KeepNas) {
   }
   // # nocov end
 
-  int nThread = asInteger(nthread);
+  int nThread = as_nThread(nthreads);
   const bool keep_na = asLogical(KeepNas);
   SEXP out = PROTECT(allocVector(LGLSXP, N));
   int * restrict outp = LOGICAL(out);
@@ -83,7 +83,7 @@ SEXP Cdivisible16(SEXP xx, SEXP nthreads) {
   SEXP out = PROTECT(allocVector(LGLSXP, N));
   int * restrict outp = LOGICAL(out);
   const int * xp = INTEGER(xx);
-  int nThread = asInteger(nthreads);
+  int nThread = as_nThread(nthreads);
 
 #if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)

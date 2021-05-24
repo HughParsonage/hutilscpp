@@ -120,7 +120,7 @@ SEXP CfirstNonNegativeRadix(SEXP x, SEXP Mini, SEXP Maxi, SEXP Desc) {
     const double * xp = REAL(x);
     o = do_firstNonNegativeRadix_dbl(xp, N, mini, maxi, desc, 0);
   } else {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
   return ScalarLength(o);
 }
@@ -130,12 +130,10 @@ SEXP Cpmax0_radix_sorted_dbl(SEXP xx,
                              SEXP nthreads) {
   if (TYPEOF(xx) != REALSXP ||
       TYPEOF(InPlace) != LGLSXP ||
-      xlength(InPlace) != 1 ||
-      TYPEOF(nthreads) != INTSXP ||
-      xlength(nthreads) != 1) {
-    return R_NilValue;
+      xlength(InPlace) != 1) {
+    return R_NilValue; // # nocov
   }
-  int nThread = asInteger(nthreads);
+  int nThread = as_nThread(nthreads);
   R_xlen_t N = xlength(xx);
   double * x = REAL(xx);
   if (N == 0) {
@@ -195,12 +193,10 @@ SEXP Cpmin0_radix_sorted_dbl(SEXP xx,
                              SEXP nthreads) {
   if (TYPEOF(xx) != REALSXP ||
       TYPEOF(InPlace) != LGLSXP ||
-      xlength(InPlace) != 1 ||
-      TYPEOF(nthreads) != INTSXP ||
-      xlength(nthreads) != 1) {
-    error("Cpmin0_radix_sorted_dbl.");
+      xlength(InPlace) != 1) {
+    return R_NilValue;
   }
-  int nThread = asInteger(nthreads);
+  int nThread = as_nThread(nthreads);
   R_xlen_t N = xlength(xx);
   double * x = REAL(xx);
   bool x0_positive = x[0] > 0;
@@ -255,12 +251,10 @@ SEXP Cpmax0_radix_sorted_int(SEXP xx,
                              SEXP nthreads) {
   if (TYPEOF(xx) != INTSXP ||
       TYPEOF(InPlace) != LGLSXP ||
-      xlength(InPlace) != 1 ||
-      TYPEOF(nthreads) != INTSXP ||
-      xlength(nthreads) != 1) {
-    return R_NilValue;
+      xlength(InPlace) != 1) {
+    return R_NilValue; // # nocov
   }
-  int nThread = asInteger(nthreads);
+  int nThread = as_nThread(nthreads);
   R_xlen_t N = xlength(xx);
   bool in_place = asLogical(InPlace);
   int * x = INTEGER(xx);
@@ -313,12 +307,10 @@ SEXP Cpmin0_radix_sorted_int(SEXP xx,
                              SEXP nthreads) {
   if (TYPEOF(xx) != INTSXP ||
       TYPEOF(InPlace) != LGLSXP ||
-      xlength(InPlace) != 1 ||
-      TYPEOF(nthreads) != INTSXP ||
-      xlength(nthreads) != 1) {
+      xlength(InPlace) != 1) {
     return R_NilValue;
   }
-  int nThread = asInteger(nthreads);
+  int nThread = as_nThread(nthreads);
   R_xlen_t N = xlength(xx);
   bool in_place = asLogical(InPlace);
   int * x = INTEGER(xx);
@@ -368,9 +360,7 @@ SEXP Cpmin0_radix_sorted_int(SEXP xx,
 }
 
 SEXP Cpmax0_bitwise(SEXP xx, SEXP InPlace, SEXP nthreads) {
-  if (TYPEOF(xx) != INTSXP ||
-      TYPEOF(nthreads) != INTSXP ||
-      xlength(nthreads) != 1) {
+  if (TYPEOF(xx) != INTSXP) {
     return R_NilValue;
   }
   bool in_place = asLogical(InPlace);
@@ -391,7 +381,7 @@ SEXP Cpmax0_bitwise(SEXP xx, SEXP InPlace, SEXP nthreads) {
     }
     return xx;
   }
-  int nThread = asInteger(nthreads);
+  int nThread = as_nThread(nthreads);
   R_xlen_t j = 0;
   const int * x = INTEGER(xx);
   while (j < N && x[j] >= 0) {
@@ -424,9 +414,7 @@ SEXP Cpmax0_bitwise(SEXP xx, SEXP InPlace, SEXP nthreads) {
 SEXP Cpmin0_bitwise(SEXP xx,
                     SEXP InPlace,
                     SEXP nthreads) {
-  if (TYPEOF(xx) != INTSXP ||
-      TYPEOF(nthreads) != INTSXP ||
-      xlength(nthreads) != 1) {
+  if (TYPEOF(xx) != INTSXP) {
     return R_NilValue;
   }
   bool in_place = asLogical(InPlace);
@@ -447,7 +435,7 @@ SEXP Cpmin0_bitwise(SEXP xx,
     }
     return xx;
   }
-  int nThread = asInteger(nthreads);
+  int nThread = as_nThread(nthreads);
 
   const int * x = INTEGER(xx);
   R_xlen_t j = 0;
@@ -482,7 +470,7 @@ SEXP Cpmax(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
   if (xlength(y) > N) {
     return Cpmax(y, x, keepNas, nthreads);
   }
-  int nThread = asInteger(nthreads);
+  int nThread = as_nThread(nthreads);
   bool keep_nas = asLogical(keepNas);
   // int switcher =
   //   (TYPEOF(x) == REALSXP) +
@@ -742,7 +730,7 @@ SEXP Cpmin(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
   if (xlength(y) > N) {
     return Cpmin(y, x, keepNas, nthreads);
   }
-  int nThread = asInteger(nthreads);
+  int nThread = as_nThread(nthreads);
   bool keep_nas = asLogical(keepNas);
   if (TYPEOF(x) == INTSXP &&
       TYPEOF(y) == INTSXP &&

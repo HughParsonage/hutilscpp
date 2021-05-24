@@ -26,7 +26,7 @@ int dbl_is_int(double x) {
 
 
 int dbl2int(double x) {
-  if (dbl_is_int(x) < 2) {
+  if (dbl_is_int(x) != 1) {
     return NA_INTEGER;
   }
   return (int)x;
