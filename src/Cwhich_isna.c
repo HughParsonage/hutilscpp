@@ -101,6 +101,7 @@ SEXP Cwhich_isna(SEXP x, SEXP Isnt, SEXP nthreads) {
     return ans;
   }
 
+ // # nocov start
   SEXP ans = PROTECT(allocVector(REALSXP, n));
   double * restrict ansp = REAL(ans);
   switch(TYPEOF(x)) {
@@ -189,4 +190,5 @@ SEXP Cwhich_isna(SEXP x, SEXP Isnt, SEXP nthreads) {
   }
   UNPROTECT(1);
   return ans;
+  // # nocov end
 }
