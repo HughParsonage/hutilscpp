@@ -14,5 +14,5 @@ test_that("which_notNA works", {
   expect_equal(which_notNA(c(NA, NA, 1L)), 3L)
   expect_equal(which_notNA(c(NA, NA, 1)), 3L)
   expect_equal(which_notNA(c(NA, NA, '')), 3L)
-  expect_equal(which_NA(c(NA_real_ + 1i, 0, 1i)), 2:3)
+  expect_equal(which_notNA(c(NA_real_ + 1i, 0, 1i)), 2:3)
 })
