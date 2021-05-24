@@ -2,6 +2,7 @@
 
 SEXP Crangel4(SEXP x) {
   R_xlen_t N = xlength(x);
+  // # nocov start
   if (N == 0) {
     SEXP ans = PROTECT(allocVector(INTSXP, 4));
     INTEGER(ans)[0] = 1;
@@ -11,6 +12,7 @@ SEXP Crangel4(SEXP x) {
     UNPROTECT(1);
     return ans;
   }
+  // # nocov end
   const int * xp = LOGICAL(x);
   bool has_true = false;
   bool has_false = false;
@@ -61,6 +63,7 @@ SEXP Crangel4(SEXP x) {
 
 SEXP Crangei4(SEXP x) {
   R_xlen_t N = xlength(x);
+  // # nocov start
   if (N == 0) {
     SEXP ans = PROTECT(allocVector(INTSXP, 4));
     INTEGER(ans)[0] = INT_MAX;
@@ -70,6 +73,7 @@ SEXP Crangei4(SEXP x) {
     UNPROTECT(1);
     return ans;
   }
+  // # nocov end
   const int * xp = INTEGER(x);
   int xmin = xp[0], xmax = xp[0];
   R_xlen_t wmin = 1, wmax = 1;
@@ -111,6 +115,7 @@ SEXP Crangei4(SEXP x) {
 
 SEXP Cranged4(SEXP x) {
   R_xlen_t N = xlength(x);
+  // # nocov start
   if (N == 0) {
     SEXP ans = PROTECT(allocVector(REALSXP, 4));
     REAL(ans)[0] = R_PosInf;
@@ -120,6 +125,7 @@ SEXP Cranged4(SEXP x) {
     UNPROTECT(1);
     return ans;
   }
+  // # nocov end
   const double * xp = REAL(x);
   double xp0 = xp[0];
   R_xlen_t j = 1;
@@ -127,6 +133,7 @@ SEXP Cranged4(SEXP x) {
     xp0 = xp[j];
     ++j;
   }
+
   double xmin = xp0, xmax = xp0;
 
   R_xlen_t wmin = j, wmax = j;
@@ -154,14 +161,120 @@ SEXP Cranged4(SEXP x) {
 
 SEXP Crange(SEXP x) {
   switch(TYPEOF(x)) {
-  case NILSXP:
-    return R_NilValue;
   case LGLSXP:
     return Crangel4(x);
   case INTSXP:
     return Crangei4(x);
   case REALSXP:
     return Cranged4(x);
+  }
+  return R_NilValue;
+}
+
+SEXP Crangel2_nanyNA(SEXP x, int nThread) {
+  R_xlen_t N = xlength(x);
+  if (TYPEOF(x) != LGLSXP || xlength(x) == 0) {
+    return R_NilValue;  // # nocov
+  }
+  const int * xp = LOGICAL(x);
+  bool any_false = false;
+  bool any_true = false;
+  if (xp[0]) {
+    any_true = true;
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread) reduction(|| : any_false)
+#endif
+    for (R_xlen_t i = 1; i < N; ++i) {
+    any_false |= xp[i] == 0;
+  }
+  } else {
+    any_true = false;
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread) reduction(|| : any_true)
+#endif
+    for (R_xlen_t i = 1; i < N; ++i) {
+      any_true |= xp[i];
+    }
+  }
+  SEXP ans = PROTECT(allocVector(LGLSXP, 2));
+  LOGICAL(ans)[0] = any_false ? 0 : 1;
+  LOGICAL(ans)[1] = any_true ? 1 : 0;
+  UNPROTECT(1);
+  return ans;
+}
+
+SEXP Cminmax(SEXP x, SEXP emptyResult, SEXP nThread) {
+  R_xlen_t N = xlength(x);
+  if (N == 0) {
+    return emptyResult;
+  }
+  int nthreads = asInteger(nThread);
+
+  switch(TYPEOF(x)) {
+  case INTSXP: {
+    const int * xp = INTEGER(x);
+    int xmin = xp[0];
+    int xmax = xp[0];
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nthreads) reduction(min : xmin) reduction(max : xmax)
+#endif
+    for (R_xlen_t i = 1; i < N; ++i) {
+      int xi = xp[i];
+      bool nochange = xi >= xmin && xi <= xmax;
+      if (nochange) continue;
+      xmin = (xi < xmin) ? xi : xmin;
+      xmax = (xi > xmax) ? xi : xmax;
+    }
+    SEXP ans = PROTECT(allocVector(INTSXP, 2));
+    INTEGER(ans)[0] = xmin;
+    INTEGER(ans)[1] = xmax;
+    UNPROTECT(1);
+    return ans;
+  }
+    break;
+  case REALSXP: {
+    const double * xp = REAL(x);
+    double xmin = xp[0];
+    double xmax = xp[0];
+    if (ISNAN(xmin)) {
+      xmin = R_PosInf;
+    }
+    if (ISNAN(xmax)) {
+      xmax = R_NegInf;
+    }
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nthreads) reduction(min : xmin) reduction(max : xmax)
+#endif
+    for (R_xlen_t i = 1; i < N; ++i) {
+      double xi = xp[i];
+      bool nochange = xi >= xmin && xi <= xmax;
+      if (nochange || ISNAN(xi)) continue;
+      xmin = (xi < xmin) ? xi : xmin;
+      xmax = (xi > xmax) ? xi : xmax;
+    }
+    SEXP ans = PROTECT(allocVector(REALSXP, 2));
+    REAL(ans)[0] = xmin;
+    REAL(ans)[1] = xmax;
+    UNPROTECT(1);
+    return ans;
+  }
+    break;
+  case STRSXP: {
+    const char * xmin = CHAR(STRING_ELT(x, 0));
+    const char * xmax = CHAR(STRING_ELT(x, 0));
+    for (R_xlen_t i = 1; i < N; ++i) {
+      const char * xi = CHAR(STRING_ELT(x, i));
+      xmin = strcmp(xi, xmin) < 0 ? xi : xmin;
+      xmax = strcmp(xi, xmax) > 0 ? xi : xmax;
+    }
+    SEXP ans = PROTECT(allocVector(STRSXP, 2));
+    SET_STRING_ELT(ans, 0, Rf_mkChar(xmin));
+    SET_STRING_ELT(ans, 1, Rf_mkChar(xmax));
+    UNPROTECT(1);
+    return ans;
+  }
+    break;
+
   }
   return R_NilValue;
 }
