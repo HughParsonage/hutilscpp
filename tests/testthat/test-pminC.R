@@ -6,6 +6,7 @@ test_that("pminC int", {
   expect_identical(pminC(y, 0L, in_place = TRUE), res)
   expect_equal(pminC(y, 0L), y)
   expect_equal(pminC(y, 0), y)
+  expect_equal(pminC(x, 3, dbl_ok = FALSE), pmin(x, 3))
 
 
 })
@@ -30,6 +31,7 @@ test_that("pminC Error handling", {
   expect_error(pminC(1:5, 0L, in_place = "not logical"))
   expect_error(pminC("abc", "abc"), regexp = "numeric")
   expect_error(pminC(0:1, "abc"), regexp = "numeric")
+  expect_message(pminC(1:5, 1.5), "Output is double")
 })
 
 test_that("pminC_real_real", {

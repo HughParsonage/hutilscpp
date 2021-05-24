@@ -21,10 +21,17 @@
 #' }
 #'
 #' @param dbl_ok \describe{
-#' \item{\code{TRUE | FALSE}, default: \code{TRUE}}{Is it acceptable to return
-#' a non-integer vector if \code{x} is integer? If \code{TRUE}, the default,
-#' if \code{x} is an integer vector, a double vector may be returned if
-#' \code{a} is not an integer.}
+#' \item{\code{logical(1)}, default: \code{NA}}{Is it acceptable to return
+#' a non-integer vector if \code{x} is integer?
+#'
+#' This argument will have effect \code{a} is both double and cannot be coerced to
+#' \code{integer}:
+#'
+#' If \code{NA}, the default, a message is emitted whenever a double vector
+#' needs to be returned.
+#' If \code{FALSE}, an error is returned.
+#' If \code{TRUE}, neither an error nor a message is returned.
+#' }
 #' }
 #'
 #' @param sorted \describe{
@@ -71,6 +78,9 @@
 #'
 #' @examples
 #' pmaxC(-5:5, 2)
+#' pmaxC(1:4, 5.5)
+#' pmaxC(1:4, 5.5, dbl_ok = TRUE)
+#' # pmaxC(1:4, 5.5, dbl_ok = FALSE)  # error
 #'
 #' @export pmaxC pmax0 pmaxV pmax3
 #'
@@ -113,7 +123,7 @@ pmaxC <- function(x, a,
     o <- .Call("Cpmax", x, a, keep_nas, nThread, PACKAGE = packageName())
   }
   if (is.null(o)) {
-    o <- pmax.int(x, a)
+    o <- pmax.int(x, a) # nocov
   }
   if (x_was_integer && is.double(o) && msg_dbl_ok) {
     message("Output is double")
@@ -127,7 +137,7 @@ pmaxC <- function(x, a,
 pminC <- function(x, a,
                   in_place = FALSE,
                   keep_nas = FALSE,
-                  dbl_ok = TRUE,
+                  dbl_ok = NA,
                   nThread = getOption("hutilscpp.nThread", 1L)) {
   if (msg_dbl_ok <- anyNA(dbl_ok)) {
     dbl_ok <- TRUE
@@ -159,7 +169,7 @@ pminC <- function(x, a,
     o <- .Call("Cpmin", x, a, keep_nas, nThread, PACKAGE = packageName())
   }
   if (is.null(o)) {
-    o <- pmin.int(x, a)
+    o <- pmin.int(x, a) # nocov
   }
   if (x_was_integer && is.double(o) && msg_dbl_ok) {
     message("Output is double")
@@ -363,6 +373,7 @@ pmin3 <- function(x, y, z, in_place = FALSE) {
     }
 
     out <- .Call("Csummary3", x, as.integer(y), as.integer(z), ifelse(do_max, "max", "min"), nThread, PACKAGE = packageName())
+    # nocov start
     if (is.null(out)) {
       if (do_max) {
         return(pmax.int(x, pmax.int(y, z)))
@@ -370,11 +381,13 @@ pmin3 <- function(x, y, z, in_place = FALSE) {
         return(pmin.int(x, pmin.int(y, z)))
       }
     }
+    # nocov end
     return(out)
   }
   if (is.double(x) && is.numeric(y) && is.numeric(z)) {
     nThread <- check_omp(getOption("hutilscpp.nThread", 1L))
     out <- .Call("Csummary3", x, as.double(y), as.double(z), ifelse(do_max, "max", "min"), nThread, PACKAGE = packageName())
+    # nocov start
     if (is.null(out)) {
       if (do_max) {
         return(pmax.int(x, pmax.int(y, z)))
@@ -382,9 +395,10 @@ pmin3 <- function(x, y, z, in_place = FALSE) {
         return(pmin.int(x, pmin.int(y, z)))
       }
     }
+    # nocov end
     return(out)
   }
-  # nocov begin
+  # nocov start
   if (do_max) {
     pmax(x, pmax(y, z))
   } else {
