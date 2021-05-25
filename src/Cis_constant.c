@@ -190,7 +190,7 @@ SEXP Cisnt_constant(SEXP x) {
   case RAWSXP:
     return ScalarLength(isntConstant_raw(RAW(x), N));
   }
-  return R_NilValue;
+  return R_NilValue; // # nocov
 }
 
 
