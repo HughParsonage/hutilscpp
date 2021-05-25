@@ -51,7 +51,7 @@ range_rcpp <- function(x,
     }
     return(out)
   }
-  ans <- .Call("Crange", x, PACKAGE = packageName())
+  ans <- .Call("Crange", x, PACKAGE = packageName)
   if (is.null(ans)) {
     range(x)
   } else {

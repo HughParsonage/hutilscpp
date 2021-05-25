@@ -23,7 +23,7 @@ fmatchp <- function(x, table, nomatch = NA_integer_, nThread = getOption("hutils
   nThread <- check_omp(nThread)
   stopifnot(is.integer(nomatch))
   check_TF(fin)
-  .Call("fmatch", x, table, nomatch, FALSE, fin, whichFirst, nThread, PACKAGE = packageName())
+  .Call("fmatch", x, table, nomatch, FALSE, fin, whichFirst, nThread, PACKAGE = packageName)
 }
 
 #' @rdname fmatchp

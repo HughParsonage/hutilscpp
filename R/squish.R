@@ -27,7 +27,7 @@ squish <- function(x, a, b, in_place = FALSE) {
 
   if (is.integer(x)) {
     if (is.integer(a) && is.integer(b)) {
-      .Call("CSquish", x, c(a, b), PACKAGE = packageName())
+      .Call("CSquish", x, c(a, b), PACKAGE = packageName)
     } else {
       stop("`x` was type integer but `a` was type '", class(a), "' and ",
            "`b` was type '", class(b), "'. ",
@@ -35,7 +35,7 @@ squish <- function(x, a, b, in_place = FALSE) {
     }
   } else if (is.double(x)) {
     ab <- as.double(c(a, b))
-    .Call("CSquish", x, ab, PACKAGE = packageName())
+    .Call("CSquish", x, ab, PACKAGE = packageName)
   } else {
     stop("`x` was type ", typeof(x), ", but must be numeric.")
   }

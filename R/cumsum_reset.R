@@ -26,7 +26,7 @@ cumsum_reset <- function(x, y = as.integer(x)) {
   }
   if (missing(y)) {
     if (length(x)) {
-      return(.Call("Ccumsum_reset", x, NULL, PACKAGE = packageName()))
+      return(.Call("Ccumsum_reset", x, NULL, PACKAGE = packageName))
     } else {
       return(integer(0L))
     }
@@ -42,7 +42,7 @@ cumsum_reset <- function(x, y = as.integer(x)) {
   if (!is.numeric(y)) {
     stop("`y` was type ", class(y), ", but must be an integer or double.")
   }
-  .Call("Ccumsum_reset", x, y, PACKAGE = packageName())
+  .Call("Ccumsum_reset", x, y, PACKAGE = packageName)
 }
 
 
@@ -53,7 +53,7 @@ cumsum_reset_where <- function(where, y, .parent_nframes = 1L) {
     x <- eval.parent(sexpr[[2]], n = .parent_nframes)
     o <- attr(isBinaryW, "M")
     rhs_eval <- attr(isBinaryW, "rhs_eval")
-    ans <- .Call("Ccumsum_reset_where", x, y, o, rhs_eval, PACKAGE = packageName())
+    ans <- .Call("Ccumsum_reset_where", x, y, o, rhs_eval, PACKAGE = packageName)
     if (!is.null(ans)) {
       return(ans)
     }

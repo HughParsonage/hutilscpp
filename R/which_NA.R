@@ -1,6 +1,6 @@
 
 which_NA <- function(x) {
-  ans <- .Call("Cwhich_isna", x, FALSE, 1L, PACKAGE = packageName())
+  ans <- .Call("Cwhich_isna", x, FALSE, 1L, PACKAGE = packageName)
   if (is.null(ans)) {
     return(seq_along(x))
   }
@@ -8,7 +8,7 @@ which_NA <- function(x) {
 }
 
 which_notNA <- function(x) {
-  ans <- .Call("Cwhich_isna", x, TRUE, 1L, PACKAGE = packageName())
+  ans <- .Call("Cwhich_isna", x, TRUE, 1L, PACKAGE = packageName)
   if (is.null(ans)) {
     return(seq_along(x))
   }

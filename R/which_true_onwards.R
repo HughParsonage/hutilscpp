@@ -16,5 +16,5 @@ which_true_onwards <- function(x) {
     stop("`x` had missing values. This is not permitted.")
   }
 
-  .Call("Cwhich_true_onwards", x, PACKAGE = packageName())
+  .Call("Cwhich_true_onwards", x, PACKAGE = packageName)
 }

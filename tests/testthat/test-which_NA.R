@@ -1,4 +1,5 @@
 test_that("which_NA works", {
+  expect_true(TRUE)
   expect_equal(which_NA(c(letters)), integer(0))
   expect_equal(which_NA(c(NA, NA)), 1:2)
   expect_equal(which_NA(c(NA, NA, FALSE)), 1:2)

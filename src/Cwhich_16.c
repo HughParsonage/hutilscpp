@@ -30,7 +30,6 @@ SEXP Cwhich_16(SEXP opp, SEXP x, SEXP y, SEXP nthreads) {
     return R_NilValue; // # nocov
   }
   const bool yn1 = yn == 1;
-  const bool xye = yn == xn;
   int n = (xn >= yn) ? xn : yn;
 
   const int y0 = sex2int1(y);
