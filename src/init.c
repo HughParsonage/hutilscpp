@@ -19,6 +19,7 @@ extern SEXP Callocate_with_root(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Callocate0_dbl(SEXP, SEXP);
 extern SEXP Callocate0_except(SEXP, SEXP, SEXP, SEXP);
 extern SEXP Callocate0_int(SEXP, SEXP);
+extern SEXP CallocateConstants(SEXP, SEXP);
 extern SEXP Cand3(SEXP, SEXP, SEXP);
 extern SEXP Cand3s_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP CAnyCharMatch(SEXP, SEXP, SEXP);
@@ -100,6 +101,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Callocate0_dbl",                (DL_FUNC) &Callocate0_dbl,                 2},
     {"Callocate0_except",             (DL_FUNC) &Callocate0_except,              4},
     {"Callocate0_int",                (DL_FUNC) &Callocate0_int,                 2},
+    {"CallocateConstants",            (DL_FUNC) &CallocateConstants,             2},
     {"Cand3",                         (DL_FUNC) &Cand3,                          3},
     {"Cand3s_par",                    (DL_FUNC) &Cand3s_par,                    16},
     {"CAnyCharMatch",                 (DL_FUNC) &CAnyCharMatch,                  3},

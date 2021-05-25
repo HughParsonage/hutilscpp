@@ -2,11 +2,11 @@
 
 SEXP Callocate0_int(SEXP N, SEXP nThread) {
   if (xlength(N) != 1 || (TYPEOF(N) != INTSXP && TYPEOF(N) != REALSXP)) {
-    error("N not a single number.");
+    error("N not a single number."); // # nocov
   }
   if (xlength(nThread) != 1 ||
       (TYPEOF(nThread) != INTSXP && TYPEOF(nThread) != REALSXP)) {
-    error("nThread not a single number.");
+    error("nThread not a single number."); // # nocov
   }
   R_xlen_t n = TYPEOF(N) == INTSXP ? asInteger(N) : asReal(N);
   int nthreads = asInteger(nThread);
@@ -25,11 +25,11 @@ SEXP Callocate0_int(SEXP N, SEXP nThread) {
 
 SEXP Callocate0_dbl(SEXP N, SEXP nThread) {
   if (xlength(N) != 1 || (TYPEOF(N) != INTSXP && TYPEOF(N) != REALSXP)) {
-    error("N not a single number.");
+    error("N not a single number."); // # nocov
   }
   if (xlength(nThread) != 1 ||
       (TYPEOF(nThread) != INTSXP && TYPEOF(nThread) != REALSXP)) {
-    error("nThread not a single number.");
+    error("nThread not a single number."); // # nocov
   }
   R_xlen_t n = TYPEOF(N) == INTSXP ? asInteger(N) : asReal(N);
   int nthreads = asInteger(nThread);
@@ -162,7 +162,7 @@ SEXP IntegerNNA(R_xlen_t N) {
 
 SEXP DoubleN(R_xlen_t N) {
   SEXP ans = PROTECT(allocVector(REALSXP, N));
-  int * ansp = INTEGER(ans);
+  double * ansp = REAL(ans);
   for (R_xlen_t i = 0; i < N; ++i) {
     ansp[i] = 0;
   }
@@ -172,7 +172,7 @@ SEXP DoubleN(R_xlen_t N) {
 
 SEXP DoubleNNA(R_xlen_t N) {
   SEXP ans = PROTECT(allocVector(REALSXP, N));
-  int * ansp = INTEGER(ans);
+  double * ansp = REAL(ans);
   for (R_xlen_t i = 0; i < N; ++i) {
     ansp[i] = NA_REAL;
   }
@@ -180,6 +180,23 @@ SEXP DoubleNNA(R_xlen_t N) {
   return ans;
 }
 
+SEXP CallocateConstants(SEXP NN, SEXP ii) {
+  R_xlen_t N = asInteger(NN);
+  int i = asInteger(ii);
+  switch(i) {
+  case 0:
+    return LogicalN(N);
+  case 1:
+    return IntegerN(N);
+  case 2:
+    return IntegerNNA(N);
+  case 3:
+    return DoubleN(N);
+  case 4:
+    return DoubleNNA(N);
+  }
+  return R_NilValue;
+}
 
 
 
