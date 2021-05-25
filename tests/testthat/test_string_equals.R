@@ -11,6 +11,7 @@ test_that("string_equals", {
   expect_true(string_equals("", ""))
   expect_false(string_equals(character(2), c("", " a")))
   expect_true(string_equals(rep("a", 10), "a"))
+  expect_false(string_equals(c(rep("a", 10), "b"), "a"))
   expect_true(string_equals(x, y))
   expect_false(string_equals(x, zz))
   expect_false(string_equals(x, zw))

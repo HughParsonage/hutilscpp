@@ -34,7 +34,7 @@ bool string_equaln(const char * x, int nx, const char * y) {
 
 SEXP CStringEqual(SEXP x, SEXP y) {
   if (TYPEOF(x) != STRSXP || TYPEOF(y) != STRSXP) {
-    return ScalarLogical(0);
+    return ScalarLogical(0); // # nocov
   }
   if (xlength(y) == 1) {
     const char * y0 = CHAR(STRING_ELT(y, 0));
@@ -63,20 +63,6 @@ SEXP CStringEqual(SEXP x, SEXP y) {
   return ScalarLogical(1);
 }
 
-int validate_nchar1(SEXP x, bool return_size) {
-  if (TYPEOF(x) != STRSXP) {
-    error("Internal error(validate_nchar1): x not a STRSXP."); // # nocov
-  }
-  R_xlen_t N = xlength(x);
-
-  for (R_xlen_t i = 0; i < N; ++i) {
-    int leni = strlen(CHAR(STRING_ELT(x, i)));
-    if (leni > 1) {
-      return return_size ? leni : i + 1;
-    }
-  }
-  return 0;
-}
 
 
 //' @name where_square_bracket_opens
@@ -94,10 +80,6 @@ int validate_nchar1(SEXP x, bool return_size) {
 SEXP Cwhere_square_bracket_opens(SEXP xx, SEXP ii) {
   if (TYPEOF(xx) != STRSXP || xlength(xx) >= INT_MAX) {
     return R_NilValue;
-  }
-  int validate_char1 = validate_nchar1(xx, false);
-  if (validate_char1) {
-    error("x contains multiple characters at position %d.", validate_char1);
   }
   R_xlen_t N = xlength(xx);
   int i = asInteger(ii);
@@ -121,7 +103,7 @@ SEXP Cwhere_square_bracket_opens(SEXP xx, SEXP ii) {
 
 SEXP CextractMandatory(SEXP x, SEXP command, SEXP NCommands) {
   if (TYPEOF(x) != STRSXP || xlength(x) >= INT_MAX) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
   if (TYPEOF(NCommands) != INTSXP) {
     error("TYPEOF(NCommands) != INTSXP."); // # nocov
@@ -287,6 +269,25 @@ SEXP CextractMandatory(SEXP x, SEXP command, SEXP NCommands) {
   UNPROTECT(n_protect);
   return out;
 }
+
+// # nocov start
+SEXP CPrintChars(SEXP x) {
+  if (TYPEOF(x) != STRSXP) {
+    return R_NilValue;
+  }
+  R_xlen_t N = xlength(x);
+  for (R_xlen_t i = 0; i < N; ++i) {
+    const char * xi = CHAR(STRING_ELT(x, i));
+    int j = 0;
+    while (xi[j] != '\0') {
+      Rprintf("%c", xi[j]);
+      ++j;
+    }
+  }
+  return R_NilValue;
+}
+// # nocov end
+
 
 
 

@@ -191,7 +191,6 @@ which_first <- function(expr,
     }
 
     if (length(rhs_eval) == length(lhs_eval) ||
-        operator == "%in%" ||
         operator == "%between%" ||
         operator == "%(between)%") {
       if (is.logical(rhs_eval)) {
@@ -486,7 +485,7 @@ do_which_first__ <- function(x, op, y,
   Nx <- length(x)
   Ny <- length(y)
   if (ny > 2L && Nx != Ny) {
-    stop("Lengths differ.")
+    stop("Lengths differ.") # nocov
   }
   stopifnot(is.numeric(x),
             is.integer(op), length(op) == 1L,
@@ -539,10 +538,6 @@ do_which_lastNA <- function(x) {
   .Call("Cwhich_lastNA", x, PACKAGE = packageName)
 }
 
-do_which_first_notTRUE <- function(x) {
-  .Call("Cwhich_first_notTRUE", x, PACKAGE = packageName)
-}
-
 do_which_last_notTRUE <- function(x) {
   .Call("Cwhich_last_notTRUE", x, PACKAGE = packageName)
 }
@@ -564,7 +559,7 @@ do_which_last__ <- function(x, op, y,
   Nx <- length(x)
   Ny <- length(y)
   if (ny > 2L && Nx != Ny) {
-    stop("Lengths differ.")
+    stop("Lengths differ.") # nocov
   }
   stopifnot(is.numeric(x),
             is.integer(op), length(op) == 1L,

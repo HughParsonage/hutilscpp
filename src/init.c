@@ -59,6 +59,7 @@ extern SEXP Cpmin0_bitwise(SEXP, SEXP, SEXP);
 extern SEXP Cpmin0_radix_sorted_dbl(SEXP, SEXP, SEXP);
 extern SEXP Cpmin0_radix_sorted_int(SEXP, SEXP, SEXP);
 extern SEXP CpminC_in_place(SEXP, SEXP, SEXP, SEXP);
+extern SEXP CPrintChars(SEXP);
 extern SEXP Crange(SEXP);
 extern SEXP CSquish(SEXP, SEXP);
 extern SEXP CStringEqual(SEXP, SEXP);
@@ -73,7 +74,6 @@ extern SEXP Cwhich_first__(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cwhich_first_false(SEXP);
 extern SEXP Cwhich_first_in_lgl(SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cwhich_first_lgl_lgl_op(SEXP, SEXP, SEXP, SEXP);
-extern SEXP Cwhich_first_notTRUE(SEXP);
 extern SEXP Cwhich_firstNA(SEXP);
 extern SEXP Cwhich_isna(SEXP, SEXP, SEXP);
 extern SEXP Cwhich_isnt_integerish(SEXP);
@@ -141,6 +141,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cpmin0_radix_sorted_dbl",       (DL_FUNC) &Cpmin0_radix_sorted_dbl,        3},
     {"Cpmin0_radix_sorted_int",       (DL_FUNC) &Cpmin0_radix_sorted_int,        3},
     {"CpminC_in_place",               (DL_FUNC) &CpminC_in_place,                4},
+    {"CPrintChars",                   (DL_FUNC) &CPrintChars,                    1},
     {"Crange",                        (DL_FUNC) &Crange,                         1},
     {"CSquish",                       (DL_FUNC) &CSquish,                        2},
     {"CStringEqual",                  (DL_FUNC) &CStringEqual,                   2},
@@ -155,7 +156,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cwhich_first_false",            (DL_FUNC) &Cwhich_first_false,             1},
     {"Cwhich_first_in_lgl",           (DL_FUNC) &Cwhich_first_in_lgl,            4},
     {"Cwhich_first_lgl_lgl_op",       (DL_FUNC) &Cwhich_first_lgl_lgl_op,        4},
-    {"Cwhich_first_notTRUE",          (DL_FUNC) &Cwhich_first_notTRUE,           1},
     {"Cwhich_firstNA",                (DL_FUNC) &Cwhich_firstNA,                 1},
     {"Cwhich_isna",                   (DL_FUNC) &Cwhich_isna,                    3},
     {"Cwhich_isnt_integerish",        (DL_FUNC) &Cwhich_isnt_integerish,         1},

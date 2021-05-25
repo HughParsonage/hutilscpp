@@ -17,3 +17,10 @@ extractMandatory <- function(x, command, nCommands) {
 where_square_bracket_opens <- function(x, i) {
   .Call("Cwhere_square_bracket_opens", x, i, PACKAGE = packageName)
 }
+
+print_chars <- function(x) {
+  invisible(.Call("CPrintChars", x, PACKAGE = packageName))
+}
+
+
+

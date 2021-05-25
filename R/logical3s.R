@@ -32,21 +32,6 @@
 NULL
 
 
-op2M <- function(operator) {
-  switch(operator,
-         "!=" = 1L,
-         "==" = 2L,
-         ">=" = 3L,
-         "<=" = 4L,
-         ">"  = 5L,
-         "<"  = 6L,
-         "%in%" = 7L,
-         "%between%" = 8L,
-         "%(between)%" = 9L,
-         "%]between[%" = 10L,
-         0L)
-}
-
 is_binary_sexp <- function(sexprA, .parent_nframes = 2L) {
   # e.g.
   #      x > -1L
