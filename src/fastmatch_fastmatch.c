@@ -460,6 +460,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP hashOnly, SEXP Fin, SEXP WhichFi
 
 
     SEXP r;
+// # nocov start
 #ifdef LONG_VECTOR_SUPPORT
       if (IS_LONG_VEC(x)) {
         hash_index_t i, n = XLENGTH(x);
@@ -515,6 +516,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP hashOnly, SEXP Fin, SEXP WhichFi
         }
       } else
 #endif
+        // # nocov end
 {
   /* short vector - everything is int */
   int n = LENGTH(x);
