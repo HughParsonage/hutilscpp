@@ -1,5 +1,6 @@
 
 test_that("fmatchp works", {
+  expect_true(TRUE)
   skip_if_not_installed("withr")
   withr::with_seed(3, {
     x <- sample.int(1e5)
@@ -20,6 +21,7 @@ test_that("fmatchp works", {
     expect_equal(finp(letters, lettre), letters %in% lettre)
 
   })
+
 
   # if (is_covr() && Sys.getenv("USERNAME") == "hughp") {
   #   x0 <- sample(2:100)
