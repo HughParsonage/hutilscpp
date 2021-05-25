@@ -2,44 +2,38 @@
 
 bool do_one_op_1_6(int op, int xi, int yi) {
   switch(op) {
-  case 1:
+  case OP_NE:
     return xi != yi;
-  case 2:
+  case OP_EQ:
     return xi == yi;
-  case 3:
+  case OP_GE:
     return xi >= yi;
-  case 4:
+  case OP_LE:
     return xi <= yi;
-  case 5:
+  case OP_GT:
     return xi >  yi;
-  case 6:
+  case OP_LT:
     return xi <  yi;
   }
   return false; // # nocov
 }
 
 SEXP Cwhich_16(SEXP opp, SEXP x, SEXP y, SEXP nthreads) {
-  if (TYPEOF(opp) != INTSXP ||
-      xlength(opp) != 1 ||
-      TYPEOF(nthreads) != INTSXP ||
-      xlength(nthreads) != 1) {
-    return R_NilValue;
-  }
   int op = asInteger(opp);
-  int nThread = asInteger(nthreads);
+  int nThread = as_nThread(nthreads);
   if (op < OP_NE || op >= OP_IN || nThread < 1) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
   R_xlen_t xn = xlength(x);
   R_xlen_t yn = xlength(y);
   if (xlength(x) >= INT_MAX || xlength(y) >= INT_MAX) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
   const bool yn1 = yn == 1;
   const bool xye = yn == xn;
   int n = (xn >= yn) ? xn : yn;
 
-  const int y0 = sex2int1(x);
+  const int y0 = sex2int1(y);
 
   if (xn != yn && !yn1) {
     error("Internal error(do_whichs_16): xn != yn && yn != 1"); // # nocov
