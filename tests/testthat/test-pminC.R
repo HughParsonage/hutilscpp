@@ -42,4 +42,10 @@ test_that("pminC_real_real", {
   expect_equal(pminC(x, y, keep_nas = TRUE), pmin(x, y))
 })
 
+test_that("pminC real_int", {
+  x <- runif(100)
+  expect_equal(pminC(x, 1L), pmin(x, 1))
+})
+
+
 
