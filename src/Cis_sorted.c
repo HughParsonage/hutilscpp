@@ -203,7 +203,6 @@ SEXP Cis_sorted(SEXP x, SEXP asc) {
     case REALSXP:
       return ScalarLogical(is_sorted_dbl(REAL(x), N));
     }
-    break;
   case 0:
     switch(TYPEOF(x)) {
     case INTSXP:
@@ -211,7 +210,6 @@ SEXP Cis_sorted(SEXP x, SEXP asc) {
     case REALSXP:
       return ScalarLogical(is_sorted_descending_dbl(REAL(x), N));
     }
-    break;
   case 1:
     switch(TYPEOF(x)) {
     case INTSXP:
@@ -219,7 +217,6 @@ SEXP Cis_sorted(SEXP x, SEXP asc) {
     case REALSXP:
       return ScalarLogical(is_sorted_ascending_dbl(REAL(x), N));
     }
-    break;
   }
   return R_NilValue;
 }
@@ -238,7 +235,6 @@ SEXP Cisnt_sorted(SEXP x, SEXP asc) {
     case REALSXP:
       return ScalarLength(do_isntSorted_dbl(REAL(x), N));
     }
-    break;
   case 0:
     switch(TYPEOF(x)) {
     case INTSXP:
@@ -246,7 +242,6 @@ SEXP Cisnt_sorted(SEXP x, SEXP asc) {
     case REALSXP:
       return ScalarLength(do_isntSorted_descending_dbl(REAL(x), N));
     }
-    break;
   case 1:
     switch(TYPEOF(x)) {
     case INTSXP:
@@ -254,7 +249,6 @@ SEXP Cisnt_sorted(SEXP x, SEXP asc) {
     case REALSXP:
       return ScalarLength(do_isntSorted_ascending_dbl(REAL(x), N));
     }
-    break;
   }
   return R_NilValue;
 }

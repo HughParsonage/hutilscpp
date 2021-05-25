@@ -30,6 +30,18 @@ test_that("A in len>100 ", {
 
 })
 
+test_that("%(between)% and %]between[%", {
+  xi <- 1:10 + 0L
+  xd <- as.double(xi)
+  ans <- xi > 1L & xi < 10L & xi != 5L
+  expect_equal(and3s(xi %(between)% c(1L, 10L),
+                     xi %]between[% c(4L, 6L)),
+               ans)
+  expect_equal(and3s(xd %(between)% c(1.1, 10),
+                     xd %]between[% c(4, 6)),
+               ans)
+})
+
 
 test_that("and3s works", {
   skip_if_not_installed("magrittr")
@@ -49,6 +61,8 @@ test_that("and3s works", {
     }
     (exprA & exprB) & exprC
   }
+
+
 
 
   library(magrittr)
