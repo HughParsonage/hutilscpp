@@ -1261,6 +1261,14 @@ test_that("do_which_first_xd_ind", {
                first_which(x %in% d0))
 })
 
+test_that("which_first unusual", {
+  x <- 1:12
+  expect_equal(which_first(x %(between)% c(2L, 5L)), 3L)
+  expect_equal(which_last(x %(between)% c(2L, 5L)), 4L)
+  expect_equal(which_first(x %]between[% c(2L, 5L)), 1L)
+  expect_equal(which_last(x %]between[% c(2L, 5L)), 12L)
+})
+
 
 
 

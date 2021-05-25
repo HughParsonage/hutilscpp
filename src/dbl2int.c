@@ -65,12 +65,12 @@ SEXP Cwhich_isnt_integerish(SEXP xx) {
   return ScalarInteger(0);
 }
 
-SEXP Cis_safe2int(SEXP x) {
+int is_safe2int(SEXP x) {
   if (TYPEOF(x) == INTSXP) {
-    return ScalarInteger(2);
+    return 2;
   }
   if (TYPEOF(x) != REALSXP) {
-    return ScalarInteger(0);
+    return 0;
   }
   R_xlen_t n = xlength(x);
   int out = 1; // Purpose of loop is to contradict this
@@ -102,19 +102,37 @@ SEXP Cis_safe2int(SEXP x) {
       break;
     }
   }
-  return ScalarInteger(out);
+  return out;
+}
+
+SEXP Cis_safe2int(SEXP x) {
+  return ScalarInteger(is_safe2int(x));
 }
 
 SEXP Cforce_as_integer(SEXP xx, SEXP Na_code) {
+  if (TYPEOF(xx) == INTSXP) {
+    return xx;
+  }
+  if (TYPEOF(xx) == LGLSXP) {
+    R_xlen_t N = xlength(xx);
+    const int * xp = LOGICAL(xx);
+    SEXP ans = PROTECT(allocVector(INTSXP, N));
+    int * ansp = INTEGER(ans);
+    for (R_xlen_t i = 0; i < N; ++i) {
+      ansp[i] = xp[i];
+    }
+    UNPROTECT(1);
+    return ans;
+  }
   if (TYPEOF(xx) != REALSXP || TYPEOF(Na_code) != INTSXP) {
     return R_NilValue;
   }
-  int na_code = asInteger(Na_code);
+  int na_code = asInteger2(Na_code);
   if (na_code < 0 || na_code > 2) {
-    na_code = asReal(Cis_safe2int(xx));
+    na_code = is_safe2int(xx);
   }
   if (na_code != 1 && na_code != 2) {
-    error("Internal error(Cforce_as_integer): na_code = 0 so cannot return IntegerVector safely.");
+    error("x could not be safely coerced to integer.");
   }
   R_xlen_t N = xlength(xx);
   const double * x = REAL(xx);

@@ -64,22 +64,6 @@ SEXP Cwhich_last_false(SEXP x) {
   return ScalarLength(o);
 }
 
-SEXP Cwhich_first_notTRUE(SEXP x) {
-  if (TYPEOF(x) != LGLSXP) {
-    error("Internal error(Cwhich_first): TYPEOF(x) != LGLSXP."); // # nocov
-  }
-  R_xlen_t N = xlength(x);
-  R_xlen_t o = 0;
-  const int * xp = LOGICAL(x);
-  for (R_xlen_t i = 0; i < N; ++i) {
-    if (xp[i] != TRUE) {
-      o = i + 1;
-      break;
-    }
-  }
-  return ScalarLength(o);
-}
-
 SEXP Cwhich_last_notTRUE(SEXP x) {
   if (TYPEOF(x) != LGLSXP) {
     error("Internal error(Cwhich_first): TYPEOF(x) != LGLSXP."); // # nocov
@@ -290,100 +274,57 @@ SEXP Cwhich_lastNA(SEXP x) {
 }
 
 R_xlen_t do_which_first_lgl_lgl_op(SEXP xx, SEXP yy, int op, bool reverse) {
-  if (TYPEOF(xx) != LGLSXP || TYPEOF(yy) != LGLSXP) {
-    return -1;
-  }
-  R_xlen_t N = xlength(xx), Ny = xlength(yy);
-  if (N == 0 || Ny == 0) {
-    return 0;
-  }
   if (op == OP_BO) {
     // even (F, T) can never occur
     return 0;
   }
+  if (TYPEOF(xx) != LGLSXP || TYPEOF(yy) != LGLSXP) {
+    return -1; // # nocov
+  }
+
+  R_xlen_t N = xlength(xx), Ny = xlength(yy);
+  if (N == 0 || Ny == 0 || (N != Ny && op != OP_BW)) {
+    return 0; // # nocov
+  }
+
   const int * x = LOGICAL(xx);
   const int * y = LOGICAL(yy);
 
-  const bool len1 = Ny == 1;
-  if (op == OP_IN || op == OP_BW) {
-    bool hasNA = false;
-    bool hasTRUE = false;
-    bool hasFALSE = false;
+  if (op == OP_BW) {
+    int y0 = y[0] == NA_LOGICAL ? 0 : y[0];
+    int y1 = y[1] == NA_LOGICAL ? 1 : y[1];
 
-    for (R_xlen_t j = 0; j < Ny; ++j) {
-      hasNA = hasNA || y[j] == NA_LOGICAL;
-      hasTRUE = hasTRUE || y[j] == TRUE;
-      hasFALSE = hasFALSE || y[j] == FALSE;
+    if (y0 > y1) {
+      return 0;
     }
-
-    if (hasNA && hasTRUE && hasFALSE) {
-      if (reverse) {
-        return N;
-      } else {
-        return 1;
-      }
+    if (y0 < y1) {
+      return reverse ? N : 1;
     }
-
-    // Two values, for %between%, we need F,F F,T or T,T
-    // otherwise will never occur so return 0 now
-    switch(op) {
-    case OP_BW: {
-      if (y[0] == TRUE && y[1] == FALSE) {
-        return 0;
-      }
-      // c(NA, TRUE) => x <= TRUE
-      const bool onlyTRUE  = ((y[0] == NA_LOGICAL) ? FALSE : y[0]) == TRUE;
-      const bool onlyFALSE = ((y[1] == NA_LOGICAL) ? TRUE  : y[1]) == FALSE;
-
-      // otherwise we just use the normal:
+    if (y0) {
+      // only TRUE
       for (R_xlen_t k = 0; k < N; ++k) {
         R_xlen_t i = reverse ? (N - k - 1) : k;
-        if (onlyTRUE) {
-          if (x[i] == TRUE) {
-            return i + 1;
-          }
-          continue;
-        }
-        if (onlyFALSE) {
-          if (x[i] == FALSE) {
-            return i + 1;
-          }
-          continue;
-        }
-        if (x[i] != NA_LOGICAL) {
+        if (x[i] == 1) {
           return i + 1;
         }
       }
-      return 0;
-    }
-      break;
-    case OP_IN: {
-      //
+    } else {
+      // only FALSE
       for (R_xlen_t k = 0; k < N; ++k) {
-      R_xlen_t i = reverse ? (N - k - 1) : k;
-      if (hasNA && x[i] == NA_LOGICAL) {
-        return i + 1;
-      }
-      if (hasTRUE && x[i] == TRUE) {
-        return i + 1;
-      }
-      if (hasFALSE && x[i] == FALSE) {
-        return i + 1;
+        R_xlen_t i = reverse ? (N - k - 1) : k;
+        if (x[i] == 0) {
+          return i + 1;
+        }
       }
     }
-      return 0;
-    }
-      break;
-    }
-    return 0; // # nocov
+    return 0;
   }
 
   for (R_xlen_t k = 0; k < N; ++k) {
     R_xlen_t i = reverse ? (N - k - 1) : k;
     int xi = x[i];
-    int y1 = len1 ? y[0] : y[i];
-    int y2 = (N == 2) ? y[1] : y[0];
-    if (isingle_ox_x1_x2(xi, op, y1, y2)) {
+    int y1 = y[i];
+    if (isingle_ox_x1_x2(xi, op, y1, y1)) {
       return i + 1;
     }
   }
