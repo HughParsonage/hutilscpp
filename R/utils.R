@@ -35,7 +35,7 @@ isnt_number <- function(a, na.bad = TRUE, infinite.bad = TRUE, int.only = FALSE)
   if (na.bad && is.na(a)) {
     o <- TRUE
     ac <- deparse(substitute(a))
-    attr(o, "ErrorMessage") <- paste0("`", ac, "= NA`, but this is not permitted.")
+    attr(o, "ErrorMessage") <- paste0("`", ac, " = NA`, but this is not permitted.")
     return(o)
   }
   if (infinite.bad && is.infinite(a)) {

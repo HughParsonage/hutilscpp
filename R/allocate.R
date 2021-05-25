@@ -28,3 +28,12 @@ allocate0_except <- function(N, India, Victor, nThread = 1L) {
 allocate_with_root <- function(N, a, r, left, do_pmin, nThread = 1L) {
   .Call("Callocate_with_root", N, a, r, left, do_pmin, nThread, PACKAGE = packageName)
 }
+
+.allocate_constants <- function(N) {
+  N <- as.integer(N)
+  list(LogicalN = .Call("CallocateConstants", N, 0L, PACKAGE = packageName),
+       IntegerN = .Call("CallocateConstants", N, 1L, PACKAGE = packageName),
+       IntegerNNA = .Call("CallocateConstants", N, 2L, PACKAGE = packageName),
+       DoubleN = .Call("CallocateConstants", N, 3L, PACKAGE = packageName),
+       DoubleNNA = .Call("CallocateConstants", N, 4L, PACKAGE = packageName))
+}
