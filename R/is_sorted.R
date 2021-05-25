@@ -18,7 +18,7 @@ is_sorted <- function(x, asc = NA) {
   stopifnot(is.atomic(x),
             is.logical(asc),
             length(asc) == 1L)
-  ans <- .Call("Cis_sorted", x, asc, PACKAGE = packageName())
+  ans <- .Call("Cis_sorted", x, asc, PACKAGE = packageName)
   if (is.null(ans)) {
     return(!is.unsorted(x)) # nocov
   }
@@ -29,7 +29,7 @@ isntSorted <- function(x, asc = NA) {
   stopifnot(is.atomic(x),
             is.logical(asc),
             length(asc) == 1L)
-  ans <- .Call("Cisnt_sorted", x, asc, PACKAGE = packageName())
+  ans <- .Call("Cisnt_sorted", x, asc, PACKAGE = packageName)
   if (is.null(ans)) {
     stop("`x` was type ", typeof(x), ", which is not yet supported.") # nocov
   }
@@ -38,5 +38,5 @@ isntSorted <- function(x, asc = NA) {
 
 
 string_equals <- function(x, y) {
-  .Call("CStringEqual", x, y, PACKAGE = packageName())
+  .Call("CStringEqual", x, y, PACKAGE = packageName)
 }

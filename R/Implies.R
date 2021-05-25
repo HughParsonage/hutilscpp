@@ -41,5 +41,5 @@ Implies <- function(x, y, anyNAx = TRUE, anyNAy = TRUE) {
             is.logical(y))
   check_TF(anyNAx)
   check_TF(anyNAy)
-  .Call("CImplies", x, y, anyNAx, anyNAy, PACKAGE = packageName())
+  .Call("CImplies", x, y, anyNAx, anyNAy, PACKAGE = packageName)
 }

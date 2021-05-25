@@ -9,7 +9,7 @@ check_omp <- function(nThread) {
   if (nThread != as.integer(nThread)) {
     stop("`nThread = ", nThread, "` was not a whole number.")
   }
-  omp_diagnosis_int <- .Call("Cdiagnose_omp", nThread, PACKAGE = packageName())
+  omp_diagnosis_int <- .Call("Cdiagnose_omp", nThread, PACKAGE = packageName)
   diagnosis <-
     switch(omp_diagnosis_int,
            g("No OpenMP detected."),
@@ -24,6 +24,6 @@ check_omp <- function(nThread) {
 }
 
 has_openmp <- function() {
-  .Call("Chas_openmp", PACKAGE = packageName())
+  .Call("Chas_openmp", PACKAGE = packageName)
 }
 

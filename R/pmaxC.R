@@ -118,9 +118,9 @@ pmaxC <- function(x, a,
   }
 
   if (in_place && is.symbol(substitute(x))) {
-    o <- .Call("CpmaxC_in_place", x, a, keep_nas, nThread, PACKAGE = packageName())
+    o <- .Call("CpmaxC_in_place", x, a, keep_nas, nThread, PACKAGE = packageName)
   } else {
-    o <- .Call("Cpmax", x, a, keep_nas, nThread, PACKAGE = packageName())
+    o <- .Call("Cpmax", x, a, keep_nas, nThread, PACKAGE = packageName)
   }
   if (is.null(o)) {
     o <- pmax.int(x, a) # nocov
@@ -164,9 +164,9 @@ pminC <- function(x, a,
   }
 
   if (in_place && is.symbol(substitute(x))) {
-    o <- .Call("CpminC_in_place", x, a, keep_nas, nThread, PACKAGE = packageName())
+    o <- .Call("CpminC_in_place", x, a, keep_nas, nThread, PACKAGE = packageName)
   } else {
-    o <- .Call("Cpmin", x, a, keep_nas, nThread, PACKAGE = packageName())
+    o <- .Call("Cpmin", x, a, keep_nas, nThread, PACKAGE = packageName)
   }
   if (is.null(o)) {
     o <- pmin.int(x, a) # nocov
@@ -174,7 +174,7 @@ pminC <- function(x, a,
   if (x_was_integer && is.double(o) && msg_dbl_ok) {
     message("Output is double")
   }
-  .Call("Cpmin", x, a, keep_nas, nThread, PACKAGE = packageName())
+  .Call("Cpmin", x, a, keep_nas, nThread, PACKAGE = packageName)
 }
 
 #' @rdname pmaxC
@@ -212,9 +212,9 @@ pmax0 <- function(x, in_place = FALSE, sorted = FALSE, keep_nas = FALSE, nThread
   }
   z <- if (is.double(x)) 0 else 0L
   if (in_place) {
-    .Call("CpmaxC_in_place", x, z, keep_nas, nThread, PACKAGE = packageName())
+    .Call("CpmaxC_in_place", x, z, keep_nas, nThread, PACKAGE = packageName)
   } else {
-    .Call("Cpmax", x, z, keep_nas, nThread, PACKAGE = packageName())
+    .Call("Cpmax", x, z, keep_nas, nThread, PACKAGE = packageName)
   }
 }
 
@@ -254,9 +254,9 @@ pmin0 <- function(x, in_place = FALSE, sorted = FALSE, keep_nas = FALSE, nThread
 
   z <- if (is.double(x)) 0 else 0L
   if (in_place && is.symbol(substitute(x))) {
-    .Call("CpminC_in_place", x, z, keep_nas, nThread, PACKAGE = packageName())
+    .Call("CpminC_in_place", x, z, keep_nas, nThread, PACKAGE = packageName)
   } else {
-    .Call("Cpmin", x, z, keep_nas, nThread, PACKAGE = packageName())
+    .Call("Cpmin", x, z, keep_nas, nThread, PACKAGE = packageName)
   }
 }
 
@@ -282,7 +282,7 @@ pmaxV <- function(x, y, in_place = FALSE, dbl_ok = TRUE, nThread = getOption("hu
   } else {
     swap_xy <- is.integer(y) && is.double(x)
   }
-  out <- .Call("Cpmax", x, y, TRUE, nThread, PACKAGE = packageName())
+  out <- .Call("Cpmax", x, y, TRUE, nThread, PACKAGE = packageName)
   if (in_place && is.symbol(substitute(x))) {
     eval.parent(substitute(x <- out))
   }
@@ -306,7 +306,7 @@ pminV <- function(x, y, in_place = FALSE, dbl_ok = TRUE, nThread = getOption("hu
          "Both `x` and `y` must be atomic numeric vectors.")
   }
 
-  out <- .Call("Cpmin", x, y, TRUE, nThread, PACKAGE = packageName())
+  out <- .Call("Cpmin", x, y, TRUE, nThread, PACKAGE = packageName)
   if (in_place && is.symbol(substitute(x))) {
     eval.parent(substitute(x <- out))
   }
@@ -331,7 +331,7 @@ pmin3 <- function(x, y, z, in_place = FALSE) {
   lx <- length(x)
   nThread <- check_omp(getOption("hutilscpp.nThread", 1L))
   if (length(y) == lx && length(z) == lx) {
-    out <- .Call("Csummary3", x, y, z, ifelse(do_max, "max", "min"), nThread, PACKAGE = packageName())
+    out <- .Call("Csummary3", x, y, z, ifelse(do_max, "max", "min"), nThread, PACKAGE = packageName)
     if (!is.null(out)) {
       return(out)
     }
@@ -372,7 +372,7 @@ pmin3 <- function(x, y, z, in_place = FALSE) {
       }
     }
 
-    out <- .Call("Csummary3", x, as.integer(y), as.integer(z), ifelse(do_max, "max", "min"), nThread, PACKAGE = packageName())
+    out <- .Call("Csummary3", x, as.integer(y), as.integer(z), ifelse(do_max, "max", "min"), nThread, PACKAGE = packageName)
     # nocov start
     if (is.null(out)) {
       if (do_max) {
@@ -386,7 +386,7 @@ pmin3 <- function(x, y, z, in_place = FALSE) {
   }
   if (is.double(x) && is.numeric(y) && is.numeric(z)) {
     nThread <- check_omp(getOption("hutilscpp.nThread", 1L))
-    out <- .Call("Csummary3", x, as.double(y), as.double(z), ifelse(do_max, "max", "min"), nThread, PACKAGE = packageName())
+    out <- .Call("Csummary3", x, as.double(y), as.double(z), ifelse(do_max, "max", "min"), nThread, PACKAGE = packageName)
     # nocov start
     if (is.null(out)) {
       if (do_max) {
@@ -447,30 +447,30 @@ do_pminmax0_altrep <- function(x,
 
 do_pmax0_radix_sorted_int <- function(x, in_place = FALSE, nThread = getOption("hutilscpp.nThread", 1L)) {
   nThread <- check_omp(nThread)
-  .Call("Cpmax0_radix_sorted_int", x, in_place, nThread, PACKAGE = packageName())
+  .Call("Cpmax0_radix_sorted_int", x, in_place, nThread, PACKAGE = packageName)
 }
 
 do_pmin0_radix_sorted_int <- function(x, in_place = FALSE, nThread = getOption("hutilscpp.nThread", 1L)) {
   nThread <- check_omp(nThread)
-  .Call("Cpmin0_radix_sorted_int", x, in_place, nThread, PACKAGE = packageName())
+  .Call("Cpmin0_radix_sorted_int", x, in_place, nThread, PACKAGE = packageName)
 }
 
 do_pmax0_radix_sorted_dbl <- function(x, in_place = FALSE, nThread = getOption("hutilscpp.nThread", 1L)) {
   nThread <- check_omp(nThread)
-  .Call("Cpmax0_radix_sorted_dbl", x, in_place, nThread, PACKAGE = packageName())
+  .Call("Cpmax0_radix_sorted_dbl", x, in_place, nThread, PACKAGE = packageName)
 }
 
 do_pmin0_radix_sorted_dbl <- function(x, in_place = FALSE, nThread = getOption("hutilscpp.nThread", 1L)) {
   nThread <- check_omp(nThread)
-  .Call("Cpmin0_radix_sorted_dbl", x, in_place, nThread, PACKAGE = packageName())
+  .Call("Cpmin0_radix_sorted_dbl", x, in_place, nThread, PACKAGE = packageName)
 }
 
 do_pmin0_bitwise <- function(x, in_place = FALSE, nThread = getOption("hutilscpp.nThread", 1L)) {
   nThread <- check_omp(nThread)
-  .Call("Cpmin0_bitwise", x, in_place, nThread, PACKAGE = packageName())
+  .Call("Cpmin0_bitwise", x, in_place, nThread, PACKAGE = packageName)
 }
 
 do_pmax0_bitwise <- function(x, in_place = FALSE, nThread = getOption("hutilscpp.nThread", 1L)) {
   nThread <- check_omp(nThread)
-  .Call("Cpmax0_bitwise", x, in_place, nThread, PACKAGE = packageName())
+  .Call("Cpmax0_bitwise", x, in_place, nThread, PACKAGE = packageName)
 }

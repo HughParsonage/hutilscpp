@@ -150,7 +150,7 @@ which_min_HaversineDistance <- function(lat1, lon1, lat2, lon2, upperBound = 10)
   }
   .Call("C_which_min_HaversineDistance",
         lat1, lon1, lat2, lon2, upperBound,
-        PACKAGE = packageName())
+        PACKAGE = packageName)
 }
 
 
@@ -214,27 +214,27 @@ match_min_Haversine <- function(lat,
                do_verify_box,
                excl_self,
                ncores,
-               PACKAGE = packageName())
+               PACKAGE = packageName)
   names(out) <- c("pos", "dist")
   out
 }
 
 theEuclidDistance <- function(x1, x2, y1, y2, unitless = FALSE) {
-  .Call("C_theEuclidDistance", x1, x2, y1, y2, unitless, PACKAGE = packageName())
+  .Call("C_theEuclidDistance", x1, x2, y1, y2, unitless, PACKAGE = packageName)
 }
 
 hausdorffEuclid <- function(x, y) {
-  .Call("C_hausdorffEuclid", x, y, PACKAGE = packageName())
+  .Call("C_hausdorffEuclid", x, y, PACKAGE = packageName)
 }
 
 EmptiestQuarter <- function(x, y, minx = 1, maxx = -1, miny = 1, maxy = -1) {
   ad <- as.double
- .Call("CEmptiestQuarter", ad(x), ad(y), ad(minx), ad(maxx), ad(miny), ad(maxy), PACKAGE = packageName())
+ .Call("CEmptiestQuarter", ad(x), ad(y), ad(minx), ad(maxx), ad(miny), ad(maxy), PACKAGE = packageName)
 }
 
 theEmptiestQuarters <- function(x, y, minx = 1, maxx = -1, miny = 1, maxy = -1, depth = 4L) {
   ad <- as.double
-  .Call("C_theEmptiestQuarters", ad(x), ad(y), ad(minx), ad(maxx), ad(miny), ad(maxy), depth, PACKAGE = packageName())
+  .Call("C_theEmptiestQuarters", ad(x), ad(y), ad(minx), ad(maxx), ad(miny), ad(maxy), depth, PACKAGE = packageName)
 }
 
 

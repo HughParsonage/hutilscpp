@@ -103,7 +103,7 @@ is_constant <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
          "Such objects are not supported.")
   }
   nThread <- check_omp(nThread)
-  ans <- .Call("Cis_constant", x, nThread, PACKAGE = packageName())
+  ans <- .Call("Cis_constant", x, nThread, PACKAGE = packageName)
   # nocov start
   if (is.null(ans)) {
     return(identical(rep_len(x[1], length(x)), x))
@@ -147,7 +147,7 @@ isntConstant <- function(x) {
     }
   }
 
-  ans <- .Call("Cisnt_constant", x, PACKAGE = packageName())
+  ans <- .Call("Cisnt_constant", x, PACKAGE = packageName)
   # nocov start
   if (is.null(ans)) {
     x1 <- x[1L]

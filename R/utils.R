@@ -82,7 +82,7 @@ firstNonNegativeRadix <- function(x, mini = 0L, maxi = -1L, desc = FALSE) {
   .Call("CfirstNonNegativeRadix",
         x,
         mini, maxi, desc,
-        PACKAGE = packageName())
+        PACKAGE = packageName)
 }
 
 g <- glue::glue
@@ -98,14 +98,14 @@ is_wholer <- function(dbl) {
 
 
 is_safe2int <- function(x) {
-  .Call("Cis_safe2int", x, PACKAGE = packageName())
+  .Call("Cis_safe2int", x, PACKAGE = packageName)
 }
 
 force_as_integer <- function(x, na_code = NULL) {
   if (is.null(na_code)) {
     na_code <- is_safe2int(x)
   }
-  ans <- .Call("Cforce_as_integer", x, na_code, PACKAGE = packageName())
+  ans <- .Call("Cforce_as_integer", x, na_code, PACKAGE = packageName)
   if (is.null(ans)) {
     return(as.double(x)) # nocov
   }

@@ -14,10 +14,10 @@ which3 <- function(x, y, z,
   stopifnot(is.logical(x), is.logical(y), is.logical(z))
   check_TF(And)
   if (anyNAx || anyNAy || anyNAz) {
-    cpp_list <- .Call("Cwhich3", x, y, z, And, anyNAx, anyNAy, anyNAz, PACKAGE = packageName())
+    cpp_list <- .Call("Cwhich3", x, y, z, And, anyNAx, anyNAy, anyNAz, PACKAGE = packageName)
     {cpp_list[[2]]}[seq_len(cpp_list[[1]])]
   } else {
-    .Call("Cwhich3_mem", x, y, z, And, PACKAGE = packageName())
+    .Call("Cwhich3_mem", x, y, z, And, PACKAGE = packageName)
   }
 }
 

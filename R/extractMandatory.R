@@ -1,7 +1,7 @@
 
 
 extractMandatory <- function(x, command, nCommands) {
-  ans <- .Call("CextractMandatory", x, command, nCommands, PACKAGE = packageName())
+  ans <- .Call("CextractMandatory", x, command, nCommands, PACKAGE = packageName)
   names(ans) <- c("support", "Openers", "Closers")
   ans
 }
@@ -15,5 +15,5 @@ extractMandatory <- function(x, command, nCommands) {
 #' j position where x[j] opens x[i];
 #' @noRd
 where_square_bracket_opens <- function(x, i) {
-  .Call("Cwhere_square_bracket_opens", x, i, PACKAGE = packageName())
+  .Call("Cwhere_square_bracket_opens", x, i, PACKAGE = packageName)
 }

@@ -504,55 +504,55 @@ do_which_first__ <- function(x, op, y,
         y2i,
         y1d,
         y2d,
-        PACKAGE = packageName())
+        PACKAGE = packageName)
 }
 
 do_which_first <- function(x) {
-  .Call("Cwhich_first", x, PACKAGE = packageName())
+  .Call("Cwhich_first", x, PACKAGE = packageName)
 }
 
 do_which_last <- function(x) {
-  .Call("Cwhich_last", x, PACKAGE = packageName())
+  .Call("Cwhich_last", x, PACKAGE = packageName)
 }
 
 do_which_first_false <- function(x) {
-  .Call("Cwhich_first_false", x, PACKAGE = packageName())
+  .Call("Cwhich_first_false", x, PACKAGE = packageName)
 }
 
 do_which_last_false <- function(x) {
-  .Call("Cwhich_last_false", x, PACKAGE = packageName())
+  .Call("Cwhich_last_false", x, PACKAGE = packageName)
 }
 
 do_which_first_in_lgl <- function(x, anyNA_, any_, nall_) {
-  .Call("Cwhich_first_in_lgl", x, anyNA_, any_, nall_, PACKAGE = packageName())
+  .Call("Cwhich_first_in_lgl", x, anyNA_, any_, nall_, PACKAGE = packageName)
 }
 
 do_which_last_in_lgl <- function(x, anyNA_, any_, nall_) {
-  .Call("Cwhich_last_in_lgl", x, anyNA_, any_, nall_, PACKAGE = packageName())
+  .Call("Cwhich_last_in_lgl", x, anyNA_, any_, nall_, PACKAGE = packageName)
 }
 
 do_which_firstNA <- function(x) {
-  .Call("Cwhich_firstNA", x, PACKAGE = packageName())
+  .Call("Cwhich_firstNA", x, PACKAGE = packageName)
 }
 
 do_which_lastNA <- function(x) {
-  .Call("Cwhich_lastNA", x, PACKAGE = packageName())
+  .Call("Cwhich_lastNA", x, PACKAGE = packageName)
 }
 
 do_which_first_notTRUE <- function(x) {
-  .Call("Cwhich_first_notTRUE", x, PACKAGE = packageName())
+  .Call("Cwhich_first_notTRUE", x, PACKAGE = packageName)
 }
 
 do_which_last_notTRUE <- function(x) {
-  .Call("Cwhich_last_notTRUE", x, PACKAGE = packageName())
+  .Call("Cwhich_last_notTRUE", x, PACKAGE = packageName)
 }
 
 do_which_last_notFALSE <- function(x) {
-  .Call("Cwhich_last_notFALSE", x, PACKAGE = packageName())
+  .Call("Cwhich_last_notFALSE", x, PACKAGE = packageName)
 }
 
 do_which_first_lgl_lgl_op <- function(x, y, op, reverse = FALSE) {
-  .Call("Cwhich_first_lgl_lgl_op", x, y, op, reverse, PACKAGE = packageName())
+  .Call("Cwhich_first_lgl_lgl_op", x, y, op, reverse, PACKAGE = packageName)
 }
 
 do_which_last__ <- function(x, op, y,
@@ -582,5 +582,5 @@ do_which_last__ <- function(x, op, y,
         y2i,
         y1d,
         y2d,
-        PACKAGE = packageName())
+        PACKAGE = packageName)
 }

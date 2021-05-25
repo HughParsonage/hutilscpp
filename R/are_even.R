@@ -59,7 +59,7 @@ which_are_even <- function(x, check_integerish = TRUE) {
   }
   wb <- 0L
   if (is.integer(x)) {
-    return(.Call("Cwhich_even", x, PACKAGE = packageName()))
+    return(.Call("Cwhich_even", x, PACKAGE = packageName))
   }
   if (is.double(x)) {
     if (AND(check_integerish,
@@ -68,7 +68,7 @@ which_are_even <- function(x, check_integerish = TRUE) {
               wb, " = ", x[wb], " was not an integer value. ",
               "Will be coerced to integer: ", as.integer(x[wb]), ".")
     }
-    return(.Call("Cwhich_even", x, PACKAGE = packageName()))
+    return(.Call("Cwhich_even", x, PACKAGE = packageName))
   } else {
     stop("`x` was not an integer or double.")
   }

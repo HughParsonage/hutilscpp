@@ -57,7 +57,7 @@ sum_and3s <- function(exprA, exprB, exprC, ...,
     d[[24]],
     TRUE, # ampersand
     check_omp(nThread),
-    PACKAGE = packageName()
+    PACKAGE = packageName
   )
 }
 

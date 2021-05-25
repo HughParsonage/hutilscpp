@@ -13,20 +13,20 @@
 
 divisible <- function(x, d, nThread = getOption("hutilscpp.nThread", 1L)) {
   nThread <- ensure_integer(nThread)
-  .Call("Cdivisible", x, d, nThread, PACKAGE = packageName())
+  .Call("Cdivisible", x, d, nThread, PACKAGE = packageName)
 }
 
 #' @rdname divisible
 #' @export
 divisible2 <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
   nThread <- ensure_integer(nThread)
-  .Call("Cdivisible2", x, nThread, TRUE, PACKAGE = packageName())
+  .Call("Cdivisible2", x, nThread, TRUE, PACKAGE = packageName)
 }
 
 #' @rdname divisible
 #' @export
 divisible16 <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
-  .Call("Cdivisible16", x, nThread, PACKAGE = packageName())
+  .Call("Cdivisible16", x, nThread, PACKAGE = packageName)
 }
 
 

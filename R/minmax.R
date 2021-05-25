@@ -7,5 +7,5 @@
 #'
 #' @export
 minmax <- function(x, empty_result = NULL, nThread = getOption("hutilsc.nThread", 1L)) {
-  .Call("Cminmax", x, empty_result, check_omp(nThread), PACKAGE = packageName())
+  .Call("Cminmax", x, empty_result, check_omp(nThread), PACKAGE = packageName)
 }

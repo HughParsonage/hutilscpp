@@ -70,7 +70,7 @@ anyOutside <- function(x, a, b, nas_absent = NA, na_is_outside = NA) {
     b <- as.double(b)
   }
 
-  return(.Call("CanyOutside", x, a, b, nas_absent, na_is_outside, PACKAGE = packageName()))
+  return(.Call("CanyOutside", x, a, b, nas_absent, na_is_outside, PACKAGE = packageName))
 }
 
 

@@ -24,7 +24,7 @@ whichs <- function(exprA, .env = parent.frame(), nThread = getOption("hutilscpp.
   opm <- op2M(opc)
   lhs <- eval(sexprA[[2L]], envir = .env, enclos = baseenv())
   rhs <- eval(sexprA[[3L]], envir = .env, enclos = baseenv())
-  ans <- .Call("Cwhich_16", opm, lhs, rhs, nThread, PACKAGE = packageName())
+  ans <- .Call("Cwhich_16", opm, lhs, rhs, nThread, PACKAGE = packageName)
   if (is.null(ans)) {
     return(which(exprA))
   }
