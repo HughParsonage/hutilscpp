@@ -32,11 +32,11 @@ SEXP Squishd(SEXP x, SEXP ab) {
 
 SEXP CSquish(SEXP x, SEXP ab) {
   if (xlength(ab) != 2) {
-    warning("xlength(ab) != 2");
-    return x;
+    warning("xlength(ab) != 2"); // # nocov
+    return x; // # nocov
   }
   if (TYPEOF(x) != TYPEOF(ab)) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
   switch(TYPEOF(x)) {
   case INTSXP:
@@ -44,5 +44,5 @@ SEXP CSquish(SEXP x, SEXP ab) {
   case REALSXP:
     return Squishd(x, ab);
   }
-  return R_NilValue;
+  return R_NilValue; // # nocov
 }
