@@ -28,7 +28,7 @@ SEXP Chas_openmp() {
 
 #ifndef _OPENMP
 int diagnose_omp(SEXP Threads_requested) {
-  return ScalarInteger(0);
+  return 0;
 }
 
 int as_nThread(SEXP x) {
