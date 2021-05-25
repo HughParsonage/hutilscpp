@@ -41,11 +41,11 @@ jobs:
       - name: Install packages
         shell: bash
         run: |
-          Rdevel -q -e "ip <- function(x) install.packages(x, quiet = TRUE, repos = 'https://cran.r-project.org'); ip(c('Rcpp', 'testthat', 'data.table', 'glue', 'hutils', 'magrittr'))"
+          Rdevel -q -e "ip <- function(x) install.packages(x[!sapply(x, requireNamespace, quietly = TRUE)], quiet = TRUE, repos = 'https://cran.r-project.org'); ip(c('testthat', 'data.table', 'glue', 'hutils', 'magrittr'))"
           Rdevel CMD build .
           Rdevel CMD INSTALL --install-tests hutilscpp*.tar.gz
           Rdevel -q -e "sapply(dir(path = find.package('hutilscpp'), recursive = TRUE, full.names = TRUE), function(x) file.size(x) / 1024)"
-          Rdevel -q -e "testthat::test_package('hutilscpp', reporter = testthat::LocationReporter)"
+          Rdevel -q -e "testthat::test_package('hutilscpp', reporter = testthat::LocationReporter, filter = 'fmatch|which')"
           Rdevel -q -e "z3 <- integer(3); hutilscpp::which_first(z3 == NaN)"
           Rdevel -q -e "z3 <- integer(3); hutilscpp::which_first(z3 != NaN)"
           Rdevel -q -e "z3 <- integer(3); hutilscpp::which_first(z3 >= 2147483647.1)"
