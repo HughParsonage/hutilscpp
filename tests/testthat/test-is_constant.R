@@ -105,12 +105,17 @@ test_that("is_constant with NA", {
 })
 
 test_that("isntConstant works", {
+  expect_equal(isntConstant(integer(0)), 0)
   expect_equal(isntConstant(c(1, 1, 1)), 0L)
   expect_equal(isntConstant(rep(0L, 2L)), 0L)
   expect_equal(isntConstant(c(1, 2, 1)), 2L)
   expect_equal(isntConstant(c(1L, 1L, 1L, -3L)), 4L)
   expect_equal(isntConstant(logical(4)), 0L)
   expect_equal(isntConstant(c(logical(4), TRUE)), 5L)
+  expect_equal(isntConstant(rep(NaN, 10)), 0)
+  expect_equal(isntConstant(character(5)), 0)
+  expect_equal(isntConstant(complex(5)), 0)
+  expect_equal(isntConstant(1:5 + complex(5)), 2)
 })
 
 test_that("isntConstant error handling", {
