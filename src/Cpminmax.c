@@ -308,7 +308,7 @@ SEXP Cpmin0_radix_sorted_int(SEXP xx,
   if (TYPEOF(xx) != INTSXP ||
       TYPEOF(InPlace) != LGLSXP ||
       xlength(InPlace) != 1) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
   int nThread = as_nThread(nthreads);
   R_xlen_t N = xlength(xx);
@@ -361,7 +361,7 @@ SEXP Cpmin0_radix_sorted_int(SEXP xx,
 
 SEXP Cpmax0_bitwise(SEXP xx, SEXP InPlace, SEXP nthreads) {
   if (TYPEOF(xx) != INTSXP) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
   bool in_place = asLogical(InPlace);
   R_xlen_t N = xlength(xx);
@@ -415,7 +415,7 @@ SEXP Cpmin0_bitwise(SEXP xx,
                     SEXP InPlace,
                     SEXP nthreads) {
   if (TYPEOF(xx) != INTSXP) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
   bool in_place = asLogical(InPlace);
   R_xlen_t N = xlength(xx);
@@ -720,7 +720,7 @@ SEXP Cpmax(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
     UNPROTECT(1);
     return ans;
   }
-  return R_NilValue;
+  return R_NilValue; // # nocov
 }
 
 
@@ -939,7 +939,7 @@ SEXP Cpmin(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
     UNPROTECT(1);
     return ans;
   }
-  return R_NilValue;
+  return R_NilValue; // # nocov
 }
 
 SEXP CpmaxC_in_place(SEXP x, SEXP a, SEXP keepNas, SEXP nthreads) {
