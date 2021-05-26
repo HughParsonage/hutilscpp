@@ -191,10 +191,8 @@ SEXP Cpmax0_radix_sorted_dbl(SEXP xx,
 SEXP Cpmin0_radix_sorted_dbl(SEXP xx,
                              SEXP InPlace,
                              SEXP nthreads) {
-  if (TYPEOF(xx) != REALSXP ||
-      TYPEOF(InPlace) != LGLSXP ||
-      xlength(InPlace) != 1) {
-    return R_NilValue;
+  if (TYPEOF(xx) != REALSXP) {
+    return R_NilValue; // # nocov
   }
   int nThread = as_nThread(nthreads);
   R_xlen_t N = xlength(xx);
@@ -249,14 +247,12 @@ SEXP Cpmin0_radix_sorted_dbl(SEXP xx,
 SEXP Cpmax0_radix_sorted_int(SEXP xx,
                              SEXP InPlace,
                              SEXP nthreads) {
-  if (TYPEOF(xx) != INTSXP ||
-      TYPEOF(InPlace) != LGLSXP ||
-      xlength(InPlace) != 1) {
+  if (TYPEOF(xx) != INTSXP) {
     return R_NilValue; // # nocov
   }
   int nThread = as_nThread(nthreads);
   R_xlen_t N = xlength(xx);
-  bool in_place = asLogical(InPlace);
+  bool in_place = is_true(InPlace);
   int * x = INTEGER(xx);
   bool x0_positive = x[0] > 0;
   bool xn_positive = x[N - 1] > 0;
@@ -467,9 +463,6 @@ SEXP Cpmin0_bitwise(SEXP xx,
 
 SEXP Cpmax(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
   R_xlen_t N = xlength(x);
-  if (xlength(y) > N) {
-    return Cpmax(y, x, keepNas, nthreads); // # nocov
-  }
   int nThread = as_nThread(nthreads);
   bool keep_nas = asLogical(keepNas);
   // int switcher =
@@ -705,9 +698,6 @@ SEXP Cpmax(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
 
 SEXP Cpmin(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
   R_xlen_t N = xlength(x);
-  if (xlength(y) > N) {
-    return Cpmin(y, x, keepNas, nthreads);
-  }
   int nThread = as_nThread(nthreads);
   bool keep_nas = asLogical(keepNas);
   if (TYPEOF(x) == INTSXP &&
@@ -957,37 +947,6 @@ SEXP CpminC_in_place(SEXP x, SEXP a, SEXP keepNas, SEXP nthreads) {
       TYPEOF(a) == INTSXP) {
     int * xp = INTEGER(x);
     int aa = asInteger(a);
-    for (R_xlen_t i = 0; i < N; ++i) {
-      if (xp[i] >= aa) {
-        xp[i] = aa;
-      }
-    }
-  }
-  if (TYPEOF(x) == INTSXP &&
-      TYPEOF(a) == REALSXP) {
-    int * xp = INTEGER(x);
-    double ad = asReal(a);
-    // # nocov start
-    switch(dbl_is_int(ad)) {
-    case 0:
-      return Cpmin(x, a, keepNas, nthreads);
-    case 2:
-      return keep_nas ? IntegerNNA(N) : x;
-    case 1:
-      break;
-    }
-    // # nocov end
-    int aa = (int)(ad);
-    for (R_xlen_t i = 0; i < N; ++i) {
-      if (xp[i] >= aa) {
-        xp[i] = aa;
-      }
-    }
-  }
-  if (TYPEOF(x) == REALSXP &&
-      TYPEOF(a) == INTSXP) {
-    double * xp = REAL(x);
-    double aa = (double)asInteger(a);
     for (R_xlen_t i = 0; i < N; ++i) {
       if (xp[i] >= aa) {
         xp[i] = aa;

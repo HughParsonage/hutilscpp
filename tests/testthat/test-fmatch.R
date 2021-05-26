@@ -7,6 +7,11 @@ test_that("fmatchp works", {
     y <- sample.int(99)
     oi <- as.integer(fmatchp(x, y, nomatch = 0L, nThread = 2L))
     expect_equal(oi, match(x, y, nomatch = 0L))
+
+    x <- as.double(sample.int(1e5))
+    y <- as.double(sample.int(99))
+    oi <- as.integer(fmatchp(x, y, nomatch = 0L, nThread = 2L))
+    expect_equal(oi, match(x, y, nomatch = 0L))
     z <- sample(99, size = 98)
 
     oj <- as.integer(fmatchp(x, z, nomatch = 0L, nThread = 2L))
@@ -23,10 +28,16 @@ test_that("fmatchp works", {
     zf <- factor(z, levels = unique(lettre))
     lettref <- factor(lettre, levels = unique(lettre))
     expect_equal(finp(zf, lettref), zf %in% lettref)
+    expect_equal(fmatchp(zf, lettref, whichFirst = 1L),
+                 first_which(zf %in% lettref))
+    expect_equal(fmatchp(zf, lettref, whichFirst = 1L),
+                 first_which(zf %in% lettref))
+
     expect_equal(fmatchp(integer(0), 1:5, whichFirst = 1L), 0)
     expect_equal(finp(integer(0), 1:5), logical(0))
     expect_equal(finp(1:5, integer(0)), logical(5))
     expect_equal(fmatchp(1:5, integer(0), nomatch = 0L), integer(5))
+
 
   })
 
@@ -42,3 +53,11 @@ test_that("fmatchp works", {
 
 })
 
+test_that("edge cases", {
+  expect_equal(fmatchp(raw(5), 0:5),
+                match(raw(5), 0:5))
+  z <- as.POSIXlt(Sys.time() + 0:5)
+  tt <- as.POSIXlt(Sys.time() + 1e6 + 1:5)
+  expect_equal(fmatchp(z, tt, nomatch = 0L),
+               match(z, tt, nomatch = 0L))
+})
