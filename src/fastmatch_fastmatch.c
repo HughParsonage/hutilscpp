@@ -215,7 +215,7 @@ static double NA_int2real(hash_index_t res) {
 }
 
 /* the only externally visible function to be called from R */
-SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP hashOnly, SEXP Fin, SEXP WhichFirst, SEXP nthreads) {
+SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthreads) {
   int nThread = asInteger(nthreads);
   if (TYPEOF(WhichFirst) != INTSXP ||
       xlength(WhichFirst) != 1) {
@@ -226,7 +226,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP hashOnly, SEXP Fin, SEXP WhichFi
   SEXP a;
   SEXPTYPE type;
   hash_t *h = 0;
-  int nmv = asInteger(nonmatch), np = 0, y_to_char = 0, y_factor = 0, hash_only = asInteger(hashOnly);
+  int nmv = asInteger(nonmatch), np = 0, y_to_char = 0, y_factor = 0;
   if (fin | whichfirst) {
     nmv = 0; // fin should cause 0 in result
   }
@@ -358,10 +358,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP hashOnly, SEXP Fin, SEXP WhichFi
     }
   }
 
-  if (hash_only) {
-    if (np) UNPROTECT(np);
-    return y;
-  }
+
 
   { /* query the hash table */
 

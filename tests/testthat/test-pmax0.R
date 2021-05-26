@@ -1,3 +1,7 @@
+test_that("init", {
+  expect_true(TRUE)
+})
+
 test_that("pmax0 abs", {
   expect_true(TRUE) # to get started
   x <- c(-1, 0, 1, -1)
