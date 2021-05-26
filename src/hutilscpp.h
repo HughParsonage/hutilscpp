@@ -49,6 +49,7 @@ SEXP DoubleNNA(R_xlen_t N);
 
 // asInteger2
 int asInteger2(SEXP x);
+bool is_true(SEXP x);
 
 // diagnose_omp
 int as_nThread(SEXP x);

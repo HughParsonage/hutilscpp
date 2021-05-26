@@ -24,3 +24,10 @@ test_that("swap_xy", {
   expect_equal(pminV(1:5, 2:6 + 0),
                pminV(1:5 + 0, 2:6))
 })
+
+test_that("pmaxV(Int, Real)", {
+  x <- c(1L, 2:10)
+  y <- as.double(x + -5:4)
+  expect_equal(pmaxV(x, y), pmax(x, y))
+  expect_equal(pmaxV(y, x), pmax(y, x))
+})

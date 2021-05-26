@@ -24,6 +24,8 @@ test_that("pminC in-place", {
   expect_equal(pminC(oi, 2L), pmin(oi, 2L))
   pminC(oi, 2L, in_place = TRUE)
   expect_equal(oi, pmin2)
+
+  expect_equal(pminC(1:3, -3e9, in_place = TRUE), rep(-3e9, 3))
 })
 
 
