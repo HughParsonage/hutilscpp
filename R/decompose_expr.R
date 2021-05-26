@@ -60,7 +60,10 @@ decompose_expr <- function(sexprA,
       if (OR(is.numeric(rhs),
              AND(is.numeric(rhs_eval),
                  OR(length(rhs_eval) == 1L,
-                    OR(M == op2M("%between%") && length(rhs_eval) == 2L,
+                    OR((M == op2M("%between%") ||
+                        M == op2M("%(between)%") ||
+                        M == op2M("%]between[%")) &&
+                       length(rhs_eval) == 2L,
                        M == op2M("%in%")))))) {
         attr(isBinary, "rhs_eval") <- rhs_eval
         return(isBinary)
@@ -78,7 +81,9 @@ decompose_expr <- function(sexprA,
     x <- eval(sexprA[[2]], envir = .env)
     ox <- attr(isBinaryA, "M")
     rhs_eval <- attr(isBinaryA, "rhs_eval")
-    if (ox == op2M("%between%")) { # between so two elements
+    if (ox == op2M("%between%") ||
+        ox == op2M("%(between)%") ||
+        ox == op2M("%]between[%")) { # between so two elements
       x1 <- rhs_eval[[1]]
       x2 <- rhs_eval[[2]]
     } else if (ox == op2M("%in%")) {
@@ -114,7 +119,9 @@ decompose_expr <- function(sexprA,
       y <- eval(sexprB[[2]], envir = .env)
       oy <- attr(isBinaryB, "M")
       rhs_eval <- attr(isBinaryB, "rhs_eval")
-      if (oy == op2M("%between%")) { # between so two elements
+      if (oy == op2M("%between%") ||
+          oy == op2M("%(between)%") ||
+          oy == op2M("%]between[%")) { # between so two elements
         y1 <- rhs_eval[[1]]
         y2 <- rhs_eval[[2]]
       } else if (oy == op2M("%in%")) {
@@ -155,7 +162,9 @@ decompose_expr <- function(sexprA,
       z <- eval(sexprC[[2]], envir = .env)
       oz <- attr(isBinaryC, "M")
       rhs_eval <- attr(isBinaryC, "rhs_eval")
-      if (oz == op2M("%between%")) { # between so two elements
+      if (oz == op2M("%between%") ||
+          oz == op2M("%(between)%") ||
+          oz == op2M("%]between[%")) { # between so two elements
         z1 <- rhs_eval[[1]]
         z2 <- rhs_eval[[2]]
       } else if (oz == op2M("%in%")) {
