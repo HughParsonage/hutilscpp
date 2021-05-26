@@ -52,6 +52,7 @@ SEXP Crangel4(SEXP x) {
     UNPROTECT(1);
     return ans;
   }
+  // # nocov start
   SEXP ans = PROTECT(allocVector(REALSXP, 4));
   REAL(ans)[0] = has_false ? 0 : 1;
   REAL(ans)[1] = has_true ? 1 : 0;
@@ -59,6 +60,7 @@ SEXP Crangel4(SEXP x) {
   REAL(ans)[3] = wmax;
   UNPROTECT(1);
   return ans;
+  // # nocov end
 }
 
 SEXP Crangei4(SEXP x) {
@@ -104,6 +106,7 @@ SEXP Crangei4(SEXP x) {
     UNPROTECT(1);
     return ans;
   }
+  // # nocov start
   SEXP ans = PROTECT(allocVector(REALSXP, 4));
   REAL(ans)[0] = xmin;
   REAL(ans)[1] = xmax;
@@ -111,6 +114,7 @@ SEXP Crangei4(SEXP x) {
   REAL(ans)[3] = wmax;
   UNPROTECT(1);
   return ans;
+  // # nocov end
 }
 
 SEXP Cranged4(SEXP x) {
@@ -188,7 +192,7 @@ SEXP Crangel2_nanyNA(SEXP x, int nThread) {
     any_false |= xp[i] == 0;
   }
   } else {
-    any_true = false;
+    any_false = true;
 #if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread) reduction(|| : any_true)
 #endif
@@ -211,6 +215,8 @@ SEXP Cminmax(SEXP x, SEXP emptyResult, SEXP nthreads) {
   int nThread = as_nThread(nthreads);
 
   switch(TYPEOF(x)) {
+  case LGLSXP:
+    return Crangel2_nanyNA(x, nThread);
   case INTSXP: {
     const int * xp = INTEGER(x);
     int xmin = xp[0];
@@ -276,5 +282,5 @@ SEXP Cminmax(SEXP x, SEXP emptyResult, SEXP nthreads) {
     break;
 
   }
-  return R_NilValue;
+  return R_NilValue; // # nocov
 }

@@ -55,6 +55,13 @@ test_that("pmin0 sorted", {
   x <- 5:-6 + 0
 
   expect_equal(pmin0(x, sorted = TRUE), pmin(5:-6, 0))
+
+  x <- c(1L, 4:8)
+  expect_equal(pmin0(x, sorted = TRUE, in_place = TRUE), integer(length(x)))
+  expect_equal(x, integer(length(x)))
+  x <- c(1, 4:8)
+  expect_equal(pmin0(x, sorted = TRUE, in_place = TRUE), double(length(x)))
+  expect_equal(x, double(length(x)))
 })
 
 test_that("pmin0 sorted but all positive", {

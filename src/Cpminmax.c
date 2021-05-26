@@ -204,7 +204,7 @@ SEXP Cpmin0_radix_sorted_dbl(SEXP xx,
   if (!x0_positive && !xn_positive) {
     return xx;
   }
-  bool in_place = asLogical(InPlace);
+  bool in_place = is_true(InPlace);
   if (in_place) {
     if (x0_positive && xn_positive) {
       for (R_xlen_t i = 0; i < N; ++i) {
@@ -468,7 +468,7 @@ SEXP Cpmin0_bitwise(SEXP xx,
 SEXP Cpmax(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
   R_xlen_t N = xlength(x);
   if (xlength(y) > N) {
-    return Cpmax(y, x, keepNas, nthreads);
+    return Cpmax(y, x, keepNas, nthreads); // # nocov
   }
   int nThread = as_nThread(nthreads);
   bool keep_nas = asLogical(keepNas);
@@ -555,6 +555,8 @@ SEXP Cpmax(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
       UNPROTECT(1);
       return ans;
     }
+      // normally handled at R level
+      // # nocov start
       break;
     case 2:
       // NA
@@ -571,6 +573,7 @@ SEXP Cpmax(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
         return ans;
       }
       break;
+      // # nocov end
     case 1: {
         const int a = (int)ad;
         SEXP ans = PROTECT(allocVector(INTSXP, N));
@@ -838,6 +841,8 @@ SEXP Cpmin(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
       xlength(y) == 1) {
     const double * xp = REAL(x);
     const int ai = asInteger(y);
+    // ai == NA_INTEGER not permitted at R level
+    // # nocov start
     if (ai == NA_INTEGER) {
       if (keep_nas) {
         return IntegerNNA(N);
@@ -845,6 +850,7 @@ SEXP Cpmin(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
         return x;
       }
     }
+    // # nocov end
     const double ad = (double)ai;
     SEXP ans = PROTECT(allocVector(REALSXP, N));
     double * restrict ansp = REAL(ans);
@@ -887,6 +893,7 @@ SEXP Cpmin(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
       xlength(y) == 1) {
     const double * xp = REAL(x);
     const double a = asReal(y);
+    // # nocov start
     if (ISNAN(a)) {
       if (keep_nas) {
         return DoubleNNA(N);
@@ -894,6 +901,7 @@ SEXP Cpmin(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
         return x;
       }
     }
+    // # nocov end
     SEXP ans = PROTECT(allocVector(REALSXP, N));
     double * restrict ansp = REAL(ans);
     if (keep_nas) {
@@ -944,11 +952,11 @@ SEXP Cpmin(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
 
 SEXP CpmaxC_in_place(SEXP x, SEXP a, SEXP keepNas, SEXP nthreads) {
   if (xlength(a) != 1) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
 
   R_xlen_t N = xlength(x);
-  const bool keep_nas = asLogical(keepNas);
+  const bool keep_nas = is_true(keepNas);
   if (TYPEOF(x) == INTSXP &&
       TYPEOF(a) == INTSXP) {
     int * xp = INTEGER(x);
@@ -963,6 +971,7 @@ SEXP CpmaxC_in_place(SEXP x, SEXP a, SEXP keepNas, SEXP nthreads) {
       TYPEOF(a) == REALSXP) {
     int * xp = INTEGER(x);
     double ad = asReal(a);
+    // # nocov start
     switch(dbl_is_int(ad)) {
     case 0:
       return Cpmax(x, a, keepNas, nthreads);
@@ -971,6 +980,7 @@ SEXP CpmaxC_in_place(SEXP x, SEXP a, SEXP keepNas, SEXP nthreads) {
     case 1:
       break;
     }
+    // # nocov end
     int aa = (int)(ad);
     for (R_xlen_t i = 0; i < N; ++i) {
       if (xp[i] <= aa) {
@@ -993,7 +1003,7 @@ SEXP CpmaxC_in_place(SEXP x, SEXP a, SEXP keepNas, SEXP nthreads) {
     double * xp = REAL(x);
     double aa = asReal(a);
     if (ISNAN(aa)) {
-      return keep_nas ? DoubleNNA(N) : x;
+      return keep_nas ? DoubleNNA(N) : x; // # nocov
     }
     for (R_xlen_t i = 0; i < N; ++i) {
       if (xp[i] <= aa) {
@@ -1006,7 +1016,7 @@ SEXP CpmaxC_in_place(SEXP x, SEXP a, SEXP keepNas, SEXP nthreads) {
 
 SEXP CpminC_in_place(SEXP x, SEXP a, SEXP keepNas, SEXP nthreads) {
   if (xlength(a) != 1) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
 
   R_xlen_t N = xlength(x);
@@ -1025,6 +1035,7 @@ SEXP CpminC_in_place(SEXP x, SEXP a, SEXP keepNas, SEXP nthreads) {
       TYPEOF(a) == REALSXP) {
     int * xp = INTEGER(x);
     double ad = asReal(a);
+    // # nocov start
     switch(dbl_is_int(ad)) {
     case 0:
       return Cpmin(x, a, keepNas, nthreads);
@@ -1033,6 +1044,7 @@ SEXP CpminC_in_place(SEXP x, SEXP a, SEXP keepNas, SEXP nthreads) {
     case 1:
       break;
     }
+    // # nocov end
     int aa = (int)(ad);
     for (R_xlen_t i = 0; i < N; ++i) {
       if (xp[i] >= aa) {
@@ -1055,7 +1067,7 @@ SEXP CpminC_in_place(SEXP x, SEXP a, SEXP keepNas, SEXP nthreads) {
     double * xp = REAL(x);
     double aa = asReal(a);
     if (ISNAN(aa)) {
-      return keep_nas ? DoubleNNA(N) : x;
+      return keep_nas ? DoubleNNA(N) : x; // # nocov
     }
     for (R_xlen_t i = 0; i < N; ++i) {
       if (xp[i] >= aa) {

@@ -42,12 +42,19 @@ test_that("pmaxC_int_real", {
   o <- pmax(x, 2)
   pmaxC(x, 2, in_place = TRUE)
   expect_equal(x, o)
+  x <- 1:5
+  ans <- pmaxC(x, 2.5, in_place = TRUE)
+  expect_equal(ans, pmax(1:5, 2.5))
+
   xd <- 1:5 + 0
   pmaxC(xd, 2L, in_place = TRUE)
   expect_equal(xd, o)
+  expect_equal(pmaxC(1:3, 3e9, in_place = TRUE), rep(3e9, 3))
+})
 
-
-
+test_that("pmaxC real int", {
+  x <- c(0, 1.5)
+  expect_equal(pmaxC(x, 1L), pmax(x, 1L))
 })
 
 
