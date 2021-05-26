@@ -33,6 +33,8 @@ test_that("NAs", {
 
   expect_identical(anyOutside(c(1L, 4L, 3L), -1L, 5L, nas_absent = TRUE), 0L)
   expect_identical(anyOutside(c(1L, 4L, 3L), -1L, 5L, nas_absent = TRUE, na_is_outside = FALSE), 0L)
+  expect_identical(anyOutside(c(1L, 4L, 3L), -1L, 5L, nas_absent = TRUE, na_is_outside = TRUE), 0L)
+  expect_identical(anyOutside(c(1L, 4L, 3 ), -1 , 5 , nas_absent = TRUE, na_is_outside = TRUE), 0L)
 
   expect_identical(anyOutside(c(NA, 1L, 9L), 1L, 10L, na_is_outside = NA), NA_integer_)
   expect_identical(anyOutside(c(NA, 1L, 9L), 1L, 10L, na_is_outside = TRUE), 1L)
