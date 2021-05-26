@@ -74,6 +74,7 @@ test_that("pmin0 sorted but all positive", {
 test_that("pmin0 sorted but all negative", {
   z <- c(10:1, 0L)
   zd <- as.double(z)
+  expect_identical(pmin0(z, sorted = TRUE, in_place = FALSE), integer(11))
   expect_identical(pmin0(z, sorted = TRUE, in_place = TRUE), integer(11))
   expect_equal(z, integer(11))
   expect_identical(pmin0(zd, sorted = TRUE, in_place = TRUE), double(11))

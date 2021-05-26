@@ -320,7 +320,7 @@ SEXP Cpmin0_radix_sorted_int(SEXP xx,
     return xx;
   }
   if (in_place) {
-    if (!x0_positive && !xn_positive) {
+    if (x0_positive && xn_positive) {
       for (R_xlen_t i = 0; i < N; ++i) {
         x[i] = 0;
       }
@@ -625,31 +625,6 @@ SEXP Cpmax(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
   }
   if (TYPEOF(x) == REALSXP &&
       TYPEOF(y) == INTSXP &&
-      xlength(y) == 1) {
-    const double * xp = REAL(x);
-    const double ad = (double)asInteger(y);
-    SEXP ans = PROTECT(allocVector(REALSXP, N));
-    double * restrict ansp = REAL(ans);
-    if (keep_nas) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-      for (R_xlen_t i = 0; i < N; ++i) {
-        ansp[i] = ISNAN(xp[i]) ? NA_REAL : maxdd(xp[i], ad);
-      }
-    } else {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-      for (R_xlen_t i = 0; i < N; ++i) {
-        ansp[i] = maxdd(xp[i], ad);
-      }
-    }
-    UNPROTECT(1);
-    return ans;
-  }
-  if (TYPEOF(x) == REALSXP &&
-      TYPEOF(y) == INTSXP &&
       xlength(y) == N) {
     const double * xp = REAL(x);
     const int * yp = INTEGER(y);
@@ -788,6 +763,7 @@ SEXP Cpmin(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
       return ans;
     }
       break;
+      // # nocov start
     case 2:
       // NA
       if (keep_nas) {
@@ -808,7 +784,9 @@ SEXP Cpmin(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
         }
         UNPROTECT(1);
         return ans;
+
       }
+      // # nocov end
     }
   }
   if (TYPEOF(x) == INTSXP &&
@@ -831,42 +809,6 @@ SEXP Cpmin(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
 #endif
       for (R_xlen_t i = 0; i < N; ++i) {
         ansp[i] = minid(xp[i], yp[i]);
-      }
-    }
-    UNPROTECT(1);
-    return ans;
-  }
-  if (TYPEOF(x) == REALSXP &&
-      TYPEOF(y) == INTSXP &&
-      xlength(y) == 1) {
-    const double * xp = REAL(x);
-    const int ai = asInteger(y);
-    // ai == NA_INTEGER not permitted at R level
-    // # nocov start
-    if (ai == NA_INTEGER) {
-      if (keep_nas) {
-        return IntegerNNA(N);
-      } else {
-        return x;
-      }
-    }
-    // # nocov end
-    const double ad = (double)ai;
-    SEXP ans = PROTECT(allocVector(REALSXP, N));
-    double * restrict ansp = REAL(ans);
-    if (keep_nas) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-      for (R_xlen_t i = 0; i < N; ++i) {
-        ansp[i] = ISNAN(xp[i]) ? NA_REAL : mindd(xp[i], ad);
-      }
-    } else {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-      for (R_xlen_t i = 0; i < N; ++i) {
-        ansp[i] = mindd(xp[i], ad);
       }
     }
     UNPROTECT(1);
@@ -982,16 +924,6 @@ SEXP CpmaxC_in_place(SEXP x, SEXP a, SEXP keepNas, SEXP nthreads) {
     }
     // # nocov end
     int aa = (int)(ad);
-    for (R_xlen_t i = 0; i < N; ++i) {
-      if (xp[i] <= aa) {
-        xp[i] = aa;
-      }
-    }
-  }
-  if (TYPEOF(x) == REALSXP &&
-      TYPEOF(a) == INTSXP) {
-    double * xp = REAL(x);
-    double aa = (double)asInteger(a);
     for (R_xlen_t i = 0; i < N; ++i) {
       if (xp[i] <= aa) {
         xp[i] = aa;
