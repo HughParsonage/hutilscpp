@@ -49,12 +49,15 @@ int sex2int1(SEXP x) {
 }
 
 SEXP Cwhich_isnt_integerish(SEXP xx) {
-  if (TYPEOF(xx) == INTSXP) {
+  // handled at R level
+  // # nocov start
+  if (TYPEOF(xx) == INTSXP || xlength(xx) == 0) {
     return ScalarInteger(0);
   }
   if (TYPEOF(xx) != REALSXP) {
     return ScalarInteger(1);
   }
+  // # nocov end
   R_xlen_t N = xlength(xx);
   const double * xp = REAL(xx);
   for (R_xlen_t i = 0; i < N; ++i) {
@@ -111,7 +114,7 @@ SEXP Cis_safe2int(SEXP x) {
 
 SEXP Cforce_as_integer(SEXP xx, SEXP Na_code) {
   if (TYPEOF(xx) == INTSXP) {
-    return xx;
+    return xx; // # nocov
   }
   if (TYPEOF(xx) == LGLSXP) {
     R_xlen_t N = xlength(xx);
@@ -125,7 +128,7 @@ SEXP Cforce_as_integer(SEXP xx, SEXP Na_code) {
     return ans;
   }
   if (TYPEOF(xx) != REALSXP || TYPEOF(Na_code) != INTSXP) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
   int na_code = asInteger2(Na_code);
   if (na_code < 0 || na_code > 2) {

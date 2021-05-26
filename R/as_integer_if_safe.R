@@ -29,6 +29,9 @@
 #' @export
 
 as_integer_if_safe <- function(x) {
+  if (is.logical(x)) {
+    return(force_as_integer(x, 1L))
+  }
   if (is.double(x)) {
     if (is_altrep(x)) {
       # Implies out of range

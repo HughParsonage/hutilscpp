@@ -1,6 +1,7 @@
 #include "hutilscpp.h"
 
 SEXP CanyOutside(SEXP xx, SEXP aa, SEXP bb, SEXP nasAbsent, SEXP naIsOutside) {
+  // # nocov start
   if (TYPEOF(xx) != INTSXP && TYPEOF(xx) != REALSXP &&
       TYPEOF(aa) != INTSXP && TYPEOF(aa) != REALSXP &&
       TYPEOF(bb) != INTSXP && TYPEOF(bb) != REALSXP &&
@@ -12,6 +13,7 @@ SEXP CanyOutside(SEXP xx, SEXP aa, SEXP bb, SEXP nasAbsent, SEXP naIsOutside) {
       xlength(nasAbsent) != 1 || xlength(naIsOutside) != 1) {
     error("Internal error(CanyOutside): wrong lengths.");
   }
+  // # nocov end
   const int na_outside = asLogical(naIsOutside);
 
   switch (na_outside) {
