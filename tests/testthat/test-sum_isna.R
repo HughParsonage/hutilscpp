@@ -52,12 +52,7 @@ test_that("sum_isna long", {
 })
 
 
-test_that("sum_isfalse", {
-  x <- logical(1e5)
-  expect_equal(sum_isfalse(x), 1e5)
-  x <- c(TRUE, FALSE, NA)
-  expect_equal(sum_isfalse(x), 1)
-})
+
 
 test_that("sum_isna_real", {
   x <- c(1:5, 0.5)
@@ -94,6 +89,10 @@ test_that("sum_isna nThread == 1", {
 test_that("sum_isna_altrep", {
   expect_equal(sum_isna(1:5), 0L)
   expect_equal(sum_isna(1:5, do_anyNA = FALSE), 0L)
+})
+
+test_that("sum_isna(raw)", {
+  expect_equal(sum_isna(raw(5)), 0)
 })
 
 

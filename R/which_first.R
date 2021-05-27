@@ -113,7 +113,7 @@ which_first <- function(expr,
   }
   if (!is.call(sexpr) ||
       length(sexpr) != 3L ||
-      !(op <- do_op2M(operator <- as.character(sexpr[[1L]])))) {
+      isFALSE(op <- op2M(operator <- as.character(sexpr[[1L]])))) {
     o <- .which_first(expr, verbose = verbose, reverse = reverse)
     return(o)
   }
@@ -191,7 +191,6 @@ which_first <- function(expr,
     }
 
     if (length(rhs_eval) == length(lhs_eval) ||
-        operator == "%in%" ||
         operator == "%between%" ||
         operator == "%(between)%") {
       if (is.logical(rhs_eval)) {
@@ -246,17 +245,9 @@ which_first <- function(expr,
     if (op == 7L) {
       o <-
         if (reverse) {
-          switch(typeof(lhs_eval),
-                 "integer" = switch(typeof(rhs_eval),
-                                    "integer" = do_which_last_xi_ini(lhs_eval, rhs_eval),
-                                    "double" =  do_which_last_xi_ind(lhs_eval, rhs_eval)),
-                 "double" = do_which_last_xd_ind(lhs_eval, rhs_eval, anyNA(rhs_eval)))
+          fmatchp(lhs_eval, rhs_eval, whichFirst = -1L)
         } else {
-          switch(typeof(lhs_eval),
-                 "integer" = switch(typeof(rhs_eval),
-                                    "integer" = do_which_first_xi_ini(lhs_eval, rhs_eval),
-                                    "double" =  do_which_first_xi_ind(lhs_eval, rhs_eval)),
-                 "double" = do_which_first_xd_ind(lhs_eval, rhs_eval, anyNA(rhs_eval)))
+          fmatchp(lhs_eval, rhs_eval, whichFirst = 1L)
         }
       return(R_xlen_t(o))
     }
@@ -293,6 +284,13 @@ which_first <- function(expr,
     } else {
       y1d <- y1i <- rhs_eval[1L]
       y2d <- y2i <- rhs_eval[2L]
+    }
+
+    if (!is.double(y1d)) {
+      y1d <- as.double(y1d)
+    }
+    if (!is.double(y2d)) {
+      y2d <- as.double(y2d)
     }
 
     if (reverse) {
@@ -478,9 +476,106 @@ which_last <- function(expr,
 }
 
 
+do_which_first__ <- function(x, op, y,
+                             ny,
+                             y1i,
+                             y2i,
+                             y1d,
+                             y2d) {
+  Nx <- length(x)
+  Ny <- length(y)
+  if (ny > 2L && Nx != Ny) {
+    stop("Lengths differ.") # nocov
+  }
+  stopifnot(is.numeric(x),
+            is.integer(op), length(op) == 1L,
+            is.numeric(y),
+            is.integer(y1i), is.integer(y2i),
+            length(y1i) == 1L,
+            length(y2i) == 1L,
+            is.double(y1d), is.double(y2d),
+            length(y1d) == 1L,
+            length(y2d) == 1L)
+  .Call("Cwhich_first__",
+        x, op, y,
+        ny,
+        y1i,
+        y2i,
+        y1d,
+        y2d,
+        PACKAGE = packageName)
+}
 
+do_which_first <- function(x) {
+  .Call("Cwhich_first", x, PACKAGE = packageName)
+}
 
+do_which_last <- function(x) {
+  .Call("Cwhich_last", x, PACKAGE = packageName)
+}
 
+do_which_first_false <- function(x) {
+  .Call("Cwhich_first_false", x, PACKAGE = packageName)
+}
 
+do_which_last_false <- function(x) {
+  .Call("Cwhich_last_false", x, PACKAGE = packageName)
+}
 
+do_which_first_in_lgl <- function(x, anyNA_, any_, nall_) {
+  .Call("Cwhich_first_in_lgl", x, anyNA_, any_, nall_, PACKAGE = packageName)
+}
 
+do_which_last_in_lgl <- function(x, anyNA_, any_, nall_) {
+  .Call("Cwhich_last_in_lgl", x, anyNA_, any_, nall_, PACKAGE = packageName)
+}
+
+do_which_firstNA <- function(x) {
+  .Call("Cwhich_firstNA", x, PACKAGE = packageName)
+}
+
+do_which_lastNA <- function(x) {
+  .Call("Cwhich_lastNA", x, PACKAGE = packageName)
+}
+
+do_which_last_notTRUE <- function(x) {
+  .Call("Cwhich_last_notTRUE", x, PACKAGE = packageName)
+}
+
+do_which_last_notFALSE <- function(x) {
+  .Call("Cwhich_last_notFALSE", x, PACKAGE = packageName)
+}
+
+do_which_first_lgl_lgl_op <- function(x, y, op, reverse = FALSE) {
+  .Call("Cwhich_first_lgl_lgl_op", x, y, op, reverse, PACKAGE = packageName)
+}
+
+do_which_last__ <- function(x, op, y,
+                            ny,
+                            y1i,
+                            y2i,
+                            y1d,
+                            y2d) {
+  Nx <- length(x)
+  Ny <- length(y)
+  if (ny > 2L && Nx != Ny) {
+    stop("Lengths differ.") # nocov
+  }
+  stopifnot(is.numeric(x),
+            is.integer(op), length(op) == 1L,
+            is.numeric(y),
+            is.integer(y1i), is.integer(y2i),
+            length(y1i) == 1L,
+            length(y2i) == 1L,
+            is.double(y1d), is.double(y2d),
+            length(y1d) == 1L,
+            length(y2d) == 1L)
+  .Call("Cwhich_last__",
+        x, op, y,
+        ny,
+        y1i,
+        y2i,
+        y1d,
+        y2d,
+        PACKAGE = packageName)
+}

@@ -1,11 +1,12 @@
-test_that("sum_and3s works", {
-  sum_band3 <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L, nThread = 1L) {
-    if (missing(..1)) {
-      sum(exprA & exprB & exprC)
-    } else {
-      sum_band3(exprA & exprB, exprC, ...)
-    }
+sum_band3 <- function(exprA, exprB = TRUE, exprC = TRUE, ..., .parent_nframes = 1L, nThread = 1L) {
+  if (missing(..1)) {
+    sum(exprA & exprB & exprC)
+  } else {
+    sum_band3(exprA & exprB, exprC, ...)
   }
+}
+
+test_that("sum_and3s works", {
   abc <- -1:100
   def <- -1:100
   ghi <- -1:100
@@ -26,6 +27,10 @@ test_that("sum_and3s works", {
                DT[, sum_band3(A %in% c(5L, 5L, 6L), B == 2L, Z >= 1L)])
   expect_equal(DT[, sum_and3s(A %between% c(5L, 6L), B == 2L, Z >= 1L)],
                DT[, sum_band3(A %between% c(5L, 6L), B == 2L, Z >= 1L)])
+  expect_equal(DT[, sum_and3s(A %]between[% c(5L, 60L), B == 2L, Z >= 1L)],
+               DT[, sum_band3(A %]between[% c(5L, 60L), B == 2L, Z >= 1L)])
+  expect_equal(DT[, sum_and3s(A %(between)% c(5L, 60L), B == 2L, Z >= 1L)],
+               DT[, sum_band3(A %(between)% c(5L, 60L), B == 2L, Z >= 1L)])
   expect_equal(DT[, sum_and3s(A %in% c(5L, 6L), B == 2L, Z >= 1L)],
                DT[, sum_band3(A %in% c(5L, 6L), B == 2L, Z >= 1L)])
   expect_equal(DT[, sum_and3s(A %in% B, B == 2L, Z >= 1L)],
@@ -50,7 +55,17 @@ test_that("sum_and/or3s doubles", {
   # Would be zero if coerced to integer wrongly
   expect_equal(sum_and3s(x > 50, x < 51), 10)
   expect_equal(sum_and3s(x > 50.1, x < 50.9), 10)
+  expect_equal(sum_and3s(x %(between)% c(50.1, 50.9)), 10)
+  expect_equal(sum_and3s(x %]between[% c(50.1, 50.9)),
+               sum_band3(x %]between[% c(50.1, 50.9)))
+  expect_equal(sum_and3s(x %]between[% c(50.1, 55.9)),
+               sum_band3(x %]between[% c(50.1, 55.9)))
+  expect_equal(sum_and3s(x != 5.5),
+               sum_band3(x != 5.5))
+  expect_equal(sum_and3s(x != 50.5),
+               sum_band3(x != 50.5))
   expect_equal(sum_or3s(x > 50, x < 51), 10)
+  expect_equal(sum_or3s(x >= 50, x <= 51), 10)
   expect_equal(sum_or3s(x > 50.1, x < 50.9), 10)
 })
 

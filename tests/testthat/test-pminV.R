@@ -17,9 +17,11 @@ test_that("Error handling", {
 })
 
 test_that("in_place = TRUE", {
+  out <- "foo"
   x <- copy(1:10)
   pminV(x, x - 1L, in_place = TRUE)
   expect_equal(x, 0:9)
+  expect_equal(out, "foo")
 })
 
 test_that("swap_xy", {

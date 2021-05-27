@@ -26,21 +26,6 @@ test_that("range falls through", {
   expect_equal(range_rcpp(y)[1:2], range_rcpp(y))
 })
 
-test_that("halting", {
-  z <- c(0, 0, -2, 2)
-  y <- do_range_dbl(z, -1, 1)
-  expect_equal(y[1:2], c(-2, 0))
-  expect_equal(y[3], c(3))
-  y <- do_range_dbl(z, -3, 1)
-  expect_equal(y[4], c(4))
-
-  z <- as.integer(z)
-  y <- do_range_int(z, -1L, 1L)
-  expect_equal(y[1:2], c(-2, 0))
-  expect_equal(y[3], c(3))
-  y <- do_range_int(z, -3, 1)
-  expect_equal(y[4], c(4))
-})
 
 test_that("range on empty", {
   expect_warning(range0 <- range_rcpp(double(0)),

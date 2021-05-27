@@ -59,10 +59,23 @@ test_that("Braces may appear within command", {
 test_that("Big popper", {
   skip_if_not_installed("TeXCheckR")
   skip_if_not_installed("data.table")
-  skip_if_not(file.exists("~/AP-2018-retirement/report.tex"))
+  report.tex <-
+    if (file.exists("~/AP-2018-retirement/report.tex")) {
+      "~/AP-2018-retirement/report.tex"
+    } else {
+      system.file("extdata", "ap-2018-retirement-report.tex",
+                  package = "hutilscpp")
+    }
+  skip_if_not(file.exists(report.tex))
   library(TeXCheckR)
   library(data.table)
-  Housing <- read_tex_document("~/AP-2018-retirement/report.tex")
+  Housing <- tryCatch(read_tex_document(report.tex),
+                      error = function(e) {
+                        out <- 0L
+                        names(out) <- e$m
+                        out
+                      })
+  skip_if(is.integer(Housing), message = names(Housing))
   Housing_split = unlist(strsplit(Housing, split = ""))
   nFootnotes <- (length(grep("\\\\footnote(?![A-Za-z])[^\\{]*\\{", Housing, perl = TRUE)))
   footnote <- strsplit("footnote", split = "")[[1L]]
@@ -81,9 +94,14 @@ test_that("Big popper", {
                                                                collapse = "")),
                                              keyby = c("Ope", "Clo", "I")]
 
+
   expect_true(any(grepl("For example, see: \\textcites[][]{IndustrySuperAustralia2015inquiryintoeconom",
                         DT$Text[1:10],
                         fixed = TRUE)))
 
 
 })
+
+
+
+

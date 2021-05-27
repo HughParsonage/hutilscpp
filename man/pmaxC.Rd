@@ -16,7 +16,7 @@ pmaxC(
   a,
   in_place = FALSE,
   keep_nas = FALSE,
-  dbl_ok = TRUE,
+  dbl_ok = NA,
   nThread = getOption("hutilscpp.nThread", 1L)
 )
 
@@ -25,7 +25,7 @@ pminC(
   a,
   in_place = FALSE,
   keep_nas = FALSE,
-  dbl_ok = TRUE,
+  dbl_ok = NA,
   nThread = getOption("hutilscpp.nThread", 1L)
 )
 
@@ -83,10 +83,17 @@ dependent on the representation of \code{NA}s at the C++ level.}
 }}
 
 \item{dbl_ok}{\describe{
-\item{\code{TRUE | FALSE}, default: \code{TRUE}}{Is it acceptable to return
-a non-integer vector if \code{x} is integer? If \code{TRUE}, the default,
-if \code{x} is an integer vector, a double vector may be returned if
-\code{a} is not an integer.}
+\item{\code{logical(1)}, default: \code{NA}}{Is it acceptable to return
+a non-integer vector if \code{x} is integer?
+
+This argument will have effect \code{a} is both double and cannot be coerced to
+\code{integer}:
+
+If \code{NA}, the default, a message is emitted whenever a double vector
+needs to be returned.
+If \code{FALSE}, an error is returned.
+If \code{TRUE}, neither an error nor a message is returned.
+}
 }}
 
 \item{nThread}{\describe{
@@ -132,5 +139,8 @@ nonnegative, the vector is returned.
 }
 \examples{
 pmaxC(-5:5, 2)
+pmaxC(1:4, 5.5)
+pmaxC(1:4, 5.5, dbl_ok = TRUE)
+# pmaxC(1:4, 5.5, dbl_ok = FALSE)  # error
 
 }

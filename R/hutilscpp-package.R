@@ -1,5 +1,4 @@
 #' @keywords internal
-#' @importFrom Rcpp evalCpp
 #' @import data.table
 #' @importFrom utils hasName
 #' @importFrom utils head

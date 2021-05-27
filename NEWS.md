@@ -1,3 +1,14 @@
+## hutilscpp 0.7.0
+
+Functions are now in C to improve install time and size.
+
+* New functions:
+  - `Implies` for logical implies
+  - `divisible2` test evenness of numbers
+  - `fmatchp`, `finp` experimental parallel hashing functions
+  - `is_sorted` and `isntSorted` for assertions about sorted atomic vectors
+  - `minmax` multithreaded function of `c(min(x), max(x))`
+
 ## hutilscpp 0.5.2
 * Attempt fix of UBSAN error in which_first
 

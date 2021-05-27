@@ -1,11 +1,15 @@
 Package: hutilscpp
 Title: Miscellaneous Functions in C++
-Version: 0.6.0
+Version: 0.7.0
 Authors@R: 
-    person(given = "Hugh",
+    c(person(given = "Hugh",
            family = "Parsonage",
            role = c("aut", "cre"),
-           email = "hugh.parsonage@gmail.com")
+           email = "hugh.parsonage@gmail.com"),
+      person(given = "Simon", 
+              family = "Urbanek",
+              role = "ctb",
+              comment = "fastmatch components"))
 Description: Provides utility functions that are simply, frequently used, 
     but may require higher performance that what can be obtained from base R.
     Incidentally provides support for 'reverse geocoding', such as matching a point
@@ -17,10 +21,7 @@ BugReports: https://github.com/hughparsonage/hutilscpp/issues
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-LinkingTo: 
-    Rcpp
 Imports: 
-    Rcpp, 
     data.table, 
     glue,
     hutils,

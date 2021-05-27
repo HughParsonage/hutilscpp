@@ -1,8 +1,12 @@
 #' Cumulative sum unless reset
 #' @param x A logical vector indicating when the sum should \emph{continue}.
+#' Missing values in \code{x} is an error.
 #' @param y Optional: a numeric vector the same length as \code{x} to cumulatively sum.
-#' @return If \code{y} is a double vector, a double vector of cumulative sums,
-#' resetting whenever \code{x} is \code{FALSE}; otherwise an integer vector.
+#' @return A vector of cumulative sums,
+#' resetting whenever \code{x} is \code{FALSE}.
+#' The return type is double if \code{y} is double; otherwise an integer vector. Integer
+#' overflow wraps around, rather than being promoted to double type, as this
+#' function is intended for 'shortish' runs of cumulative sums.
 #'
 #' If \code{length(x) == 0}, \code{y} is returned (i.e. \code{integer(0)} or \code{double(0)}.
 #'
@@ -22,7 +26,7 @@ cumsum_reset <- function(x, y = as.integer(x)) {
   }
   if (missing(y)) {
     if (length(x)) {
-      return(do_cumsum_reset_logical(x))
+      return(.Call("Ccumsum_reset", x, NULL, PACKAGE = packageName))
     } else {
       return(integer(0L))
     }
@@ -35,13 +39,27 @@ cumsum_reset <- function(x, y = as.integer(x)) {
   if (!length(y)) {
     return(y)
   }
-  if (is.integer(y)) {
-    return(do_cumsum_reset_integer(x, y))
+  if (!is.numeric(y)) {
+    stop("`y` was type ", class(y), ", but must be an integer or double.")
   }
-  if (is.double(y)) {
-    return(do_cumsum_reset_double(x, y))
-  }
-  stop("`y` was type ", class(y), ", but must be an integer or double.")
+  .Call("Ccumsum_reset", x, y, PACKAGE = packageName)
 }
 
+
+# nocov start
+cumsum_reset_where <- function(where, y, .parent_nframes = 1L) {
+  sexpr <- substitute(where)
+  isBinaryW <- is_binary_sexp(sexpr, .parent_nframes = .parent_nframes + 1L)
+  if (isBinaryW) {
+    x <- eval.parent(sexpr[[2]], n = .parent_nframes)
+    o <- attr(isBinaryW, "M")
+    rhs_eval <- attr(isBinaryW, "rhs_eval")
+    ans <- .Call("Ccumsum_reset_where", x, y, o, rhs_eval, PACKAGE = packageName)
+    if (!is.null(ans)) {
+      return(ans)
+    }
+  }
+  cumsum_reset(where, y)
+}
+# nocov end
 

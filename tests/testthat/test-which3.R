@@ -22,6 +22,8 @@ test_that("which3 works", {
   expect_equal(which3(x, y, x),
                which(x & y & x))
 
+  expect_equal(which3(y, y, y), 1:3)
+
   library(data.table)
   TFN <- CJ(a = c(TRUE, FALSE, NA),
             b = c(TRUE, NA, FALSE),

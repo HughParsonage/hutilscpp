@@ -105,12 +105,18 @@ test_that("is_constant with NA", {
 })
 
 test_that("isntConstant works", {
+  expect_equal(isntConstant(integer(0)), 0)
   expect_equal(isntConstant(c(1, 1, 1)), 0L)
   expect_equal(isntConstant(rep(0L, 2L)), 0L)
   expect_equal(isntConstant(c(1, 2, 1)), 2L)
   expect_equal(isntConstant(c(1L, 1L, 1L, -3L)), 4L)
   expect_equal(isntConstant(logical(4)), 0L)
   expect_equal(isntConstant(c(logical(4), TRUE)), 5L)
+  expect_equal(isntConstant(rep(NaN, 10)), 0)
+  expect_equal(isntConstant(character(5)), 0)
+  expect_equal(isntConstant(rep(NA_character_, 5)), 0)
+  expect_equal(isntConstant(complex(5)), 0)
+  expect_equal(isntConstant(1:5 + complex(5)), 2)
 })
 
 test_that("isntConstant error handling", {
@@ -156,10 +162,44 @@ test_that("isntConstant other type", {
 })
 
 test_that("do_isntConstant(LGL)", {
-  expect_equal(do_isntConstant(NULL), 0L)
-  expect_equal(do_isntConstant(TRUE), 0L)
-  expect_equal(do_isntConstant(c(TRUE, FALSE)), 2L)
-  expect_equal(do_isntConstant(c(TRUE, TRUE)), 0L)
+  expect_equal(isntConstant(NULL), 0L)
+  expect_equal(isntConstant(TRUE), 0L)
+  expect_equal(isntConstant(c(TRUE, FALSE)), 2L)
+  expect_equal(isntConstant(c(TRUE, TRUE)), 0L)
+})
+
+test_that("hutilsc original", {
+  xl <- logical(5)
+  xi <- integer(5)
+  xd <- double(5)
+  xc <- character(5)
+  expect_true(is_constant(xl))
+  expect_true(is_constant(xi))
+  expect_true(is_constant(xd))
+  expect_true(is_constant(xc))
+
+  yl <- c(TRUE, xl)
+  yi <- c(1L, xi)
+  yd <- c(1, xd)
+  yc <- c(" ", xc)
+  expect_false(is_constant(yl))
+  expect_false(is_constant(yi))
+  expect_false(is_constant(yd))
+  expect_false(is_constant(yc))
+
+  xcomplex <- complex(10)
+  expect_true(is_constant(xcomplex))
+  xcomplex <- c(xcomplex, 2)
+  expect_false(is_constant(xcomplex))
+
+  xraw <- raw(10)
+  expect_true(is_constant(xraw))
+  xraw <- c(xraw, charToRaw("b"))
+  expect_false(is_constant(xraw))
+
+  expect_true(is_constant(NULL))
+  expect_true(is_constant(1))
+
 })
 
 

@@ -51,34 +51,12 @@ range_rcpp <- function(x,
     }
     return(out)
   }
-  if (is.integer(x)) {
-    return(R_xlen_t(do_range_int(x)))
+  ans <- .Call("Crange", x, PACKAGE = packageName)
+  if (is.null(ans)) {
+    range(x)
+  } else {
+    ans
   }
-  if (is.double(x)) {
-    if (anyNAx) {
-      return(do_range_dbl(x))
-    } else {
-      return(do_range_dbl_simple(x))
-    }
-  }
-  if (is.logical(x)) {
-    if (any(x, na.rm = TRUE)) {
-      if (all(x, na.rm = TRUE)) {
-        o <- c(TRUE, TRUE, rep(do_which_first(x), 2L))
-      } else {
-        o <- c(FALSE, TRUE, do_which_first_false(x), do_which_first(x))
-      }
-    } else {
-      ff <- do_which_first_false(x)
-      if (ff) {
-        o <- c(FALSE, FALSE, rep(ff, 2L))
-      } else {
-        o <- as.integer(c(NA, NA, NA, NA))
-      }
-    }
-    return(o)
-  }
-  range(x)
 }
 
 

@@ -1,7 +1,8 @@
-name: Render and Deploy RMarkdown Website
+name: Check
 'on': push
 jobs:
   build:
+    name: covr
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -11,10 +12,23 @@ jobs:
           Rscript -e "install.packages(c('rcmdcheck', 'remotes', 'covr'), repos = 'https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
           Rscript -e "remotes::install_deps(dependencies = TRUE, repos = 'https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
       - name: codecov
-        run: Rscript -e "covr::codecov()"
+        run: Rscript -e "covr::codecov(quiet = FALSE)"
+    container: rocker/verse:latest
+  rcmdchecker:
+    name: Rcmdcheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@master
+      - name: Install Package Dependencies
+        run: |-
+            Rscript -e "install.packages(c('rcmdcheck', 'remotes'), repos = 'https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
+            Rscript -e "remotes::install_deps(dependencies = TRUE, repos = 'https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
+      - name: Run Check
+        run: Rscript -e "rcmdcheck::rcmdcheck(build_args = '--no-manual')"
     container: rocker/verse:latest
   test-r-sanitizers:
-    name: r-package (ubuntu-latest, R-devel, GCC ASAN/UBSAN)
+    name: ASAN-UBSAN
     timeout-minutes: 60
     runs-on: ubuntu-latest
     container:
@@ -28,9 +42,11 @@ jobs:
       - name: Install packages
         shell: bash
         run: |
-          Rdevel -q -e "ip <- function(x) install.packages(x, quiet = TRUE, repos = 'https://cran.r-project.org'); ip(c('Rcpp', 'data.table', 'glue', 'hutils', 'magrittr'))"
+          Rdevel -q -e "ip <- function(x) install.packages(x[!sapply(x, requireNamespace, quietly = TRUE)], quiet = TRUE, repos = 'https://cran.r-project.org'); ip(c('testthat', 'data.table', 'glue', 'hutils', 'magrittr'))"
           Rdevel CMD build .
-          Rdevel CMD INSTALL hutilscpp*.tar.gz
+          Rdevel CMD INSTALL --install-tests hutilscpp*.tar.gz
+          Rdevel -q -e "sapply(dir(path = find.package('hutilscpp'), recursive = TRUE, full.names = TRUE), function(x) file.size(x) / 1024)"
+          Rdevel -q -e "testthat::test_package('hutilscpp', reporter = testthat::LocationReporter, filter = 'fmatch|which')"
           Rdevel -q -e "z3 <- integer(3); hutilscpp::which_first(z3 == NaN)"
           Rdevel -q -e "z3 <- integer(3); hutilscpp::which_first(z3 != NaN)"
           Rdevel -q -e "z3 <- integer(3); hutilscpp::which_first(z3 >= 2147483647.1)"

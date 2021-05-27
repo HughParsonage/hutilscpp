@@ -34,29 +34,7 @@ sum_isna <- function(x, do_anyNA = TRUE, nThread = getOption("hutilscpp.nThread"
     return(as.integer(anyNA(x)))
   }
 
-  o <- switch(typeof(x),
-              "logical" = sum_isna_logi(x, nThread = nThread),
-
-              "integer" = sum_isna_int(x, nThread = nThread),
-
-              "double"  = sum_isna_dbl(x, nThread = nThread),
-
-              "complex" = sum_isna_complx(x, nThread = nThread),
-
-              "character" = sum_isna_char(x, nThread = nThread),
-
-              # nocov start
-              {
-                stop("Internal error: anyNA(x) was TRUE but typeof(x) is ",
-                     typeof(x),
-                     ", a contradiction.")
-              }
-              # nocov end
-  )
-  if (o <= .Machine$integer.max) {
-    o <- as.integer(o)
-  }
-  return(o)
+  .Call("Csum_isna", x, nThread, PACKAGE = packageName)
 }
 
 

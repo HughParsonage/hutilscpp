@@ -23,7 +23,7 @@ which_isnt_integerish <- function(x) {
       o <- .Machine$integer.max + first(x) + 2L
     }
   } else {
-    o <- do_which_isnt_integerish(x)
+    o <- .Call("Cwhich_isnt_integerish", x, PACKAGE = packageName)
   }
   if (o <= 2147483647) {
     o <- as.integer(o)

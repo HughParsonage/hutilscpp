@@ -35,7 +35,7 @@ isnt_number <- function(a, na.bad = TRUE, infinite.bad = TRUE, int.only = FALSE)
   if (na.bad && is.na(a)) {
     o <- TRUE
     ac <- deparse(substitute(a))
-    attr(o, "ErrorMessage") <- paste0("`", ac, "= NA`, but this is not permitted.")
+    attr(o, "ErrorMessage") <- paste0("`", ac, " = NA`, but this is not permitted.")
     return(o)
   }
   if (infinite.bad && is.infinite(a)) {
@@ -78,12 +78,11 @@ isFALSE <- function(x) {
 }
 
 
-firstNonNegativeRadix <- function(x, ...) {
-  if (is.double(x)) {
-    do_firstNonNegativeRadix_dbl(x, ...)
-  } else {
-    do_firstNonNegativeRadix_int(x, ...)
-  }
+firstNonNegativeRadix <- function(x, mini = 0L, maxi = -1L, desc = FALSE) {
+  .Call("CfirstNonNegativeRadix",
+        x,
+        mini, maxi, desc,
+        PACKAGE = packageName)
 }
 
 g <- glue::glue
@@ -97,6 +96,22 @@ is_wholer <- function(dbl) {
   dbl == as.integer(dbl)
 }
 
+
+is_safe2int <- function(x) {
+  .Call("Cis_safe2int", x, PACKAGE = packageName)
+}
+
+force_as_integer <- function(x, na_code = NULL) {
+  if (is.null(na_code)) {
+    na_code <- is_safe2int(x)
+  }
+  ans <- .Call("Cforce_as_integer", x, na_code, PACKAGE = packageName)
+  if (is.null(ans)) {
+    return(as.double(x)) # nocov
+  }
+  ans
+}
+
 # quiet double to int -- when passed to a C++ function that
 # accepts int but only conditionally uses
 qd2i <- function(x) {
@@ -106,6 +121,8 @@ qd2i <- function(x) {
     NA_integer_
   }
 }
+
+
 
 # nocov start
 is64bit <- function() .Machine$sizeof.pointer == 8L

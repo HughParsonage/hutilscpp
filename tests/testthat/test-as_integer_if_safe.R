@@ -1,5 +1,12 @@
 context("test-as_integer_if_safe")
 
+test_that("internals", {
+  expect_equal(is_safe2int(c(1, 2, NA, 3)), 2)
+  expect_equal(is_safe2int(c(1, 2.5, NA, 3)), 0)
+  expect_equal(is_safe2int(c("a")), 0)
+  expect_equal(force_as_integer(1), 1L)
+})
+
 test_that("as_integer_if_safe works", {
   expect_identical(as_integer_if_safe(4), 4L)
   expect_identical(as_integer_if_safe(4:5), 4:5)
@@ -35,7 +42,7 @@ test_that("ubsan warning", {
   expect_true(is.integer(as_integer_if_safe(NA_real_)))
   expect_false(is.integer(as_integer_if_safe(Inf)))
   expect_false(is.integer(as_integer_if_safe(-Inf)))
-  expect_error(force_as_integer(double(10), na_code = 0L), regexp = "Internal error")
+  expect_error(force_as_integer(double(10), na_code = 0L))
 })
 
 test_that("large even numbers", {
@@ -51,5 +58,12 @@ test_that("altrep", {
   skip_if_not(is64bit())
   expect_true(is.double(as_integer_if_safe(-3e9:3e9)))
 })
+
+test_that("logical", {
+  expect_equal(as_integer_if_safe(c(FALSE, TRUE, NA)),
+               c(0L, 1L, NA_integer_))
+})
+
+
 
 

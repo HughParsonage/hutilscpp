@@ -27,14 +27,15 @@ squish <- function(x, a, b, in_place = FALSE) {
 
   if (is.integer(x)) {
     if (is.integer(a) && is.integer(b)) {
-      squishi(x, a, b, in_place)
+      .Call("CSquish", x, c(a, b), PACKAGE = packageName)
     } else {
       stop("`x` was type integer but `a` was type '", class(a), "' and ",
            "`b` was type '", class(b), "'. ",
            "Coerce `x`, `a`, `b` to the same type.")
     }
   } else if (is.double(x)) {
-    squishn(x, as.double(a), as.double(b), in_place)
+    ab <- as.double(c(a, b))
+    .Call("CSquish", x, ab, PACKAGE = packageName)
   } else {
     stop("`x` was type ", typeof(x), ", but must be numeric.")
   }

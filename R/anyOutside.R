@@ -61,42 +61,16 @@ anyOutside <- function(x, a, b, nas_absent = NA, na_is_outside = NA) {
   if (length(nas_absent) != 1L) {
     stop("`nas_absent` had length ", length(nas_absent), ", but must be length-one.")
   }
-  nas_present <-
-    if (anyNA(nas_absent)) {
-      anyNA(x)
-    } else {
-      !nas_absent
-    }
-
-  if (nas_present && isFALSE(na_is_outside)) {
-    if (min(x, na.rm = TRUE) >= a && max(x, na.rm = TRUE) <= b) {
-      return(0L)
-    }
+  if (is.integer(x)) {
+    a <- ensure_integer(a)
+    b <- ensure_integer(b)
+  }
+  if (is.double(x)) {
+    a <- as.double(a)
+    b <- as.double(b)
   }
 
-  if (is.integer(x) && is.integer(a) && is.integer(b)) {
-    if (anyNA(na_is_outside)) {
-      o <- anyOutside_int(x, a, b, nas_present = nas_present, na_is_outside = TRUE)
-      if (o && is.na(x[o])) {
-        return(NA_integer_)
-      }
-    } else {
-      o <- anyOutside_int(x, a, b, nas_present = nas_present, na_is_outside = na_is_outside)
-    }
-    return(o)
-  }
-  if (is.double(x) && is.double(a) && is.double(b)) {
-    if (anyNA(na_is_outside)) {
-      o <- anyOutside_dbl(x, a, b, nas_present = nas_present, na_is_outside = TRUE)
-      if (o && is.na(x[o])) {
-        return(NA_integer_)
-      }
-    } else {
-      o <- anyOutside_dbl(x, a, b, nas_present = nas_present, na_is_outside = na_is_outside)
-    }
-    return(o)
-  }
-  stop("`x`, `a`, and `b` must be numeric vectors of the same type.")
+  return(.Call("CanyOutside", x, a, b, nas_absent, na_is_outside, PACKAGE = packageName))
 }
 
 

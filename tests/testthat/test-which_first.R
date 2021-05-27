@@ -9,6 +9,12 @@ test_that("which_first works", {
   expect_identical(which_first(x >= 0), 1L)
   expect_identical(which_first(x <= 0), 0L)
   expect_identical(which_first(x != 0), 1L)
+  expect_identical(which_first(x < 0L), 0L)
+  expect_identical(which_first(x > 0L), 1L)
+  expect_identical(which_first(x == 0L), 0L)
+  expect_identical(which_first(x >= 0L), 1L)
+  expect_identical(which_first(x <= 0L), 0L)
+  expect_identical(which_first(x != 0L), 1L)
   x30 <- rep(3, 4)
   expect_identical(which_first(x30 != 3.0), 0L)
 
@@ -242,6 +248,8 @@ test_that("LHS logical length-one", {
 })
 
 test_that("RHS NA", {
+  skip_if_not_installed("withr")
+  withr::with_options(list(hutilscpp_suppressWarning = FALSE), {
   x <- c(NA, NA)
   expect_error(which_first(x > NA),
                regexp = "This is not supported for operator '>'.",
@@ -268,7 +276,7 @@ test_that("RHS NA", {
                  regexp = "`rhs` appears to be logical NA.",
                  fixed = TRUE)
   expect_equal(wf_zisntna, 2L)
-
+  })
 })
 
 test_that("lhs_eval length 0", {
@@ -860,6 +868,8 @@ test_that("which_first(lgl lgl)", {
   B2 <- c(TRUE, FALSE)
   B3 <- c(FALSE, TRUE)
   B4 <- c(NA, FALSE)
+  N3 <- c(NA, NA, NA)
+  F2 <- c(FALSE, FALSE)
   T2 <- c(TRUE, TRUE)
   expect_equal(which_first(x %in% B1),
                first_which(x %in% B1))
@@ -870,34 +880,14 @@ test_that("which_first(lgl lgl)", {
   expect_equal(which_first(x %in% c(NA, TRUE, FALSE, TRUE)), 1)
   expect_equal(which_first(x %between% T2),
                first_which(and(x >= T2[1], x <= T2[2])))
+  expect_equal(which_first(N3 %between% F2), 0L)
+  expect_equal(which_first(N3 %between% T2), 0L)
   expect_equal(which_first(x %in% T2), which_first(x))
   T0 <- logical(0)
   expect_equal(which_first(x %in% T0),
                first_which(x %in% T0))
 })
 
-test_that("which_first internals", {
-  expect_equal(do_which_first_notTRUE(c(FALSE)), 1L)
-  expect_equal(do_which_first_notTRUE(c(TRUE)), 0L)
-  expect_equal(do_which_first_notTRUE(c(TRUE, TRUE)), 0L)
-  expect_equal(do_which_first_notTRUE(c(NA)), 1L)
-
-  all_lgls <- c(TRUE, FALSE, NA)
-  expect_equal(do_which_first_lgl_lgl_op(logical(0), logical(0), 1, TRUE), 0)
-  expect_error(do_which_first_lgl_lgl_op(logical(5), logical(3), do_op2M("%between%")))
-               # regex = "length.(2|two)")
-  expect_equal(do_which_first_lgl_lgl_op(logical(11), all_lgls, do_op2M("%in%")), 1)
-  expect_equal(do_which_first_lgl_lgl_op(logical(11), all_lgls, do_op2M("%in%"), TRUE), 11)
-  expect_equal(do_which_first_lgl_lgl_op(logical(11), TRUE, do_op2M("%in%")), 0)
-  expect_equal(do_which_first_lgl_lgl_op(logical(11), FALSE, do_op2M("%in%")), 1)
-  expect_equal(do_which_first_lgl_lgl_op(logical(11), c(TRUE, FALSE), do_op2M("%between%")), 0)
-  expect_equal(do_which_first_lgl_lgl_op(c(TRUE, NA), c(FALSE, NA), do_op2M("%in%")), 2)
-  expect_equal(do_which_first_lgl_lgl_op(c(TRUE, TRUE), c(TRUE, FALSE), do_op2M("%between%")), 0)
-  expect_equal(do_which_first_lgl_lgl_op(c(TRUE, TRUE), c(TRUE, TRUE), do_op2M("%in%")), 1)
-  expect_equal(do_which_first_lgl_lgl_op(c(FALSE, TRUE), c(TRUE, TRUE), do_op2M("%in%")), 2)
-  expect_equal(do_which_first_lgl_lgl_op(c(FALSE, FALSE), c(TRUE, TRUE), do_op2M("%between%")), 0)
-
-})
 
 
 
@@ -1279,6 +1269,14 @@ test_that("do_which_first_xd_ind", {
   d0 <- double(0)
   expect_equal(which_first(x %in% d0),
                first_which(x %in% d0))
+})
+
+test_that("which_first unusual", {
+  x <- 1:12
+  expect_equal(which_first(x %(between)% c(2L, 5L)), 3L)
+  expect_equal(which_last(x %(between)% c(2L, 5L)), 4L)
+  expect_equal(which_first(x %]between[% c(2L, 5L)), 1L)
+  expect_equal(which_last(x %]between[% c(2L, 5L)), 12L)
 })
 
 

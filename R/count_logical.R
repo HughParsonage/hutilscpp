@@ -12,9 +12,6 @@ count_logical <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
   if (!is.logical(x)) {
     stop(g("`x` was type {typeof(x)}, but must be type logical."))
   }
-  if (length(x) <= .Machine$integer.max) {
-    do_count_logical(x, nThread)
-  } else {
-    do_count_logical_long(x, nThread)
-  }
+  nThread <- check_omp(nThread)
+  .Call("Ccount_logical", x, nThread, PACKAGE = packageName)
 }

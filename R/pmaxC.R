@@ -21,10 +21,17 @@
 #' }
 #'
 #' @param dbl_ok \describe{
-#' \item{\code{TRUE | FALSE}, default: \code{TRUE}}{Is it acceptable to return
-#' a non-integer vector if \code{x} is integer? If \code{TRUE}, the default,
-#' if \code{x} is an integer vector, a double vector may be returned if
-#' \code{a} is not an integer.}
+#' \item{\code{logical(1)}, default: \code{NA}}{Is it acceptable to return
+#' a non-integer vector if \code{x} is integer?
+#'
+#' This argument will have effect \code{a} is both double and cannot be coerced to
+#' \code{integer}:
+#'
+#' If \code{NA}, the default, a message is emitted whenever a double vector
+#' needs to be returned.
+#' If \code{FALSE}, an error is returned.
+#' If \code{TRUE}, neither an error nor a message is returned.
+#' }
 #' }
 #'
 #' @param sorted \describe{
@@ -71,6 +78,9 @@
 #'
 #' @examples
 #' pmaxC(-5:5, 2)
+#' pmaxC(1:4, 5.5)
+#' pmaxC(1:4, 5.5, dbl_ok = TRUE)
+#' # pmaxC(1:4, 5.5, dbl_ok = FALSE)  # error
 #'
 #' @export pmaxC pmax0 pmaxV pmax3
 #'
@@ -79,10 +89,16 @@
 pmaxC <- function(x, a,
                   in_place = FALSE,
                   keep_nas = FALSE,
-                  dbl_ok = TRUE,
+                  dbl_ok = NA,
                   nThread = getOption("hutilscpp.nThread", 1L)) {
+  if (msg_dbl_ok <- anyNA(dbl_ok)) {
+    dbl_ok <- TRUE
+  }
+  check_TF(dbl_ok)
+
   check_TF(in_place)
   check_TF(keep_nas)
+  nThread <- check_omp(nThread)
   if (!is.atomic(x) || !is.numeric(x)) {
     stop("\n`x` was of type ", typeof(x), ", class ", toString(class(x)), " and\n",
          "`a` was of type ", typeof(a), ", class ", toString(class(a)), " and\n",
@@ -91,17 +107,28 @@ pmaxC <- function(x, a,
   if (amsg <- isnt_number(a, na.bad = TRUE, infinite.bad = TRUE, int.only = !dbl_ok)) {
     stop(attr(amsg, "ErrorMessage"))
   }
+  x_was_integer <- is.integer(x)
   if (is.double(x)) {
     a <- as.double(a)
+  } else if (!dbl_ok) {
+    a <- ensure_integer(a)
+  }
+  if (!length(x)) {
+    return(x)
   }
 
-  o <- do_pminpmax(x, a,
-                   do_min = FALSE,
-                   in_place = in_place,
-                   keep_nas = keep_nas,
-                   dbl_ok = dbl_ok,
-                   swap_xy = FALSE,
-                   nThread = nThread)
+  if (in_place && is.symbol(substitute(x))) {
+    o <- .Call("CpmaxC_in_place", x, a, keep_nas, nThread, PACKAGE = packageName)
+  } else {
+    o <- .Call("Cpmax", x, a, keep_nas, nThread, PACKAGE = packageName)
+  }
+  if (is.null(o)) {
+    o <- pmax.int(x, a) # nocov
+  }
+  if (x_was_integer && is.double(o) && msg_dbl_ok) {
+    message("Output is double")
+  }
+
   return(o)
 }
 
@@ -110,10 +137,14 @@ pmaxC <- function(x, a,
 pminC <- function(x, a,
                   in_place = FALSE,
                   keep_nas = FALSE,
-                  dbl_ok = TRUE,
+                  dbl_ok = NA,
                   nThread = getOption("hutilscpp.nThread", 1L)) {
+  if (msg_dbl_ok <- anyNA(dbl_ok)) {
+    dbl_ok <- TRUE
+  }
   check_TF(in_place)
   check_TF(keep_nas)
+  nThread <- check_omp(nThread)
   if (!is.atomic(x) || !is.numeric(x)) {
     stop("\n`x` was of type ", typeof(x), ", class ", toString(class(x)), " and\n",
          "`a` was of type ", typeof(a), ", class ", toString(class(a)), " and\n",
@@ -122,17 +153,28 @@ pminC <- function(x, a,
   if (amsg <- isnt_number(a, na.bad = TRUE, infinite.bad = TRUE, int.only = !dbl_ok)) {
     stop(attr(amsg, "ErrorMessage"))
   }
+  x_was_integer <- is.integer(x)
   if (is.double(x)) {
     a <- as.double(a)
+  } else if (!dbl_ok) {
+    a <- ensure_integer(a)
+  }
+  if (!length(x)) {
+    return(x)
   }
 
-  o <- do_pminpmax(x, a,
-                   do_min = TRUE,
-                   in_place = in_place,
-                   dbl_ok = dbl_ok,
-                   swap_xy = FALSE,
-                   nThread = nThread)
-  return(o)
+  if (in_place && is.symbol(substitute(x))) {
+    o <- .Call("CpminC_in_place", x, a, keep_nas, nThread, PACKAGE = packageName)
+  } else {
+    o <- .Call("Cpmin", x, a, keep_nas, nThread, PACKAGE = packageName)
+  }
+  if (is.null(o)) {
+    o <- pmin.int(x, a) # nocov
+  }
+  if (x_was_integer && is.double(o) && msg_dbl_ok) {
+    message("Output is double")
+  }
+  .Call("Cpmin", x, a, keep_nas, nThread, PACKAGE = packageName)
 }
 
 #' @rdname pmaxC
@@ -147,7 +189,7 @@ pmax0 <- function(x, in_place = FALSE, sorted = FALSE, keep_nas = FALSE, nThread
   check_TF(in_place)
   check_TF(sorted)
   check_TF(keep_nas)
-  check_omp(nThread)
+  nThread <- check_omp(nThread)
 
   if (is_altrep(x)) {
     if (in_place) {
@@ -165,11 +207,15 @@ pmax0 <- function(x, in_place = FALSE, sorted = FALSE, keep_nas = FALSE, nThread
     }
   }
 
-  if (is.integer(x) && !keep_nas && !in_place) {
-    return(do_pmax0_bitwise(x, nThread = nThread))
+  if (is.integer(x) && !keep_nas) {
+    return(do_pmax0_bitwise(x, in_place = in_place, nThread = nThread))
   }
   z <- if (is.double(x)) 0 else 0L
-  do_pminpmax(x, z, do_min = FALSE, in_place = in_place, keep_nas = keep_nas, nThread = nThread)
+  if (in_place) {
+    .Call("CpmaxC_in_place", x, z, keep_nas, nThread, PACKAGE = packageName)
+  } else {
+    .Call("Cpmax", x, z, keep_nas, nThread, PACKAGE = packageName)
+  }
 }
 
 #' @rdname pmaxC
@@ -184,7 +230,7 @@ pmin0 <- function(x, in_place = FALSE, sorted = FALSE, keep_nas = FALSE, nThread
   check_TF(in_place)
   check_TF(sorted)
   check_TF(keep_nas)
-  check_omp(nThread)
+  nThread <- check_omp(nThread)
 
   if (is_altrep(x)) {
     if (in_place) {
@@ -202,11 +248,16 @@ pmin0 <- function(x, in_place = FALSE, sorted = FALSE, keep_nas = FALSE, nThread
     }
   }
 
-  if (is.integer(x) && !keep_nas && !in_place) {
-    return(do_pmin0_bitwise(x, nThread = nThread))
+  if (is.integer(x) && !keep_nas) {
+    return(do_pmin0_bitwise(x, in_place = in_place, nThread = nThread))
   }
+
   z <- if (is.double(x)) 0 else 0L
-  do_pminpmax(x, z, do_min = TRUE, in_place = in_place, keep_nas = keep_nas, nThread = nThread)
+  if (in_place && is.symbol(substitute(x))) {
+    .Call("CpminC_in_place", x, z, keep_nas, nThread, PACKAGE = packageName)
+  } else {
+    .Call("Cpmin", x, z, keep_nas, nThread, PACKAGE = packageName)
+  }
 }
 
 #' @rdname pmaxC
@@ -214,6 +265,7 @@ pmin0 <- function(x, in_place = FALSE, sorted = FALSE, keep_nas = FALSE, nThread
 pmaxV <- function(x, y, in_place = FALSE, dbl_ok = TRUE, nThread = getOption("hutilscpp.nThread", 1L)) {
   check_TF(in_place)
   check_TF(dbl_ok)
+  nThread <- check_omp(nThread)
   if (length(x) != length(y)) {
     stop("`length(x) = ", length(x), "`, yet ",
          "`length(y) = ", length(y), "`. ",
@@ -230,14 +282,11 @@ pmaxV <- function(x, y, in_place = FALSE, dbl_ok = TRUE, nThread = getOption("hu
   } else {
     swap_xy <- is.integer(y) && is.double(x)
   }
-  o <- do_pminpmax(if (swap_xy) y else x,
-                   if (swap_xy) x else y,
-                   do_min = FALSE,
-                   in_place = in_place,
-                   dbl_ok = dbl_ok,
-                   swap_xy = swap_xy,
-                   nThread = nThread)
-  return(o)
+  out <- .Call("Cpmax", x, y, TRUE, nThread, PACKAGE = packageName)
+  if (in_place && is.symbol(substitute(x))) {
+    eval.parent(substitute(x <- out))
+  }
+  out
 }
 
 #' @rdname pmaxC
@@ -245,6 +294,7 @@ pmaxV <- function(x, y, in_place = FALSE, dbl_ok = TRUE, nThread = getOption("hu
 pminV <- function(x, y, in_place = FALSE, dbl_ok = TRUE, nThread = getOption("hutilscpp.nThread", 1L)) {
   check_TF(in_place)
   check_TF(dbl_ok)
+  nThread <- check_omp(nThread)
   if (length(x) != length(y)) {
     stop("`length(x) = ", length(x), "`, yet ",
          "`length(y) = ", length(y), "`. ",
@@ -256,19 +306,11 @@ pminV <- function(x, y, in_place = FALSE, dbl_ok = TRUE, nThread = getOption("hu
          "Both `x` and `y` must be atomic numeric vectors.")
   }
 
-  if (in_place) {
-    swap_xy <- FALSE
-  } else {
-    swap_xy <- is.integer(y) && is.double(x)
+  out <- .Call("Cpmin", x, y, TRUE, nThread, PACKAGE = packageName)
+  if (in_place && is.symbol(substitute(x))) {
+    eval.parent(substitute(x <- out))
   }
-  o <- do_pminpmax(if (swap_xy) y else x,
-                   if (swap_xy) x else y,
-                   do_min = TRUE,
-                   in_place = in_place,
-                   dbl_ok = dbl_ok,
-                   swap_xy = swap_xy,
-                   nThread = nThread)
-  return(o)
+  out
 }
 
 #' @rdname pmaxC
@@ -285,13 +327,13 @@ pmin3 <- function(x, y, z, in_place = FALSE) {
 
 .pminpmax3 <- function(x, y, z, in_place = FALSE, do_max) {
   check_TF(in_place)
+  check_TF(do_max)
   lx <- length(x)
+  nThread <- check_omp(getOption("hutilscpp.nThread", 1L))
   if (length(y) == lx && length(z) == lx) {
-    if (is.integer(x) && is.integer(y) && is.integer(z)) {
-      return(do_summary3_int(x, y, z, in_place, do_max = do_max))
-    }
-    if (is.double(x) && is.double(y) && is.double(z)) {
-      return(do_summary3_dbl(x, y, z, in_place, do_max = do_max))
+    out <- .Call("Csummary3", x, y, z, ifelse(do_max, "max", "min"), nThread, PACKAGE = packageName)
+    if (!is.null(out)) {
+      return(out)
     }
   }
   if (!is.numeric(x) || !is.numeric(y) || !is.numeric(z)) {
@@ -329,12 +371,34 @@ pmin3 <- function(x, y, z, in_place = FALSE) {
              " was not equal to the integer equivalent. ")
       }
     }
-    return(do_summary3_int(x, y, z, in_place = in_place, do_max = do_max))
+
+    out <- .Call("Csummary3", x, as.integer(y), as.integer(z), ifelse(do_max, "max", "min"), nThread, PACKAGE = packageName)
+    # nocov start
+    if (is.null(out)) {
+      if (do_max) {
+        return(pmax.int(x, pmax.int(y, z)))
+      } else {
+        return(pmin.int(x, pmin.int(y, z)))
+      }
+    }
+    # nocov end
+    return(out)
   }
   if (is.double(x) && is.numeric(y) && is.numeric(z)) {
-    return(do_summary3_dbl(x, as.double(y), as.double(z), in_place = in_place, do_max = do_max))
+    nThread <- check_omp(getOption("hutilscpp.nThread", 1L))
+    out <- .Call("Csummary3", x, as.double(y), as.double(z), ifelse(do_max, "max", "min"), nThread, PACKAGE = packageName)
+    # nocov start
+    if (is.null(out)) {
+      if (do_max) {
+        return(pmax.int(x, pmax.int(y, z)))
+      } else {
+        return(pmin.int(x, pmin.int(y, z)))
+      }
+    }
+    # nocov end
+    return(out)
   }
-  # nocov begin
+  # nocov start
   if (do_max) {
     pmax(x, pmax(y, z))
   } else {
@@ -381,5 +445,32 @@ do_pminmax0_altrep <- function(x,
   allocate_with_root(n, a = a, root, zero_left, do_pmin = do_pmin, nThread = nThread)
 }
 
+do_pmax0_radix_sorted_int <- function(x, in_place = FALSE, nThread = getOption("hutilscpp.nThread", 1L)) {
+  nThread <- check_omp(nThread)
+  .Call("Cpmax0_radix_sorted_int", x, in_place, nThread, PACKAGE = packageName)
+}
 
+do_pmin0_radix_sorted_int <- function(x, in_place = FALSE, nThread = getOption("hutilscpp.nThread", 1L)) {
+  nThread <- check_omp(nThread)
+  .Call("Cpmin0_radix_sorted_int", x, in_place, nThread, PACKAGE = packageName)
+}
 
+do_pmax0_radix_sorted_dbl <- function(x, in_place = FALSE, nThread = getOption("hutilscpp.nThread", 1L)) {
+  nThread <- check_omp(nThread)
+  .Call("Cpmax0_radix_sorted_dbl", x, in_place, nThread, PACKAGE = packageName)
+}
+
+do_pmin0_radix_sorted_dbl <- function(x, in_place = FALSE, nThread = getOption("hutilscpp.nThread", 1L)) {
+  nThread <- check_omp(nThread)
+  .Call("Cpmin0_radix_sorted_dbl", x, in_place, nThread, PACKAGE = packageName)
+}
+
+do_pmin0_bitwise <- function(x, in_place = FALSE, nThread = getOption("hutilscpp.nThread", 1L)) {
+  nThread <- check_omp(nThread)
+  .Call("Cpmin0_bitwise", x, in_place, nThread, PACKAGE = packageName)
+}
+
+do_pmax0_bitwise <- function(x, in_place = FALSE, nThread = getOption("hutilscpp.nThread", 1L)) {
+  nThread <- check_omp(nThread)
+  .Call("Cpmax0_bitwise", x, in_place, nThread, PACKAGE = packageName)
+}

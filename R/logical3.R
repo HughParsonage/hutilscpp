@@ -172,5 +172,14 @@ or3 <- function(x, y, z = NULL) {
   do_or3(x, y, .z)
 }
 
+do_and3 <- function(x, y, z) {
+  .Call("Cand3", x, y, z, PACKAGE = packageName)
+}
 
+do_or3 <- function(x, y, z) {
+  .Call("Cor3", x, y, z, PACKAGE = packageName)
+}
 
+na_and <- function(x) {
+  .Call("Cna_and", x, PACKAGE = packageName)
+}

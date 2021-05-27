@@ -1,6 +1,7 @@
 
 
 seqN_by <- function(x) {
-  do_cumsum_reset_sorted_int(x)
+  stopifnot(is.integer(x))
+  .Call("Ccumsum_reset_sorted_int", x, PACKAGE = packageName)
 }
 

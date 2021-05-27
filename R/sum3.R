@@ -30,7 +30,7 @@ sum_and3s <- function(exprA, exprB, exprC, ...,
                       .env = .env,
                       nThread = nThread)
 
-  do_sum3s_par(
+  .Call("Csum3s_par",
     d[[1]],
     d[[2]],
     d[[3]],
@@ -55,8 +55,9 @@ sum_and3s <- function(exprA, exprB, exprC, ...,
     d[[22]],
     d[[23]],
     d[[24]],
-    ampersand = TRUE,
-    nThread = nThread
+    TRUE, # ampersand
+    check_omp(nThread),
+    PACKAGE = packageName
   )
 }
 
@@ -66,6 +67,7 @@ sum_and3s <- function(exprA, exprB, exprC, ...,
 sum_or3s <- function(exprA, exprB, exprC, ...,
                      .env = parent.frame(),
                      nThread = getOption("hutilscpp.nThread", 1L)) {
+  nThread <- check_omp(nThread)
   sexprA <- substitute(exprA)
   sexprB <- substitute(exprB)
   sexprC <- substitute(exprC)
@@ -78,7 +80,7 @@ sum_or3s <- function(exprA, exprB, exprC, ...,
                       .env = .env,
                       nThread = nThread)
 
-  do_sum3s_par(
+  .Call("Csum3s_par",
     d[[1]],
     d[[2]],
     d[[3]],
@@ -103,7 +105,7 @@ sum_or3s <- function(exprA, exprB, exprC, ...,
     d[[22]],
     d[[23]],
     d[[24]],
-    ampersand = FALSE,
+    FALSE,  # ampersand
     nThread = nThread
   )
 }

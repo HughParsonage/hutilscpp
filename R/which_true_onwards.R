@@ -16,9 +16,5 @@ which_true_onwards <- function(x) {
     stop("`x` had missing values. This is not permitted.")
   }
 
-  o <- do_which_true_onwards(x)
-  if (o < .Machine$integer.max) {
-    o <- as.integer(o)
-  }
-  o
+  .Call("Cwhich_true_onwards", x, PACKAGE = packageName)
 }

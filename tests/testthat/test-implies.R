@@ -1,7 +1,7 @@
 context("test-implies")
 
 test_that("Error handling", {
-  expect_error(Implies(1:5 > 0, 1:4 > 0), "lengths.*differ")
+  expect_error(Implies(1:5 > 0, 1:4 > 0), "length")
 })
 
 test_that("implies same as hutils", {

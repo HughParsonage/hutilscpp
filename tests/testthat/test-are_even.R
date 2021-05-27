@@ -16,6 +16,7 @@ test_that("even works", {
 })
 
 test_that("error handling", {
+  expect_error(are_even("foo"))
   expect_warning(are_even(c(0, 0.5, 1)),
                  regexp = "`x` was type double, but element 2 = 0.5 was not an integer value",
                  fixed = TRUE)
@@ -55,10 +56,6 @@ test_that("non-finite values", {
   expect_equal(wh, which((c(NA, 1, 2, Inf, -Inf, 7, 8, 8) %% 2) == 0))
 })
 
-test_that("NA", {
-  expect_equal(do_are_even(c(NA, 1L, 2L), double(0), 0L), c(NA, FALSE, TRUE))
-  expect_equal(do_are_even(integer(0), c(NA, 1, 2), 0L), c(NA, FALSE, TRUE))
-})
 
 test_that("large", {
   skip_if_not_installed("withr")

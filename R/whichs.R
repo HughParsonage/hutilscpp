@@ -24,16 +24,11 @@ whichs <- function(exprA, .env = parent.frame(), nThread = getOption("hutilscpp.
   opm <- op2M(opc)
   lhs <- eval(sexprA[[2L]], envir = .env, enclos = baseenv())
   rhs <- eval(sexprA[[3L]], envir = .env, enclos = baseenv())
-  rhs_good <-
-    is.integer(rhs) ||
-    AND(is.double(rhs) && length(rhs) == 1, rhs == as.integer(rhs))
-  if (opm < 1 || opm > 6 || is.double(lhs)) {
+  ans <- .Call("Cwhich_16", opm, lhs, rhs, nThread, PACKAGE = packageName)
+  if (is.null(ans)) {
     return(which(exprA))
   }
-  do_whichs_16(opm,
-               lhs,
-               rhs,
-               nThread = nThread)
+  ans
 }
 
 

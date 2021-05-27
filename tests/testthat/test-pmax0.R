@@ -1,3 +1,7 @@
+test_that("init", {
+  expect_true(TRUE)
+})
+
 test_that("pmax0 abs", {
   expect_true(TRUE) # to get started
   x <- c(-1, 0, 1, -1)
@@ -83,8 +87,8 @@ test_that("firstNonnegativeRadix corners", {
   expect_lte(firstNonNegativeRadix(-x, maxi = 5), 5)
 
   # Check bad arguments to mini
-  expect_equal(do_firstNonNegativeRadix_int(1:5, mini = -2L), 0)
-  expect_equal(do_firstNonNegativeRadix_dbl(1:5, mini = -2L), 0)
+  expect_equal(firstNonNegativeRadix(1:5, mini = -2L), 0)
+  expect_equal(firstNonNegativeRadix(1:5 + 0, mini = -2L), 0)
 
 })
 
@@ -139,7 +143,7 @@ test_that("do_pmin0s", {
   x <- sort(x)
   expect_equal(do_pmin0_radix_sorted_dbl(x), pmin(x, 0L))
 
-  x <- hutilscpp_rev(x)
+  x <- rev(x)
 
   expect_equal(pmin0(x), pmin(x, 0L))
   x <- sort(x)
@@ -188,6 +192,8 @@ test_that("in-place", {
 
 test_that("pmax0 bitwise", {
   expect_equal(do_pmax0_bitwise(-1:5), pmax.int(-1:5, 0L))
+  z <- c(1:10, 0L)
+  expect_equal(pmax0(z, in_place = TRUE), z)
 })
 
 
@@ -196,6 +202,12 @@ test_that("pmax0 sorted but all negative", {
   expect_equal(pmax0(-10:-1, sorted = TRUE), integer(10))
   expect_equal(pmax0(rep(-1, 10), sorted = TRUE), double(10))
   expect_equal(pmax0(-10:-1 + 0, sorted = TRUE), double(10))
+  z <- c(-10:-1, 0L)
+  zd <- as.double(z)
+  expect_identical(pmax0(z, sorted = TRUE, in_place = TRUE), integer(11))
+  expect_equal(z, integer(11))
+  expect_identical(pmax0(zd, sorted = TRUE, in_place = TRUE), double(11))
+  expect_equal(zd, double(11))
 })
 
 test_that("pmax0 altrep", {
@@ -211,4 +223,5 @@ test_that("pmax0 sorted double", {
   expect_equal(do_pmax0_radix_sorted_dbl(0.25), 0.25)
   expect_equal(do_pmax0_radix_sorted_dbl(-0.25), 0)
 })
+
 

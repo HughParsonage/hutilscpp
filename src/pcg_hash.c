@@ -7,6 +7,7 @@ unsigned int pcg_hash(unsigned int input)
   return (word >> 22u) ^ word;
 }
 
+
 SEXP Cpcg_hash(SEXP n, SEXP r, SEXP nthreads) {
   int nThread = as_nThread(nthreads);
   if (nThread > 32) {

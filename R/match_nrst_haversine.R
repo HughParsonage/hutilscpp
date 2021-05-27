@@ -128,10 +128,11 @@ match_nrst_haversine <- function(lat,
                              addresses_lon,
                              Index.int,
                              cartR = cartesian_R,
+                             dist0_km = dist0_km,
                              verify_cartR = verify_cartR,
                              do_verify_box = .verify_box,
-                             dist0_km = dist0_km,
-                             ncores = 1L)
+                             excl_self = excl_self)
+
   if (!is.integer(Index)) {
     out[[1L]] <- Index[out[[1L]]]
   }
@@ -141,6 +142,99 @@ match_nrst_haversine <- function(lat,
   } else {
     return(out)
   }
+}
+
+which_min_HaversineDistance <- function(lat1, lon1, lat2, lon2, upperBound = 10) {
+  if (length(lat1) != length(lon1)) {
+    stop("length(lat1) != length(lon1)")
+  }
+  .Call("C_which_min_HaversineDistance",
+        lat1, lon1, lat2, lon2, upperBound,
+        PACKAGE = packageName)
+}
+
+
+match_min_Haversine <- function(lat,
+                                lon,
+                                addresses_lat,
+                                addresses_lon,
+                                tabl = NULL,
+                                cartR = -1,
+                                dist0_km = 0.01,
+                                verify_cartR = FALSE,
+                                do_verify_box = FALSE,
+                                excl_self = FALSE,
+                                ncores = 1L) {
+  if (length(lat) != length(lon)) {
+    stop("length(lat1) != length(lon1)")
+  }
+  if (length(addresses_lat) != length(addresses_lon)) {
+    stop("length(lat2) != length(lon2)")
+  }
+  if (is.null(tabl)) {
+    tabl <- seq_along(lat)
+  }
+  if (is.integer(lat)) {
+    lat <- as.double(lat)
+  }
+  if (is.integer(lon)) {
+    lon <- as.double(lon)
+  }
+  if (is.integer(addresses_lat)) {
+    addresses_lat <- as.double(addresses_lat)
+  }
+  if (is.integer(addresses_lon)) {
+    addresses_lon <- as.double(addresses_lon)
+  }
+
+  stopifnot(is.double(lat),
+            is.double(lon),
+            is.double(addresses_lat),
+            is.double(addresses_lon),
+            length(lat) == length(lon),
+            length(addresses_lat) == length(addresses_lon),
+            length(lat) <= .Machine$integer.max,
+            length(addresses_lat) <= .Machine$integer.max)
+
+  if (cramsg <- isnt_number(cartR, na.bad = TRUE, infinite.bad = FALSE)) {
+    stop(attr(cramsg, "ErrorMessage")) # nocov
+  }
+  if (d0amsg <- isnt_number(dist0_km, na.bad = TRUE, infinite.bad = FALSE)) {
+    stop(attr(d0amsg, "ErrorMessage")) # nocov
+  }
+  out <- .Call("C_match_min_Haversine",
+               lat,
+               lon,
+               addresses_lat,
+               addresses_lon,
+               tabl,
+               cartR,
+               dist0_km,
+               verify_cartR,
+               do_verify_box,
+               excl_self,
+               ncores,
+               PACKAGE = packageName)
+  names(out) <- c("pos", "dist")
+  out
+}
+
+theEuclidDistance <- function(x1, x2, y1, y2, unitless = FALSE) {
+  .Call("C_theEuclidDistance", x1, x2, y1, y2, unitless, PACKAGE = packageName)
+}
+
+hausdorffEuclid <- function(x, y) {
+  .Call("C_hausdorffEuclid", x, y, PACKAGE = packageName)
+}
+
+EmptiestQuarter <- function(x, y, minx = 1, maxx = -1, miny = 1, maxy = -1) {
+  ad <- as.double
+ .Call("CEmptiestQuarter", ad(x), ad(y), ad(minx), ad(maxx), ad(miny), ad(maxy), PACKAGE = packageName)
+}
+
+theEmptiestQuarters <- function(x, y, minx = 1, maxx = -1, miny = 1, maxy = -1, depth = 4L) {
+  ad <- as.double
+  .Call("C_theEmptiestQuarters", ad(x), ad(y), ad(minx), ad(maxx), ad(miny), ad(maxy), depth, PACKAGE = packageName)
 }
 
 

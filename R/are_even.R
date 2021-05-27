@@ -30,27 +30,19 @@ are_even <- function(x,
                      keep_nas = TRUE,
                      nThread = getOption("hutilscpp.nThread", 1L)) {
   check_TF(keep_nas)
-  check_omp(nThread)
-  if (!keep_nas && is.integer(x)) {
-    return(do_divisible2(x, nThread = nThread))
-  }
-
-  wb <- 0L
-
-  if (is.integer(x)) {
-    return(do_are_even(x, double(0), wb, nThread))
-  }
-  if (is.double(x)) {
-    if (AND(check_integerish,
-            wb <- which_isnt_integerish(x))) {
-      warning("`x` was type double, but element ",
-              wb, " = ", x[wb], " was not an integer value. ",
-              "Will be coerced to integer.")
-    }
-    do_are_even(integer(0), x, wb, nThread)
-  } else {
+  nThread <- check_omp(nThread)
+  if (!is.numeric(x)) {
     stop("`x` was not an integer or double.")
   }
+  check_TF(check_integerish)
+  if (is.double(x) &&
+      AND(check_integerish,
+          wb <- which_isnt_integerish(x))) {
+    warning("`x` was type double, but element ",
+            wb, " = ", x[wb], " was not an integer value. ",
+            "Will be coerced to integer.")
+  }
+  return(.Call("Cdivisible2", x, nThread, FALSE))
 }
 
 #' @rdname are_even
@@ -59,9 +51,10 @@ which_are_even <- function(x, check_integerish = TRUE) {
     stop("`which_are_even() not implemented for long `x`.") # nocov
   }
   wb <- 0L
-  if (is.integer(x)) {
-    return(do_which_even(x, double(0), wb))
+  if (!is.numeric(x)) {
+    stop("`x` was not an integer or double.")
   }
+  check_TF(check_integerish)
   if (is.double(x)) {
     if (AND(check_integerish,
             wb <- which_isnt_integerish(x))) {
@@ -69,9 +62,8 @@ which_are_even <- function(x, check_integerish = TRUE) {
               wb, " = ", x[wb], " was not an integer value. ",
               "Will be coerced to integer: ", as.integer(x[wb]), ".")
     }
-    return(do_which_even(integer(0), x, wb))
-  } else {
-    stop("`x` was not an integer or double.")
   }
+  return(.Call("Cwhich_even", x, PACKAGE = packageName))
 }
+
 

@@ -4,17 +4,16 @@ test_that("Error handling", {
   expect_error(haversineDistance(1, 1:2, 1:3, 1:4), regexp = "ength")
   expect_error(haversineDistance(1:2, 1:2, 1:3, 1:4), regexp = "ength")
   expect_error(which_min_HaversineDistance(1, 1:2, 1, 1),
-               regexp = "length(lat1) != length(lat2)",
+               regexp = "ength",
                fixed = TRUE)
   expect_error(match_min_Haversine(1, 1:2, 1, 1, 0L),
-               regexp = "length(lat1) != length(lon1)",
+               regexp = "ength",
                fixed = TRUE)
   expect_error(match_min_Haversine(1, 1, 1:2, 1, 0L),
-               regexp = "length(lat2) != length(lon2)",
+               regexp = "ength",
                fixed = TRUE)
   expect_warning(match_min_Haversine(1, 1, 1:2, 1:2, 0L, excl_self = TRUE),
-                 regexp = "`excl_self = true`, yet lengths of `lat1` and `lat2` differ.",
-                 fixed = TRUE)
+                 regexp = "`excl_self = true`.*ength")
 
 })
 
@@ -69,6 +68,16 @@ test_that("match_min_Haversine", {
 
   expect_identical(match_min_Haversine(lat1, lon1, lat2, lon2, 0L)[[1L]], c(5L, 5L))
   expect_identical(match_min_Haversine(lat1, lon1, lat2, lon2, 101:105)[[1L]], c(5L, 5L) + 100L)
+
+  expect_identical(match_min_Haversine(as.integer(lat1),
+                                       as.integer(lon1),
+                                       lat2,
+                                       lon2),
+                   match_min_Haversine(as.double(as.integer(lat1)),
+                                       as.double(as.integer(lon1)),
+                                       lat2,
+                                       lon2))
+
 })
 
 test_that("match_min_Haversine excl_self", {
@@ -119,10 +128,6 @@ test_that("hausdorff distance", {
   expect_equal(o, sqrt(0.74))
 })
 
-test_that("is_sorted_ascending", {
-  expect_true(is_sorted_ascending_dbl(c(0, 1.5, 3)))
-  expect_false(is_sorted_ascending_dbl(c(0, 1.5, 3, 1)))
-})
 
 test_that("Emptiest quadrants", {
   skip_if_not_installed("covr")

@@ -8,7 +8,9 @@ test_that("allocate works", {
   o <- integer(10)
   o[3] <- -2L
   expect_identical(xc, o)
+  xd <- allocate0_except(10L, 2L, -2L)
+  expect_identical(xd, o)
 
-
-
+  Ans <- .allocate_constants(3)
+  expect_equal(lengths(Ans, use.names = FALSE), rep(3L, length(Ans)))
 })
