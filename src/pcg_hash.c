@@ -31,7 +31,11 @@ SEXP Cpcg_hash(SEXP n, SEXP r, SEXP nthreads) {
 #pragma omp parallel for num_threads(nThread)
 #endif
   for (unsigned int i = 0; i < N; ++i) {
-    int oi = has_openmp() ? omp_get_thread_num() : (i & 31U);
+#ifdef _OPENMP
+    int oi = omp_get_thread_num();
+#else
+    int oi = (i & 31U);
+#endif
     unsigned int new_si = pcg_hash(States[oi]);
     ansp[i] = new_si;
     States[oi] = new_si;
@@ -40,11 +44,15 @@ SEXP Cpcg_hash(SEXP n, SEXP r, SEXP nthreads) {
   return ans;
 }
 
-SEXP firstAbsentInt(SEXP xx, SEXP From) {
+SEXP firstAbsentInt(SEXP xx, SEXP From, SEXP nthreads) {
   if (TYPEOF(xx) != INTSXP) {
     error("Not an int.");
   }
   R_xlen_t N = xlength(xx);
+  int nThread = as_nThread(nthreads);
+  if (nThread > 32) {
+    nThread = 32;
+  }
   const int * xp = INTEGER(xx);
   unsigned char * all_ints = calloc(4294967296, sizeof(char));
   if (all_ints == NULL) {
@@ -53,7 +61,7 @@ SEXP firstAbsentInt(SEXP xx, SEXP From) {
     return R_NilValue;
   }
 
-int nThread = 10;
+
 #if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
 #endif
