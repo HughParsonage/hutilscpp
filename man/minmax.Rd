@@ -4,7 +4,7 @@
 \alias{minmax}
 \title{Minimum and maximum}
 \usage{
-minmax(x, empty_result = NULL, nThread = getOption("hutilsc.nThread", 1L))
+minmax(x, empty_result = NULL, nThread = getOption("hutilscpp.nThread", 1L))
 }
 \arguments{
 \item{x}{An atomic vector.}

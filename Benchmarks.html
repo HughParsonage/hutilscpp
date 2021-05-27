@@ -11,7 +11,7 @@
 
 <meta name="author" content="Hugh Parsonage" />
 
-<meta name="date" content="2021-05-24" />
+<meta name="date" content="2021-05-27" />
 
 <title>Benchmarks</title>
 
@@ -167,73 +167,73 @@ pre code {
 
 <h1 class="title toc-ignore">Benchmarks</h1>
 <h4 class="author">Hugh Parsonage</h4>
-<h4 class="date">2021-05-24</h4>
+<h4 class="date">2021-05-27</h4>
 
 </div>
 
 
 <pre class="r"><code>cat(as.character(START &lt;- Sys.time()), &quot;\n&quot;)</code></pre>
-<pre><code>## 2021-05-27 14:35:43</code></pre>
+<pre><code>## 2021-05-27 14:42:15</code></pre>
 <pre class="r"><code>options(digits = 2)
 options(hutilscpp.nThread = 10L)
 set.seed(1)</code></pre>
 <pre class="r"><code>cat(difftime(Sys.time(), START), &quot;\n&quot;)</code></pre>
-<pre><code>## 0.49</code></pre>
+<pre><code>## 0.28</code></pre>
 <pre class="r"><code>packageVersion(&quot;hutilscpp&quot;)</code></pre>
-<pre><code>## [1] &#39;0.5.2&#39;</code></pre>
+<pre><code>## [1] &#39;0.7.0&#39;</code></pre>
 <pre class="r"><code>system_time(x1 &lt;- allocate0_except(2^31 - 2, c(1e8, 21e8), c(1L, -1L)))</code></pre>
 <pre><code>## process    real 
-##  1.953s  1.952s</code></pre>
+##  1.984s  1.987s</code></pre>
 <div id="which_first" class="section level2">
 <h2><code>which_first</code></h2>
 <pre class="r"><code>system_time(which_first(x1 != 0))</code></pre>
 <pre><code>##  process     real 
-## 46.875ms 49.254ms</code></pre>
+## 62.500ms 57.829ms</code></pre>
 <pre class="r"><code>system_time(which_last(x1 != 0))</code></pre>
 <pre><code>##  process     real 
-## 15.625ms 23.627ms</code></pre>
+## 31.250ms 31.596ms</code></pre>
 </div>
 <div id="and3s" class="section level2">
 <h2><code>and3s</code></h2>
 <pre class="r"><code>system_time(and3s(x1 != 23L, x1 &gt;= 0L, x1 == 0L))</code></pre>
 <pre><code>## process    real 
-## 28.125s  2.912s</code></pre>
+## 24.766s  2.687s</code></pre>
 <pre class="r"><code>system_time(and3s(x1 != 0L, x1 &gt;= 0L, x1 == 0L))</code></pre>
 <pre><code>## process    real 
-## 10.969s  1.928s</code></pre>
+## 10.609s  2.062s</code></pre>
 </div>
 <div id="sum_and3s" class="section level2">
 <h2><code>sum_and3s</code></h2>
 <pre class="r"><code>system_time(sum_and3s(x1 != 23L, x1 &gt;= 0L, x1 == 0L))</code></pre>
 <pre><code>## process    real 
-## 36.047s  3.712s</code></pre>
+## 38.844s  4.056s</code></pre>
 <pre class="r"><code>system_time(sum_and3s(x1 != 0L, x1 &gt;= 0L, x1 == 0L))</code></pre>
 <pre><code>## process    real 
-## 11.516s  1.212s</code></pre>
+## 11.578s  1.177s</code></pre>
 </div>
 <div id="divisible16" class="section level2">
 <h2><code>divisible16</code></h2>
 <pre class="r"><code>system_time(divisible16(x1))</code></pre>
 <pre><code>## process    real 
-##  7.828s  1.631s</code></pre>
+##  7.875s  1.766s</code></pre>
 </div>
 <div id="is_constant" class="section level2">
 <h2><code>is_constant</code></h2>
 <pre class="r"><code>system_time(is_constant(x1))</code></pre>
 <pre><code>##    process       real 
-## 2250.000ms  232.007ms</code></pre>
+## 2281.250ms  243.836ms</code></pre>
 </div>
 <div id="is_sorted" class="section level2">
 <h2><code>is_sorted</code></h2>
 <pre class="r"><code>system_time(is_sorted(x1))</code></pre>
 <pre><code>##  process     real 
-## 46.875ms 43.439ms</code></pre>
+## 46.875ms 42.143ms</code></pre>
 </div>
 <div id="minmax" class="section level2">
 <h2><code>minmax</code></h2>
-<pre class="r"><code>system_time(range_rcpp(x1))</code></pre>
-<pre><code>## process    real 
-##  2.016s  2.007s</code></pre>
+<pre class="r"><code>system_time(minmax(x1))</code></pre>
+<pre><code>##    process       real 
+## 2437.500ms  266.545ms</code></pre>
 </div>
 <div id="haversine" class="section level2">
 <h2>Haversine</h2>
@@ -246,17 +246,17 @@ yy &lt;- runif(100, -39, -38)
 xx &lt;- runif(100, 144, 145)
 system_time(haversineDistance(y, x, y, x))</code></pre>
 <pre><code>##   process      real 
-## 156.250ms 154.112ms</code></pre>
+## 171.875ms 165.751ms</code></pre>
 </div>
 <div id="match_nrst_haversine" class="section level2">
 <h2><code>match_nrst_haversine</code></h2>
 <pre class="r"><code>system_time(match_nrst_haversine(y, x, yy, xx))</code></pre>
 <pre><code>## process    real 
-##  6.734s  6.760s</code></pre>
+##  6.719s  6.778s</code></pre>
 <pre class="r"><code>cat(as.character(END &lt;- Sys.time()), &quot;\n&quot;)</code></pre>
-<pre><code>## 2021-05-27 14:36:07</code></pre>
+<pre><code>## 2021-05-27 14:42:37</code></pre>
 <pre class="r"><code>print(difftime(END, START))</code></pre>
-<pre><code>## Time difference of 24 secs</code></pre>
+<pre><code>## Time difference of 22 secs</code></pre>
 </div>
 
 

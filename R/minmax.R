@@ -6,6 +6,6 @@
 #' @return Vector of two elements, the minimum and maximum of \code{x}, or \code{NULL}.
 #'
 #' @export
-minmax <- function(x, empty_result = NULL, nThread = getOption("hutilsc.nThread", 1L)) {
+minmax <- function(x, empty_result = NULL, nThread = getOption("hutilscpp.nThread", 1L)) {
   .Call("Cminmax", x, empty_result, check_omp(nThread), PACKAGE = packageName)
 }
