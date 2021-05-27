@@ -17,10 +17,15 @@ library(bench)
 library(hutilscpp)
 allocate0_except <- hutilscpp:::allocate0_except
 haversineDistance <- hutilscpp:::haversineDistance
+is_sorted <- hutilscpp:::is_sorted
 ```
 
 ```{r install_time}
 cat(difftime(Sys.time(), START), "\n")
+```
+
+```{r packageVer}
+packageVersion("hutilscpp")
 ```
 
 
@@ -71,7 +76,7 @@ system_time(is_sorted(x1))
 ## `minmax`
 
 ```{r minmax}
-system_time(minmax(x1))
+system_time(range_rcpp(x1))
 ```
 
 ## Haversine
@@ -92,6 +97,12 @@ system_time(haversineDistance(y, x, y, x))
 system_time(match_nrst_haversine(y, x, yy, xx))
 ```
 
+
+
+```{r FINALLY}
+cat(as.character(END <- Sys.time()), "\n")
+print(difftime(END, START))
+```
 
 
 
