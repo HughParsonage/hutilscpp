@@ -88,7 +88,7 @@ extern SEXP Cwhich_lastNA(SEXP);
 extern SEXP Cwhich_true_onwards(SEXP);
 extern SEXP Cwhich3(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cwhich3_mem(SEXP, SEXP, SEXP, SEXP);
-extern SEXP firstAbsentInt(SEXP, SEXP);
+extern SEXP firstAbsentInt(SEXP, SEXP, SEXP);
 extern SEXP fmatch(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
@@ -172,7 +172,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cwhich_true_onwards",           (DL_FUNC) &Cwhich_true_onwards,            1},
     {"Cwhich3",                       (DL_FUNC) &Cwhich3,                        7},
     {"Cwhich3_mem",                   (DL_FUNC) &Cwhich3_mem,                    4},
-    {"firstAbsentInt",                (DL_FUNC) &firstAbsentInt,                 2},
+    {"firstAbsentInt",                (DL_FUNC) &firstAbsentInt,                 3},
     {"fmatch",                        (DL_FUNC) &fmatch,                         6},
     {NULL, NULL, 0}
 };

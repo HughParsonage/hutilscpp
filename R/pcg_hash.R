@@ -9,6 +9,6 @@ pcg_hash <- function(n, r = NULL, nThread = getOption("hutilscpp.nThread", 1L)) 
 }
 
 
-first_absent_int <- function(x, r = NA_integer_) {
-  .Call("firstAbsentInt", x, r, PACKAGE = packageName)
+first_absent_int <- function(x, r = NA_integer_, nThread = getOption("hutilscpp.nThread", 1L)) {
+  .Call("firstAbsentInt", x, r, check_omp(nThread), PACKAGE = packageName)
 }
