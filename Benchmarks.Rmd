@@ -9,12 +9,14 @@ output: html_document
 cat(as.character(START <- Sys.time()), "\n")
 options(digits = 2)
 options(hutilscpp.nThread = 10L)
+set.seed(1)
 ```
 
 ```{r pkgInstallation, include = FALSE}
 library(bench)
 library(hutilscpp)
 allocate0_except <- hutilscpp:::allocate0_except
+haversineDistance <- hutilscpp:::haversineDistance
 ```
 
 ```{r install_time}
@@ -39,6 +41,57 @@ system_time(which_last(x1 != 0))
 system_time(and3s(x1 != 23L, x1 >= 0L, x1 == 0L))
 system_time(and3s(x1 != 0L, x1 >= 0L, x1 == 0L))
 ```
+
+## `sum_and3s`
+
+```{r sum_and3s}
+system_time(sum_and3s(x1 != 23L, x1 >= 0L, x1 == 0L))
+system_time(sum_and3s(x1 != 0L, x1 >= 0L, x1 == 0L))
+```
+
+
+## `divisible16`
+
+```{r divisible16}
+system_time(divisible16(x1))
+```
+
+## `is_constant`
+
+```{r is_constant}
+system_time(is_constant(x1))
+```
+
+## `is_sorted`
+
+```{r is_sorted}
+system_time(is_sorted(x1))
+```
+
+## `minmax`
+
+```{r minmax}
+system_time(minmax(x1))
+```
+
+## Haversine
+
+## `haversineDistance`
+
+```{r haveresineDistance}
+y <- runif(1e6, -39, -38)
+x <- runif(1e6, 144, 146)
+yy <- runif(100, -39, -38)
+xx <- runif(100, 144, 145)
+system_time(haversineDistance(y, x, y, x))
+```
+
+## `match_nrst_haversine`
+
+```{r match_nrst_haversine}
+system_time(match_nrst_haversine(y, x, yy, xx))
+```
+
 
 
 
