@@ -94,7 +94,7 @@ SEXP Cis_constant(SEXP x, SEXP nthreads) {
   case RAWSXP:
     return ScalarLogical(is_constant_raw(RAW(x), N, nThread));
   }
-  return R_NilValue;
+  return R_NilValue; // # nocov
 }
 
 R_xlen_t isntConstant_int(const int * x, R_xlen_t N) {
@@ -175,7 +175,7 @@ R_xlen_t isntConstant_raw(const Rbyte * xp, R_xlen_t N) {
 SEXP Cisnt_constant(SEXP x) {
   R_xlen_t N = xlength(x);
   if (N <= 1) {
-    return ScalarInteger(0);
+    return ScalarInteger(0); // # nocov
   }
   switch(TYPEOF(x)) {
   case LGLSXP:

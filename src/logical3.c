@@ -5,7 +5,7 @@ SEXP Cor3(SEXP xx, SEXP yy, SEXP zz) {
   if (TYPEOF(xx) != LGLSXP ||
       TYPEOF(yy) != LGLSXP ||
       TYPEOF(zz) != LGLSXP) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
   R_xlen_t N = xlength(xx);
   if (xlength(yy) != N) {
@@ -49,7 +49,7 @@ SEXP Cand3(SEXP xx, SEXP yy, SEXP zz) {
   if (TYPEOF(xx) != LGLSXP ||
       TYPEOF(yy) != LGLSXP ||
       TYPEOF(zz) != LGLSXP) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
   R_xlen_t N = xlength(xx);
   if (xlength(yy) != N) {
@@ -109,7 +109,8 @@ SEXP Cwhich3(SEXP xx, SEXP yy, SEXP zz,
              SEXP AanyNAz) {
   R_xlen_t n = (xlength(xx) > 1) ? xlength(xx) : ((xlength(yy) > 1) ? xlength(yy) : xlength(zz));
   if (n >= INT_MAX) {
-    return R_NilValue; // # not suitable for integer
+    // # not suitable for integer
+    return R_NilValue; // # nocov
   }
   const bool nx = xlength(xx) == n;
   const bool ny = xlength(yy) == n;

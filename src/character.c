@@ -79,7 +79,7 @@ SEXP CStringEqual(SEXP x, SEXP y) {
 
 SEXP Cwhere_square_bracket_opens(SEXP xx, SEXP ii) {
   if (TYPEOF(xx) != STRSXP || xlength(xx) >= INT_MAX) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
   R_xlen_t N = xlength(xx);
   int i = asInteger(ii);
@@ -182,19 +182,19 @@ SEXP CextractMandatory(SEXP x, SEXP command, SEXP NCommands) {
               // optional group.
               ++k;
               if (length(STRING_ELT(x, k)) != 1) {
-                continue;
+                continue; // # nocov
               }
               xk = CHAR(STRING_ELT(x, k))[0];
               if (xk == ']') {
                 --rel_opt_group;
                 --opt_group;
               } else {
-                if (xk == '\0') {
+                if (xk == '{') {
                   ++rel_group;
                   while (rel_group && k < N - 1) {
                     ++k;
                     if (length(STRING_ELT(x, k)) != 1) {
-                      continue;
+                      continue; // # nocov
                     }
                     xk = CHAR(STRING_ELT(x, k))[0];
                     if (xk == '}') {

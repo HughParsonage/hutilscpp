@@ -5,7 +5,7 @@ SEXP Cwhich_isna(SEXP x, SEXP Isnt, SEXP nthreads) {
       xlength(Isnt) != 1 ||
       TYPEOF(nthreads) != INTSXP ||
       xlength(nthreads) != 1) {
-    error("Wrongtype.");
+    error("Internal error(Cwhich_isna): wrong types."); // # nocov
   }
   const bool isnt = asLogical(Isnt);
   R_xlen_t s = sum_isna(x, nthreads);
@@ -22,7 +22,7 @@ SEXP Cwhich_isna(SEXP x, SEXP Isnt, SEXP nthreads) {
   R_xlen_t j = 0;
 
   if (n >= INT_MAX) {
-    error("n too large.");
+    error("Result would be too long a vector: (%u).", (unsigned int)n); // # nocov
   }
   SEXP ans = PROTECT(allocVector(INTSXP, n));
   int * restrict ansp = INTEGER(ans);
@@ -86,7 +86,7 @@ SEXP Cwhich_isna(SEXP x, SEXP Isnt, SEXP nthreads) {
     }
   }
   }
-    break;
+    break; // # nocov
   case CPLXSXP: {
     if (isnt) {
     for (R_xlen_t i = 0; (i < N && j < n); ++i) {
@@ -104,11 +104,13 @@ SEXP Cwhich_isna(SEXP x, SEXP Isnt, SEXP nthreads) {
   }
     break;
   }
+  // # nocov start
   if (j == 0) {
     for (R_xlen_t i = 0; (i < N && j < n); ++i) {
       ansp[i] = 0;
     }
   }
+  // # nocov end
   UNPROTECT(1);
   return ans;
 }

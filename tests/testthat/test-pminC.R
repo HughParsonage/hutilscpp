@@ -7,7 +7,7 @@ test_that("pminC int", {
   expect_equal(pminC(y, 0L), y)
   expect_equal(pminC(y, 0), y)
   expect_equal(pminC(x, 3, dbl_ok = FALSE), pmin(x, 3))
-
+  expect_equal(pminC(integer(0), 1L), integer(0))
 
 })
 

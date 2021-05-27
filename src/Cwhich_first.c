@@ -466,42 +466,42 @@ R_xlen_t do_which_first_xd_yi(const double * x,
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_EQ:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] == y[i]) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_GE:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] >= y[i]) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_GT:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] > y[i]) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_LE:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] <= y[i]) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_LT:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] < y[i]) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   }
 
   return 0;
@@ -516,42 +516,42 @@ R_xlen_t do_which_first_xi_yi(const int * x, int op, const int * y, R_xlen_t N) 
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_EQ:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] == y[i]) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_GE:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] >= y[i]) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_GT:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] > y[i]) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_LE:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] <= y[i]) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_LT:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] < y[i]) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   }
 
   return 0;
@@ -567,42 +567,42 @@ R_xlen_t do_which_first_xi_yd(const int * x, int op, const double * y, R_xlen_t 
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_EQ:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] == y[i]) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_GE:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] >= y[i]) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_GT:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] > y[i]) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_LE:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] <= y[i]) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_LT:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] < y[i]) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   }
 
   return 0;
@@ -769,7 +769,7 @@ R_xlen_t do_which_first_xi_ad(const int * x,
           return 0;
         }
       }
-      return 0;
+      return 0; // # nocov
     }
     // correct for integer conversion giving
     // incorrect results for >  >=  <  <=
@@ -809,42 +809,42 @@ R_xlen_t do_which_first_xi_ad(const int * x,
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_EQ:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] == a) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_GE:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] >= a) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_GT:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] > a) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_LE:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] <= a) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   case OP_LT:
     for (R_xlen_t i = 0; i < N; ++i) {
       if (x[i] < a) {
         return i + 1;
       }
     }
-    break;
+    break; // # nocov
   }
   return 0;
 }

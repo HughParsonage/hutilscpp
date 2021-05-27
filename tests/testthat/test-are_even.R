@@ -16,6 +16,7 @@ test_that("even works", {
 })
 
 test_that("error handling", {
+  expect_error(are_even("foo"))
   expect_warning(are_even(c(0, 0.5, 1)),
                  regexp = "`x` was type double, but element 2 = 0.5 was not an integer value",
                  fixed = TRUE)

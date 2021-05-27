@@ -9,5 +9,5 @@ int asInteger2(SEXP x) {
       return dbl2int(REAL_ELT(x, 0));
     }
   }
-  return NA_INTEGER;
+  return NA_INTEGER; // # nocov
 }

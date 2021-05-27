@@ -91,4 +91,8 @@ test_that("sum_isna_altrep", {
   expect_equal(sum_isna(1:5, do_anyNA = FALSE), 0L)
 })
 
+test_that("sum_isna(raw)", {
+  expect_equal(sum_isna(raw(5)), 0)
+})
+
 

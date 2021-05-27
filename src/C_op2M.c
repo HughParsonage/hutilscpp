@@ -43,7 +43,7 @@ SEXP C_op2M(SEXP xx) {
   if (TYPEOF(xx) != STRSXP ||
       xlength(xx) == 0 ||
       STRING_ELT(xx, 0) == NA_STRING) {
-    return ScalarInteger(0);
+    return ScalarInteger(0); // # nocov
   }
   const char * x = CHAR(STRING_ELT(xx, 0));
   return ScalarInteger(do_op2M(x));

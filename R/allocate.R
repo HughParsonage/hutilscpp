@@ -2,14 +2,14 @@
 
 allocate0_int <- function(N, nThread = 1L) {
   if ((res <- isnt_number(N)) || (res <- isnt_number(nThread))) {
-    stop(attr(res, "ErrorMessage"))
+    stop(attr(res, "ErrorMessage")) # nocov
   }
   .Call("Callocate0_int", N, nThread, PACKAGE = packageName)
 }
 
 allocate0_dbl <- function(N, nThread = 1L) {
   if ((res <- isnt_number(N)) || (res <- isnt_number(nThread))) {
-    stop(attr(res, "ErrorMessage"))
+    stop(attr(res, "ErrorMessage")) # nocov
   }
   .Call("Callocate0_dbl", N, nThread, PACKAGE = packageName)
 }
@@ -17,7 +17,7 @@ allocate0_dbl <- function(N, nThread = 1L) {
 
 allocate0_except <- function(N, India, Victor, nThread = 1L) {
   if ((res <- isnt_number(N)) || (res <- isnt_number(nThread))) {
-    stop(attr(res, "ErrorMessage"))
+    stop(attr(res, "ErrorMessage")) # nocov
   }
   stopifnot(is.integer(India) || isTRUE(all.equal(floor(India), India)))
   Victor <- ensure_integer(Victor)

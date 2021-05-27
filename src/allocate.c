@@ -195,7 +195,7 @@ SEXP CallocateConstants(SEXP NN, SEXP ii) {
   case 4:
     return DoubleNNA(N);
   }
-  return R_NilValue;
+  return R_NilValue; // # nocov
 }
 
 
