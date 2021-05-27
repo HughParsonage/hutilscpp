@@ -277,7 +277,10 @@ SEXP CEmptiestQuarter(SEXP xx,
   double maxx = asReal(Maxx);
   double miny = asReal(Miny);
   double maxy = asReal(Maxy);
-  int N = xlength(xx);
+  int N = length(xx);
+  if (N == 0) {
+    return IntegerN(2); // # nocov
+  }
   int out[2] = {0, 0};
 
   do_EmptiestQuarter(out, x, y, N, minx, maxx, miny, maxy);
@@ -365,8 +368,12 @@ SEXP C_theEmptiestQuarters(SEXP x, SEXP y,
   if (xlength(x) >= INT_MAX || xlength(x) != xlength(y)) {
     error("x,y wrong lengths."); // # nocov
   }
+  int N = length(x);
+  if (N == 0) {
+    return IntegerN(2); // # nocov
+  }
   int out[256] = {0};
-  theEmptiestQuarters(out, REAL(x), REAL(y), length(x),
+  theEmptiestQuarters(out, REAL(x), REAL(y), N,
                       asReal(minx),
                       asReal(maxx),
                       asReal(miny),

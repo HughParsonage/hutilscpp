@@ -218,7 +218,7 @@ SEXP Cis_sorted(SEXP x, SEXP asc) {
       return ScalarLogical(is_sorted_ascending_dbl(REAL(x), N));
     }
   }
-  return R_NilValue;
+  return R_NilValue; // # nocov
 }
 
 SEXP Cisnt_sorted(SEXP x, SEXP asc) {
@@ -250,5 +250,5 @@ SEXP Cisnt_sorted(SEXP x, SEXP asc) {
       return ScalarLength(do_isntSorted_ascending_dbl(REAL(x), N));
     }
   }
-  return R_NilValue;
+  return R_NilValue; // # nocov
 }

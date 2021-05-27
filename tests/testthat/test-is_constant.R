@@ -114,6 +114,7 @@ test_that("isntConstant works", {
   expect_equal(isntConstant(c(logical(4), TRUE)), 5L)
   expect_equal(isntConstant(rep(NaN, 10)), 0)
   expect_equal(isntConstant(character(5)), 0)
+  expect_equal(isntConstant(rep(NA_character_, 5)), 0)
   expect_equal(isntConstant(complex(5)), 0)
   expect_equal(isntConstant(1:5 + complex(5)), 2)
 })

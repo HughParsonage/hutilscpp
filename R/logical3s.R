@@ -470,7 +470,7 @@ do_par_in <- function(x, tbl, nThread = 1L) {
   if (is.integer(x) && is.integer(tbl)) {
     .Call("Cpar_in_int", x, tbl, nThread, PACKAGE = packageName)
   } else {
-    x %in% tbl
+    x %in% tbl # nocov
   }
 }
 

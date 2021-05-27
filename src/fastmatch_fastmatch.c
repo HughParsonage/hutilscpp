@@ -210,9 +210,12 @@ static SEXP asCharacter(SEXP s, SEXP env)
   return r;
 }
 
+// this function is only used with long vectors
+// # nocov start
 static double NA_int2real(hash_index_t res) {
   return (res == NA_INTEGER) ? R_NaReal : ((double)  res);
 }
+// # nocov end
 
 /* the only externally visible function to be called from R */
 SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthreads) {
@@ -278,7 +281,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
 
   /* we only support INT/REAL/STR */
   if (type != INTSXP && type != REALSXP && type != STRSXP) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
 
   if (y_to_char && type != STRSXP) /* y = factor -> character -> type must be STRSXP */

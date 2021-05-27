@@ -53,6 +53,7 @@ bool is_true(SEXP x);
 
 // diagnose_omp
 int as_nThread(SEXP x);
+bool has_openmp();
 
 SEXP ScalarLength(R_xlen_t o);
 

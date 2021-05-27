@@ -19,7 +19,7 @@ where_square_bracket_opens <- function(x, i) {
 }
 
 print_chars <- function(x) {
-  invisible(.Call("CPrintChars", x, PACKAGE = packageName))
+  invisible(.Call("CPrintChars", x, PACKAGE = packageName))  # nocov
 }
 
 

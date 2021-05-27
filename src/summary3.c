@@ -7,7 +7,7 @@
 int fun2int(const char * x) {
   char x0 = x[0];
   if (x0 == '\0' || x[1] == '\0' || x[2] == '\0') {
-    return -1;
+    return -1; // # nocov
   }
   char x1 = x[1];
   char x2 = x[2];
@@ -21,7 +21,7 @@ int fun2int(const char * x) {
       x2 == 'n') {
     return F_MIN;
   }
-  return -1;
+  return -1; // # nocov
 }
 
 SEXP Csummary3(SEXP xx, SEXP yy, SEXP zz,
@@ -32,7 +32,7 @@ SEXP Csummary3(SEXP xx, SEXP yy, SEXP zz,
       TYPEOF(yy) != TYPEOF(zz) ||
       TYPEOF(nthreads) != INTSXP ||
       xlength(nthreads) != 1) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
   if (TYPEOF(xx) != REALSXP && TYPEOF(xx) != INTSXP) {
     return R_NilValue;
@@ -43,6 +43,7 @@ SEXP Csummary3(SEXP xx, SEXP yy, SEXP zz,
   const R_xlen_t N = xlength(xx);
   const R_xlen_t ny = xlength(yy);
   const R_xlen_t nz = xlength(zz);
+  // # nocov start
   if (N == 0 || ny == 0 || nz == 0) {
     return allocVector(TYPEOF(xx), 0);
   }
@@ -52,6 +53,7 @@ SEXP Csummary3(SEXP xx, SEXP yy, SEXP zz,
   if (nz != N && nz != 1) {
     return R_NilValue;
   }
+  // # nocov end
 
   const bool y1 = ny == 1;
   const bool z1 = nz == 1;

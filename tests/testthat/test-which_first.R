@@ -9,6 +9,12 @@ test_that("which_first works", {
   expect_identical(which_first(x >= 0), 1L)
   expect_identical(which_first(x <= 0), 0L)
   expect_identical(which_first(x != 0), 1L)
+  expect_identical(which_first(x < 0L), 0L)
+  expect_identical(which_first(x > 0L), 1L)
+  expect_identical(which_first(x == 0L), 0L)
+  expect_identical(which_first(x >= 0L), 1L)
+  expect_identical(which_first(x <= 0L), 0L)
+  expect_identical(which_first(x != 0L), 1L)
   x30 <- rep(3, 4)
   expect_identical(which_first(x30 != 3.0), 0L)
 
@@ -862,6 +868,8 @@ test_that("which_first(lgl lgl)", {
   B2 <- c(TRUE, FALSE)
   B3 <- c(FALSE, TRUE)
   B4 <- c(NA, FALSE)
+  N3 <- c(NA, NA, NA)
+  F2 <- c(FALSE, FALSE)
   T2 <- c(TRUE, TRUE)
   expect_equal(which_first(x %in% B1),
                first_which(x %in% B1))
@@ -872,6 +880,8 @@ test_that("which_first(lgl lgl)", {
   expect_equal(which_first(x %in% c(NA, TRUE, FALSE, TRUE)), 1)
   expect_equal(which_first(x %between% T2),
                first_which(and(x >= T2[1], x <= T2[2])))
+  expect_equal(which_first(N3 %between% F2), 0L)
+  expect_equal(which_first(N3 %between% T2), 0L)
   expect_equal(which_first(x %in% T2), which_first(x))
   T0 <- logical(0)
   expect_equal(which_first(x %in% T0),

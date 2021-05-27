@@ -40,7 +40,7 @@ double maxd3(double a, double b, double c) {
 
 double Mind(const double * x, R_xlen_t N, int nThread) {
   if (N == 0) {
-    return R_PosInf;
+    return R_PosInf; // # nocov
   }
   double o = x[0];
 #if defined _OPENMP && _OPENMP >= 201511
@@ -56,7 +56,7 @@ double Mind(const double * x, R_xlen_t N, int nThread) {
 
 double Maxd(const double * x, R_xlen_t N, int nThread) {
   if (N == 0) {
-    return R_NegInf;
+    return R_NegInf; // # nocov
   }
   double o = x[0];
 #if defined _OPENMP && _OPENMP >= 201511

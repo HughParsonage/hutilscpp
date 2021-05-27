@@ -12,7 +12,7 @@ bool do_is_safe2int(double x) {
 //'   2 if   safe to coerce to integer but _some_ NAs in output
 int dbl_is_int(double x) {
   if (ISNAN(x)) {
-    return 2;
+    return 2; // # nocov
   }
   if (x > 2147483647 || x < -2147483647) {
     return 0;
@@ -42,10 +42,8 @@ int sex2int1(SEXP x) {
     return INTEGER_ELT(x, 0);
   case REALSXP:
     return dbl2int(REAL_ELT(x, 0));
-  default:
-    return NA_INTEGER;
   }
-  return NA_INTEGER;
+  return NA_INTEGER; // # nocov
 }
 
 SEXP Cwhich_isnt_integerish(SEXP xx) {
@@ -132,7 +130,7 @@ SEXP Cforce_as_integer(SEXP xx, SEXP Na_code) {
   }
   int na_code = asInteger2(Na_code);
   if (na_code < 0 || na_code > 2) {
-    na_code = is_safe2int(xx);
+    na_code = is_safe2int(xx); // # nocov
   }
   if (na_code != 1 && na_code != 2) {
     error("x could not be safely coerced to integer.");

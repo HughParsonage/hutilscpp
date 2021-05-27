@@ -10,6 +10,7 @@ test_that("which_NA works", {
 })
 
 test_that("which_notNA works", {
+  expect_equal(which_notNA(double(5)), 1:5)
   expect_equal(which_notNA(c(NA, NA)), integer(0))
   expect_equal(which_notNA(c(NA, NA, FALSE)), 3L)
   expect_equal(which_notNA(c(NA, NA, 1L)), 3L)

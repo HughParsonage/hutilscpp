@@ -46,6 +46,7 @@ cumsum_reset <- function(x, y = as.integer(x)) {
 }
 
 
+# nocov start
 cumsum_reset_where <- function(where, y, .parent_nframes = 1L) {
   sexpr <- substitute(where)
   isBinaryW <- is_binary_sexp(sexpr, .parent_nframes = .parent_nframes + 1L)
@@ -60,4 +61,5 @@ cumsum_reset_where <- function(where, y, .parent_nframes = 1L) {
   }
   cumsum_reset(where, y)
 }
+# nocov end
 

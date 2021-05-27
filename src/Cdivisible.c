@@ -7,7 +7,7 @@ SEXP Cdivisible(SEXP xx, SEXP dd, SEXP nthreads) {
   int nThread = as_nThread(nthreads);
 
   if (TYPEOF(xx) != INTSXP) {
-    error("Internal error(Cdivisible): xx not INTSXP.");
+    error("Internal error(Cdivisible): xx not INTSXP."); // # nocov
   }
   const int * xp = INTEGER(xx);
   const unsigned int d = asInteger(dd);
@@ -78,7 +78,7 @@ if (TYPEOF(xx) == INTSXP) {
 SEXP Cdivisible16(SEXP xx, SEXP nthreads) {
   R_xlen_t N = xlength(xx);
   if (TYPEOF(xx) != INTSXP) {
-    error("Internal error(Cdivisible16): xx not INTSXP.");
+    error("Internal error(Cdivisible16): xx not INTSXP."); // # nocov
   }
   SEXP out = PROTECT(allocVector(LGLSXP, N));
   int * restrict outp = LOGICAL(out);

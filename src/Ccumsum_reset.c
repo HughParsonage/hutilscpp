@@ -46,9 +46,10 @@ SEXP Ccumsum_reset(SEXP xx, SEXP yy) {
     return ans;
   }
 
-  return R_NilValue;
+  return R_NilValue; // # nocov
 }
 
+// # nocov start
 SEXP Ccumsum_reset_where(SEXP xx, SEXP yy, SEXP oo, SEXP aa) {
   R_xlen_t N = xlength(xx);
   if (N != xlength(yy) || N == 0) {
@@ -93,11 +94,13 @@ SEXP Ccumsum_reset_where(SEXP xx, SEXP yy, SEXP oo, SEXP aa) {
   }
   return R_NilValue;
 }
+// # nocov end
+
 
 SEXP Ccumsum_reset_sorted_int(SEXP xx) {
   R_xlen_t N = xlength(xx);
   if (TYPEOF(xx) != INTSXP) {
-    error("Internal error(Ccumsum_reset): xx not INTSXP.");
+    error("Internal error(Ccumsum_reset): xx not INTSXP."); // # nocov
   }
   const int * xp = INTEGER(xx);
   SEXP ans = PROTECT(allocVector(INTSXP, N));
@@ -109,3 +112,4 @@ SEXP Ccumsum_reset_sorted_int(SEXP xx) {
   UNPROTECT(1);
   return ans;
 }
+
