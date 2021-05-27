@@ -2,9 +2,12 @@
 % Please edit documentation in R/is_sorted.R
 \name{is_sorted}
 \alias{is_sorted}
+\alias{isntSorted}
 \title{Is a vector sorted?}
 \usage{
 is_sorted(x, asc = NA)
+
+isntSorted(x, asc = NA)
 }
 \arguments{
 \item{x}{An atomic vector.}
