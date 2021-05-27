@@ -25,6 +25,8 @@ is_sorted <- function(x, asc = NA) {
   ans
 }
 
+#' @rdname is_sorted
+#' @export
 isntSorted <- function(x, asc = NA) {
   stopifnot(is.atomic(x),
             is.logical(asc),
