@@ -49,7 +49,6 @@ extern SEXP Cna_and(SEXP);
 extern SEXP Cor3(SEXP, SEXP, SEXP);
 extern SEXP Cor3_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cpar_in_int(SEXP, SEXP, SEXP);
-extern SEXP Cpcg_hash(SEXP, SEXP, SEXP);
 extern SEXP Cpmax(SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cpmax0_bitwise(SEXP, SEXP, SEXP);
 extern SEXP Cpmax0_radix_sorted_dbl(SEXP, SEXP, SEXP);
@@ -88,7 +87,6 @@ extern SEXP Cwhich_lastNA(SEXP);
 extern SEXP Cwhich_true_onwards(SEXP);
 extern SEXP Cwhich3(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cwhich3_mem(SEXP, SEXP, SEXP, SEXP);
-extern SEXP firstAbsentInt(SEXP, SEXP, SEXP);
 extern SEXP fmatch(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
@@ -133,7 +131,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cor3",                          (DL_FUNC) &Cor3,                           3},
     {"Cor3_par",                      (DL_FUNC) &Cor3_par,                      16},
     {"Cpar_in_int",                   (DL_FUNC) &Cpar_in_int,                    3},
-    {"Cpcg_hash",                     (DL_FUNC) &Cpcg_hash,                      3},
     {"Cpmax",                         (DL_FUNC) &Cpmax,                          4},
     {"Cpmax0_bitwise",                (DL_FUNC) &Cpmax0_bitwise,                 3},
     {"Cpmax0_radix_sorted_dbl",       (DL_FUNC) &Cpmax0_radix_sorted_dbl,        3},
@@ -172,7 +169,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cwhich_true_onwards",           (DL_FUNC) &Cwhich_true_onwards,            1},
     {"Cwhich3",                       (DL_FUNC) &Cwhich3,                        7},
     {"Cwhich3_mem",                   (DL_FUNC) &Cwhich3_mem,                    4},
-    {"firstAbsentInt",                (DL_FUNC) &firstAbsentInt,                 3},
     {"fmatch",                        (DL_FUNC) &fmatch,                         6},
     {NULL, NULL, 0}
 };

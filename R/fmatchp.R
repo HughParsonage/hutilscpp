@@ -37,5 +37,13 @@ finp <- function(x, table, nThread = getOption("hutilscpp.nThread", 1L)) {
   fmatchp(x, table, nomatch = 0L, nThread = nThread, fin = TRUE)
 }
 
+#' @rdname fmatchp
+#' @export
+fnotinp <- function(x, table, nThread = getOption("hutilscpp.nThread", 1L)) {
+  nThread <- check_omp(nThread)
+  ans <- fmatchp(x, table, nomatch = 0L, nThread = nThread, fin = TRUE)
+  FLIP(ans);
+}
+FLIP <- `!`
 do_par_in_hash_int <- finp
 do_par_in_hash_dbl <- finp

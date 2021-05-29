@@ -3,6 +3,7 @@
 \name{fmatchp}
 \alias{fmatchp}
 \alias{finp}
+\alias{fnotinp}
 \title{Parallel fastmatching}
 \usage{
 fmatchp(
@@ -15,6 +16,8 @@ fmatchp(
 )
 
 finp(x, table, nThread = getOption("hutilscpp.nThread", 1L))
+
+fnotinp(x, table, nThread = getOption("hutilscpp.nThread", 1L))
 }
 \arguments{
 \item{x, table, nomatch}{As in \code{match}.}
