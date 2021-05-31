@@ -1,5 +1,5 @@
 #' First/last position of missing values
-#' @description Introuduced in \code{v 1.6.0}
+#' @description Introduced in \code{v 1.6.0}
 #'
 #' @param x An atomic vector.
 #' @return The position of the first/last missing value in \code{x}.

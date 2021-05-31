@@ -9,7 +9,7 @@
 #'
 #' @param keep_nas (logical, default: \code{TRUE}) Should \code{NA}s in \code{x}
 #' return \code{NA} in the result? If \code{FALSE}, will return \code{TRUE} since
-#' the internal reprsentation of \code{x} is even. Only applies if \code{is.integer(x)}.
+#' the internal representation of \code{x} is even. Only applies if \code{is.integer(x)}.
 #'
 #' @param nThread Number of threads to use.
 #'

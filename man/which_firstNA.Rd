@@ -16,7 +16,7 @@ which_lastNA(x)
 The position of the first/last missing value in \code{x}.
 }
 \description{
-Introuduced in \code{v 1.6.0}
+Introduced in \code{v 1.6.0}
 }
 \examples{
 N <- 1e8

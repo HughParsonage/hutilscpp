@@ -40,7 +40,7 @@ Functions are now in C to improve install time and size.
 * `count_logical` fast tabulation of logical vectors
 * `and3s`, `or3s`, parallelized and _separated_ versions of `&`
 * `sum_and3s` and `sum_or3s`, the sums of the above logical vectors. 
-* `whichs` for an alterantive implementation of `which` which separates the input
+* `whichs` for an alternative implementation of `which` which separates the input
 * `which_firstNA` and `which_lastNA` for first/last position of missing values
 
 ### Enhancements:
