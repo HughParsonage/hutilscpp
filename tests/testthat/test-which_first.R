@@ -135,6 +135,9 @@ test_that("which_first works", {
   expect_identical(which_first(expr %in% c(7, 9)), 0L)
   expect_identical(which_first(expr %in% c(2L, 3L)), 3L)
   expect_identical(which_first(expr %in% c(8L, 9L)), 0L)
+  # Repeat (possible UBD)
+  expect_identical(which_first(expr %in% c(8L, 9L)), 0L)
+  expect_true(TRUE)
 })
 
 test_that("Conflicts with expressions", {

@@ -6,7 +6,7 @@ SEXP Cwhich_even(SEXP xx) {
       TYPEOF(xx) != REALSXP) {
     error("Internal error(Cwhich_even): non-numeric xx."); // # nocov
   }
-  if (NN > INT_MAX) {
+  if (NN >= INT_MAX) {
     error("Internal error: long vectors are not supported."); // # nocov
   }
   int N = (int)NN;
@@ -31,16 +31,16 @@ SEXP Cwhich_even(SEXP xx) {
   int * restrict ansp = INTEGER(ans);
   if (TYPEOF(xx) == INTSXP) {
     const int * xp = INTEGER(xx);
-    for (R_xlen_t i = 0, j = 0; i < N; ++i) {
+    for (int i = 0, j = 0; (i < N && j < n_even); ++i) {
       int is_even = !(((unsigned int)xp[i]) & 1U);
-      ansp[j] = (int)(i + 1);
+      ansp[j] = ((unsigned int)i) + 1U;
       j += is_even;
     }
   } else {
     const double * xp = REAL(xx);
-    for (R_xlen_t i = 0, j = 0; i < N; ++i) {
+    for (int i = 0, j = 0; (i < N && j < n_even); ++i) {
       int is_even = R_finite(xp[i]) && (fmod(xp[i], 2) == 0);
-      ansp[j] = (int)(i + 1);
+      ansp[j] = ((unsigned int)i) + 1U;
       j += is_even;
     }
   }
