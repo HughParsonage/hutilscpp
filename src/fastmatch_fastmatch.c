@@ -521,7 +521,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
   }
   // # nocov end
   /* short vector - everything is int */
-  R_xlen_t N = LENGTH(x);
+  R_xlen_t N = xlength(x);
   SEXP r = PROTECT(allocVector(INTSXP, N));
   ++np;
   int *v = INTEGER(r);
@@ -530,7 +530,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
 #if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
 #endif
-    for (R_xlen_t i = 0; i < n; i++) {
+    for (R_xlen_t i = 0; i < N; i++) {
       v[i] = get_hash_int(h, k[i], nmv);
     }
   } else if (type == REALSXP) {
@@ -538,12 +538,12 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
 #if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
 #endif
-    for (R_xlen_t i = 0; i < n; i++) {
+    for (R_xlen_t i = 0; i < N; i++) {
       v[i] = get_hash_real(h, k[i], nmv);
     }
   } else {
     SEXP *k = (SEXP*) DATAPTR(x);
-    for (R_xlen_t i = 0; i < n; i++)
+    for (R_xlen_t i = 0; i < N; i++)
       v[i] = get_hash_ptr(h, k[i], nmv);
   }
   UNPROTECT(np);
