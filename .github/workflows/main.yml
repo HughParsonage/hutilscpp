@@ -27,6 +27,11 @@ jobs:
       - name: Run Check
         run: Rscript -e "rcmdcheck::rcmdcheck(build_args = '--no-manual')"
     container: rocker/verse:latest
+  rchk:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: r-lib/actions/run-rchk@master
   test-r-sanitizers:
     name: ASAN-UBSAN
     timeout-minutes: 60

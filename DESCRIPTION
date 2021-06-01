@@ -1,6 +1,6 @@
 Package: hutilscpp
 Title: Miscellaneous Functions in C++
-Version: 0.7.1
+Version: 0.7.2
 Authors@R: 
     c(person(given = "Hugh",
            family = "Parsonage",
@@ -20,6 +20,8 @@ URL: https://github.com/hughparsonage/hutilscpp
 BugReports: https://github.com/hughparsonage/hutilscpp/issues
 License: GPL-2
 Encoding: UTF-8
+Depends:
+    R (>= 3.3.0)
 Imports: 
     data.table, 
     glue,
