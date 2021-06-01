@@ -34,6 +34,10 @@ fmatchp <- function(x, table, nomatch = NA_integer_, nThread = getOption("hutils
 #' @export
 finp <- function(x, table, nThread = getOption("hutilscpp.nThread", 1L)) {
   nThread <- check_omp(nThread)
+  if (!is.symbol(substitute(table))) {
+    # avoid constants
+    table <- copy(table)
+  }
   fmatchp(x, table, nomatch = 0L, nThread = nThread, fin = TRUE)
 }
 
@@ -41,6 +45,10 @@ finp <- function(x, table, nThread = getOption("hutilscpp.nThread", 1L)) {
 #' @export
 fnotinp <- function(x, table, nThread = getOption("hutilscpp.nThread", 1L)) {
   nThread <- check_omp(nThread)
+  if (!is.symbol(substitute(table))) {
+    # avoid constants
+    table <- copy(table)
+  }
   ans <- fmatchp(x, table, nomatch = 0L, nThread = nThread, fin = TRUE)
   FLIP(ans);
 }
