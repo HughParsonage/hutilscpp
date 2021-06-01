@@ -13,7 +13,14 @@
  *  GNU General Public License for more details.
  */
 #include "hutilscpp.h"
-#include "common.h"
+/* hash_index_t is big enough to cover long vectors */
+typedef R_xlen_t hash_index_t;
+
+/* hashes are always 32-bit -- this is for compatibility with
+ the hash function used in R.
+ This means that long vectors are fine, but they may not have
+ more than 2^32 - 1 unique values */
+typedef unsigned int hash_value_t;
 
 /* for malloc/free since we handle our hash table memory separately from R */
 #include <stdlib.h>
@@ -462,7 +469,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
 
 
   // # nocov start
-  if (IS_LONG_VEC(x)) {
+  if (xlength(x) >= INT_MAX) {
     hash_index_t i, n = XLENGTH(x);
     SEXP r = PROTECT(allocVector(REALSXP, n));
     ++np;
