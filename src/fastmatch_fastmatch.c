@@ -217,14 +217,12 @@ static SEXP asCharacter(SEXP s, SEXP env)
   return r;
 }
 
-#ifdef LONG_VECTOR_SUPPORT
 // this function is only used with long vectors
 // # nocov start
 static double NA_int2real(hash_index_t res) {
   return (res == NA_INTEGER) ? R_NaReal : ((double)  res);
 }
 // # nocov end
-#endif
 
 /* the only externally visible function to be called from R */
 SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthreads) {
