@@ -36,6 +36,7 @@ test_that("fmatchp works", {
     expect_equal(fmatchp(integer(0), 1:5, whichFirst = 1L), 0)
     expect_equal(finp(integer(0), 1:5), logical(0))
     expect_equal(finp(1:5, integer(0)), logical(5))
+    expect_equal(fnotinp(1:5, integer(0)), !logical(5))
     expect_equal(fmatchp(1:5, integer(0), nomatch = 0L), integer(5))
 
 
