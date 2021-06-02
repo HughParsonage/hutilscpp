@@ -24,6 +24,8 @@ test_that("fmatchp works", {
     expect_equal(fmatchp(z, lettre), match(z, lettre))
     expect_equal(finp(z, lettre), z %in% lettre)
     expect_equal(finp(letters, lettre), letters %in% lettre)
+    expect_equal(fmatchp(lettre, "e", whichFirst = -1L),
+                 length(lettre))
 
     zf <- factor(z, levels = unique(lettre))
     lettref <- factor(lettre, levels = unique(lettre))
