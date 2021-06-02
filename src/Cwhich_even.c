@@ -1,9 +1,9 @@
 #include "hutilscpp.h"
 
-inline bool is_even_int(int x) {
+static inline bool is_even_int(int x) {
   return !((unsigned int)x & 1U);
 }
-inline bool is_even_dbl(double x) {
+static inline bool is_even_dbl(double x) {
   return R_finite(x) && (fmod(x, 2) == 0);
 }
 
