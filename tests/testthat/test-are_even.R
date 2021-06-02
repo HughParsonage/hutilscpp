@@ -13,6 +13,8 @@ test_that("even works", {
                    c(1L, 3L))
   expect_identical(which_are_even(c(5L, 1L, 3L)),
                    integer(0L))
+  expect_identical(which_are_even(c(0, rep(1, 1e5))),
+                   1L)
 })
 
 test_that("error handling", {
