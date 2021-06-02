@@ -1,5 +1,12 @@
 #include "hutilscpp.h"
 
+inline bool is_even_int(int x) {
+  return !((unsigned int)x & 1U);
+}
+inline bool is_even_dbl(double x) {
+  return R_finite(x) && (fmod(x, 2) == 0);
+}
+
 SEXP Cwhich_even(SEXP xx) {
   R_xlen_t NN = xlength(xx);
   if (TYPEOF(xx) != INTSXP &&
@@ -15,13 +22,13 @@ SEXP Cwhich_even(SEXP xx) {
     // Just count number of even
     const int * xp = INTEGER(xx);
     for (int i = 0; i < N; ++i) {
-      n_even += !(((unsigned int)xp[i]) & 1U);
+      n_even += is_even_int(xp[i]);
     }
 
   } else {
     const double * xp = REAL(xx);
     for (int i = 0; i < N; ++i) {
-      n_even += R_finite(xp[i]) && (fmod(xp[i], 2) == 0);
+      n_even += is_even_dbl(xp[i]);
     }
   }
   if (n_even == 0) {
@@ -32,16 +39,14 @@ SEXP Cwhich_even(SEXP xx) {
   if (TYPEOF(xx) == INTSXP) {
     const int * xp = INTEGER(xx);
     for (int i = 0, j = 0; (i < N && j < n_even); ++i) {
-      int is_even = !(((unsigned int)xp[i]) & 1U);
       ansp[j] = ((unsigned int)i) + 1U;
-      j += is_even;
+      j += is_even_int(xp[i]);
     }
   } else {
     const double * xp = REAL(xx);
     for (int i = 0, j = 0; (i < N && j < n_even); ++i) {
-      int is_even = R_finite(xp[i]) && (fmod(xp[i], 2) == 0);
       ansp[j] = ((unsigned int)i) + 1U;
-      j += is_even;
+      j += is_even_dbl(xp[i]);
     }
   }
   UNPROTECT(1);
