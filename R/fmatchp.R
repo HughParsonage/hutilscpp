@@ -27,7 +27,8 @@ fmatchp <- function(x, table, nomatch = NA_integer_, nThread = getOption("hutils
     # avoid constants
     table <- copy(table)
   }
-  .Call("fmatch", x, table, nomatch, fin, whichFirst, nThread, PACKAGE = packageName)
+  .Call("fmatch", x, table, nomatch, fin, whichFirst, nThread, PACKAGE = packageName) %||%
+    match_last_resort(x, table, nomatch, nThread, fin, whichFirst) # nocov
 }
 
 #' @rdname fmatchp
@@ -55,3 +56,22 @@ fnotinp <- function(x, table, nThread = getOption("hutilscpp.nThread", 1L)) {
 FLIP <- `!`
 do_par_in_hash_int <- finp
 do_par_in_hash_dbl <- finp
+
+# nocov start
+match_last_resort <- function(x, table, nomatch = NA_integer_, nThread = getOption("hutilscpp.nThread", 1L),
+                              fin = FALSE,
+                              whichFirst = 0L) {
+  if (isTRUE(fin)) {
+    return(x %in% table)
+  }
+  if (whichFirst) {
+    if (whichFirst == 1L) {
+      first_which(x %in% table)
+    }
+    if (whichFirst == -1L) {
+      last_which(x %in% table)
+    }
+  }
+  match(x, table, nomatch = nomatch)
+}
+# nocov end

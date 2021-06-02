@@ -290,12 +290,12 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
 
   /* we only support INT/REAL/STR */
   if (type != INTSXP && type != REALSXP && type != STRSXP) {
-    if (np) UNPROTECT(np);
+    if (np) UNPROTECT(np); // # nocov
     return R_NilValue; // # nocov
   }
 
   if (y_to_char && type != STRSXP) /* y = factor -> character -> type must be STRSXP */
-  type = STRSXP;
+  type = STRSXP; // # nocov
 
   /* coerce x - not y yet because we may get away with the existing cache */
   if (TYPEOF(x) != type) {

@@ -122,6 +122,10 @@ qd2i <- function(x) {
   }
 }
 
+"%||%" <- function(a, b) {
+  if (is.null(a)) b else a
+}
+
 
 
 # nocov start
