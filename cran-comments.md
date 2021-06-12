@@ -1,3 +1,5 @@
+rchk and valgrind errors have been fixed
+
 ## Test environments
 * local Windows 4.0.0
 * ubuntu 20.04.2 (on GitHub Action), R dev and release
@@ -8,4 +10,4 @@
 
 0 errors | 0 warnings | 1 note
 
-Note relates to recent submission. UBSAN error seemed urgent.
+Note relates to recent submission. rchk and valgrind seemed urgent

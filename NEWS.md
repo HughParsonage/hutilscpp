@@ -1,3 +1,8 @@
+## hutilscpp 0.7.2
+
+* Bug fixes
+  - Two programming errors detected by valgrind and rchk have been fixed
+
 ## hutilscpp 0.7.0
 
 Functions are now in C to improve install time and size.
