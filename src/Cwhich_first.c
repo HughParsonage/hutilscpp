@@ -201,7 +201,7 @@ SEXP Cwhich_firstNA(SEXP x) {
 
   case LGLSXP:
   case INTSXP: {
-    const int * xp = LOGICAL(x);
+    const int * xp = TYPEOF(x) == LGLSXP ? LOGICAL(x) : INTEGER(x);
     for (R_xlen_t i = 0; i < N; ++i) {
       if (xp[i] == NA_INTEGER) {
         o = i + 1;
@@ -242,7 +242,7 @@ SEXP Cwhich_lastNA(SEXP x) {
 
   case LGLSXP:
   case INTSXP: {
-    const int * xp = LOGICAL(x);
+    const int * xp = TYPEOF(x) == LGLSXP ? LOGICAL(x) : INTEGER(x);
     for (R_xlen_t i = N - 1; i >= 0; --i) {
       if (xp[i] == NA_INTEGER) {
         o = i + 1;

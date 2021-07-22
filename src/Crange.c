@@ -189,8 +189,8 @@ SEXP Crangel2_nanyNA(SEXP x, int nThread) {
 #pragma omp parallel for num_threads(nThread) reduction(|| : any_false)
 #endif
     for (R_xlen_t i = 1; i < N; ++i) {
-    any_false |= xp[i] == 0;
-  }
+      any_false |= xp[i] == 0;
+    }
   } else {
     any_false = true;
 #if defined _OPENMP && _OPENMP >= 201511
@@ -213,6 +213,10 @@ SEXP Cminmax(SEXP x, SEXP emptyResult, SEXP nthreads) {
     return emptyResult;
   }
   int nThread = as_nThread(nthreads);
+  int m = 0; // for testing various methods
+  if (TYPEOF(emptyResult) == INTSXP && xlength(emptyResult) == 1) {
+    m = asInteger(emptyResult);
+  }
 
   switch(TYPEOF(x)) {
   case LGLSXP:
@@ -280,6 +284,37 @@ SEXP Cminmax(SEXP x, SEXP emptyResult, SEXP nthreads) {
     return ans;
   }
     break;
+  case RAWSXP: {
+    const unsigned char * xp = RAW(x);
+    unsigned char xmax = 0;
+    unsigned char xmin = 255;
+    bool o[256] = {0};
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread) reduction(|| : o[:256])
+#endif
+    for (R_xlen_t i = 0; i < N; ++i) {
+      int xi = xp[i];
+      o[xi] = true;
+    }
+    for (int i = 0; i < 256; ++i) {
+      if (o[i]) {
+        xmin = (unsigned char)i;
+        break;
+      }
+    }
+    for (int i = 255; i >= xmin; --i) {
+      if (o[i]) {
+        xmax = (unsigned char)i;
+        break;
+      }
+    }
+
+    SEXP ans = PROTECT(allocVector(RAWSXP, 2));
+    RAW(ans)[0] = xmin;
+    RAW(ans)[1] = xmax;
+    UNPROTECT(1);
+    return ans;
+  }
 
   }
   return R_NilValue; // # nocov

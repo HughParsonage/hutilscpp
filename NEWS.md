@@ -1,3 +1,11 @@
+## hutilscpp 0.8.0
+
+* Enhancements: 
+  - `minmax` accepts raw input, treating as unsigned characters
+
+* Internal:
+  - A change to the `LOGICAL` C API has been absorbed.
+
 ## hutilscpp 0.7.2
 
 * Bug fixes
