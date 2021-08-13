@@ -17,7 +17,7 @@ test_that("implies same as hutils", {
                  FALSE))
   DT[, hutils_orig := implies(x, y)]
   DT[, hutils_cpp := Implies(x, y)]
-  expect_identical(DT$hutils_cpp, DT$hutils_cpp)
+  expect_identical(DT$hutils_cpp, DT$hutils_orig)
 })
 
 test_that("No NAs", {
