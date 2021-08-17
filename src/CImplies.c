@@ -1,16 +1,16 @@
 #include "hutilscpp.h"
 
 
-static const int implies_result[9] = {1, 1, 0, 1,
-                                   NA_INT, NA_INT,
-                                   1, 1, NA_INT};
+static const int implies_result[9] = {1, 1, 1, 0, 1,
+                                      NA_INT, NA_INT,
+                                      1, NA_INT};
 
-inline int na2two(int x) {
-  return x == NA_INTEGER ? 2 : x;
+unsigned int na2two(int x) {
+  return x < 0 ? 2 : x;
 }
 
-inline int do_implies(int x, int y) {
-  return implies_result[na2two(x) + 3 * na2two(y)];
+int do_implies(int x, int y) {
+  return implies_result[na2two(y) + 3 * na2two(x)];
 }
 
 SEXP CImplies(SEXP x, SEXP y, SEXP anyNAx, SEXP anyNAy) {
@@ -28,16 +28,6 @@ SEXP CImplies(SEXP x, SEXP y, SEXP anyNAx, SEXP anyNAy) {
   const int * yp = LOGICAL(y);
   SEXP ans = PROTECT(allocVector(LGLSXP, N));
   int * restrict ansp = LOGICAL(ans);
-  if (any_nax == 0 && any_nay == 0) {
-    for (R_xlen_t i = 0; i < N; ++i) {
-      ansp[i] = xp[i] ? yp[i] : 1;
-    }
-    UNPROTECT(1);
-    return ans;
-  }
-
-
-
   for (R_xlen_t i = 0; i < N; ++i) {
     int xpi = xp[i];
     int ypi = yp[i];
