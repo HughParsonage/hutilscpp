@@ -21,8 +21,6 @@ SEXP CImplies(SEXP x, SEXP y, SEXP anyNAx, SEXP anyNAy) {
   if (xlength(x) != xlength(y)) {
     error("lengths of x and y differ."); // # nocov
   }
-  const bool any_nax = asLogical(anyNAx);
-  const bool any_nay = asLogical(anyNAy);
   R_xlen_t N = xlength(x);
   const int * xp = LOGICAL(x);
   const int * yp = LOGICAL(y);
