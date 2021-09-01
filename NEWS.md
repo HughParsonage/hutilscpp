@@ -1,3 +1,11 @@
+## hutilscpp 0.8.1
+
+* Bug fixes:
+  - Implies returns correct results for `NA` results.
+  
+* Internal 
+  - Header change for compatibility with clang13. Thanks to CRAN for reporting.
+
 ## hutilscpp 0.8.0
 
 * Enhancements: 
