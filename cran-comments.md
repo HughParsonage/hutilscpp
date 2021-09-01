@@ -1,4 +1,4 @@
-rchk and valgrind errors have been fixed
+Fix for new clang 13 strictness about omp.h header order
 
 ## Test environments
 * local Windows 4.0.0

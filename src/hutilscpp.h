@@ -1,6 +1,10 @@
 #ifndef hutilsc_H
 #define hutilsc_H
 
+#if _OPENMP
+#include <omp.h>
+#endif
+
 #include <R.h>
 #define USE_RINTERNALS
 #include <Rinternals.h>
@@ -9,9 +13,7 @@
 #include <stdbool.h>
 #include <math.h>
 
-#if _OPENMP
-#include <omp.h>
-#endif
+
 
 #if (__GNUC__ > 7) || \
 ((__GNUC__ == 7) && (__GNUC_MINOR__ > 3))
