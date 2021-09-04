@@ -1,5 +1,5 @@
 # test_that("is_lgl_sym works", {
-if (at_home()) {
+if (at_home() || hutilscpp:::is_covr()) {
 library(hutilscpp)
 is_lgl_sym <- hutilscpp:::is_lgl_sym
 

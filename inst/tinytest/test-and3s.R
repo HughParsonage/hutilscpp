@@ -179,7 +179,7 @@ if (at_home() && identical(.Platform$r_arch, "x64")) {
   error = function(e) {
     message(e$m)
   })
-  if (exists("A")) {
+  if (exists("B")) {
   expect_equal(and3s(x %in% c(4L, 2L),
                      B,
                      C),
