@@ -7,6 +7,7 @@ which_min_HaversineDistance <- hutilscpp:::which_min_HaversineDistance
 match_min_Haversine <- hutilscpp:::match_min_Haversine
 theEuclidDistance <- hutilscpp:::theEuclidDistance
 hausdorffEuclid <- hutilscpp:::hausdorffEuclid
+EmptiestQuarter <- hutilscpp:::EmptiestQuarter
 
 # test_that("Error handling", {
   expect_error(haversineDistance(1, 1:2, 1:3, 1:4), pattern = "ength")
