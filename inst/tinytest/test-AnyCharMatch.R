@@ -1,6 +1,11 @@
-context("AnyCharMatch")
+library(hutilscpp)
+library(tinytest)
 
-test_that("AnyCharMatch works and opposite", {
+AnyCharMatch <- hutilscpp:::AnyCharMatch
+
+# context("AnyCharMatch")
+#
+# test_that("AnyCharMatch works and opposite", {
   x <- c("", "", "a")
   o1 <- AnyCharMatch(x, "")
   expect_equal(o1, 1L)
@@ -11,9 +16,9 @@ test_that("AnyCharMatch works and opposite", {
   xx <- c("aa", "aa", "ab")
   o3 <- AnyCharMatch(xx, "aa", opposite = TRUE)
   expect_equal(o3, 3L)
-})
 
-test_that("Works fine with NA", {
+
+# test_that("Works fine with NA", {
   x <- c("", "", NA)
   expect_equal(AnyCharMatch(x, ""), 1L)
   expect_equal(AnyCharMatch(x, "a"), 0L)
@@ -28,4 +33,4 @@ test_that("Works fine with NA", {
   expect_equal(AnyCharMatch(y, "", opposite = TRUE), 1L)
   expect_equal(AnyCharMatch(y, NA_character_), 1L)
   expect_equal(AnyCharMatch(y, NA_character_, opposite = TRUE), 2L)
-})
+# })

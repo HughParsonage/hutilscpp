@@ -1,40 +1,41 @@
-context("test-or3")
+#context "test-or3")
+do_or3 <- hutilscpp:::do_or3
 
-test_that("or3 error handling", {
-  expect_error(or3(logical(2), logical(3)), regexp = "permissible.*lengths")
-  expect_error(or3(z = TRUE, logical(2), logical(3)), regexp = "permissible.*lengths")
-  expect_error(or3(y = TRUE, logical(2), logical(3)), regexp = "permissible.*lengths")
-  expect_error(or3(y = TRUE, logical(2), x = logical(3)), regexp = "permissible.*lengths")
-  expect_error(or3(x = TRUE, logical(2), logical(3)), regexp = "permissible.*lengths")
-  expect_error(or3(x = logical(3), logical(2), logical(3)), regexp = "permissible.*lengths")
-  expect_error(or3(x = logical(1), logical(4), logical(3)), regexp = "permissible.*lengths")
-})
+# test_that("or3 error handling", {
+  expect_error(or3(logical(2), logical(3)), pattern = "permissible.*lengths")
+  expect_error(or3(z = TRUE, logical(2), logical(3)), pattern = "permissible.*lengths")
+  expect_error(or3(y = TRUE, logical(2), logical(3)), pattern = "permissible.*lengths")
+  expect_error(or3(y = TRUE, logical(2), x = logical(3)), pattern = "permissible.*lengths")
+  expect_error(or3(x = TRUE, logical(2), logical(3)), pattern = "permissible.*lengths")
+  expect_error(or3(x = logical(3), logical(2), logical(3)), pattern = "permissible.*lengths")
+  expect_error(or3(x = logical(1), logical(4), logical(3)), pattern = "permissible.*lengths")
 
-test_that("logical3 works", {
+
+# test_that("logical3 works", {
   x <- c(TRUE, FALSE, TRUE)
   y <- logical(3)
   z <- c(TRUE, TRUE, FALSE)
   expect_equal(or3(x, y, z), x | y | z)
   z <- NULL
   expect_equal(or3(x, y, z), x | y)
-})
 
-test_that("or3 length-1", {
+
+# test_that("or3 length-1", {
   expect_equal(or3(TRUE, FALSE, TRUE),
                TRUE)
-})
 
-test_that("length-1s 2/3", {
+
+# test_that("length-1s 2/3", {
   expect_equal(or3(FALSE, FALSE, c(TRUE, FALSE, FALSE)),
                c(TRUE, FALSE, FALSE))
   expect_equal(or3(logical(3), FALSE, c(TRUE, FALSE, FALSE)),
                c(TRUE, FALSE, FALSE))
   expect_equal(or3(FALSE, logical(3), c(TRUE, FALSE, FALSE)),
                c(TRUE, FALSE, FALSE))
-})
 
-test_that("or3 works with NAs", {
-  skip_if_not_installed("data.table")
+
+# test_that("or3 works with NAs", {
+
   library(data.table)
   DT <- CJ(xx = c(NA, FALSE, TRUE),
            yy = c(NA, FALSE, TRUE),
@@ -79,14 +80,14 @@ test_that("or3 works with NAs", {
       }
     }
   }
-})
 
-test_that("C++", {
+
+# test_that("C++", {
   expect_error(do_or3(logical(3), logical(2), TRUE),
-               regexp = "different lengths")
+               pattern = "different lengths")
   expect_equal(do_or3(c(TRUE, FALSE), c(TRUE, FALSE), TRUE), c(TRUE, TRUE))
   expect_equal(do_or3(c(TRUE, FALSE), c(TRUE, FALSE), FALSE), c(TRUE, FALSE))
   expect_equal(do_or3(c(TRUE, FALSE), c(TRUE, FALSE), logical(0)), c(TRUE, FALSE))
   expect_error(do_or3(c(TRUE, FALSE), c(TRUE, FALSE), c(TRUE, FALSE, FALSE)),
-               regexp = "wrong length")
-})
+               pattern = "wrong length")
+

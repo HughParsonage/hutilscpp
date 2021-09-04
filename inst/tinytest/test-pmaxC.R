@@ -1,11 +1,11 @@
-test_that("pmaxC works", {
+# test_that("pmaxC works", {
   x <- 1:10
   expect_equal(pmaxC(x, 3L), pmax(x, 3L))
   expect_equal(pmaxC(x, 3), pmax(x, 3))
   expect_equal(pmaxC(x, 3, dbl_ok = FALSE), pmax(x, 3))
-})
 
-test_that("pmaxC in-place", {
+
+# test_that("pmaxC in-place", {
   o <- c(-1, 0, 1)
   e <- c(0.5, 0.5, 1)
   expect_equal(pmaxC(o, 0.5), c(0.5, 0.5, 1))
@@ -19,25 +19,25 @@ test_that("pmaxC in-place", {
   expect_equal(pmaxC(oi, 2L), pmax(oi, 2L))
   pmaxC(oi, 2L, in_place = TRUE)
   expect_equal(oi, pmax2)
-})
 
-test_that("pmaxC error handling", {
-  expect_error(pmaxC("", ""), regexp = "numeric")
-  expect_error(pmaxC(list(1), 1L), regexp = "atomic")
+
+# test_that("pmaxC error handling", {
+  expect_error(pmaxC("", ""), pattern = "numeric")
+  expect_error(pmaxC(list(1), 1L), pattern = "atomic")
   expect_error(pmaxC(1:5, 1:2), "length.*2")
   expect_message(pmaxC(1:5, 1.5), "Output is double")
   expect_error(pmaxC(1:5, 2.5, dbl_ok = FALSE))
-})
 
-test_that("pmaxC_real_real", {
+
+# test_that("pmaxC_real_real", {
   x <- runif(100)
   y <- x[2]
   expect_equal(pminC(x, y), pmin(x, y))
   x <- c(NaN, x)
   expect_equal(pminC(x, y, keep_nas = TRUE), pmin(x, y))
-})
 
-test_that("pmaxC_int_real", {
+
+# test_that("pmaxC_int_real", {
   x <- 1:5
   o <- pmax(x, 2)
   pmaxC(x, 2, in_place = TRUE)
@@ -50,11 +50,11 @@ test_that("pmaxC_int_real", {
   pmaxC(xd, 2L, in_place = TRUE)
   expect_equal(xd, o)
   expect_equal(pmaxC(1:3, 3e9, in_place = TRUE), rep(3e9, 3))
-})
 
-test_that("pmaxC real int", {
+
+# test_that("pmaxC real int", {
   x <- c(0, 1.5)
   expect_equal(pmaxC(x, 1L), pmax(x, 1L))
-})
+
 
 

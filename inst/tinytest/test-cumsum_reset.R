@@ -1,16 +1,16 @@
-context("test-cumsum_reset")
+#context "test-cumsum_reset")
 
-test_that("Error handling", {
+# test_that("Error handling", {
   expect_error(cumsum_reset(1),
-               regexp = "logical")
+               pattern = "logical")
   expect_error(cumsum_reset(c(NA, TRUE), "missing value"))
   expect_error(cumsum_reset(1:5 > 0, 1:6),
                "same lengths")
   expect_error(cumsum_reset(1:5, "a"))
   expect_error(cumsum_reset(1:26 > 0, letters))
-})
 
-test_that("cumsum_reset works", {
+
+# test_that("cumsum_reset works", {
   expect_identical(cumsum_reset(c(TRUE, TRUE, FALSE, TRUE, TRUE)),
                    c(1L, 2L, 0L, 1L, 2L))
   expect_identical(cumsum_reset(x = c(TRUE, TRUE, FALSE, TRUE, TRUE),
@@ -22,9 +22,9 @@ test_that("cumsum_reset works", {
   expect_identical(cumsum_reset(FALSE), 0L)
   expect_identical(cumsum_reset(FALSE, 1L), 0L)
   expect_identical(cumsum_reset(FALSE, 2), 0)
-})
 
-test_that("Corner cases", {
+
+# test_that("Corner cases", {
   expect_identical(cumsum_reset(logical(0)), integer(0L))
   expect_identical(cumsum_reset(logical(0), double(0)), double(0L))
-})
+

@@ -1,4 +1,4 @@
-test_that("pminC int", {
+# test_that("pminC int", {
   x <- c(1L, -3L, 2L, .Machine$integer.max)
   expect_identical(pminC(x, 3L), pmin.int(x, 3L))
   y <- c(x, 4L)
@@ -9,9 +9,9 @@ test_that("pminC int", {
   expect_equal(pminC(x, 3, dbl_ok = FALSE), pmin(x, 3))
   expect_equal(pminC(integer(0), 1L), integer(0))
 
-})
 
-test_that("pminC in-place", {
+
+# test_that("pminC in-place", {
   o <- c(-1, 0, 1)
   expect_equal(pminC(o, 0.5), c(-1, 0, 0.5))
   expect_equal(o, c(-1, 0, 1))
@@ -26,28 +26,28 @@ test_that("pminC in-place", {
   expect_equal(oi, pmin2)
 
   expect_equal(pminC(1:3, -3e9, in_place = TRUE), rep(-3e9, 3))
-})
 
 
-test_that("pminC Error handling", {
+
+# test_that("pminC Error handling", {
   expect_error(pminC(1:5, 0L, in_place = "not logical"))
-  expect_error(pminC("abc", "abc"), regexp = "numeric")
-  expect_error(pminC(0:1, "abc"), regexp = "numeric")
+  expect_error(pminC("abc", "abc"), pattern = "numeric")
+  expect_error(pminC(0:1, "abc"), pattern = "numeric")
   expect_message(pminC(1:5, 1.5), "Output is double")
-})
 
-test_that("pminC_real_real", {
+
+# test_that("pminC_real_real", {
   x <- runif(100)
   y <- x[2]
   expect_equal(pminC(x, y), pmin(x, y))
   x <- c(NaN, x)
   expect_equal(pminC(x, y, keep_nas = TRUE), pmin(x, y))
-})
 
-test_that("pminC real_int", {
+
+# test_that("pminC real_int", {
   x <- runif(100)
   expect_equal(pminC(x, 1L), pmin(x, 1))
-})
+
 
 
 

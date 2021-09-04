@@ -968,3 +968,30 @@ SEXP Cwhich_first__(SEXP xx, SEXP opp, SEXP yy,
                                     y1dd,
                                     y2dd));
 }
+
+
+
+SEXP C_which_first_lgl1(SEXP X, SEXP A, SEXP O, SEXP R) {
+  const int * xp = LOGICAL(X);
+  const int a = asLogical(A);
+  const bool r = asLogical(R);
+  const int o = asInteger(O);
+  R_xlen_t N = xlength(X);
+  if (r) {
+    for (R_xlen_t i = N - 1; i >= 0; --i) {
+      if (isingle_ox_x1_x2(xp[i], o, a, a)) {
+        return ScalarLength(i + 1);
+      }
+    }
+  } else {
+    for (R_xlen_t i = 0; i < N; ++i) {
+      if (isingle_ox_x1_x2(xp[i], o, a, a)) {
+        return ScalarLength(i + 1);
+      }
+    }
+  }
+  return ScalarInteger(0);
+}
+
+
+

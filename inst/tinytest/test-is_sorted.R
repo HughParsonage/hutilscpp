@@ -1,4 +1,4 @@
-test_that("is_sorted works no NAs", {
+# test_that("is_sorted works no NAs", {
   expect_true(is_sorted(NULL))
   expect_true(is_sorted(integer(1)))
   expect_true(is_sorted(1:100))
@@ -20,9 +20,9 @@ test_that("is_sorted works no NAs", {
   expect_false(is_sorted(c(0L, -1L, 1L)))
   expect_false(is_sorted(c(0L, 1L, -1L)))
 
-})
 
-test_that("isntSorted", {
+
+# test_that("isntSorted", {
   expect_equal(isntSorted(NULL), 0)
   expect_equal(isntSorted(integer(1)), 0L)
   expect_equal(isntSorted(c(0, 1, 2, 1)), 4)
@@ -49,9 +49,9 @@ test_that("isntSorted", {
 
   expect_equal(isntSorted(c(40, 30, 00, 10)), 4)
   expect_equal(isntSorted(c(4L, 3L, 0L, 1L)), 4)
-})
 
-test_that("is_sorted asc", {
+
+# test_that("is_sorted asc", {
   x <- c(0L, 2:4)
   expect_true(is_sorted(x, asc = TRUE))
   expect_true(is_sorted(as.double(x), asc = TRUE))
@@ -62,9 +62,9 @@ test_that("is_sorted asc", {
   expect_false(is_sorted(as.double(xr), asc = TRUE))
   expect_true(is_sorted(xr, asc = FALSE))
   expect_true(is_sorted(as.double(xr), asc = FALSE))
-})
 
-test_that("isntSorted asc", {
+
+# test_that("isntSorted asc", {
   x <- c(0L, 2:4)
   expect_true(!isntSorted(x, asc = TRUE))
   expect_true(!isntSorted(as.double(x), asc = TRUE))
@@ -75,7 +75,7 @@ test_that("isntSorted asc", {
   expect_false(!isntSorted(as.double(xr), asc = TRUE))
   expect_true(!isntSorted(xr, asc = FALSE))
   expect_true(!isntSorted(as.double(xr), asc = FALSE))
-})
+
 
 
 

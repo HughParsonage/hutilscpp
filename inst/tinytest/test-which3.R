@@ -1,5 +1,5 @@
-test_that("which3 works", {
-  skip_if_not_installed("data.table")
+# test_that("which3 works", {
+  # skip_if_not_installed("data.table")
   expect_equal(which3(c(TRUE, FALSE, FALSE),
                       c(FALSE, TRUE, FALSE),
                       c(FALSE, FALSE, TRUE)),
@@ -60,11 +60,13 @@ test_that("which3 works", {
 
 
 
-})
 
 
-test_that("long failing instance", {
-  skip_on_cran()
+
+# test_that("long failing instance", {
+  if (at_home()) {
+  # skip_on_cran()
+
   N <- 1e8L
   if (nzchar(Sys.getenv("TRAVIS"))) {
     N <- 1e6L
@@ -89,6 +91,6 @@ test_that("long failing instance", {
   expect_identical(which3(x, y, z),
                    which(x & y & z))
 
-})
+}
 
 

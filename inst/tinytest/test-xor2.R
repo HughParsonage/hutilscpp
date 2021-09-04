@@ -1,4 +1,4 @@
-test_that("xor2 works", {
+# test_that("xor2 works", {
   x <- c(TRUE, FALSE)
   y <- c(FALSE, TRUE)
   u <- c(TRUE, TRUE, FALSE, FALSE, NA, NA)
@@ -12,4 +12,4 @@ test_that("xor2 works", {
   expect_equal(xor(u, w), xor2(u, w, anyNA(u), anyNA(w)))
   expect_equal(xor(u, z), xor2(u, z, anyNA(u), anyNA(z)))
   expect_equal(xor(z, u), xor2(z, u, anyNA(z), anyNA(u)))
-})
+

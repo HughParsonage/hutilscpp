@@ -1,4 +1,10 @@
-test_that("pmin0 works", {
+do_pmin0_radix_sorted_dbl <- hutilscpp:::do_pmin0_radix_sorted_dbl
+do_pmin0_radix_sorted_int <- hutilscpp:::do_pmin0_radix_sorted_int
+hutilscpp_rev <- hutilscpp:::hutilscpp_rev
+
+# test_that("pmin0 works", {
+
+
   o <- c(-1, 0, 1)
   expect_equal(pmin0(o), c(-1, 0, 0))
   pmin0(o, in_place = TRUE)
@@ -14,15 +20,15 @@ test_that("pmin0 works", {
   expect_equal(min(oi), min(-1:5))
   expect_identical(max(pmin0(oi, TRUE)), 0L)
   expect_equal(pmin0(integer(0)), integer(0))
-})
 
-test_that("Error handling", {
+
+# test_that("Error handling", {
   expect_error(pmin0(list()), "list")
   expect_error(pmin0(""), "numeric")
 
-})
 
-test_that("pmin0 sorted", {
+
+# test_that("pmin0 sorted", {
   x <- as.double(seq(-1e6, 1e7, length.out = 3e3))
   expect_identical(pmin0(x), do_pmin0_radix_sorted_dbl(x))
   x <- hutilscpp_rev(x)
@@ -62,16 +68,16 @@ test_that("pmin0 sorted", {
   x <- c(1, 4:8)
   expect_equal(pmin0(x, sorted = TRUE, in_place = TRUE), double(length(x)))
   expect_equal(x, double(length(x)))
-})
 
-test_that("pmin0 sorted but all positive", {
+
+# test_that("pmin0 sorted but all positive", {
   expect_equal(pmin0(rep(1L, 10), sorted = TRUE), integer(10))
   expect_equal(pmin0(10:1, sorted = TRUE), integer(10))
   expect_equal(pmin0(rep(1, 10), sorted = TRUE), double(10))
   expect_equal(pmin0(10:1 + 0, sorted = TRUE), double(10))
-})
 
-test_that("pmin0 sorted but all negative", {
+
+# test_that("pmin0 sorted but all negative", {
   z <- c(10:1, 0L)
   zd <- as.double(z)
   expect_identical(pmin0(z, sorted = TRUE, in_place = FALSE), integer(11))
@@ -79,13 +85,13 @@ test_that("pmin0 sorted but all negative", {
   expect_equal(z, integer(11))
   expect_identical(pmin0(zd, sorted = TRUE, in_place = TRUE), double(11))
   expect_equal(zd, double(11))
-})
 
-test_that("pmin0 altrep", {
+
+# test_that("pmin0 altrep", {
   expect_warning(pmin0(1:10, in_place = TRUE), "ALTREP")
   expect_equal(pmin0(1:10), pmin(1:10, 0L))
   expect_equal(pmin0(-1:-10), pmin(-1:-10, 0L))
   expect_equal(pmin0(-1:10), pmin(-1:10, 0L))
   expect_equal(pmin0(1:-10), pmin(1:-10, 0L))
-})
+
 

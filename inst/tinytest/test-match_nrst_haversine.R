@@ -1,6 +1,6 @@
-context("test-match_nrst_haversine")
+#context "test-match_nrst_haversine")
 
-test_that("match_nrst_haversine error", {
+# test_that("match_nrst_haversine error", {
   expect_error(match_nrst_haversine("a"))
   expect_error(match_nrst_haversine(1, "a"))
   expect_error(match_nrst_haversine(1, 1:2))
@@ -21,18 +21,17 @@ test_that("match_nrst_haversine error", {
   expect_error(match_nrst_haversine(lat1, lon1, lat2, lon2, as.data.table = NULL),
                "as.data.table")
   expect_error(match_nrst_haversine(lat1, lon1, lat2, lon2, close_enough = "a"),
-               "`close_enough` was a character",
-               fixed = TRUE)
+               "`close_enough` was a character")
 
   expect_warning(Table14_res <- match_nrst_haversine(lat1, lon1, lat2, lon2, Index = 1:4),
                  "not the same length as")
   expect_identical(Table14_res[[1L]], c(3L, 3L))
 
 
-})
 
-test_that("match_nrst_haversine works", {
-  skip_if_not_installed("data.table")
+
+# test_that("match_nrst_haversine works", {
+
   between <- data.table::between
   lat2 <- seq(from = -38, to = -37.8, length.out = 5)
   lon2 <- rep(145, 5)
@@ -48,9 +47,9 @@ test_that("match_nrst_haversine works", {
   expect_true(all(between(oL[[2L]], c(0.5, 2), c(0.6, 2.1))))
 
 
-})
 
-test_that("match_nrst_haversine Table", {
+
+# test_that("match_nrst_haversine Table", {
   lat2 <- seq(from = -38, to = -37.8, length.out = 6)
   lon2 <- rep(145, 6)
 
@@ -59,9 +58,9 @@ test_that("match_nrst_haversine Table", {
 
   res <- match_nrst_haversine(lat1, lon1, lat2, lon2, Index = letters[1:6])
   expect_true(is.character(res[[1]]))
-})
 
-test_that("Suffixes", {
+
+# test_that("Suffixes", {
   res10 <- match_nrst_haversine(c(-37, -38), c(150, 149),
                                 seq(-39, -36, length.out = 100),
                                 seq(148, 151, length.out = 100))
@@ -109,4 +108,4 @@ test_that("Suffixes", {
   expect_true(all(res_equator_123km[[2]] < 53))
   expect_true(all(res_equator_123km[[2]] > 52))
 
-})
+

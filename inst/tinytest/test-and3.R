@@ -1,40 +1,45 @@
-context("test-and3")
+library(hutilscpp)
+library(tinytest)
+do_and3 <- hutilscpp:::do_and3
+na_and <- hutilscpp:::na_and
 
-test_that("and3 error handling", {
-  expect_error(and3(logical(2), logical(3)), regexp = "permissible.*lengths")
-  expect_error(and3(z = TRUE, logical(2), logical(3)), regexp = "permissible.*lengths")
-  expect_error(and3(y = TRUE, logical(2), logical(3)), regexp = "permissible.*lengths")
-  expect_error(and3(y = TRUE, logical(2), x = logical(3)), regexp = "permissible.*lengths")
-  expect_error(and3(x = TRUE, logical(2), logical(3)), regexp = "permissible.*lengths")
-  expect_error(and3(x = logical(3), logical(2), logical(3)), regexp = "permissible.*lengths")
-  expect_error(and3(x = logical(4), logical(1), logical(3)), regexp = "permissible.*lengths")
-  expect_error(and3(y = logical(4), logical(1), logical(3)), regexp = "permissible.*lengths")
-})
 
-test_that("and3 works", {
+
+# test_that("and3 error handling", {
+  expect_error(and3(logical(2), logical(3)), pattern = "permissible.*lengths")
+  expect_error(and3(z = TRUE, logical(2), logical(3)), pattern = "permissible.*lengths")
+  expect_error(and3(y = TRUE, logical(2), logical(3)), pattern = "permissible.*lengths")
+  expect_error(and3(y = TRUE, logical(2), x = logical(3)), pattern = "permissible.*lengths")
+  expect_error(and3(x = TRUE, logical(2), logical(3)), pattern = "permissible.*lengths")
+  expect_error(and3(x = logical(3), logical(2), logical(3)), pattern = "permissible.*lengths")
+  expect_error(and3(x = logical(4), logical(1), logical(3)), pattern = "permissible.*lengths")
+  expect_error(and3(y = logical(4), logical(1), logical(3)), pattern = "permissible.*lengths")
+# })
+
+# test_that("and3 works", {
   x <- c(TRUE, FALSE, TRUE)
   y <- logical(3)
   z <- c(TRUE, TRUE, FALSE)
   expect_equal(and3(x, y, z),
                x & y & z)
   expect_equal(and3(x, y), x & y)
-})
+# })
 
-test_that("and3 length-1s", {
+# test_that("and3 length-1s", {
   expect_equal(and3(TRUE, TRUE, TRUE), TRUE)
   expect_equal(and3(TRUE, TRUE, FALSE), FALSE)
   expect_equal(and3(TRUE, TRUE, NA), NA)
-})
+# })
 
-test_that("length-1s 2/3", {
+# test_that("length-1s 2/3", {
   expect_equal(and3(TRUE, TRUE, c(TRUE, FALSE, TRUE)),
                c(TRUE, FALSE, TRUE))
   expect_equal(and3(TRUE, logical(3), c(TRUE, FALSE, TRUE)),
                c(FALSE, FALSE, FALSE))
-})
+# })
 
-test_that("and3 works with NAs", {
-  skip_if_not_installed("data.table")
+# test_that("and3 works with NAs", {
+
   library(data.table)
   DT <- CJ(xx = c(NA, FALSE, TRUE),
            yy = c(NA, FALSE, TRUE),
@@ -76,25 +81,25 @@ test_that("and3 works with NAs", {
       }
     }
   }
-})
 
-test_that("nas_absent ok", {
+
+# test_that("nas_absent ok", {
   expect_equal(and3(c(TRUE, FALSE), c(TRUE, FALSE), c(TRUE, FALSE), nas_absent = TRUE),
                c(TRUE, FALSE))
-})
+# })
 
-test_that("C++", {
+# test_that("C++", {
   expect_error(do_and3(logical(3), logical(2), TRUE),
-               regexp = "lengths")
+               pattern = "lengths")
   expect_error(do_and3(c(TRUE, FALSE), c(TRUE, FALSE), c(TRUE, FALSE, FALSE)),
-               regexp = "wrong length")
+               pattern = "wrong length")
   expect_equal(do_and3(c(TRUE, FALSE), c(TRUE, FALSE), TRUE), c(TRUE, FALSE))
   expect_equal(do_and3(c(TRUE, FALSE), c(TRUE, FALSE), FALSE), c(FALSE, FALSE))
   expect_equal(do_and3(c(TRUE, FALSE), c(TRUE, FALSE), logical(0)), c(TRUE, FALSE))
   expect_equal(na_and(c(TRUE, FALSE, NA)), c(TRUE, FALSE, NA) & NA)
   expect_error(do_and3(c(TRUE, FALSE), c(TRUE, FALSE), c(TRUE, FALSE, FALSE)),
-               regexp = "wrong length")
-})
+               pattern = "wrong length")
+# })
 
 
 

@@ -1,37 +1,42 @@
-context("test-haversine")
+#context "test-haversine")
 
-test_that("Error handling", {
-  expect_error(haversineDistance(1, 1:2, 1:3, 1:4), regexp = "ength")
-  expect_error(haversineDistance(1:2, 1:2, 1:3, 1:4), regexp = "ength")
+library(hutilscpp)
+library(tinytest)
+haversineDistance <- hutilscpp:::haversineDistance
+which_min_HaversineDistance <- hutilscpp:::which_min_HaversineDistance
+match_min_Haversine <- hutilscpp:::match_min_Haversine
+theEuclidDistance <- hutilscpp:::theEuclidDistance
+hausdorffEuclid <- hutilscpp:::hausdorffEuclid
+
+# test_that("Error handling", {
+  expect_error(haversineDistance(1, 1:2, 1:3, 1:4), pattern = "ength")
+  expect_error(haversineDistance(1:2, 1:2, 1:3, 1:4), pattern = "ength")
   expect_error(which_min_HaversineDistance(1, 1:2, 1, 1),
-               regexp = "ength",
-               fixed = TRUE)
+               pattern = "ength")
   expect_error(match_min_Haversine(1, 1:2, 1, 1, 0L),
-               regexp = "ength",
-               fixed = TRUE)
+               pattern = "ength")
   expect_error(match_min_Haversine(1, 1, 1:2, 1, 0L),
-               regexp = "ength",
-               fixed = TRUE)
+               pattern = "ength")
   expect_warning(match_min_Haversine(1, 1, 1:2, 1:2, 0L, excl_self = TRUE),
-                 regexp = "`excl_self = true`.*ength")
+                 pattern = "`excl_self = true`.*ength")
 
-})
+
 
 # Same as hutils
 # bankstown to sydney airports approximately 17628m
-test_that("Bankstown airport to Sydney airport approximately 17628m", {
-  expect_lt(haversineDistance(-33 - 56/60 - 46/3600, 151 + 10/60 + 38/3600,
-                              -33 - 55/60 - 28/3600, 150 + 59/60+18/3600) / 17.628 - 1,
-            0.01)
-})
+# test_that("Bankstown airport to Sydney airport approximately 17628m", {
+  expect_true(haversineDistance(-33 - 56/60 - 46/3600, 151 + 10/60 + 38/3600,
+                                -33 - 55/60 - 28/3600, 150 + 59/60+18/3600) / 17.628 - 1 <
+              0.01)
 
-test_that("Broken Hill airport to Sydney airport approximately 932158", {
-  expect_lt(haversineDistance(-33 - 56/60 - 46/3600, 151 + 10/60 + 38/3600,
-                              -32 - 00/60 - 05/3600, 141 + 28/60 + 18/3600) / 932.158 - 1,
-            0.01)
-})
 
-test_that("which_min_HaversineDistance", {
+# test_that("Broken Hill airport to Sydney airport approximately 932158", {
+  expect_true(haversineDistance(-33 - 56/60 - 46/3600, 151 + 10/60 + 38/3600,
+                              -32 - 00/60 - 05/3600, 141 + 28/60 + 18/3600) / 932.158 - 1 <
+            0.01)
+
+
+# test_that("which_min_HaversineDistance", {
   lat1 <- -33 - seq(0, 1, length.out = 10)
   lon1 <- rep_len(150, 10)
   lat2 <- -33.09
@@ -57,9 +62,9 @@ test_that("which_min_HaversineDistance", {
                                                upperBound = 100),
                    5L)
 
-})
 
-test_that("match_min_Haversine", {
+
+# test_that("match_min_Haversine", {
   lat2 <- c(-37.929, -37.962, -37.983, -37.928, -37.85)
   lon2 <- rep(145, 5)
 
@@ -78,16 +83,16 @@ test_that("match_min_Haversine", {
                                        lat2,
                                        lon2))
 
-})
 
-test_that("match_min_Haversine excl_self", {
+
+# test_that("match_min_Haversine excl_self", {
   lat1 <- c(-37.875, -37.88)
   lon1 <- c(144.96, 144.978)
   mat <- match_min_Haversine(lat1, lon1, lat1, lon1, 0L)
   expect_equal(NROW(mat), length(lat1))
-})
 
-test_that("unitless", {
+
+# test_that("unitless", {
   lat2 <- c(-37.929, -37.962, -37.983, -37.928, -37.85)
   lon2 <- rep(145, 5)
 
@@ -99,9 +104,9 @@ test_that("unitless", {
 
   expect_identical(order(haversineDistance(lat1, lon1, lat2, lon2)),
                    order(haversineDistance(lat1, lon1, lat2, lon2, unitless = TRUE)))
-})
 
-test_that("theEuclidDistance", {
+
+# test_that("theEuclidDistance", {
   expect_equal(theEuclidDistance(0, 0, 0, 0), 0)
   expect_equal(theEuclidDistance(0, 1, 0, 0), 1)
   expect_equal(theEuclidDistance(0, 1, 0, 0, unitless = TRUE), 1)
@@ -116,27 +121,22 @@ test_that("theEuclidDistance", {
   # Can't be identical
   expect_equal(theEuclidDistance(x, ax, y, ay), dist_euc(x, ax, y, ay))
   expect_error(theEuclidDistance(x, ax, y, ay[1:5]),
-               regexp = "lengths")
+               pattern = "lengths")
 
 
-})
 
-test_that("hausdorff distance", {
+
+# test_that("hausdorff distance", {
   o <- hausdorffEuclid(c(0, 0, 1), c(0, 1, 1))
   expect_equal(o, 1)
   o <- hausdorffEuclid(c(0, 0.5, 1), c(0, 0.7, 0))
   expect_equal(o, sqrt(0.74))
-})
 
 
-test_that("Emptiest quadrants", {
-  skip_if_not_installed("covr")
-  skip_if_not_installed("withr")
-  on_cran_not_covr <-
-    !identical(Sys.getenv("NOT_CRAN"), "true") &&
-    !covr::in_covr()
 
-  skip_if(on_cran_not_covr, message = "On CRAN but not COVR")
+# test_that("Emptiest quadrants", {
+  if (requireNamespace("covr", quietly = TRUE) && requireNamespace("withr", quietly = TRUE) && at_home() && covr::in_covr()) {
+
   library(data.table)
   withr::with_seed(7441, {
     x <- c(sample(0:49, size = 2000, replace = TRUE), sample(76:100, size = 1000, replace = TRUE))
@@ -275,20 +275,21 @@ test_that("Emptiest quadrants", {
     expect_identical(first(DT_NE[, theEmptiestQuarters(x, y)]), 1L)
 
   }) # withr
-})
 
-test_that("poleInaccessibility error handling", {
-  expect_error(poleInaccessibility2(), regexp = "were all NULL")
-  expect_error(poleInaccessibility3(), regexp = "were all NULL")
-})
 
-test_that("poleInaccessibility3 infinite xmin_new's", {
-  skip_if_not_installed("covr")
+# test_that("poleInaccessibility error handling", {
+  expect_error(poleInaccessibility2(), pattern = "were all NULL")
+  expect_error(poleInaccessibility3(), pattern = "were all NULL")
+
+
+# test_that("poleInaccessibility3 infinite xmin_new's", {
+# skip_if_not_installed("covr")
   on_cran_not_covr <-
     !identical(Sys.getenv("NOT_CRAN"), "true") &&
     !covr::in_covr()
 
-  skip_if(on_cran_not_covr, message = "On CRAN but not COVR") # My fault but too sporadic for CRAN
+  # skip_if(on_cran_not_covr, message = "On CRAN but not COVR") # My fault but too sporadic for CRAN
+  if (!on_cran_not_covr) {
   # Essentially need to test when a box occurs at the edges
   library(data.table)
   library(hutils) # for implies
@@ -322,28 +323,26 @@ test_that("poleInaccessibility3 infinite xmin_new's", {
                  xmax = -0.92,
                  ymin = -1.0,
                  ymax = -0.909))
-})
+}
 
-test_that("poleInaccessibility error handling", {
+# test_that("poleInaccessibility error handling", {
   expect_error(poleInaccessibility2(DT = data.table()),
                "supplied but did not have.*LATITUDE.*LONGITUDE")
   expect_warning(poleInaccessibility2(data.table(LONGITUDE = 1:5 + 0,
                                                  LATITUDE = 11:15 + 0),
                                       x = 0, y = 0),
-                 "`x` and `y` are not both NULL and will be ignored.",
-                 fixed = TRUE)
+                 "`x` and `y` are not both NULL and will be ignored.")
   expect_error(poleInaccessibility3(DT = data.table()),
-               regexp = "supplied but did not have.*LATITUDE.*LONGITUDE")
+               pattern = "supplied but did not have.*LATITUDE.*LONGITUDE")
   expect_warning(poleInaccessibility3(data.table(LONGITUDE = 1:5 + 0,
                                                  LATITUDE = 11:15 + 0),
                                       x = 0, y = 0),
-                 "`x` and `y` are not both NULL and will be ignored.",
-                 fixed = TRUE)
+                 "`x` and `y` are not both NULL and will be ignored.")
   expect_error(cut_DT(data.table()),
                "lacked column")
-})
 
-test_that("match_min_haversine stops first at sufficiently close, then gets closer", {
+
+# test_that("match_min_haversine stops first at sufficiently close, then gets closer", {
   x <- c(-1, -0.5, 0.1, 0.05)
   y <- double(4)
   pos2 <-
@@ -369,9 +368,9 @@ test_that("match_min_haversine stops first at sufficiently close, then gets clos
                          .verify_box = TRUE)
   expect_equal(pos3[["pos"]], 3L)
   expect_equal(pos4[["pos"]], 4L)
-})
 
-test_that("When the main match_min_haversine fails to pick a match", {
+
+# test_that("When the main match_min_haversine fails to pick a match", {
   lon <- c(-1, -0.5, 0.1, 0.05)
   lat <- double(4)
   match0 <- match_min_Haversine(0, 0,
@@ -383,8 +382,8 @@ test_that("When the main match_min_haversine fails to pick a match", {
                                 tabl = 1L,
                                 dist0_km = 200)
   expect_equal(match0$pos, 1L)
-})
 
+}
 
 
 

@@ -1,4 +1,7 @@
-test_that("%in% aliases work", {
+
+do_par_in_hash_int <- hutilscpp:::do_par_in_hash_int
+do_par_in <- hutilscpp:::do_par_in
+# test_that("%in% aliases work", {
   a <- 0:10
   b <- 0:5
   expect_identical(do_par_in_hash_int(a, b), a %in% b)
@@ -9,8 +12,8 @@ test_that("%in% aliases work", {
   f <- c(36L, 20L, 41L, 40L)
   expect_identical(do_par_in(e, f), e %in% f)
   expect_identical(do_par_in_hash_int(e, f), e %in% f)
-  skip_on_cran()
-  skip_on_travis()
+if (at_home()) {
+
 
   expect_identical(do_par_in(e, f, nThread = 2L), e %in% f)
   expect_identical(do_par_in_hash_int(e, f, nThread = 2L), e %in% f)
@@ -44,4 +47,5 @@ test_that("%in% aliases work", {
 
   ee <- c(ee, ff[2])
   expect_true(any(do_par_in_hash_int(ee, ff)))
-})
+
+}

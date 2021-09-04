@@ -352,8 +352,11 @@ which_first <- function(expr,
 
 .which_first_logical <- function(lhs, rhs, operator = "==", verbose = FALSE, rev = FALSE) {
   stopifnot(length(lhs) >= 1L,
-            is.logical(rhs), length(rhs) == 1L, !anyNA(rhs),
+            is.logical(rhs), length(rhs) == 1L,
             is.logical(verbose))
+  if (is.na(rhs)) {
+    return(.Call("C_which_first_lgl1", lhs, rhs, op2M(operator), isTRUE(rev), PACKAGE = packageName))
+  }
 
   #    operator   rhs   first/last
   # 1:       != FALSE   notFALSE

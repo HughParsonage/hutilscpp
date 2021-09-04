@@ -1,6 +1,8 @@
-context("test-tex")
+#context "test-tex")
+extractMandatory <- hutilscpp:::extractMandatory
+where_square_bracket_opens <- hutilscpp:::where_square_bracket_opens
 
-test_that("extractMandatory works", {
+# test_that("extractMandatory works", {
   library(hutils)
   x <- c('a', '', 'b', 'd', '{', 'e', '}', '.', 'b', 'e')
   res <- extractMandatory(x, c('b', 'd'), nCommands = 1L)[[1]]
@@ -10,15 +12,15 @@ test_that("extractMandatory works", {
   xop <- strsplit("qxy[ab]{jys}", split = "")[[1]]
   res_op <- extractMandatory(xop, c("q", "x", "y"), nCommands = 1L)[[1]]
   expect_true("y" %in% res_op)
-})
 
-test_that("Works with space before brace", {
+
+# test_that("Works with space before brace", {
   x <- c('a', '', 'b', 'd', ' ', '{', 'e', '}', '.')
   res <- extractMandatory(x, c('b', 'd'), nCommands = 1L)[[1]]
   expect_true(any(nzchar(x)))
-})
 
-test_that("Multiple optionals", {
+
+# test_that("Multiple optionals", {
   x <- strsplit("a \\Def[a [b] c]{df} x", split = "")[[1]]
   res <- extractMandatory(x, c("D", "e", "f"), 1L)
   expect_false("[" %in% res$support)
@@ -36,9 +38,9 @@ test_that("Multiple optionals", {
 
   x <- strsplit("a \\Defg[a [b{q{}}] c]{df} \\Def{a} b", split = "")[[1]]
   res <- extractMandatory(x, c("D", "e", "f"), 1L)
-})
 
-test_that("Bad document", {
+
+# test_that("Bad document", {
   x <- strsplit("a{b", split = "")[[1]]
   res <- extractMandatory(x, c("foo"), 1L)
   expect_false(any(nzchar(res$support)))
@@ -48,17 +50,17 @@ test_that("Bad document", {
   x <- strsplit("b \\ad[s]", split = "")[[1]]
   res <- extractMandatory(x, c("a", "d"), 1L)
   expect_false(any(nzchar(res$support)))
-})
 
-test_that("Braces may appear within command", {
+
+# test_that("Braces may appear within command", {
   x <- strsplit(c("the \\XYZ{cliff \\za{ba} wood.} flighty."), split = "")[[1L]]
   res <- extractMandatory(x, strsplit("XYZ", split = "")[[1]], 1L)
   expect_true(all(strsplit("cliff \\za{ba} wood.", split = "")[[1L]] %in% res$support))
-})
 
-test_that("Big popper", {
-  skip_if_not_installed("TeXCheckR")
-  skip_if_not_installed("data.table")
+
+# test_that("Big popper", {
+# skip_if_not_installed("TeXCheckR")
+# skip_if_not_installed("data.table")
   report.tex <-
     if (file.exists("~/AP-2018-retirement/report.tex")) {
       "~/AP-2018-retirement/report.tex"
@@ -66,7 +68,7 @@ test_that("Big popper", {
       system.file("extdata", "ap-2018-retirement-report.tex",
                   package = "hutilscpp")
     }
-  skip_if_not(file.exists(report.tex))
+  if (file.exists(report.tex)) {
   library(TeXCheckR)
   library(data.table)
   Housing <- tryCatch(read_tex_document(report.tex),
@@ -75,7 +77,7 @@ test_that("Big popper", {
                         names(out) <- e$m
                         out
                       })
-  skip_if(is.integer(Housing), message = names(Housing))
+  if (!is.integer(Housing)) {
   Housing_split = unlist(strsplit(Housing, split = ""))
   nFootnotes <- (length(grep("\\\\footnote(?![A-Za-z])[^\\{]*\\{", Housing, perl = TRUE)))
   footnote <- strsplit("footnote", split = "")[[1L]]
@@ -99,8 +101,8 @@ test_that("Big popper", {
                         DT$Text[1:10],
                         fixed = TRUE)))
 
-
-})
+}
+}
 
 
 
