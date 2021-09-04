@@ -33,7 +33,6 @@ RoxygenNote: 7.1.1
 Suggests: 
     bench,
     parallel,
-    testthat (>= 2.1.0),
     TeXCheckR,
     withr,
     tinytest,
