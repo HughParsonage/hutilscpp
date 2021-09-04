@@ -2,6 +2,8 @@
 
 library(hutilscpp)
 library(tinytest)
+OR <- `||`
+AND <- `&&`
 haversineDistance <- hutilscpp:::haversineDistance
 which_min_HaversineDistance <- hutilscpp:::which_min_HaversineDistance
 match_min_Haversine <- hutilscpp:::match_min_Haversine
