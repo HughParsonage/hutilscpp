@@ -11,6 +11,7 @@ theEuclidDistance <- hutilscpp:::theEuclidDistance
 hausdorffEuclid <- hutilscpp:::hausdorffEuclid
 EmptiestQuarter <- hutilscpp:::EmptiestQuarter
 theEmptiestQuarters <- hutilscpp:::theEmptiestQuarters
+cut_DT <- hutilscpp:::cut_DT
 
 # test_that("Error handling", {
   expect_error(haversineDistance(1, 1:2, 1:3, 1:4), pattern = "ength")
