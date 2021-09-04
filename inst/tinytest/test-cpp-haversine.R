@@ -135,7 +135,9 @@ hausdorffEuclid <- hutilscpp:::hausdorffEuclid
 
 
 # test_that("Emptiest quadrants", {
-  if (requireNamespace("covr", quietly = TRUE) && requireNamespace("withr", quietly = TRUE) && at_home() && covr::in_covr()) {
+  if (requireNamespace("covr", quietly = TRUE) &&
+      requireNamespace("withr", quietly = TRUE) &&
+      (at_home() || covr::in_covr())) {
 
   library(data.table)
   withr::with_seed(7441, {
