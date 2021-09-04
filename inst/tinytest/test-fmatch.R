@@ -1,7 +1,11 @@
 
-test_that("fmatchp works", {
-  expect_true(TRUE)
-  skip_if_not_installed("withr")
+first_which <- hutilscpp:::first_which
+last_which <- hutilscpp:::last_which
+
+
+# test_that("fmatchp works", {
+expect_true(TRUE)
+if (requireNamespace("withr", quietly = TRUE)) {
   withr::with_seed(3, {
     x <- sample.int(1e5)
     y <- sample.int(99)
@@ -54,13 +58,13 @@ test_that("fmatchp works", {
   #   expect_identical(finp(as.character(x), as.character(y), nThread = 10L)[1:101], rep_len(x0 %in% y, 101))
   # }
 
-})
 
-test_that("edge cases", {
+
+# test_that("edge cases", {
   expect_equal(fmatchp(raw(5), 0:5),
                 match(raw(5), 0:5))
   z <- as.POSIXlt(Sys.time() + 0:5)
   tt <- as.POSIXlt(Sys.time() + 1e6 + 1:5)
   expect_equal(fmatchp(z, tt, nomatch = 0L),
                match(z, tt, nomatch = 0L))
-})
+}

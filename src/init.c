@@ -14,6 +14,7 @@ extern SEXP C_match_min_Haversine(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP
 extern SEXP C_op2M(SEXP);
 extern SEXP C_theEmptiestQuarters(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_theEuclidDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP C_which_first_lgl1(SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_which_min_HaversineDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Callocate_with_root(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Callocate0_dbl(SEXP, SEXP);
@@ -96,6 +97,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"C_op2M",                        (DL_FUNC) &C_op2M,                         1},
     {"C_theEmptiestQuarters",         (DL_FUNC) &C_theEmptiestQuarters,          7},
     {"C_theEuclidDistance",           (DL_FUNC) &C_theEuclidDistance,            5},
+    {"C_which_first_lgl1",            (DL_FUNC) &C_which_first_lgl1,             4},
     {"C_which_min_HaversineDistance", (DL_FUNC) &C_which_min_HaversineDistance,  5},
     {"Callocate_with_root",           (DL_FUNC) &Callocate_with_root,            6},
     {"Callocate0_dbl",                (DL_FUNC) &Callocate0_dbl,                 2},

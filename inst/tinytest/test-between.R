@@ -1,4 +1,7 @@
-test_that("between works", {
+# test_that("between works", {
+
+"%(between)%" <- hutilscpp:::`%(between)%`
+"%]between[%" <- hutilscpp:::`%]between[%`
   x <- 1:10
   expect_equal(x %(between)% c(1, 10), 1:10 %in% 2:9)
   expect_equal(x %]between[% c(1, 10), 1:10 %in% c(1, 10))
@@ -8,4 +11,4 @@ test_that("between works", {
   expect_equal(x %]between[% c(NA, 2L), x >= 2L)
   expect_equal(x %]between[% c(2L, NA), x <= 2L)
   expect_true(all(x %]between[% c(NA_integer_, NA)))
-})
+

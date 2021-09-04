@@ -1,4 +1,4 @@
-test_that("pmin3", {
+# test_that("pmin3", {
   x <- c(-3L, 2L, -1L, 5L, 3L, -5L, -2L)
   y <- c(-4L, -5L, 4L, 2L, 5L, -3L, -1L)
   z <- c(3L, -4L, -2L, 5L, -1L, 4L, 0L)
@@ -22,9 +22,9 @@ test_that("pmin3", {
   expect_equal(pmin3(x, z, 1L), pmin(x, pmin(z, 1L)))
   expect_error(pmin3(x, z[1:5], z), "length 5")
   expect_error(pmin3(x, z, z[1:4]), "length 4")
-  expect_error(pmin3(2:3, c(2, 2.5), 2:3), regexp = "type double, but entry 2")
-  expect_error(pmin3(2:3, 2:3, c(0, -0.1)), regexp = "type double, but entry 2")
-  expect_error(pmin3("a", "b", "c"), regexp = "must be numeric")
+  expect_error(pmin3(2:3, c(2, 2.5), 2:3), pattern = "type double, but entry 2")
+  expect_error(pmin3(2:3, 2:3, c(0, -0.1)), pattern = "type double, but entry 2")
+  expect_error(pmin3("a", "b", "c"), pattern = "must be numeric")
 
   x <- as.double(x)
   expect_equal(pmin3(x, y, z), pmin(x, pmin(y, z)))
@@ -35,4 +35,4 @@ test_that("pmin3", {
   expect_error(pmin3(x, z, z[1:4]), "length 4")
 
 
-})
+

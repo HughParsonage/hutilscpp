@@ -1,4 +1,4 @@
-test_that("Proper frame for eval.parent(sexpr[[2]])", {
+# test_that("Proper frame for eval.parent(sexpr[[2]])", {
   # We need to make sure that when and3s enters the dots, the symbols it uses
   # on the second run are the symbols provided by the user, not the symbols
   # in the frame of the function (e.g. ox)
@@ -46,4 +46,4 @@ test_that("Proper frame for eval.parent(sexpr[[2]])", {
     logical(1))
 
   expect_equal(which_first(test_multi), 0L)
-})
+# })

@@ -173,67 +173,67 @@ pre code {
 
 
 <pre class="r"><code>cat(as.character(START &lt;- Sys.time()), &quot;\n&quot;)</code></pre>
-<pre><code>## 2021-05-27 14:42:15</code></pre>
+<pre><code>## 2021-09-05 01:41:39</code></pre>
 <pre class="r"><code>options(digits = 2)
 options(hutilscpp.nThread = 10L)
 set.seed(1)</code></pre>
 <pre class="r"><code>cat(difftime(Sys.time(), START), &quot;\n&quot;)</code></pre>
-<pre><code>## 0.28</code></pre>
+<pre><code>## 0.46</code></pre>
 <pre class="r"><code>packageVersion(&quot;hutilscpp&quot;)</code></pre>
-<pre><code>## [1] &#39;0.7.0&#39;</code></pre>
+<pre><code>## [1] &#39;0.8.1&#39;</code></pre>
 <pre class="r"><code>system_time(x1 &lt;- allocate0_except(2^31 - 2, c(1e8, 21e8), c(1L, -1L)))</code></pre>
 <pre><code>## process    real 
-##  1.984s  1.987s</code></pre>
+##  2.047s  2.049s</code></pre>
 <div id="which_first" class="section level2">
 <h2><code>which_first</code></h2>
 <pre class="r"><code>system_time(which_first(x1 != 0))</code></pre>
 <pre><code>##  process     real 
-## 62.500ms 57.829ms</code></pre>
+## 78.125ms 72.217ms</code></pre>
 <pre class="r"><code>system_time(which_last(x1 != 0))</code></pre>
 <pre><code>##  process     real 
-## 31.250ms 31.596ms</code></pre>
+## 15.625ms 23.534ms</code></pre>
 </div>
 <div id="and3s" class="section level2">
 <h2><code>and3s</code></h2>
 <pre class="r"><code>system_time(and3s(x1 != 23L, x1 &gt;= 0L, x1 == 0L))</code></pre>
 <pre><code>## process    real 
-## 24.766s  2.687s</code></pre>
+## 27.266s  2.963s</code></pre>
 <pre class="r"><code>system_time(and3s(x1 != 0L, x1 &gt;= 0L, x1 == 0L))</code></pre>
 <pre><code>## process    real 
-## 10.609s  2.062s</code></pre>
+## 10.359s  1.494s</code></pre>
 </div>
 <div id="sum_and3s" class="section level2">
 <h2><code>sum_and3s</code></h2>
 <pre class="r"><code>system_time(sum_and3s(x1 != 23L, x1 &gt;= 0L, x1 == 0L))</code></pre>
 <pre><code>## process    real 
-## 38.844s  4.056s</code></pre>
+## 40.422s  4.261s</code></pre>
 <pre class="r"><code>system_time(sum_and3s(x1 != 0L, x1 &gt;= 0L, x1 == 0L))</code></pre>
 <pre><code>## process    real 
-## 11.578s  1.177s</code></pre>
+## 11.984s  1.321s</code></pre>
 </div>
 <div id="divisible16" class="section level2">
 <h2><code>divisible16</code></h2>
 <pre class="r"><code>system_time(divisible16(x1))</code></pre>
 <pre><code>## process    real 
-##  7.875s  1.766s</code></pre>
+##  7.109s  1.193s</code></pre>
 </div>
 <div id="is_constant" class="section level2">
 <h2><code>is_constant</code></h2>
 <pre class="r"><code>system_time(is_constant(x1))</code></pre>
 <pre><code>##    process       real 
-## 2281.250ms  243.836ms</code></pre>
+## 2281.250ms  243.718ms</code></pre>
 </div>
 <div id="is_sorted" class="section level2">
 <h2><code>is_sorted</code></h2>
 <pre class="r"><code>system_time(is_sorted(x1))</code></pre>
 <pre><code>##  process     real 
-## 46.875ms 42.143ms</code></pre>
+## 31.250ms 42.126ms</code></pre>
 </div>
 <div id="minmax" class="section level2">
 <h2><code>minmax</code></h2>
 <pre class="r"><code>system_time(minmax(x1))</code></pre>
 <pre><code>##    process       real 
-## 2437.500ms  266.545ms</code></pre>
+## 2609.375ms  315.789ms</code></pre>
 </div>
 <div id="haversine" class="section level2">
 <h2>Haversine</h2>
@@ -246,15 +246,15 @@ yy &lt;- runif(100, -39, -38)
 xx &lt;- runif(100, 144, 145)
 system_time(haversineDistance(y, x, y, x))</code></pre>
 <pre><code>##   process      real 
-## 171.875ms 165.751ms</code></pre>
+## 125.000ms 149.426ms</code></pre>
 </div>
 <div id="match_nrst_haversine" class="section level2">
 <h2><code>match_nrst_haversine</code></h2>
 <pre class="r"><code>system_time(match_nrst_haversine(y, x, yy, xx))</code></pre>
 <pre><code>## process    real 
-##  6.719s  6.778s</code></pre>
+##  6.797s  6.804s</code></pre>
 <pre class="r"><code>cat(as.character(END &lt;- Sys.time()), &quot;\n&quot;)</code></pre>
-<pre><code>## 2021-05-27 14:42:37</code></pre>
+<pre><code>## 2021-09-05 01:42:01</code></pre>
 <pre class="r"><code>print(difftime(END, START))</code></pre>
 <pre><code>## Time difference of 22 secs</code></pre>
 </div>

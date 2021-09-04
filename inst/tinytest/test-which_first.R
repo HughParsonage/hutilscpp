@@ -1,6 +1,14 @@
-context("which_first")
+#context "which_first")
+.which_first_logical <- hutilscpp:::.which_first_logical
+.which_first <- hutilscpp:::.which_first
+first_which <- hutilscpp:::first_which
 
-test_that("which_first works", {
+"%(between)%" <- hutilscpp:::`%(between)%`
+"%]between[%" <- hutilscpp:::`%]between[%`
+
+which_isnt_integerish <- hutilscpp:::which_isnt_integerish
+
+# test_that("which_first works", {
   x <- runif(10, 1, 2)
   expr <- c(0, 5, 3, 2)
   expect_identical(which_first(x < 0), 0L)
@@ -138,46 +146,45 @@ test_that("which_first works", {
   # Repeat (possible UBD)
   expect_identical(which_first(expr %in% c(8L, 9L)), 0L)
   expect_true(TRUE)
-})
 
-test_that("Conflicts with expressions", {
+
+# test_that("Conflicts with expressions", {
   expr <- c(0, 5, 3, 2)
   expect_identical(which_first(expr == 5), 2L)
   lhs <- rhs <- 3
   expect_identical(which_first(expr == lhs), 3L)
-})
 
-test_that("Fall through", {
+
+# test_that("Fall through", {
   y <- logical(5)
   expect_identical(which_first(y), 0L)
   expect_identical(which_first(!y), 1L)
   expect_message(which_first(!y,
                              verbose = TRUE),
-                 regexp = "which.max",
-                 fixed = TRUE)
+                 pattern = "which\\.max")
 
   x <- c(letters, 1)
   expect_identical(which_first(x == 1), 27L)
   expect_identical(which_first(x == 155), 0L)
   expect_identical(which_first(x < 1), 0L)
-})
 
-test_that("match", {
+
+# test_that("match", {
   int_m <- 1:100
   expect_identical(which_first(int_m == 2L), 2L)
-})
 
 
 
-test_that(".which_first_logical all NA", {
-  skip("For later consideration.")
+
+# test_that(".which_first_logical all NA", {
+
   x <- c(NA, NA, NA)
   expect_equal(.which_first_logical(x, NA), 1)
   expect_equal(.which_first_logical(x, TRUE), 0)
   expect_equal(.which_first_logical(x, FALSE), 0)
-})
-test_that(".which_first_logical one NA", {
-  skip("For later consideration.")
+
+# test_that(".which_first_logical one NA", {
+
   x <- c(NA, NA, TRUE)
   expect_equal(.which_first_logical(x, NA), 1)
   expect_equal(.which_first_logical(x, TRUE), 3)
@@ -190,9 +197,9 @@ test_that(".which_first_logical one NA", {
   expect_equal(.which_first_logical(z, NA), 2)
   expect_equal(.which_first_logical(z, TRUE), 1)
   expect_equal(.which_first_logical(z, FALSE), 0)
-})
-test_that(".which_first_logical every", {
-  skip("For later consideration.")
+
+# test_that(".which_first_logical every", {
+
   x <- c(NA, TRUE, FALSE)
   expect_equal(.which_first_logical(x, NA), 1)
   expect_equal(.which_first_logical(x, TRUE), 2)
@@ -201,8 +208,8 @@ test_that(".which_first_logical every", {
   expect_equal(.which_first_logical(y, NA), 2)
   expect_equal(.which_first_logical(y, TRUE), 3)
   expect_equal(.which_first_logical(y, FALSE), 1)
-})
-test_that(".which_first_logical no NA", {
+
+# test_that(".which_first_logical no NA", {
   x <- c(TRUE, TRUE, TRUE)
 
   expect_equal(.which_first_logical(x, TRUE), 1)
@@ -217,9 +224,9 @@ test_that(".which_first_logical no NA", {
 
   expect_equal(.which_first_logical(z, TRUE), 2)
   expect_equal(.which_first_logical(z, FALSE), 1)
-})
 
-test_that("unexpected o", {
+
+# test_that("unexpected o", {
   x <- c(NA, TRUE, TRUE)
   expect_equal(which_first(x == TRUE), 2)
   expect_equal(which_first(x == 1L), 2)
@@ -234,9 +241,9 @@ test_that("unexpected o", {
   expect_equal(which_first(x.raw > 0), 6L)
   expect_equal(which_first(x.raw >= 0), 1L)
 
-})
 
-test_that("LHS logical length-one", {
+
+# test_that("LHS logical length-one", {
   true <- TRUE
   expect_equal(which_first(true == 1L), 1L)
   expect_equal(which_first(true == 0L), 0L)
@@ -248,41 +255,37 @@ test_that("LHS logical length-one", {
   missy <- NA
   expect_equal(which_first(missy == 1), 0L)
   expect_equal(which_first(missy == 1), 0L)
-})
 
-test_that("RHS NA", {
-  skip_if_not_installed("withr")
+
+# test_that("RHS NA", {
+  if (requireNamespace("withr", quietly = TRUE)) {
+
   withr::with_options(list(hutilscpp_suppressWarning = FALSE), {
   x <- c(NA, NA)
   expect_error(which_first(x > NA),
-               regexp = "This is not supported for operator '>'.",
-               fixed = TRUE)
+               pattern = "This is not supported for operator '>'\\.")
   expect_warning(wf_xisna <- which_first(x == NA),
-                 regexp = "`rhs` appears to be logical NA.",
-                 fixed = TRUE)
+                 pattern = "`rhs` appears to be logical NA\\.")
   expect_equal(wf_xisna, 1L)
   wf_xisfalse <- which_first(x == 0)
   expect_equal(wf_xisfalse, 0L)
 
   y <- c(TRUE, FALSE, NA)
   expect_warning(wf_yisna <- which_first(y == NA),
-                 regexp = "which_first(is.na",
-                 fixed = TRUE)
+                 pattern = "which_first\\(is\\.na")
   expect_equal(wf_yisna, 3L)
   expect_warning(wf_yisntna <- which_first(y != NA),
-                 regexp = "which_first(!is.na",
-                 fixed = TRUE)
+                 pattern = "which_first\\(!is\\.na")
   expect_equal(wf_yisntna, 1L)
 
   z <- c(NA, FALSE)
   expect_warning(wf_zisntna <- which_first(z != NA),
-                 regexp = "`rhs` appears to be logical NA.",
-                 fixed = TRUE)
+                 pattern = "`rhs` appears to be logical NA\\.")
   expect_equal(wf_zisntna, 2L)
   })
-})
+}
 
-test_that("lhs_eval length 0", {
+# test_that("lhs_eval length 0", {
   x <- integer(0)
   expect_equal(which_first(x == 0.5), 0L)
   expect_equal(which_first(x != 0.5), 0L)
@@ -291,10 +294,10 @@ test_that("lhs_eval length 0", {
   expect_equal(which_first(x < 0.5), 0L)
   expect_equal(which_first(x > 0.5), 0L)
   expect_equal(.which_first(c(NA, NA)), 0L)
-})
 
 
-test_that("which_first logical", {
+
+# test_that("which_first logical", {
   #10
   x <- y <- c(TRUE, FALSE, NA)
   expect_equal(which_first(x != y), 0)
@@ -309,9 +312,9 @@ test_that("which_first logical", {
   expect_equal(which_first(x != y), 1)
 
 
-})
 
-test_that("which_first_logical %in%", {
+
+# test_that("which_first_logical %in%", {
 
   abc <- logical(0)
   lgl0 <- logical(0)
@@ -393,12 +396,12 @@ test_that("which_first_logical %in%", {
   b <- c(TRUE, NA)
   expect_equal(which_first(a %in% b), 1)
 
-})
 
 
 
 
-test_that("Error handling", {
+
+# test_that("Error handling", {
   x <- c(TRUE, FALSE)
   y <- c(TRUE, FALSE, TRUE)
   expect_error(which_first(x == y), "length")
@@ -407,15 +410,15 @@ test_that("Error handling", {
   expect_error(which_first(x >= y), "length")
   expect_error(which_first(x %between% y), "length")
 
-})
 
 
-test_that("which_first fall through when no name", {
+
+# test_that("which_first fall through when no name", {
   expect_message(which_first(1 == 1, verbose = TRUE),
-                 regexp = "which.max")
-})
+                 pattern = "which.max")
 
-test_that("which_first(<lgl> <operator> <TRUE/FALSE>)", {
+
+# test_that("which_first(<lgl> <operator> <TRUE/FALSE>)", {
   lhs <- (c(1:10) %% 2L) | (c(1:10) == 7L)
 
   expect_equal(which_first(lhs < TRUE), 2L)
@@ -439,17 +442,17 @@ test_that("which_first(<lgl> <operator> <TRUE/FALSE>)", {
   expect_equal(which_last(lhs >= FALSE), 10L)
 
 
-})
 
-test_that("which_first() == notTRUE", {
+
+# test_that("which_first() == notTRUE", {
   allTRUE3 <- rep(TRUE, 3)
   expect_equal(which_first(allTRUE3 != TRUE), 0L)
   allFALSE3 <- logical(3)
   expect_equal(which_first(allFALSE3 != FALSE), 0L)
-})
 
-test_that("which_first() N == N, N != N", {
-  skip_if_not_installed("data.table")
+
+# test_that("which_first() N == N, N != N", {
+
   library(data.table)
   o <- c(-4:4, 4:0)
   x <- c(-4:4, 5:1)
@@ -468,9 +471,9 @@ test_that("which_first() N == N, N != N", {
   expect_equal(which_first(od != xd), first(which(od != xd)))
   expect_equal(which_first(od == xd, reverse = TRUE), last(which(od == xd)))
   expect_equal(which_first(od != xd, reverse = TRUE), last(which(od != xd)))
-})
 
-test_that("which_first(NA . NA)", {
+
+# test_that("which_first(NA . NA)", {
   x <- c(NA, "a", "abc", "Def")
   y <- "abc"
   z <- NA_character_
@@ -482,27 +485,27 @@ test_that("which_first(NA . NA)", {
   expect_equal(which_first(x != y), 1L)
   expect_equal(which_first(x != z), 2L)
   expect_equal(which_first(x != ""), 1L)
-})
 
-test_that("which_first not trues", {
+
+# test_that("which_first not trues", {
   expect_equal(which_first(c(NA, NA)), 0L)
   expect_equal(which_last(c(NA, NA)), 0L)
-})
 
-test_that("which_first_quick", {
+
+# test_that("which_first_quick", {
   x <- 11:20
   expect_equal(which_first(x == 13L, use.which.max = TRUE), 3L)
-})
 
-test_that("which_first_lgl_NA", {
+
+# test_that("which_first_lgl_NA", {
   x <- c(TRUE, NA, TRUE, FALSE)
   expect_equal(which_first(x %in% c(FALSE, NA)), 2L)
   expect_equal(which_first(x %in% c(TRUE, NA)), 1L)
   x2 <- c(NA, x)
   expect_equal(which_first(x2 %in% c(TRUE, NA)), 1L)
-})
 
-test_that("which_first(x > 1) (len = 1)", {
+
+# test_that("which_first(x > 1) (len = 1)", {
   x <- 1
   expect_equal(which_first(x > 1), 0)
   expect_equal(which_first(x <= 1), 1)
@@ -561,18 +564,18 @@ test_that("which_first(x > 1) (len = 1)", {
   expect_equal(which_first(x %(between)% c(0.9, 0)), 0)
   expect_equal(which_first(x %]between[% c(0.9, 0.95)), 1)
   expect_equal(which_first(x %]between[% c(0.9, 1.95)), 1)
-})
 
-test_that("first_which", {
+
+# test_that("first_which", {
   expect_equal(first_which(c(FALSE, FALSE)), 0L)
   expect_equal(first_which(c(FALSE, TRUE)), 2L)
   expect_equal(first_which(c(TRUE, TRUE)), 1L)
   expect_equal(first_which(c(TRUE, NA)), 1L)
   expect_equal(first_which(c(NA, NA)), 0L)
-})
 
 
-test_that("which_first(<x> <o> <y>) lens equal", {
+
+# test_that("which_first(<x> <o> <y>) lens equal", {
   x <- c(113L, 102L, 106L, 100L, 114L)
   y <- c(108L, 106L, 114L, 100L, 109L)
   y100 <- c(rep_len(y, length(-100:0)) + -100:0)
@@ -853,9 +856,9 @@ test_that("which_first(<x> <o> <y>) lens equal", {
                first_which(x < x))
   expect_equal(which_first(x <= y),
                first_which(x <= y))
-})
 
-test_that("which_first(lgl lgl)", {
+
+# test_that("which_first(lgl lgl)", {
   x <- c(TRUE, FALSE, TRUE)
   y <- c(FALSE, FALSE, TRUE)
   expect_equal(which_first(x == y), 2)
@@ -889,12 +892,12 @@ test_that("which_first(lgl lgl)", {
   T0 <- logical(0)
   expect_equal(which_first(x %in% T0),
                first_which(x %in% T0))
-})
 
 
 
 
-test_that("which_firstNA", {
+
+# test_that("which_firstNA", {
   expect_equal(which_firstNA(1:10), 0)
   expect_equal(which_firstNA(c(1:10, NA)), 11)
   expect_equal(which_firstNA(NA), 1L)
@@ -908,9 +911,9 @@ test_that("which_firstNA", {
   expect_equal(which_firstNA(c(0, 0, NA, NA)), 3)
   expect_equal(which_firstNA(c(0, 0, 0)), 0)
   expect_equal(which_firstNA(c(NA_real_)), 1)
-})
 
-test_that("which_first(x %between% c(NA, 1))", {
+
+# test_that("which_first(x %between% c(NA, 1))", {
   x <- c(1L, 5L, 3L, 10L, -1L)
   expect_equal(which_first(x %between% c(NA_integer_, NA_integer_)), 1)
   expect_equal(which_first(x %between% c(NA_integer_, 1L)), 1)
@@ -946,9 +949,9 @@ test_that("which_first(x %between% c(NA, 1))", {
                first_which(x %between% c(0.5, NA)))
   expect_equal(which_first(x %between% c(0.9, NA)),
                first_which(x %between% c(0.9, NA)))
-})
 
-test_that("anyNA(x) implies which_first(x %in% c(NA, <rtype>))", {
+
+# test_that("anyNA(x) implies which_first(x %in% c(NA, <rtype>))", {
   x_w_na <- c(1L, 5L, 3L, 10L, -1L, NA)
   expect_equal(which_first(x_w_na %in% c(NA, 11L)),
                first_which(x_w_na %in% c(NA, 11L)))
@@ -967,18 +970,18 @@ test_that("anyNA(x) implies which_first(x %in% c(NA, <rtype>))", {
                first_which(x_w_na %in% c(NA, 11)))
   expect_equal(which_first(x_w_na %in% c(NA, 10)),
                first_which(x_w_na %in% c(NA, 10)))
-})
 
-test_that("which_first %between% error", {
+
+# test_that("which_first %between% error", {
   x <- 1:10
   expect_error(which_first(x %between% x))
   xd <- as.double(x)
   expect_error(which_first(x %between% xd))
   expect_error(which_first(xd %between% x))
   expect_error(which_first(xd %between% xd))
-})
 
-test_that("(between) and ]between[ with NA", {
+
+# test_that("(between) and ]between[ with NA", {
   x <- c(11L, 1:5, 10L)
   expect_equal(which_first(x %(between)% c(NA, 2L)),
                which_first(x < 2L))
@@ -1054,9 +1057,9 @@ test_that("(between) and ]between[ with NA", {
                which_first(x >= 2))
   expect_equal(first_which(x %]between[% c(5, NA)),
                which_first(x <= 5))
-})
 
-test_that("lens 0", {
+
+# test_that("lens 0", {
   xi <- c(1L, 2L)
   xd <- c(10, 20)
   x0 <- integer(0)
@@ -1100,30 +1103,26 @@ test_that("lens 0", {
                first_which(x0d == y0d))
 
 
-})
 
-test_that("%in% with integers outside integer range", {
+
+# test_that("%in% with integers outside integer range", {
   s <- c(1L, 0L, -2L, 3L, NA_integer_)
   t <- c(-1e10, 1e10, 3)
   expect_equal(which_first(s %in% t), 4L)
   s <- as.double(s)
   expect_equal(which_first(s %in% t), 4L)
-})
 
-test_that("which_first bench mark", {
-  skip_on_cran()
-  skip_on_travis()
-  skip_on_appveyor()
-  skip_if_not_installed("bench")
-  skip_on_ci()
+
+# test_that("which_first bench mark", {
+  if (at_home()) {
   x <- double(1e8)
   which_first_time <- bench_system_time(which_first(x > 0))
   first_which_time <- bench_system_time(first_which(x > 0))
-  expect_lt(which_first_time[2], 0.5 * first_which_time[2])
-})
+  expect_true(which_first_time[2] < 0.5 * first_which_time[2])
+}
 
 
-test_that("do_which_first_xi_ad", {
+# test_that("do_which_first_xi_ad", {
   x <- c(-.Machine$integer.max, -1L, -1L, .Machine$integer.max)
   w <- c(-3L, 1L, -2L)
   expect_equal(which_first(x >= Inf),
@@ -1169,9 +1168,9 @@ test_that("do_which_first_xi_ad", {
   expect_equal(which_first(z3 <= -2147483647.1),
                first_which(z3 <= -2147483647.1))
 
-})
 
-test_that("do_which_first_xd_yd", {
+
+# test_that("do_which_first_xd_yd", {
   x <- c(0, 2.9, 3.5)
   y <- x - 1.1
   expect_equal(which_first(x >= y),
@@ -1185,9 +1184,9 @@ test_that("do_which_first_xd_yd", {
   expect_equal(which_first(x <= y),
                first_which(x <= y))
 
-})
 
-test_that("do_which_first_xi_yi", {
+
+# test_that("do_which_first_xi_yi", {
   x <- c(-1L, 2L, -3L)
   expect_equal(which_first(x >= -4L),
                first_which(x >= -4L))
@@ -1204,9 +1203,9 @@ test_that("do_which_first_xi_yi", {
                which_first(x <= y))
   expect_equal(which_first(x < y),
                which_first(x < y))
-})
 
-test_that("do_which_first_xi_yd", {
+
+# test_that("do_which_first_xi_yd", {
   x <- rep(1L, 3)
   z <- as.double(x)
   expect_equal(which_first(x != z),
@@ -1221,27 +1220,27 @@ test_that("do_which_first_xi_yd", {
                first_which(x <= n1.5))
   expect_equal(which_first(x < n1.5),
                first_which(x < n1.5))
-})
 
-test_that("do_which_first_xi_aii", {
+
+# test_that("do_which_first_xi_aii", {
   x <- rep(2L, 3)
   expect_equal(which_first(x %]between[% c(1L, 3L)),
                first_which(x %]between[% c(1L, 3L)))
-})
 
-test_that("do_which_first_xi_add", {
+
+# test_that("do_which_first_xi_add", {
   x <- rep(2L, 3)
   expect_equal(which_first(x %]between[% c(1, 3)),
                first_which(x %]between[% c(1, 3)))
-})
 
-test_that("do_which_first_xd_add", {
+
+# test_that("do_which_first_xd_add", {
   x <- rep(2, 3)
   expect_equal(which_first(x %]between[% c(1, 3)),
                first_which(x %]between[% c(1, 3)))
-})
 
-test_that("do_which_first_xi_ai", {
+
+# test_that("do_which_first_xi_ai", {
   x <- rep(7L, 4)
   expect_equal(which_first(x != 7L),
                first_which(x != 7L))
@@ -1249,9 +1248,9 @@ test_that("do_which_first_xi_ai", {
                first_which(x > 7L))
   expect_equal(which_first(x <= 6L),
                first_which(x <= 6L))
-})
 
-test_that("do_which_first_xi_ind", {
+
+# test_that("do_which_first_xi_ind", {
   x <- c(-400L, 4L, 5L, 2L)
   d0 <- double(0)
   tl <- seq(-50, 50, by = 0.5)
@@ -1265,22 +1264,22 @@ test_that("do_which_first_xi_ind", {
   x <- c(-400.5, 400)
   expect_equal(which_first(x %in% t2),
                first_which(x %in% t2))
-})
 
-test_that("do_which_first_xd_ind", {
+
+# test_that("do_which_first_xd_ind", {
   x <- c(4, 5L, 2L)
   d0 <- double(0)
   expect_equal(which_first(x %in% d0),
                first_which(x %in% d0))
-})
 
-test_that("which_first unusual", {
+
+# test_that("which_first unusual", {
   x <- 1:12
   expect_equal(which_first(x %(between)% c(2L, 5L)), 3L)
   expect_equal(which_last(x %(between)% c(2L, 5L)), 4L)
   expect_equal(which_first(x %]between[% c(2L, 5L)), 1L)
   expect_equal(which_last(x %]between[% c(2L, 5L)), 12L)
-})
+
 
 
 

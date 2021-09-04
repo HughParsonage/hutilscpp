@@ -133,15 +133,10 @@ is64bit <- function() .Machine$sizeof.pointer == 8L
 
 is_covr <- function() {
   requireNamespace("covr", quietly = TRUE) &&
-    requireNamespace("testthat", quietly = TRUE) &&
     covr::in_covr()
 }
 
-skip_if_covr <- function() {
-  if (requireNamespace("testthat", quietly = TRUE)) {
-    testthat::skip_if(is_covr())
-  }
-}
+
 
 # nocov end
 
