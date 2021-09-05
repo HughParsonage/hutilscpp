@@ -213,10 +213,6 @@ SEXP Cminmax(SEXP x, SEXP emptyResult, SEXP nthreads) {
     return emptyResult;
   }
   int nThread = as_nThread(nthreads);
-  int m = 0; // for testing various methods
-  if (TYPEOF(emptyResult) == INTSXP && xlength(emptyResult) == 1) {
-    m = asInteger(emptyResult);
-  }
 
   switch(TYPEOF(x)) {
   case LGLSXP:
