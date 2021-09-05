@@ -11,7 +11,7 @@ if (at_home()) {
 
 
 # test_that("count_logical long", {
-if (at_home() && .Machine$sizeof.pointer == 8) {
+if ((at_home() || hutilscpp:::is_covr()) && .Machine$sizeof.pointer == 8) {
 
   x <- logical(.Machine$integer.max + 1)
   cl <- count_logical(x)
