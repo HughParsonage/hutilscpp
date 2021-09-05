@@ -1284,7 +1284,7 @@ which_isnt_integerish <- hutilscpp:::which_isnt_integerish
   x <- c(TRUE, FALSE, NA, NA, FALSE)
   expect_equal(.which_first_logical(x, NA, rev = TRUE), 4L)
   expect_equal(.which_first_logical(x, NA, rev = FALSE), 3L)
-  expect_equal(.which_first_logical(logical(4), TRUE), 0L)
+  expect_equal(.which_first_logical(logical(4), NA), 0L)
 
 
 
