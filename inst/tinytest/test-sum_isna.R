@@ -30,6 +30,9 @@
   x <- as.character(x)
   expect_equal(sum(is.na(x)), sum_isna(x))
 
+  x <- raw(length(x))
+  expect_equal(sum(is.na(x)), sum_isna(x))
+
 
 # test_that("sum_isna long", {
   if (at_home() && identical(.Platform$r_arch, "x64")) {
