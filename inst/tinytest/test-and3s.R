@@ -170,7 +170,7 @@ for (i in XX) {
 
 # })
 
-if (at_home() && identical(.Platform$r_arch, "x64")) {
+if (at_home() && hutilscpp:::is64bit()) {
   tryCatch({
     x <- rep_len(c(1:100, 2L), 1e8)
     B <- rep_len(sample(c(TRUE, FALSE), size = 55, replace = TRUE), 1e8)

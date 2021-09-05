@@ -3,7 +3,6 @@ expect_error(count_logical(double(1)), "logical")
 expect_identical(count_logical(c(TRUE, FALSE, NA)), c(1L, 1L, 1L))
 expect_identical(count_logical(c(TRUE, FALSE, TRUE)), c(1L, 2L, 0L))
 if (at_home()) {
-  is64bit_ <- tryCatch(is.integer(seq_len(2^31 - 1)), error = function(e) FALSE)
   if (requireNamespace("parallel", quietly = TRUE)) {
     expect_equal(count_logical(logical(1e10)), c(1e10, 0, 0))
     expect_equal(count_logical(logical(1e10), parallel::detectCores()), c(1e10, 0, 0))
@@ -12,7 +11,7 @@ if (at_home()) {
 
 
 # test_that("count_logical long", {
-if (at_home() && is64bit_) {
+if (at_home() && .Machine$sizeof.pointer == 8) {
 
   x <- logical(.Machine$integer.max + 1)
   cl <- count_logical(x)
