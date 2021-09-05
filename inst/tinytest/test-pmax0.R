@@ -48,7 +48,7 @@
 
 
 # test_that("pmax0 radix extrema", {
-  if ((at_home() || hutilscpp:::is_covr()) && hutilscpp:::is64bit()) {
+  if ((at_home()) && hutilscpp:::is64bit()) {
   min_int <- -.Machine$integer.max
   max_int <- +.Machine$integer.max
   x <- min_int:max_int
