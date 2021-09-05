@@ -2,6 +2,7 @@
 .which_first_logical <- hutilscpp:::.which_first_logical
 .which_first <- hutilscpp:::.which_first
 first_which <- hutilscpp:::first_which
+and <- `&`
 
 "%(between)%" <- hutilscpp:::`%(between)%`
 "%]between[%" <- hutilscpp:::`%]between[%`
@@ -1280,8 +1281,9 @@ which_isnt_integerish <- hutilscpp:::which_isnt_integerish
   expect_equal(which_first(x %]between[% c(2L, 5L)), 1L)
   expect_equal(which_last(x %]between[% c(2L, 5L)), 12L)
 
-  x <- c(TRUE, FALSE, NA, FALSE)
-  expect_equal(.which_first_logical(x, FALSE, rev = TRUE), 4L)
+  x <- c(TRUE, FALSE, NA, NA, FALSE)
+  expect_equal(.which_first_logical(x, NA, rev = TRUE), 4L)
+  expect_equal(.which_first_logical(x, NA, rev = FALSE), 3L)
   expect_equal(.which_first_logical(logical(4), TRUE), 0L)
 
 
