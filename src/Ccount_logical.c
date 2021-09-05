@@ -20,17 +20,6 @@ SEXP Ccount_logical(SEXP xx, SEXP nthreads) {
     }
   }
   R_xlen_t falses = n - trues - nas;
-  // Integer vector output as long as every entry is integer
-  if (falses <= INT_MAX &&
-      trues <= INT_MAX &&
-      nas <= INT_MAX) {
-    SEXP o = PROTECT(allocVector(INTSXP, 3));
-    INTEGER(o)[0] = falses;
-    INTEGER(o)[1] = trues;
-    INTEGER(o)[2] = nas;
-    UNPROTECT(1);
-    return o;
-  }
   SEXP o = PROTECT(allocVector(REALSXP, 3));
   REAL(o)[0] = falses;
   REAL(o)[1] = trues;
