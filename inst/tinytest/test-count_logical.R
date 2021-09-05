@@ -13,15 +13,18 @@ if (at_home() && !hutilscpp:::is_covr()) {
 
 # test_that("count_logical long", {
 if ((at_home() || hutilscpp:::is_covr()) && .Machine$sizeof.pointer == 8) {
-
-  x <- logical(.Machine$integer.max + 1)
-  cl <- count_logical(x)
-  expect_equal(cl, c(.Machine$integer.max + 1, 0, 0))
-  cl <- count_logical(x, nThread = 2)
-  expect_equal(cl, c(.Machine$integer.max + 1, 0, 0))
-  x <- NULL
-  x <- hutilscpp:::allocate0_except(.Machine$integer.max + 1, 2, NA_integer_, nThread = 2)
-  storage.mode(x) <- "logical"
-  cl <- count_logical(x, nThread = 2)
-  expect_equal(cl, c(.Machine$integer.max, 0, 1))
+  expect_true(TRUE)
+  x <- tryCatch(logical(.Machine$integer.max + 1), error = function(e) cat(e$m))
+  expect_true(TRUE)
+  if (is.logical(x)) {
+    cl <- count_logical(x)
+    expect_equal(cl, c(.Machine$integer.max + 1, 0, 0))
+    cl <- count_logical(x, nThread = 2)
+    expect_equal(cl, c(.Machine$integer.max + 1, 0, 0))
+    x <- NULL
+    x <- hutilscpp:::allocate0_except(.Machine$integer.max + 1, 2, NA_integer_, nThread = 2)
+    storage.mode(x) <- "logical"
+    cl <- count_logical(x, nThread = 2)
+    expect_equal(cl, c(.Machine$integer.max, 0, 1))
+  }
 }
