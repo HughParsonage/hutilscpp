@@ -13,7 +13,7 @@ which_isnt_integerish <- hutilscpp:::which_isnt_integerish
 
 
 # test_that("is_integerish(altrep)", {
-if (at_home()) {
+if (at_home() || hutilscpp:::is_covr()) {
   x <- -2e9:2e9
   expect_equal(which_isnt_integerish(x), 0L)
   x <- -3e9:2e9

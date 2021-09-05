@@ -4,7 +4,7 @@
 
   # skip_if_not_installed("bench")
   # skip_on_cran()
-if (at_home() && requireNamespace("bench", quietly = TRUE)) {
+if ((at_home() || hutilscpp:::is_covr()) && requireNamespace("bench", quietly = TRUE)) {
   expect_true(TRUE) # for valgrind
 
   expr <- x <- rep_len(c(0, -0.5, 1.2), 5e6)

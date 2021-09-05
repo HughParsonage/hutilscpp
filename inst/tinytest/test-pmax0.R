@@ -48,20 +48,20 @@
 
 
 # test_that("pmax0 radix extrema", {
-  if (at_home() && identical(.Platform$r_arch, "x64")) {
+  if ((at_home() || hutilscpp:::is_covr()) && hutilscpp:::is64bit()) {
   min_int <- -.Machine$integer.max
   max_int <- +.Machine$integer.max
   x <- min_int:max_int
   res <- pmax0(x)
   expect_equal(res[1], 0L)
-  if (!is_covr()) {
+  if (!hutilscpp:::is_covr()) {
     expect_equal(which_first(res > 0), max_int)
   }
   res <- NULL
   x <- NULL
   x <- max_int:min_int
   res <- pmax0(x)
-  if (!is_covr()) {
+  if (!hutilscpp:::is_covr()) {
     expect_equal(which_first(x == 0), max_int)
   }
 
