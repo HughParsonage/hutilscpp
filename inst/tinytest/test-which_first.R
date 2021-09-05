@@ -1280,6 +1280,9 @@ which_isnt_integerish <- hutilscpp:::which_isnt_integerish
   expect_equal(which_first(x %]between[% c(2L, 5L)), 1L)
   expect_equal(which_last(x %]between[% c(2L, 5L)), 12L)
 
+  x <- c(TRUE, FALSE, NA, FALSE)
+  expect_equal(.which_first_logical(x, FALSE, rev = TRUE), 4L)
+  expect_equal(.which_first_logical(logical(4), TRUE), 0L)
 
 
 
