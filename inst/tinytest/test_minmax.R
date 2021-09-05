@@ -20,4 +20,7 @@ expect_equal(minmax(x), c(1, 100))
 x <- letters
 expect_equal(minmax(x), c("a", "z"))
 
-
+x <- as.raw(1:250)
+expect_equal(minmax(x), c(as.raw(1L), as.raw(250L)))
+x <- charToRaw("The quick brown fox jumps")
+expect_equal(minmax(x), as.raw(range(as.integer(x))))
