@@ -7,6 +7,7 @@
 ^hutilscpp\.Rproj$
 ^\.Rproj\.user$
 ^\.github/workflows$
+^\.github$
 ^Benchmarks\.Rmd$
 ^Benchmarks\.html$
 ^Moving-from-Rcpp-to-C\.md$
