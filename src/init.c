@@ -12,6 +12,7 @@ extern SEXP C_hausdorffEuclid(SEXP, SEXP);
 extern SEXP C_haversineDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_match_min_Haversine(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_op2M(SEXP);
+extern SEXP C_seqN_to_N(SEXP, SEXP);
 extern SEXP C_theEmptiestQuarters(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_theEuclidDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_which_first_lgl1(SEXP, SEXP, SEXP, SEXP);
@@ -95,6 +96,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"C_haversineDistance",           (DL_FUNC) &C_haversineDistance,            5},
     {"C_match_min_Haversine",         (DL_FUNC) &C_match_min_Haversine,         11},
     {"C_op2M",                        (DL_FUNC) &C_op2M,                         1},
+    {"C_seqN_to_N",                   (DL_FUNC) &C_seqN_to_N,                    2},
     {"C_theEmptiestQuarters",         (DL_FUNC) &C_theEmptiestQuarters,          7},
     {"C_theEuclidDistance",           (DL_FUNC) &C_theEuclidDistance,            5},
     {"C_which_first_lgl1",            (DL_FUNC) &C_which_first_lgl1,             4},

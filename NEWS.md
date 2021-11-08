@@ -1,3 +1,8 @@
+## hutilscpp 0.8.2
+
+* Bug fixes:
+  - sum_and/or is now more consistent at not summing NA values.
+
 ## hutilscpp 0.8.1
 
 * Bug fixes:

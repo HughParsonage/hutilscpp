@@ -714,10 +714,10 @@ SEXP Csum3s_par(SEXP xx, SEXP oxx, SEXP x11, SEXP x22,
       oi = dsingle_ox_x1_x2(yd[i], oy, yd1, yd2);
       break;
     case 3:
-      oi = B[i];
+      oi = B[i] == 1;
       break;
     case 4:
-      oi = !B[i];
+      oi = B[i] == 0;
       break;
     }
     if (ampersand) {
@@ -740,10 +740,10 @@ SEXP Csum3s_par(SEXP xx, SEXP oxx, SEXP x11, SEXP x22,
       oi = dsingle_ox_x1_x2(zd[i], oz, zd1, zd2);
       break;
     case 3:
-      oi = C[i];
+      oi = C[i] == 1;
       break;
     case 4:
-      oi = !C[i];
+      oi = C[i] == 0;
       break;
     }
     if (ampersand) {

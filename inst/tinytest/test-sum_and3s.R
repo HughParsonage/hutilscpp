@@ -84,3 +84,9 @@ expect_equal(sum_and3s(x > -0.5, x > -0.5, x > -0.5),
              length(x))
 # })
 
+x <- c(x, NA, x)
+expect_equal(sum(x == 55L, na.rm = TRUE),
+             sum_and3s(x == 55L))
+expect_equal(sum(x >= 55L & x == "55", na.rm = TRUE),
+             sum_and3s(x >= 55L, x == "55"))
+
