@@ -9,7 +9,7 @@
   invisible(NULL)
 }
 
-.onUnload <- function (libpath) {
+.onUnload <- function(libpath) {
   library.dynam.unload("hutilscpp", libpath)
 }
 # nocov end
