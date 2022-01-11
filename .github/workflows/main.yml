@@ -32,8 +32,8 @@ jobs:
   rchk:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - uses: r-lib/actions/run-rchk@master
+    - uses: actions/checkout@v2
+    - uses: r-lib/actions/run-rchk@v2
   test-r-sanitizers:
     name: ASAN-UBSAN
     timeout-minutes: 60
