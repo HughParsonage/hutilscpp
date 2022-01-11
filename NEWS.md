@@ -3,6 +3,9 @@
 * Bug fixes:
   - sum_and/or is now more consistent at not summing NA values.
 
+* New functions:
+  - `allNA` equivalent to `all(is.na(x))`
+
 ## hutilscpp 0.8.1
 
 * Bug fixes:

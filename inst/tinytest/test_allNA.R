@@ -1,0 +1,42 @@
+library(hutilscpp)
+
+expect_true(allNA(c(NA, NA)))
+expect_true(allNA(c(NA, NA_integer_)))
+expect_true(allNA(c(NA, NA_real_)))
+expect_true(allNA(c(NA, NaN)))
+expect_true(allNA(c(NA, NA_character_)))
+expect_false(allNA(c(NA, NA, TRUE)))
+expect_false(allNA(c(NA, NA, TRUE, NA)))
+expect_false(allNA(c(NA, NA_integer_, 1L, NA)))
+expect_false(allNA(c(NA, NA_integer_, NA, 1L)))
+expect_false(allNA(c(NA, NA_real_, 0)))
+expect_false(allNA(c(NA, NA_real_, 0, NA)))
+expect_false(allNA(c(NA, NaN, 1)))
+expect_false(allNA(c(NA, 1, NaN)))
+expect_false(allNA(c(NA, NA_character_, "")))
+expect_false(allNA(c(NA, "", NA_character_)))
+
+expect_true(allNA(NULL, len0 = TRUE))
+expect_false(allNA(NULL, len0 = FALSE))
+expect_false(allNA(raw(5)))
+
+allNA <- function(x) hutilscpp::allNA(x, expected = TRUE)
+
+expect_true(allNA(c(NA, NA)))
+expect_true(allNA(c(NA, NA_integer_)))
+expect_true(allNA(c(NA, NA_real_)))
+expect_true(allNA(c(NA, NaN)))
+expect_true(allNA(c(NA, NA_character_)))
+expect_false(allNA(c(NA, NA, TRUE)))
+expect_false(allNA(c(NA, NA, TRUE, NA)))
+expect_false(allNA(c(NA, NA_integer_, 1L, NA)))
+expect_false(allNA(c(NA, NA_integer_, NA, 1L)))
+expect_false(allNA(c(NA, NA_real_, 0)))
+expect_false(allNA(c(NA, NA_real_, 0, NA)))
+expect_false(allNA(c(NA, NaN, 1)))
+expect_false(allNA(c(NA, 1, NaN)))
+expect_false(allNA(c(NA, NA_character_, "")))
+expect_false(allNA(c(NA, "", NA_character_)))
+
+
+
