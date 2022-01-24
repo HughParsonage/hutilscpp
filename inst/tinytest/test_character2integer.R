@@ -26,3 +26,5 @@ expect_equal(character2integer("12345678901", allow.double = NA), NA_integer_)
 expect_equal(character2integer("12345678901", allow.double = TRUE), 12345678901)
 expect_error(character2integer("12345678901", allow.double = FALSE))
 
+expect_equal(Comma(5700000.05, digits = 2), "5,700,000.05")
+
