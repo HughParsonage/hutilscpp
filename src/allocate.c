@@ -180,6 +180,16 @@ SEXP DoubleNNA(R_xlen_t N) {
   return ans;
 }
 
+SEXP RawN(R_xlen_t N) {
+  SEXP ans = PROTECT(allocVector(RAWSXP, N));
+  unsigned char * ansp = RAW(ans);
+  for (R_xlen_t i = 0; i < N; ++i) {
+    ansp[i] = 0;
+  }
+  UNPROTECT(1);
+  return ans;
+}
+
 SEXP CallocateConstants(SEXP NN, SEXP ii) {
   R_xlen_t N = asInteger(NN);
   int i = asInteger(ii);
