@@ -474,5 +474,23 @@ do_par_in <- function(x, tbl, nThread = 1L) {
   }
 }
 
+do_par_in2 <- function(x, tbl, nThread = getOption("hutilscpp.nThread", 1L),
+                       raw_result = FALSE) {
+  nThread <- check_omp(nThread)
+  ans <-
+    if (is.integer(x) && is.integer(tbl)) {
+      .Call("Cpar_in_intchar", x, tbl, nThread, PACKAGE = packageName)
+    } else {
+      x %in% tbl # nocov
+    }
+  if (isTRUE(raw_result)) {
+    as.raw(ans)
+  } else {
+    raw2lgl(ans)
+  }
+}
+
+
+
 
 
