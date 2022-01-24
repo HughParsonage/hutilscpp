@@ -8,17 +8,22 @@
 */
 
 /* .Call calls */
+extern SEXP C_abs_diff(SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_character2integer(SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_comma(SEXP, SEXP, SEXP);
 extern SEXP C_empty(SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_hausdorffEuclid(SEXP, SEXP);
 extern SEXP C_haversineDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_match_min_Haversine(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP C_Mode(SEXP);
 extern SEXP C_op2M(SEXP);
 extern SEXP C_theEmptiestQuarters(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_theEuclidDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP C_which_and1s(SEXP, SEXP, SEXP, SEXP);
+extern SEXP C_which_and2s(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_which_first_lgl1(SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_which_min_HaversineDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP C_which_raw(SEXP, SEXP);
 extern SEXP Callocate_with_root(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Callocate0_dbl(SEXP, SEXP);
 extern SEXP Callocate0_except(SEXP, SEXP, SEXP, SEXP);
@@ -53,6 +58,7 @@ extern SEXP Cna_and(SEXP);
 extern SEXP Cor3(SEXP, SEXP, SEXP);
 extern SEXP Cor3_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cpar_in_int(SEXP, SEXP, SEXP);
+extern SEXP Cpar_in_intchar(SEXP, SEXP, SEXP);
 extern SEXP Cpmax(SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cpmax0_bitwise(SEXP, SEXP, SEXP);
 extern SEXP Cpmax0_radix_sorted_dbl(SEXP, SEXP, SEXP);
@@ -65,6 +71,7 @@ extern SEXP Cpmin0_radix_sorted_int(SEXP, SEXP, SEXP);
 extern SEXP CpminC_in_place(SEXP, SEXP, SEXP, SEXP);
 extern SEXP CPrintChars(SEXP);
 extern SEXP Crange(SEXP);
+extern SEXP Craw2lgl(SEXP, SEXP);
 extern SEXP CSquish(SEXP, SEXP);
 extern SEXP CStringEqual(SEXP, SEXP);
 extern SEXP Csum_isna(SEXP, SEXP);
@@ -94,17 +101,22 @@ extern SEXP Cwhich3_mem(SEXP, SEXP, SEXP, SEXP);
 extern SEXP fmatch(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
+    {"C_abs_diff",                    (DL_FUNC) &C_abs_diff,                     4},
     {"C_character2integer",           (DL_FUNC) &C_character2integer,            4},
     {"C_comma",                       (DL_FUNC) &C_comma,                        3},
     {"C_empty",                       (DL_FUNC) &C_empty,                        4},
     {"C_hausdorffEuclid",             (DL_FUNC) &C_hausdorffEuclid,              2},
     {"C_haversineDistance",           (DL_FUNC) &C_haversineDistance,            5},
     {"C_match_min_Haversine",         (DL_FUNC) &C_match_min_Haversine,         11},
+    {"C_Mode",                        (DL_FUNC) &C_Mode,                         1},
     {"C_op2M",                        (DL_FUNC) &C_op2M,                         1},
     {"C_theEmptiestQuarters",         (DL_FUNC) &C_theEmptiestQuarters,          7},
     {"C_theEuclidDistance",           (DL_FUNC) &C_theEuclidDistance,            5},
+    {"C_which_and1s",                 (DL_FUNC) &C_which_and1s,                  4},
+    {"C_which_and2s",                 (DL_FUNC) &C_which_and2s,                  8},
     {"C_which_first_lgl1",            (DL_FUNC) &C_which_first_lgl1,             4},
     {"C_which_min_HaversineDistance", (DL_FUNC) &C_which_min_HaversineDistance,  5},
+    {"C_which_raw",                   (DL_FUNC) &C_which_raw,                    2},
     {"Callocate_with_root",           (DL_FUNC) &Callocate_with_root,            6},
     {"Callocate0_dbl",                (DL_FUNC) &Callocate0_dbl,                 2},
     {"Callocate0_except",             (DL_FUNC) &Callocate0_except,              4},
@@ -139,6 +151,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cor3",                          (DL_FUNC) &Cor3,                           3},
     {"Cor3_par",                      (DL_FUNC) &Cor3_par,                      16},
     {"Cpar_in_int",                   (DL_FUNC) &Cpar_in_int,                    3},
+    {"Cpar_in_intchar",               (DL_FUNC) &Cpar_in_intchar,                3},
     {"Cpmax",                         (DL_FUNC) &Cpmax,                          4},
     {"Cpmax0_bitwise",                (DL_FUNC) &Cpmax0_bitwise,                 3},
     {"Cpmax0_radix_sorted_dbl",       (DL_FUNC) &Cpmax0_radix_sorted_dbl,        3},
@@ -151,6 +164,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"CpminC_in_place",               (DL_FUNC) &CpminC_in_place,                4},
     {"CPrintChars",                   (DL_FUNC) &CPrintChars,                    1},
     {"Crange",                        (DL_FUNC) &Crange,                         1},
+    {"Craw2lgl",                      (DL_FUNC) &Craw2lgl,                       2},
     {"CSquish",                       (DL_FUNC) &CSquish,                        2},
     {"CStringEqual",                  (DL_FUNC) &CStringEqual,                   2},
     {"Csum_isna",                     (DL_FUNC) &Csum_isna,                      2},

@@ -36,8 +36,14 @@
 #define OP_BW 8
 #define OP_BO 9
 #define OP_BC 10
+#define OP_NI 11
 
 #define NA_INT -2147483648
+
+#define CF_LEN_1 1
+#define CF_LEN_2 2
+#define CF_LEN_N -1
+
 
 extern int tens[10];
 
@@ -47,10 +53,16 @@ SEXP IntegerN(R_xlen_t N);
 SEXP IntegerNNA(R_xlen_t N);
 SEXP DoubleN(R_xlen_t N);
 SEXP DoubleNNA(R_xlen_t N);
+SEXP RawN(R_xlen_t N);
+
+int do_op2M(const char * x);
+int sex2op(SEXP oo);
 
 // asInteger2
 int asInteger2(SEXP x);
 bool is_true(SEXP x);
+
+int cf_xlen(SEXP x, SEXP y);
 
 // diagnose_omp
 int as_nThread(SEXP x);
@@ -71,6 +83,8 @@ R_xlen_t sum_isna(SEXP x, SEXP nthreads) ;
 // character
 bool string_equaln(const char * x, int nx, const char * y);
 
+// isntRaw
+bool isntRaw(SEXP x);
 
 float ssqrt_fast(float x);
 unsigned int radix_find(int a, unsigned int x0, unsigned int x1, const int * k1, unsigned int * tbl);
@@ -84,7 +98,6 @@ void ftc2(int * U0, int * U1, const int * k1, int N);
 
 // maxmin
 int maxXY(const int * x, const int * y, R_xlen_t Nx, R_xlen_t Ny, bool sx, bool sy);
-void Vminmax_i(int minmax[], int * x, R_xlen_t N, int nthreads);
 
 int minii(int a, int b);
 int mini3(int a, int b, int c);
