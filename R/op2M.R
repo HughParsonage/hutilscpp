@@ -6,7 +6,7 @@ Cop2M <- function(operator) {
 
 M2op <- function(M) {
   c("!=", "==", ">=", "<=", ">", "<", "%in%", "%between%", "%(between)%",
-    "%]between[%")[M]
+    "%]between[%", "%notin%")[M]
 }
 
 op2M <- function(operator) {
@@ -21,5 +21,6 @@ op2M <- function(operator) {
          "%between%" = 8L,
          "%(between)%" = 9L,
          "%]between[%" = 10L,
+         "%notin%" = 11L,
          0L)
 }

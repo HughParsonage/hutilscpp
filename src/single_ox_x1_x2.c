@@ -28,6 +28,12 @@ bool isingle_ox_x1_x2(int x, int oix, int x1, int x2) {
 
   case OP_BC:
     return x <= x1 || x >= x2;
+
+  case OP_IN:
+    return x == x1 || x == x2;
+
+  case OP_NI:
+    return x != x1 && x != x2;
   }
   return false; // # nocov
 }
@@ -60,6 +66,9 @@ bool dsingle_ox_x1_x2(double x, int oix, double x1, double x2) {
 
   case OP_BC:
     return x <= x1 || x >= x2;
+
+  case OP_NI:
+    return x != x1 && x != x2;
   }
   return false; // # nocov
 }
