@@ -34,7 +34,20 @@ int do_op2M(const char * x) {
     case ']':
       return OP_BC;
       break;
+    case 'n':
+      return OP_NI;
+      break;
     }
+  }
+  return 0;
+}
+
+int sex2op(SEXP oo) {
+  switch(TYPEOF(oo)) {
+  case STRSXP:
+    return do_op2M(CHAR(STRING_ELT(oo, 0)));
+  case INTSXP:
+    return asInteger(oo);
   }
   return 0;
 }
