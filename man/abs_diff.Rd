@@ -2,9 +2,12 @@
 % Please edit documentation in R/abs_diff.R
 \name{abs_diff}
 \alias{abs_diff}
+\alias{max_abs_diff}
 \title{Absolute difference}
 \usage{
 abs_diff(x, y, nThread = getOption("hutilscpp.nThread", 1L), option = 1L)
+
+max_abs_diff(x, y, nThread = getOption("hutilscpp.nThread", 1L))
 }
 \arguments{
 \item{x, y}{Atomic, numeric, equilength vectors.}
@@ -22,4 +25,11 @@ returning a \code{double} only if required.}
 \description{
 Equivalent to \code{abs(x - y)} but aims to be faster by
 avoiding allocations.
+}
+\examples{
+x <- sample(10)
+y <- sample(10)
+abs_diff(x, y)
+max_abs_diff(x, y)
+
 }

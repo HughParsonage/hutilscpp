@@ -11,7 +11,7 @@ int isingle_abs_diff(int x, int y) {
   return (x > y) ? (x - y) : (y - x);
 }
 
-static dsingle_abs_diff(double x, double y) {
+static double dsingle_abs_diff(double x, double y) {
   return x > y ? x - y : y - x;
 }
 
@@ -129,12 +129,15 @@ SEXP abs_dbl_dbl(SEXP x, SEXP y, SEXP nthreads, SEXP Option) {
 }
 
 SEXP C_abs_diff(SEXP x, SEXP y, SEXP nthreads, SEXP Option) {
+  if (xlength(x) != xlength(y) && xlength(y) != 1) {
+    return R_NilValue;
+  }
   if (isReal(x) && isReal(y)) {
     return abs_dbl_dbl(x, y, nthreads, Option);
   }
   const int opt = asInteger(Option);
-  if (!isInteger(x) || !isInteger(y) || xlength(x) != xlength(y) || xlength(x) == 0 ||
-      opt > 2) {
+  if (!isInteger(x) || !isInteger(y) || xlength(x) == 0 ||
+      opt < 0 || opt > 2) {
     return R_NilValue;
   }
   int nThread = as_nThread(nthreads);
@@ -142,14 +145,18 @@ SEXP C_abs_diff(SEXP x, SEXP y, SEXP nthreads, SEXP Option) {
   const int * xp = INTEGER(x);
   const int * yp = INTEGER(y);
 
+  // Determine whether doubles (64-bit int) are required
   bool needs64 = true;
-  // detect whether the result will be integer
-  int64_t max_abs_xy = max_abs_diffii(xp, yp, N, xlength(y), nThread);
-  if (opt == 0) {
-    return ScalarLength(max_abs_xy);
+  // If opt == 2 then we always use double so no need
+  // ... to determine need
+  if (opt != 2) {
+    // detect whether the result will be integer
+    int64_t max_abs_xy = max_abs_diffii(xp, yp, N, xlength(y), nThread);
+    if (opt == 0) {
+      return ScalarLength(max_abs_xy);
+    }
+    needs64 = max_abs_xy >= INT_MAX;
   }
-  needs64 = max_abs_xy >= INT_MAX;
-
   if (needs64) {
     SEXP ans = PROTECT(allocVector(REALSXP, N));
     double * restrict ansp = REAL(ans);
