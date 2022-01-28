@@ -11,12 +11,27 @@
 #' \item{2}{Return \code{abs(x - y)} but always a \code{double} vector, regardless of necessity.}
 #' }
 #'
+#' @examples
+#' x <- sample(10)
+#' y <- sample(10)
+#' abs_diff(x, y)
+#' max_abs_diff(x, y)
+#'
 #' @export
 abs_diff <- function(x, y, nThread = getOption("hutilscpp.nThread", 1L), option = 1L) {
   ans <- .Call("C_abs_diff", x, y, nThread, option, PACKAGE = "hutilscpp")
   if (is.null(ans)) {
+    if (option == 0L) {
+      return(max(abs(x - y)))
+    }
     return(abs(x - y))
   }
   ans
+}
+
+#' @rdname abs_diff
+#' @export
+max_abs_diff <- function(x, y, nThread = getOption("hutilscpp.nThread", 1L)) {
+  abs_diff(x, y, nThread, option = 0L)
 }
 
