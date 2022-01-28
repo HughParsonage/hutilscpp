@@ -1,3 +1,8 @@
+## hutilscpp 0.9.0
+
+* New functions:
+  - `abs_diff` for non-allocating versions of `abs(x - y)`.
+
 ## hutilscpp 0.8.2
 
 * Bug fixes:
