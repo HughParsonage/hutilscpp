@@ -9,6 +9,7 @@
 
 /* .Call calls */
 extern SEXP C_abs_diff(SEXP, SEXP, SEXP, SEXP);
+extern SEXP C_and_raw(SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_character2integer(SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_comma(SEXP, SEXP, SEXP);
 extern SEXP C_empty(SEXP, SEXP, SEXP, SEXP);
@@ -31,6 +32,7 @@ extern SEXP Callocate0_int(SEXP, SEXP);
 extern SEXP CallocateConstants(SEXP, SEXP);
 extern SEXP Cand3(SEXP, SEXP, SEXP);
 extern SEXP Cand3s_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP Cands(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP CAnyCharMatch(SEXP, SEXP, SEXP);
 extern SEXP CanyOutside(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Ccount_logical(SEXP, SEXP);
@@ -102,6 +104,7 @@ extern SEXP fmatch(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"C_abs_diff",                    (DL_FUNC) &C_abs_diff,                     4},
+    {"C_and_raw",                     (DL_FUNC) &C_and_raw,                      4},
     {"C_character2integer",           (DL_FUNC) &C_character2integer,            4},
     {"C_comma",                       (DL_FUNC) &C_comma,                        3},
     {"C_empty",                       (DL_FUNC) &C_empty,                        4},
@@ -124,6 +127,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"CallocateConstants",            (DL_FUNC) &CallocateConstants,             2},
     {"Cand3",                         (DL_FUNC) &Cand3,                          3},
     {"Cand3s_par",                    (DL_FUNC) &Cand3s_par,                    16},
+    {"Cands",                         (DL_FUNC) &Cands,                          7},
     {"CAnyCharMatch",                 (DL_FUNC) &CAnyCharMatch,                  3},
     {"CanyOutside",                   (DL_FUNC) &CanyOutside,                    5},
     {"Ccount_logical",                (DL_FUNC) &Ccount_logical,                 2},

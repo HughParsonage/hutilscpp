@@ -21,5 +21,56 @@ which3 <- function(x, y, z,
   }
 }
 
+which_and2s <- function(exprA, exprB, ..., .parent_nframes = 1L,
+                        Ion = NULL,
+                        nThread = getOption("hutilscpp.nThread", 1L)) {
+  nThread <- check_omp(nThread)
+
+  sexprA <- substitute(exprA)
+
+  if (missing(exprB) && length(sexprA) == 3L) {
+    ans <-
+      .Call("C_which_and1s",
+            as.character(sexprA[[1L]]),
+            eval.parent(sexprA[[2L]], n = .parent_nframes),
+            eval.parent(sexprA[[3L]], n = .parent_nframes),
+            Ion,
+            PACKAGE = "hutilscpp")
+    if (is.null(ans)) {
+      return(which(exprA))
+    } else {
+      return(ans)
+    }
+  }
+  sexprB <- substitute(exprB)
+  ans <- NULL
+  if (length(sexprA) == 3L && length(sexprB) == 3L) {
+    ans <- w3(eval.parent(sexprA[[2L]], n = .parent_nframes),
+              op2M(as.character(sexprA[[1L]])),
+              eval.parent(sexprA[[3L]], n = .parent_nframes),
+
+              eval.parent(sexprB[[2L]], n = .parent_nframes),
+              op2M(as.character(sexprB[[1L]])),
+              eval.parent(sexprB[[3L]], n = .parent_nframes))
+  }
+  if (is.null(ans)) {
+    return(which(and3s(exprA, exprB, nThread = nThread, .parent_nframes = .parent_nframes + 1L)))
+  }
+  ans
+}
+
+w3 <- function(x1, o1, y1,
+               x2, o2, y2,
+               Ion = length(x1)) {
+  s <-
+  .Call("C_which_and2s",
+        x1, o1, y1,
+        x2, o2, y2,
+        getOption("hutilscpp.nThread", 1L),
+        Ion,
+        PACKAGE = "hutilscpp")
+  s
+}
+
 
 

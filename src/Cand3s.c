@@ -2,23 +2,28 @@
 #include "hutilscpp.h"
 
 #if defined _OPENMP && _OPENMP >= 201511
-#define FORLOOP                                                \
+#define FORLOOP(content)                                                \
 _Pragma("omp parallel for num_threads(nThread)")               \
-  for (R_xlen_t i = 0; i < N; ++i)
+  for (R_xlen_t i = 0; i < N; ++i) {                           \
+    content                                                    \
+    }
 #else
-#define FORLOOP for (R_xlen_t i = 0; i < N; ++i)
+#define FORLOOP(content)                                       \
+  for (R_xlen_t i = 0; i < N; ++i) {                           \
+    content                                                    \
+  }
 #endif
 
 #if defined _OPENMP && _OPENMP >= 201511
 #define FORLOOP_ands(op, rhs)                                                \
 _Pragma("omp parallel for num_threads(nThread)")                             \
   for (R_xlen_t i = 0; i < N; ++i) {                                         \
-    ansp[i] = x[i] op rhs;                                                   \
+    ansp[i] &= x[i] op rhs;                                                   \
   }
 #else
 #define FORLOOP_ands(op, rhs)                                  \
 for (R_xlen_t i = 0; i < N; ++i) {                             \
-  ansp[i] = x[i] op rhs;                                       \
+  ansp[i] &= x[i] op rhs;                                       \
 }
 #endif
 
@@ -48,6 +53,37 @@ static SEXP eq(SEXP xx, SEXP yy, int nThread) {
       }
     }
   }
+}
+
+SEXP C_and_raw(SEXP x, SEXP y, SEXP z, SEXP nthreads) {
+  int nThread = asInteger(nthreads);
+  if (isntRaw(x)) {
+    return R_NilValue;
+  }
+  R_xlen_t N = xlength(x);
+  if (xlength(y) != N || isntRaw(y)) {
+    return x;
+  }
+  unsigned char * xp = RAW(x);
+  const unsigned char * yp = RAW(y);
+  if (isntRaw(z)) {
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread)
+#endif
+    for (R_xlen_t i = 0; i < N; ++i) {
+      xp[i] &= yp[i];
+    }
+    return x;
+  }
+  const unsigned char * zp = RAW(z);
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread)
+#endif
+  for (R_xlen_t i = 0; i < N; ++i) {
+    xp[i] &= yp[i] & zp[i];
+  }
+  return x;
+
 }
 
 static void vand2s_Inei(unsigned char * ansp,
@@ -220,6 +256,59 @@ static void vand2s_DeqI(unsigned char * ansp,
   }
 }
 
+static unsigned int b_subtract_a(int a, int b) {
+  // assumption a <= b
+  int64_t a64 = a, b64 = b;
+  return b64 - a64;
+}
+
+static void vands_Ibwii(unsigned char * ansp,
+                        const int o,
+                        const int * x,
+                        R_xlen_t N,
+                        const int * y,
+                        int nThread) {
+  int y0 = y[0];
+  int y1 = y[1];
+
+  if (y0 == 0) {
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread)
+#endif
+    for (R_xlen_t i = 0; i < N; ++i) {
+      unsigned int xi = x[i];
+      ansp[i] &= xi <= y1;
+    }
+    return;
+  }
+  if (y0 > 0) {
+    const unsigned int b_minus_a = b_subtract_a(y0, y1);
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread)
+#endif
+    for (R_xlen_t i = 0; i < N; ++i) {
+      unsigned int xi = x[i];
+      ansp[i] &= (xi - y0) <= b_minus_a;
+    }
+    return;
+  }
+  if (y0 < 0) {
+    const unsigned int b_minus_a = b_subtract_a(y0, y1);
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread)
+#endif
+    for (R_xlen_t i = 0; i < N; ++i) {
+      unsigned int xi = x[i];
+      unsigned int u0 = -y0;
+      ansp[i] &= (xi + u0) <= b_minus_a;
+    }
+    return;
+  }
+
+}
+
+
+
 static void vand2s_II(unsigned char * ansp,
                       const int o,
                       const int * x,
@@ -227,6 +316,53 @@ static void vand2s_II(unsigned char * ansp,
                       const int * y,
                       R_xlen_t M,
                       int nThread) {
+  if (M == 2) {
+    switch(o) {
+    case OP_BW: {
+      int y0 = y[0];
+      int y1 = y[1];
+      if (y0 == y1) {
+        FORLOOP_ands(==, y0)
+        break;
+      }
+      if (y0 > y1) {
+        memset(ansp, 0, N);
+        break;
+      }
+      // y0 < y1
+      if (y0 == 0) {
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread)
+#endif
+        for (R_xlen_t i = 0; i < N; ++i) {
+          unsigned int xi = x[i];
+          ansp[i] &= xi <= y1;
+        }
+      } else if (y0 > 0) {
+        unsigned int u0 = y0;
+        unsigned int u1 = y1 - u0;
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread)
+#endif
+        for (R_xlen_t i = 0; i < N; ++i) {
+          ansp[i] &= (x[i] - u0) <= u1;
+        }
+      } else {
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread)
+#endif
+        for (R_xlen_t i = 0; i < N; ++i) {
+          int xi = x[i];
+          ansp[i] &= xi >= y0;
+          ansp[i] &= xi <= y1;
+        }
+      }
+    }
+
+
+    }
+    return;
+  }
   if (M == N) {
     switch(o) {
     case OP_NE:
@@ -518,17 +654,27 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
   R_xlen_t N = xlength(xx1);
 
   int nThread = as_nThread(nthreads);
-  SEXP ans = PROTECT(allocVector(RAWSXP, N));
-  unsigned char * restrict ansp = RAW(ans);
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-  for (R_xlen_t i = 0; i < N; ++i) {
-    ansp[i] = 1;
-  }
   const int o1 = sex2op(oo1);
   const int o2 = sex2op(oo2);
-  vand2s(ansp, o1, xx1, yy1, nThread);
+  SEXP ans = PROTECT(allocVector(RAWSXP, N));
+  unsigned char * restrict ansp = RAW(ans);
+  if (yy1 == R_NilValue && isLogical(xx1)) {
+    const int * xx1p = LOGICAL(xx1);
+    if (o1 == OP_NE) {
+      FORLOOP(
+        ansp[i] = xx1p[i] != 1;
+      )
+    } else {
+      FORLOOP(
+        ansp[i] = xx1p[i] != 0;
+      )
+    }
+  } else {
+    FORLOOP(
+      ansp[i] = 1;
+    )
+    vand2s(ansp, o1, xx1, yy1, nThread);
+  }
   vand2s(ansp, o2, xx2, yy2, nThread);
   UNPROTECT(1);
   return ans;
