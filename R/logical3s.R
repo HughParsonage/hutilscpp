@@ -240,7 +240,7 @@ and3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
     return(raw2lgl(ans))
   }
 
-  and3s(ans, ..., .parent_nframes = .parent_nframes + 1L, nThread = nThread)
+  and3s(raw2lgl(ans), ..., .parent_nframes = .parent_nframes + 1L, nThread = nThread)
 }
 
 #' @rdname logical3s
