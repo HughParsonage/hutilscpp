@@ -28,32 +28,7 @@ for (R_xlen_t i = 0; i < N; ++i) {                             \
 #endif
 
 
-static SEXP ieqi_1(const int * x, R_xlen_t N, int y, int nThread) {
-  SEXP ans = PROTECT(allocVector(RAWSXP, N));
-  unsigned char * ansp = RAW(ans);
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-  for (R_xlen_t i = 0; i < N; ++i) {
-    ansp[i] = x[i] == y;
-  }
-  UNPROTECT(1);
-  return ans;
-}
 
-static SEXP eq(SEXP xx, SEXP yy, int nThread) {
-  switch(TYPEOF(xx)) {
-  case INTSXP:
-    switch(TYPEOF(yy)) {
-    case INTSXP:
-      if (xlength(yy) == 1) {
-        return ieqi_1(INTEGER(xx), xlength(xx), asInteger(yy), nThread);
-      } else {
-        return ieqi_1(INTEGER(xx), xlength(xx), asInteger(yy), nThread);
-      }
-    }
-  }
-}
 
 SEXP C_and_raw(SEXP x, SEXP y, SEXP z, SEXP nthreads) {
   int nThread = asInteger(nthreads);
@@ -62,6 +37,14 @@ SEXP C_and_raw(SEXP x, SEXP y, SEXP z, SEXP nthreads) {
   }
   R_xlen_t N = xlength(x);
   if (xlength(y) != N || isntRaw(y)) {
+    if (xlength(y) != N) {
+      warning("`N = %lld`, yet `xlength(y) = %lld`, so y will be ignored and `x` will be returned.",
+              N, xlength(y));
+    }
+    if (isntRaw(y)) {
+      warning("`y is type '%s' but a RAWSXP was expected, so y will be ignored and `x` will be returned.",
+              type2char(TYPEOF(y)));
+    }
     return x;
   }
   unsigned char * xp = RAW(x);
@@ -86,175 +69,6 @@ SEXP C_and_raw(SEXP x, SEXP y, SEXP z, SEXP nthreads) {
 
 }
 
-static void vand2s_Inei(unsigned char * ansp,
-                        const int * x,
-                        R_xlen_t N,
-                        const int y0,
-                        int nThread) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-  for (R_xlen_t i = 0; i < N; ++i) {
-    ansp[i] &= x[i] != y0;
-  }
-}
-
-static void vand2s_IneI(unsigned char * ansp,
-                        const int * x,
-                        R_xlen_t N,
-                        const int * y,
-                        int nThread) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-  for (R_xlen_t i = 0; i < N; ++i) {
-    ansp[i] &= x[i] != y[i];
-  }
-}
-static void vand2s_IneD(unsigned char * ansp,
-                        const int * x,
-                        R_xlen_t N,
-                        const double * y,
-                        int nThread) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-  for (R_xlen_t i = 0; i < N; ++i) {
-    ansp[i] &= x[i] != y[i];
-  }
-}
-
-static void vand2s_Dnei(unsigned char * ansp,
-                        const double * x,
-                        R_xlen_t N,
-                        const int y0,
-                        int nThread) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-  for (R_xlen_t i = 0; i < N; ++i) {
-    ansp[i] &= x[i] != y0;
-  }
-}
-
-static void vand2s_DneI(unsigned char * ansp,
-                        const double * x,
-                        R_xlen_t N,
-                        const int * y,
-                        int nThread) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-  for (R_xlen_t i = 0; i < N; ++i) {
-    ansp[i] &= x[i] != y[i];
-  }
-}
-
-static void vand2s_Dned(unsigned char * ansp,
-                        const double * x,
-                        R_xlen_t N,
-                        const double y0,
-                        int nThread) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-  for (R_xlen_t i = 0; i < N; ++i) {
-    ansp[i] &= x[i] != y0;
-  }
-}
-
-static void vand2s_DneD(unsigned char * ansp,
-                        const double * x,
-                        R_xlen_t N,
-                        const double * y,
-                        int nThread) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-  for (R_xlen_t i = 0; i < N; ++i) {
-    ansp[i] &= x[i] != y[i];
-  }
-}
-
-static void vand2s_not(unsigned char * ansp,
-                       const int * x,
-                       R_xlen_t N,
-                       int nThread) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-  for (R_xlen_t i = 0; i < N; ++i) {
-    if (x[i]) {
-      ansp[i] = 0;
-    }
-  }
-}
-
-static void vand2s_yes(unsigned char * ansp,
-                       const int * x,
-                       R_xlen_t N,
-                       int nThread) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-  for (R_xlen_t i = 0; i < N; ++i) {
-    if (!x[i]) {
-      ansp[i] = 0;
-    }
-  }
-}
-
-static void vand2s_Ieqi(unsigned char * ansp,
-                        const int * x,
-                        R_xlen_t N,
-                        const int y,
-                        int nThread) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-  for (R_xlen_t i = 0; i < N; ++i) {
-    ansp[i] &= x[i] == y;
-  }
-}
-
-static void vand2s_IeqI(unsigned char * ansp,
-                        const int * x,
-                        R_xlen_t N,
-                        const int * y,
-                        int nThread) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-  for (R_xlen_t i = 0; i < N; ++i) {
-    ansp[i] &= x[i] == y[i];
-  }
-}
-
-static void vand2s_Deqi(unsigned char * ansp,
-                        const double * x,
-                        R_xlen_t N,
-                        const int y,
-                        int nThread) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-  for (R_xlen_t i = 0; i < N; ++i) {
-    ansp[i] &= x[i] == y;
-  }
-}
-
-static void vand2s_DeqI(unsigned char * ansp,
-                        const double * x,
-                        R_xlen_t N,
-                        const int * y,
-                        int nThread) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-  for (R_xlen_t i = 0; i < N; ++i) {
-    ansp[i] &= x[i] == y[i];
-  }
-}
 
 static unsigned int b_subtract_a(int a, int b) {
   // assumption a <= b
@@ -308,7 +122,6 @@ static void vands_Ibwii(unsigned char * ansp,
 }
 
 
-
 static void vand2s_II(unsigned char * ansp,
                       const int o,
                       const int * x,
@@ -316,6 +129,33 @@ static void vand2s_II(unsigned char * ansp,
                       const int * y,
                       R_xlen_t M,
                       int nThread) {
+  if (o == OP_IN) {
+    if (M <= 30) {
+      // Rprintf("M <= 30\n");
+      for (R_xlen_t i = 0; i < N; ++i) {
+        if (ansp[i]) {
+          int xi = x[i];
+          unsigned char ans_i = 0;
+          for (int j = 0; j < M; ++j) {
+            if (xi == y[j]) {
+              ans_i = 1;
+              break;
+            }
+          }
+          ansp[i] = ans_i;
+        }
+      }
+    } else {
+      unsigned int fail[1] = {0};
+      do_uchar_in_II(ansp, fail,
+                     x, N,
+                     y, M,
+                     nThread,
+                     false);
+    }
+    return;
+  }
+
   if (M == 2) {
     switch(o) {
     case OP_BW: {
@@ -398,7 +238,7 @@ static void vand2s_II(unsigned char * ansp,
       FORLOOP_ands(>, y0)
       break;
     case OP_LT:
-      FORLOOP_ands(<, y0)
+      FORLOOP_ands(<, y0);
       break;
     case OP_GE:
       FORLOOP_ands(>=, y0)
@@ -652,12 +492,53 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
            SEXP oo2, SEXP xx2, SEXP yy2,
            SEXP nthreads) {
   R_xlen_t N = xlength(xx1);
+  if (xlength(xx2) != N) {
+    error("`xlength(xx1) = %lld`, yet `xlength(xx2) = %lld`.",
+          xlength(xx1), xlength(xx2));
+  }
 
   int nThread = as_nThread(nthreads);
+  const int temp_o1 = sex2op(oo1);
+  if (temp_o1 == OP_IN || temp_o1 == OP_NI) {
+    // x %in% a:b    => x %between% c(a, b)
+    // x %notin% a:b => x %]between[% c(a, b)
+    if (is_seq(yy1)) {
+      int y0 = INTEGER(yy1)[0] - (temp_o1 == OP_NI);
+      int y2 = INTEGER(yy1)[xlength(yy1) - 1] + (temp_o1 == OP_NI);
+      SEXP yyy = PROTECT(allocVector(INTSXP, 2));
+      INTEGER(yyy)[0] = y0;
+      INTEGER(yyy)[1] = y2;
+      UNPROTECT(1);
+      return Cands(ScalarInteger(temp_o1 == OP_IN ? OP_BW : OP_BC),
+                   xx1, yyy,
+                   oo2, xx2, yy2,
+                   nthreads);
+    }
+  }
+  const int temp_o2 = sex2op(oo2);
+  if (temp_o2 == OP_IN || temp_o2 == OP_NI) {
+    // x %in% a:b    => x %between% c(a, b)
+    // x %notin% a:b => x %]between[% c(a, b)
+    if (is_seq(yy2)) {
+      int y0 = INTEGER(yy2)[0] - (temp_o2 == OP_NI);
+      int y2 = INTEGER(yy2)[xlength(yy2) - 1] + (temp_o2 == OP_NI);
+      SEXP yyy = PROTECT(allocVector(INTSXP, 2));
+      INTEGER(yyy)[0] = y0;
+      INTEGER(yyy)[1] = y2;
+      UNPROTECT(1);
+      return Cands(oo1,
+                   xx1, yy1,
+                   ScalarInteger(temp_o2 == OP_IN ? OP_BW : OP_BC),
+                   xx2, yyy,
+                   nthreads);
+    }
+  }
+
   const int o1 = sex2op(oo1);
   const int o2 = sex2op(oo2);
   SEXP ans = PROTECT(allocVector(RAWSXP, N));
-  unsigned char * restrict ansp = RAW(ans);
+  unsigned char * ansp = RAW(ans);
+
   if (yy1 == R_NilValue && isLogical(xx1)) {
     const int * xx1p = LOGICAL(xx1);
     if (o1 == OP_NE) {
@@ -675,7 +556,10 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
     )
     vand2s(ansp, o1, xx1, yy1, nThread);
   }
+  Rprintf("%d,%d,%d,%d\n", ansp[0], ansp[1], ansp[2], ansp[3]);
+  Rprintf("\n\to2 = %d\n", o2);
   vand2s(ansp, o2, xx2, yy2, nThread);
+  Rprintf("%d,%d,%d,%d\n", ansp[0], ansp[1], ansp[2], ansp[3]);
   UNPROTECT(1);
   return ans;
 }
