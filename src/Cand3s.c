@@ -492,8 +492,9 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
            SEXP oo2, SEXP xx2, SEXP yy2,
            SEXP nthreads) {
   R_xlen_t N = xlength(xx1);
-  if (xlength(xx2) != N) {
-    error("`xlength(xx1) = %lld`, yet `xlength(xx2) = %lld`.",
+  const bool use2 = oo2 != R_NilValue;
+  if (use2 && xlength(xx2) != N) {
+    error("`(Cands1): xlength(xx1) = %lld`, yet `xlength(xx2) = %lld`.",
           xlength(xx1), xlength(xx2));
   }
 
@@ -556,10 +557,9 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
     )
     vand2s(ansp, o1, xx1, yy1, nThread);
   }
-  Rprintf("%d,%d,%d,%d\n", ansp[0], ansp[1], ansp[2], ansp[3]);
-  Rprintf("\n\to2 = %d\n", o2);
-  vand2s(ansp, o2, xx2, yy2, nThread);
-  Rprintf("%d,%d,%d,%d\n", ansp[0], ansp[1], ansp[2], ansp[3]);
+  if (use2) {
+    vand2s(ansp, o2, xx2, yy2, nThread);
+  }
   UNPROTECT(1);
   return ans;
 }
