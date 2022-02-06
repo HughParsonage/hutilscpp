@@ -32,10 +32,37 @@ for (R_xlen_t i = 0; i < N; ++i) {                             \
 
 SEXP C_and_raw(SEXP x, SEXP y, SEXP z, SEXP nthreads) {
   int nThread = asInteger(nthreads);
+  R_xlen_t N = xlength(x);
   if (isntRaw(x)) {
+    if (isLogical(x)) {
+      if (isLogical(y)) {
+        const int * xp = LOGICAL(x);
+        const int * yp = LOGICAL(y);
+        SEXP ans = PROTECT(allocVector(RAWSXP, N));
+        unsigned char * ansp = RAW(ans);
+        FORLOOP(ansp[i] = xp[i] & yp[i];)
+        UNPROTECT(1);
+        return ans;
+      }
+      if (isRaw(y)) {
+        const int * xp = LOGICAL(x);
+        const unsigned char * yp = RAW(y);
+        SEXP ans = PROTECT(allocVector(RAWSXP, N));
+        unsigned char * ansp = RAW(ans);
+        FORLOOP(ansp[i] = xp[i] & yp[i];)
+        UNPROTECT(1);
+        return ans;
+      }
+    }
     return R_NilValue;
   }
-  R_xlen_t N = xlength(x);
+  unsigned char * xp = RAW(x);
+  if (isLogical(y)) {
+    const int * yp = LOGICAL(y);
+    FORLOOP(xp[i] &= yp[i];)
+    return x;
+  }
+
   if (xlength(y) != N || isntRaw(y)) {
     if (xlength(y) != N) {
       warning("`N = %lld`, yet `xlength(y) = %lld`, so y will be ignored and `x` will be returned.",
@@ -47,7 +74,7 @@ SEXP C_and_raw(SEXP x, SEXP y, SEXP z, SEXP nthreads) {
     }
     return x;
   }
-  unsigned char * xp = RAW(x);
+
   const unsigned char * yp = RAW(y);
   if (isntRaw(z)) {
 #if defined _OPENMP && _OPENMP >= 201511
