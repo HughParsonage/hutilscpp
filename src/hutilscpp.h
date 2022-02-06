@@ -101,6 +101,7 @@ void do_uchar_in_II(unsigned char * ansp,
 
 // isntRaw
 bool isntRaw(SEXP x);
+bool isRaw(SEXP x);
 
 float ssqrt_fast(float x);
 unsigned int radix_find(int a, unsigned int x0, unsigned int x1, const int * k1, unsigned int * tbl);
