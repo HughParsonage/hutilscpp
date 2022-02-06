@@ -52,6 +52,7 @@ extern SEXP CImplies(SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cis_altrep(SEXP);
 extern SEXP Cis_constant(SEXP, SEXP);
 extern SEXP Cis_safe2int(SEXP);
+extern SEXP Cis_seq(SEXP);
 extern SEXP Cis_sorted(SEXP, SEXP);
 extern SEXP Cisnt_constant(SEXP);
 extern SEXP Cisnt_sorted(SEXP, SEXP);
@@ -79,6 +80,7 @@ extern SEXP CStringEqual(SEXP, SEXP);
 extern SEXP Csum_isna(SEXP, SEXP);
 extern SEXP Csum3s_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Csummary3(SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP Cuminus(SEXP, SEXP);
 extern SEXP Cwhere_square_bracket_opens(SEXP, SEXP);
 extern SEXP Cwhich_16(SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cwhich_even(SEXP);
@@ -147,6 +149,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cis_altrep",                    (DL_FUNC) &Cis_altrep,                     1},
     {"Cis_constant",                  (DL_FUNC) &Cis_constant,                   2},
     {"Cis_safe2int",                  (DL_FUNC) &Cis_safe2int,                   1},
+    {"Cis_seq",                       (DL_FUNC) &Cis_seq,                        1},
     {"Cis_sorted",                    (DL_FUNC) &Cis_sorted,                     2},
     {"Cisnt_constant",                (DL_FUNC) &Cisnt_constant,                 1},
     {"Cisnt_sorted",                  (DL_FUNC) &Cisnt_sorted,                   2},
@@ -174,6 +177,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Csum_isna",                     (DL_FUNC) &Csum_isna,                      2},
     {"Csum3s_par",                    (DL_FUNC) &Csum3s_par,                    26},
     {"Csummary3",                     (DL_FUNC) &Csummary3,                      5},
+    {"Cuminus",                       (DL_FUNC) &Cuminus,                        2},
     {"Cwhere_square_bracket_opens",   (DL_FUNC) &Cwhere_square_bracket_opens,    2},
     {"Cwhich_16",                     (DL_FUNC) &Cwhich_16,                      4},
     {"Cwhich_even",                   (DL_FUNC) &Cwhich_even,                    1},

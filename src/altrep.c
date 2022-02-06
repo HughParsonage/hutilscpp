@@ -1,9 +1,13 @@
 #include "hutilscpp.h"
 
-SEXP Cis_altrep(SEXP x) {
+bool is_altrep(SEXP x) {
 #if defined(R_VERSION) && R_VERSION >= R_Version(3, 5, 0)
-  return ScalarLogical(ALTREP(x));
+  return ALTREP(x);
 #else
-  return ScalarLogical(0);
+  return 0;
 #endif
+}
+
+SEXP Cis_altrep(SEXP x) {
+  return ScalarLogical(is_altrep(x));
 }
