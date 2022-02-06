@@ -55,6 +55,9 @@ SEXP DoubleN(R_xlen_t N);
 SEXP DoubleNNA(R_xlen_t N);
 SEXP RawN(R_xlen_t N);
 
+// altrep
+bool is_altrep(SEXP x);
+
 int do_op2M(const char * x);
 int sex2op(SEXP oo);
 
@@ -73,6 +76,9 @@ SEXP ScalarLength(R_xlen_t o);
 bool dsingle_ox_x1_x2(double x, int oix, double x1, double x2);
 bool isingle_ox_x1_x2(int x, int oix, int x1, int x2);
 
+// is_seq
+bool is_seq(SEXP x);
+
 bool do_is_safe2int(double x);
 int dbl_is_int(double x);
 int dbl2int(double x);
@@ -82,6 +88,16 @@ R_xlen_t sum_isna(SEXP x, SEXP nthreads) ;
 
 // character
 bool string_equaln(const char * x, int nx, const char * y);
+
+// Cpar_in.c
+void do_uchar_in_II(unsigned char * ansp,
+                    unsigned int * fail,
+                    const int * xp,
+                    R_xlen_t N,
+                    const int * yp,
+                    R_xlen_t M,
+                    int nThread,
+                    bool opposite);
 
 // isntRaw
 bool isntRaw(SEXP x);
