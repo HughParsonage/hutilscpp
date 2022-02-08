@@ -49,7 +49,7 @@ jobs:
       - name: Install packages
         shell: bash
         run: |
-          Rdevel -q -e "ip <- function(x) install.packages(x[!sapply(x, requireNamespace, quietly = TRUE)], quiet = TRUE, repos = 'https://cran.r-project.org'); ip(c('testthat', 'data.table', 'glue', 'hutils', 'magrittr'))"
+          Rdevel -q -e "ip <- function(x) install.packages(x[!sapply(x, requireNamespace, quietly = TRUE)], quiet = TRUE, repos = 'https://cran.r-project.org'); ip(c('tinytest', 'data.table', 'glue', 'hutils', 'magrittr'))"
           Rdevel CMD build .
           Rdevel CMD INSTALL --install-tests hutilscpp*.tar.gz
           Rdevel -q -e "max(sapply(dir(path = find.package('hutilscpp'), recursive = TRUE, full.names = TRUE), function(x) file.size(x) / 1024))"
@@ -61,7 +61,6 @@ jobs:
           Rdevel -q -e "z3 <- integer(3); hutilscpp::which_last(z3 >= -2147483647.1)"
           Rdevel -q -e "z3 <- c(0L, 1:9); hutilscpp::which_last(z3 >= -2147483647.1)"
           Rdevel -q -e "z3 <- integer(3); hutilscpp::which_last(z3 >= -2147483647.1)"
-          Rdevel -q -e "testthat::test_package('hutilscpp', reporter = testthat::LocationReporter, filter = 'fmatch|which')"
           Rdevel -q -e "z3 <- c(0L, 1:9, -2147483647L); hutilscpp::which_last(z3 >= -2147483647)"
           Rdevel -q -e "z3 <- c(0L, 1:9, -2147483647L); hutilscpp::which_last(z3 < -2147483647)"
           Rdevel -q -e "tinytest::run_test_file('inst/tinytest/test_character2integer.R')"
