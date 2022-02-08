@@ -14,7 +14,7 @@ character2integer <- function(x,
                               na.strings = NULL,
                               allow.double = FALSE,
                               option = 0L) {
-  .Call("C_character2integer", x, na.strings, allow.double, option, PACKAGE = packageName())
+  .Call("C_character2integer", x, na.strings, allow.double, option, PACKAGE = "hutilscpp")
 }
 
 

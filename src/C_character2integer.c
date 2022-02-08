@@ -218,7 +218,7 @@ static bool charNeedsDbl(const char * x, int n) {
   return false;
 }
 
-static bool needsDouble(SEXP x) {
+static R_xlen_t needsDouble(SEXP x) {
   R_xlen_t N = xlength(x);
   const SEXP * xp = STRING_PTR(x);
   for (R_xlen_t i = 0; i < N; ++i) {
@@ -228,10 +228,10 @@ static bool needsDouble(SEXP x) {
     const char * xi = CHAR(xp[i]);
     int n = length(xp[i]);
     if (charNeedsDbl(xi, n)) {
-      return true;
+      return i + 1;
     }
   }
-  return false;
+  return 0;
 }
 
 static SEXP str2int0_(SEXP x) {
@@ -328,9 +328,10 @@ SEXP C_character2integer(SEXP x, SEXP NaStrings, SEXP AllowDbl, SEXP Option) {
   if (NaStrings != R_NilValue && !isString(NaStrings)) {
     error("NaStrings was type '%s' but must be character (or NULL)", type2char(TYPEOF(NaStrings)));
   }
-  if (needsDouble(x)) {
+  R_xlen_t needsDoublex = needsDouble(x);
+  if (needsDoublex) {
     if (allow_dbl == 0) {
-      error("allow_double not permitted but required.");
+      error("`allow_double = FALSE` but double is required at position %lld.", needsDoublex);
     }
     if (allow_dbl == 1) {
       return character2double(x, NaStrings, option);
