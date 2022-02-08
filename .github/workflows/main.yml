@@ -63,5 +63,5 @@ jobs:
           Rdevel -q -e "z3 <- integer(3); hutilscpp::which_last(z3 >= -2147483647.1)"
           Rdevel -q -e "z3 <- c(0L, 1:9, -2147483647L); hutilscpp::which_last(z3 >= -2147483647)"
           Rdevel -q -e "z3 <- c(0L, 1:9, -2147483647L); hutilscpp::which_last(z3 < -2147483647)"
-          Rdevel -q -e "x <- c(1626783884L, 969909421L, 205541854L, -1L, 0L, 1L, -1214788235L, -709260613L, -795055625L); hutilscpp::character2integer(as.double(x))"
+          Rdevel -q -e "x <- c(1626783884L, 969909421L, 205541854L, -1L, 0L, 1L, -1214788235L, -709260613L, -795055625L); hutilscpp::character2integer(prettyNum(as.double(x), big.mark = ','))"
           Rdevel -q -e "tinytest::run_test_file('inst/tinytest/test_character2integer.R')"
