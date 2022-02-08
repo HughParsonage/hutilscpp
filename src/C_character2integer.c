@@ -188,6 +188,7 @@ static bool charNeedsDbl(const char * x, int n) {
   int dec = anyDecimal(x, n);
   int n_digit_charac = dec ? len_characteristic(x, dec) : len_characteristic(x, n);
   if (n_digit_charac > 10) {
+    Rprintf("\nn_digit_charac = %d\n", n_digit_charac);
     // exceeds INT_MAX
     return true;
   }
@@ -205,6 +206,9 @@ static bool charNeedsDbl(const char * x, int n) {
     }
     for (int dj = 0; dj < 10; ++dj) {
       if (digits[dj] > DIGIT_INT_MAX[dj]) {
+        Rprintf("\n");
+        Rprintf("dj = %d, > INT_MAX[dj] = %d", dj, DIGIT_INT_MAX[dj]);
+        Rprintf("\n");
         return true;
       }
       if (digits[dj] < DIGIT_INT_MAX[dj]) {
@@ -213,6 +217,7 @@ static bool charNeedsDbl(const char * x, int n) {
     }
   }
   if (dec && !trail_dot00(x, n, dec)) {
+    Rprintf("dec\n");
     return true;
   }
   return false;
