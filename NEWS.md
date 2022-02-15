@@ -2,6 +2,7 @@
 
 * New functions:
   - `abs_diff` for non-allocating versions of `abs(x - y)`.
+  - `coalesce0` as a convenience function, equivalent to `coalesce(x, 0)` for correct type of 0.
 
 ## hutilscpp 0.8.2
 
