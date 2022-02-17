@@ -4,6 +4,11 @@
   - `abs_diff` for non-allocating versions of `abs(x - y)`.
   - `coalesce0` as a convenience function, equivalent to `coalesce(x, 0)` for correct type of 0.
 
+* Internal changes
+  - complex separation of expressions (`and3s` and friends) is now done using 
+    a different basis, and performs internal logical operations on raw (`char`)
+    vectors.
+
 ## hutilscpp 0.8.2
 
 * Bug fixes:

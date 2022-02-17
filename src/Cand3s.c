@@ -1,99 +1,153 @@
-
 #include "hutilscpp.h"
 
-#if defined _OPENMP && _OPENMP >= 201511
-#define FORLOOP(content)                                                \
-_Pragma("omp parallel for num_threads(nThread)")               \
-  for (R_xlen_t i = 0; i < N; ++i) {                           \
-    content                                                    \
-    }
-#else
-#define FORLOOP(content)                                       \
-  for (R_xlen_t i = 0; i < N; ++i) {                           \
-    content                                                    \
-  }
-#endif
-
-#if defined _OPENMP && _OPENMP >= 201511
-#define FORLOOP_ands(op, rhs)                                                \
-_Pragma("omp parallel for num_threads(nThread)")                             \
-  for (R_xlen_t i = 0; i < N; ++i) {                                         \
-    ansp[i] &= x[i] op rhs;                                                   \
-  }
-#else
-#define FORLOOP_ands(op, rhs)                                  \
-for (R_xlen_t i = 0; i < N; ++i) {                             \
-  ansp[i] &= x[i] op rhs;                                       \
-}
-#endif
-
-
-
-
-SEXP C_and_raw(SEXP x, SEXP y, SEXP z, SEXP nthreads) {
+SEXP C_and_raw(SEXP x, SEXP y, SEXP nthreads) {
   int nThread = asInteger(nthreads);
   R_xlen_t N = xlength(x);
-  if (isntRaw(x)) {
-    if (isLogical(x)) {
-      if (isLogical(y)) {
-        const int * xp = LOGICAL(x);
-        const int * yp = LOGICAL(y);
-        SEXP ans = PROTECT(allocVector(RAWSXP, N));
-        unsigned char * ansp = RAW(ans);
-        FORLOOP(ansp[i] = xp[i] & yp[i];)
-        UNPROTECT(1);
-        return ans;
-      }
-      if (isRaw(y)) {
-        const int * xp = LOGICAL(x);
-        const unsigned char * yp = RAW(y);
-        SEXP ans = PROTECT(allocVector(RAWSXP, N));
-        unsigned char * ansp = RAW(ans);
-        FORLOOP(ansp[i] = xp[i] & yp[i];)
-        UNPROTECT(1);
-        return ans;
-      }
-    }
-    return R_NilValue;
-  }
-  unsigned char * xp = RAW(x);
-  if (isLogical(y)) {
-    const int * yp = LOGICAL(y);
-    FORLOOP(xp[i] &= yp[i];)
+  if (N == 0) {
     return x;
   }
-
-  if (xlength(y) != N || isntRaw(y)) {
-    if (xlength(y) != N) {
-      warning("`N = %lld`, yet `xlength(y) = %lld`, so y will be ignored and `x` will be returned.",
-              N, xlength(y));
+  if (xlength(y) == 0) {
+    return x;
+  }
+  if (xlength(y) != 1 && xlength(y) != N) {
+    warning("Internal error(.and_raw): y had bad length, so x will be returned.");
+    return x;
+  }
+  if (isntRaw(y) && !isLogical(y)) {
+    return y;
+  }
+  if (xlength(y) == 1) {
+    const unsigned char y0 = isntRaw(y) ? (asLogical(y) == 1) : RAW(y)[0];
+    if (y0 == 1) {
+      return x;
     }
-    if (isntRaw(y)) {
-      warning("`y is type '%s' but a RAWSXP was expected, so y will be ignored and `x` will be returned.",
-              type2char(TYPEOF(y)));
+    switch(TYPEOF(x)) {
+    case RAWSXP: {
+      unsigned char * xp = RAW(x);
+      FORLOOP(xp[i] = 0;)
+    }
+      break;
+    case LGLSXP: {
+      int * xp = LOGICAL(x);
+      FORLOOP(xp[i] = 0;)
+    }
+      break;
     }
     return x;
   }
 
-  const unsigned char * yp = RAW(y);
-  if (isntRaw(z)) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-    for (R_xlen_t i = 0; i < N; ++i) {
-      xp[i] &= yp[i];
+
+  switch(TYPEOF(x)) {
+  case LGLSXP: {
+    int * xp = LOGICAL(x);
+    switch(TYPEOF(y)) {
+    case LGLSXP: {
+      const int * yp = LOGICAL(y);
+      FORLOOP(xp[i] &= yp[i];)
     }
-    return x;
+      break;
+    case RAWSXP: {
+      const unsigned char * yp = RAW(y);
+      FORLOOP(xp[i] &= yp[i];)
+    }
+      break;
+    }
   }
-  const unsigned char * zp = RAW(z);
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-  for (R_xlen_t i = 0; i < N; ++i) {
-    xp[i] &= yp[i] & zp[i];
+    break;
+  case RAWSXP: {
+    unsigned char * xp = RAW(x);
+    switch(TYPEOF(y)) {
+    case LGLSXP: {
+      const int * yp = LOGICAL(y);
+      FORLOOP(xp[i] &= yp[i];)
+    }
+      break;
+    case RAWSXP: {
+      const unsigned char * yp = RAW(y);
+      FORLOOP(xp[i] &= yp[i];)
+    }
+      break;
+    }
   }
+    break;
+  }
+
   return x;
+}
 
+SEXP C_or_raw(SEXP x, SEXP y, SEXP nthreads) {
+  int nThread = asInteger(nthreads);
+  R_xlen_t N = xlength(x);
+  if (N == 0) {
+    return x;
+  }
+  if (xlength(y) == 0) {
+    return x;
+  }
+  if (xlength(y) != 1 && xlength(y) != N) {
+    warning("Internal error(.and_raw): y had bad length, so x will be returned.");
+    return x;
+  }
+  if (isntRaw(y) && !isLogical(y)) {
+    return y;
+  }
+  if (xlength(y) == 1) {
+    const unsigned char y0 = isntRaw(y) ? (asLogical(y) == 1) : RAW(y)[0];
+    if (y0 == 0) {
+      return x;
+    }
+    switch(TYPEOF(x)) {
+    case RAWSXP: {
+      unsigned char * xp = RAW(x);
+      FORLOOP(xp[i] = 1;)
+    }
+      break;
+    case LGLSXP: {
+      int * xp = LOGICAL(x);
+      FORLOOP(xp[i] = 1;)
+    }
+      break;
+    }
+    return x;
+  }
+
+
+  switch(TYPEOF(x)) {
+  case LGLSXP: {
+    int * xp = LOGICAL(x);
+    switch(TYPEOF(y)) {
+    case LGLSXP: {
+      const int * yp = LOGICAL(y);
+      FORLOOP(xp[i] |= yp[i];)
+    }
+      break;
+    case RAWSXP: {
+      const unsigned char * yp = RAW(y);
+      FORLOOP(xp[i] |= yp[i];)
+    }
+      break;
+    }
+  }
+    break;
+  case RAWSXP: {
+    unsigned char * xp = RAW(x);
+    switch(TYPEOF(y)) {
+    case LGLSXP: {
+      const int * yp = LOGICAL(y);
+      FORLOOP(xp[i] |= yp[i];)
+    }
+      break;
+    case RAWSXP: {
+      const unsigned char * yp = RAW(y);
+      FORLOOP(xp[i] |= yp[i];)
+    }
+      break;
+    }
+  }
+    break;
+  }
+
+  return x;
 }
 
 
@@ -101,51 +155,6 @@ static unsigned int b_subtract_a(int a, int b) {
   // assumption a <= b
   int64_t a64 = a, b64 = b;
   return b64 - a64;
-}
-
-static void vands_Ibwii(unsigned char * ansp,
-                        const int o,
-                        const int * x,
-                        R_xlen_t N,
-                        const int * y,
-                        int nThread) {
-  int y0 = y[0];
-  int y1 = y[1];
-
-  if (y0 == 0) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-    for (R_xlen_t i = 0; i < N; ++i) {
-      unsigned int xi = x[i];
-      ansp[i] &= xi <= y1;
-    }
-    return;
-  }
-  if (y0 > 0) {
-    const unsigned int b_minus_a = b_subtract_a(y0, y1);
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-    for (R_xlen_t i = 0; i < N; ++i) {
-      unsigned int xi = x[i];
-      ansp[i] &= (xi - y0) <= b_minus_a;
-    }
-    return;
-  }
-  if (y0 < 0) {
-    const unsigned int b_minus_a = b_subtract_a(y0, y1);
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-    for (R_xlen_t i = 0; i < N; ++i) {
-      unsigned int xi = x[i];
-      unsigned int u0 = -y0;
-      ansp[i] &= (xi + u0) <= b_minus_a;
-    }
-    return;
-  }
-
 }
 
 
@@ -485,11 +494,209 @@ static void vand2s_DD(unsigned char * ansp,
   }
 }
 
+static void vand2s_LL(unsigned char * ansp, const int o,
+                    const int * x, R_xlen_t N,
+                    const int * y, R_xlen_t M,
+                    int nThread) {
+  if (M == 1) {
+    const int y0 = y[0];
+    switch(o) {
+    case OP_NI:
+    case OP_NE:
+      FORLOOP(ansp[i] &= x[i] != y0;)
+      break;
+    case OP_IN:
+    case OP_EQ:
+      FORLOOP(ansp[i] &= x[i] == y0;)
+      break;
+    case OP_GE:
+      FORLOOP(ansp[i] &= x[i] >= y0;)
+      break;
+    case OP_LE:
+      FORLOOP(ansp[i] &= x[i] <= y0;)
+      break;
+    case OP_GT:
+      FORLOOP(ansp[i] &= x[i] > y0;)
+      break;
+    case OP_LT:
+      FORLOOP(ansp[i] &= x[i] < y0;)
+      break;
+    }
+    return;
+  }
+  if (M == 2) {
+    switch(o) {
+    case OP_BW:
+      if (y[0] == 0 && y[1] == 1) {
+        return;
+      } else {
+        if (y[0] == 1) {
+          if (y[1] == 0) {
+            FORLOOP(ansp[i] = 0;)
+            return;
+          }
+          FORLOOP(ansp[i] &= x[i] == 1;)
+            return;
+        }
+        return;
+      }
+      break;
+    case OP_WB:
+      if (y[0] == 0 && y[1] == 1) {
+        return;
+      } else {
+        if (y[0] == 1) {
+          if (y[1] == 0) {
+            FORLOOP(ansp[i] = 1;)
+            return;
+          }
+          FORLOOP(ansp[i] &= x[i] == 1;)
+            return;
+        }
+        if (y[1] == 1) {
+          FORLOOP(ansp[i] = 1;)
+        }
+        return;
+      }
+      break;
+    case OP_BO:
+      return;
+    case OP_BC:
+      return;
+    }
+  }
+  if (o == OP_IN && o == OP_NI) {
+    if (M == 0) {
+      // No value is in RHS
+      if (o == OP_IN) {
+        FORLOOP(ansp[i] = 0;)
+      }
+      return;
+    }
+
+    // Reduce to unique elements
+    bool tbl[3] = {0};
+
+
+    for (R_xlen_t j = 0; j < M; ++j) {
+      if (y[j] == 0) {
+        tbl[0] = true;
+      } else if (y[j] == 1) {
+        tbl[1] = true;
+      } else {
+        tbl[2] = true;
+      }
+    }
+    if (tbl[0] && tbl[1] && tbl[2]) {
+      // Any value is in RHS
+      if (o == OP_NI) {
+        FORLOOP(ansp[i] = 0;)
+      } else {
+        // since "AND TRUE" doesn't modify
+        return;
+      }
+      return;
+    }
+    // 2-element table
+    if (tbl[0] && tbl[1]) {
+      if (o == OP_IN) {
+        FORLOOP(ansp[i] &= x[i] != NA_LOGICAL;)
+      } else {
+        FORLOOP(ansp[i] &= x[i] == NA_LOGICAL;)
+      }
+      return;
+    }
+    if (tbl[0] && tbl[2]) {
+      if (o == OP_IN) {
+        FORLOOP(ansp[i] &= x[i] != 1;)
+      } else {
+        FORLOOP(ansp[i] &= x[i] == 1;)
+      }
+      return;
+    }
+    if (tbl[1] && tbl[2]) {
+      if (o == OP_IN) {
+        FORLOOP(ansp[i] &= x[i] != 0;)
+      } else {
+        FORLOOP(ansp[i] &= x[i] == 0;)
+      }
+      return;
+    }
+    // y must be constant
+    if (tbl[0]) {
+      if (o == OP_IN) {
+        FORLOOP(ansp[i] &= x[i] == 0;)
+      } else {
+        FORLOOP(ansp[i] &= x[i] != 0;)
+      }
+    }
+    if (tbl[1]) {
+      if (o == OP_IN) {
+        FORLOOP(ansp[i] &= x[i] == 1;)
+      } else {
+        FORLOOP(ansp[i] &= x[i] != 1;)
+      }
+    }
+    if (tbl[2]) {
+      if (o == OP_IN) {
+        FORLOOP(ansp[i] &= x[i] == NA_LOGICAL;)
+      } else {
+        FORLOOP(ansp[i] &= x[i] != NA_LOGICAL;)
+      }
+    }
+    return;
+  }
+
+
+  if (N == M) {
+    switch(o) {
+    case OP_NE:
+      FORLOOP(ansp[i] &= x[i] != y[i];)
+      break;
+    case OP_EQ:
+      FORLOOP(ansp[i] &= x[i] == y[i];)
+      break;
+    case OP_GE:
+      FORLOOP(ansp[i] &= x[i] >= y[i];)
+      break;
+    case OP_LE:
+      FORLOOP(ansp[i] &= x[i] <= y[i];)
+      break;
+    case OP_GT:
+      FORLOOP(ansp[i] &= x[i] > y[i];)
+      break;
+    case OP_LT:
+      FORLOOP(ansp[i] &= x[i] < y[i];)
+      break;
+    }
+  }
+}
+
+static void vand2s_L(unsigned char * ansp, const int o,
+                     const int * x, R_xlen_t N,
+                     int nThread) {
+  if (o == OP_EQ) {
+    FORLOOP(ansp[i] &= x[i] == 1;)
+  } else {
+    FORLOOP(ansp[i] &= x[i] != 1;)
+  }
+}
+
 static void vand2s(unsigned char * ansp, const int o,
                    SEXP x, SEXP y, int nThread) {
   R_xlen_t N = xlength(x);
   R_xlen_t M = xlength(y);
   switch(TYPEOF(x)) {
+  case LGLSXP:
+    switch(TYPEOF(y)) {
+    case LGLSXP:
+      vand2s_LL(ansp, o, LOGICAL(x), N, LOGICAL(y), M, nThread);
+      break;
+    default:
+      vand2s_L(ansp, o, LOGICAL(x), N, nThread);
+    }
+    break;
+
   case INTSXP:
     switch(TYPEOF(y)) {
     case INTSXP:
@@ -512,8 +719,6 @@ static void vand2s(unsigned char * ansp, const int o,
     break;
   }
 }
-
-
 
 SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
            SEXP oo2, SEXP xx2, SEXP yy2,
@@ -590,6 +795,10 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
   UNPROTECT(1);
   return ans;
 }
+
+
+
+
 
 
 

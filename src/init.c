@@ -9,7 +9,7 @@
 
 /* .Call calls */
 extern SEXP C_abs_diff(SEXP, SEXP, SEXP, SEXP);
-extern SEXP C_and_raw(SEXP, SEXP, SEXP, SEXP);
+extern SEXP C_and_raw(SEXP, SEXP, SEXP);
 extern SEXP C_character2integer(SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_comma(SEXP, SEXP, SEXP);
 extern SEXP C_empty(SEXP, SEXP, SEXP, SEXP);
@@ -18,6 +18,7 @@ extern SEXP C_haversineDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_match_min_Haversine(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_Mode(SEXP);
 extern SEXP C_op2M(SEXP);
+extern SEXP C_or_raw(SEXP, SEXP, SEXP);
 extern SEXP C_theEmptiestQuarters(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_theEuclidDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_which_and1s(SEXP, SEXP, SEXP, SEXP);
@@ -31,10 +32,11 @@ extern SEXP Callocate0_except(SEXP, SEXP, SEXP, SEXP);
 extern SEXP Callocate0_int(SEXP, SEXP);
 extern SEXP CallocateConstants(SEXP, SEXP);
 extern SEXP Cand3(SEXP, SEXP, SEXP);
-extern SEXP Cand3s_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cands(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP CAnyCharMatch(SEXP, SEXP, SEXP);
 extern SEXP CanyOutside(SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP CBetween(SEXP, SEXP, SEXP, SEXP);
+extern SEXP Ccoalesce0(SEXP, SEXP);
 extern SEXP Ccount_logical(SEXP, SEXP);
 extern SEXP Ccumsum_reset(SEXP, SEXP);
 extern SEXP Ccumsum_reset_sorted_int(SEXP);
@@ -44,6 +46,7 @@ extern SEXP Cdivisible(SEXP, SEXP, SEXP);
 extern SEXP Cdivisible16(SEXP, SEXP);
 extern SEXP Cdivisible2(SEXP, SEXP, SEXP);
 extern SEXP CEmptiestQuarter(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP Cevery_int32(SEXP, SEXP);
 extern SEXP CextractMandatory(SEXP, SEXP, SEXP);
 extern SEXP CfirstNonNegativeRadix(SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cforce_as_integer(SEXP, SEXP);
@@ -59,7 +62,7 @@ extern SEXP Cisnt_sorted(SEXP, SEXP);
 extern SEXP Cminmax(SEXP, SEXP, SEXP);
 extern SEXP Cna_and(SEXP);
 extern SEXP Cor3(SEXP, SEXP, SEXP);
-extern SEXP Cor3_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP Cors(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cpar_in_int(SEXP, SEXP, SEXP);
 extern SEXP Cpar_in_intchar(SEXP, SEXP, SEXP);
 extern SEXP Cpmax(SEXP, SEXP, SEXP, SEXP);
@@ -78,7 +81,7 @@ extern SEXP Craw2lgl(SEXP, SEXP);
 extern SEXP CSquish(SEXP, SEXP);
 extern SEXP CStringEqual(SEXP, SEXP);
 extern SEXP Csum_isna(SEXP, SEXP);
-extern SEXP Csum3s_par(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP Csum_raw(SEXP, SEXP);
 extern SEXP Csummary3(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cuminus(SEXP, SEXP);
 extern SEXP Cwhere_square_bracket_opens(SEXP, SEXP);
@@ -106,7 +109,7 @@ extern SEXP fmatch(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"C_abs_diff",                    (DL_FUNC) &C_abs_diff,                     4},
-    {"C_and_raw",                     (DL_FUNC) &C_and_raw,                      4},
+    {"C_and_raw",                     (DL_FUNC) &C_and_raw,                      3},
     {"C_character2integer",           (DL_FUNC) &C_character2integer,            4},
     {"C_comma",                       (DL_FUNC) &C_comma,                        3},
     {"C_empty",                       (DL_FUNC) &C_empty,                        4},
@@ -115,6 +118,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"C_match_min_Haversine",         (DL_FUNC) &C_match_min_Haversine,         11},
     {"C_Mode",                        (DL_FUNC) &C_Mode,                         1},
     {"C_op2M",                        (DL_FUNC) &C_op2M,                         1},
+    {"C_or_raw",                      (DL_FUNC) &C_or_raw,                       3},
     {"C_theEmptiestQuarters",         (DL_FUNC) &C_theEmptiestQuarters,          7},
     {"C_theEuclidDistance",           (DL_FUNC) &C_theEuclidDistance,            5},
     {"C_which_and1s",                 (DL_FUNC) &C_which_and1s,                  4},
@@ -128,10 +132,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"Callocate0_int",                (DL_FUNC) &Callocate0_int,                 2},
     {"CallocateConstants",            (DL_FUNC) &CallocateConstants,             2},
     {"Cand3",                         (DL_FUNC) &Cand3,                          3},
-    {"Cand3s_par",                    (DL_FUNC) &Cand3s_par,                    16},
     {"Cands",                         (DL_FUNC) &Cands,                          7},
     {"CAnyCharMatch",                 (DL_FUNC) &CAnyCharMatch,                  3},
     {"CanyOutside",                   (DL_FUNC) &CanyOutside,                    5},
+    {"CBetween",                      (DL_FUNC) &CBetween,                       4},
+    {"Ccoalesce0",                    (DL_FUNC) &Ccoalesce0,                     2},
     {"Ccount_logical",                (DL_FUNC) &Ccount_logical,                 2},
     {"Ccumsum_reset",                 (DL_FUNC) &Ccumsum_reset,                  2},
     {"Ccumsum_reset_sorted_int",      (DL_FUNC) &Ccumsum_reset_sorted_int,       1},
@@ -141,6 +146,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cdivisible16",                  (DL_FUNC) &Cdivisible16,                   2},
     {"Cdivisible2",                   (DL_FUNC) &Cdivisible2,                    3},
     {"CEmptiestQuarter",              (DL_FUNC) &CEmptiestQuarter,               6},
+    {"Cevery_int32",                  (DL_FUNC) &Cevery_int32,                   2},
     {"CextractMandatory",             (DL_FUNC) &CextractMandatory,              3},
     {"CfirstNonNegativeRadix",        (DL_FUNC) &CfirstNonNegativeRadix,         4},
     {"Cforce_as_integer",             (DL_FUNC) &Cforce_as_integer,              2},
@@ -156,7 +162,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cminmax",                       (DL_FUNC) &Cminmax,                        3},
     {"Cna_and",                       (DL_FUNC) &Cna_and,                        1},
     {"Cor3",                          (DL_FUNC) &Cor3,                           3},
-    {"Cor3_par",                      (DL_FUNC) &Cor3_par,                      16},
+    {"Cors",                          (DL_FUNC) &Cors,                           7},
     {"Cpar_in_int",                   (DL_FUNC) &Cpar_in_int,                    3},
     {"Cpar_in_intchar",               (DL_FUNC) &Cpar_in_intchar,                3},
     {"Cpmax",                         (DL_FUNC) &Cpmax,                          4},
@@ -175,7 +181,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"CSquish",                       (DL_FUNC) &CSquish,                        2},
     {"CStringEqual",                  (DL_FUNC) &CStringEqual,                   2},
     {"Csum_isna",                     (DL_FUNC) &Csum_isna,                      2},
-    {"Csum3s_par",                    (DL_FUNC) &Csum3s_par,                    26},
+    {"Csum_raw",                      (DL_FUNC) &Csum_raw,                       2},
     {"Csummary3",                     (DL_FUNC) &Csummary3,                      5},
     {"Cuminus",                       (DL_FUNC) &Cuminus,                        2},
     {"Cwhere_square_bracket_opens",   (DL_FUNC) &Cwhere_square_bracket_opens,    2},

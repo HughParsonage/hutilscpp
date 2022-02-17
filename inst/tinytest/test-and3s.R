@@ -69,36 +69,10 @@ expect_equal(and3s(x %in% c(3, 1, 2), x %in% c(2, 3, 1)),
              `&`(x %in% c(3, 1, 2), x %in% c(2, 3, 1)))
 # })
 
-# test_that("is_binary_sexp", {
-is_binary_sexp <- hutilscpp:::is_binary_sexp
-a <- 5
-ff <- function(expr) is_binary_sexp(substitute(expr))
-expect_true(ff(a > 1L))
-expect_false(ff(mean(a) > 1))
-# })
 
-# test_that("do_and3", {
-do_and3s <- hutilscpp:::do_and3
-library(data.table)
-DT1 <- CJ(m = c(TRUE, FALSE),
-          n = c(TRUE, FALSE),
-          o = c(TRUE, FALSE))
-DT1[, the_do_and3 := do_and3(m, n, o)]
-DT1[, the_do_and2 := do_and3(m, n, TRUE)]
-DT1[, the_do_and4 := and3s(m, n, o)]
-DT1[, the_do_and5 := and3s(m, n)]
-DT1[, base_and3 := m & n & o]
-DT1[, base_and2 := m & n]
 
-expect_equal(DT1[["the_do_and3"]],
-             DT1[["base_and3"]])
-expect_equal(DT1[["the_do_and4"]],
-             DT1[["base_and3"]])
-expect_equal(DT1[["the_do_and2"]],
-             DT1[["base_and2"]])
-expect_equal(DT1[["the_do_and5"]],
-             DT1[["base_and2"]])
-# })
+
+
 
 
 # test_that("and3 mixture of symbols and calls", {

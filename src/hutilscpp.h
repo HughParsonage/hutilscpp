@@ -37,12 +37,70 @@
 #define OP_BO 9
 #define OP_BC 10
 #define OP_NI 11
+#define OP_WB 12
+#define OP_TRUE 13
+#define OP_FALSE 14
 
 #define NA_INT -2147483648
 
 #define CF_LEN_1 1
 #define CF_LEN_2 2
 #define CF_LEN_N -1
+
+// number of elements where we can just do a linear search for in
+#define MAX_NAIVE_IN 30
+
+#if defined _OPENMP && _OPENMP >= 201511
+#define FORLOOP(content)                                                \
+_Pragma("omp parallel for num_threads(nThread)")                        \
+  for (R_xlen_t i = 0; i < N; ++i) {                                    \
+    content                                                             \
+  }
+#else
+#define FORLOOP(content)                                       \
+for (R_xlen_t i = 0; i < N; ++i) {                             \
+  content                                                      \
+}
+#endif
+
+#if defined _OPENMP && _OPENMP >= 201511
+#define FORLOOP_ands(op, rhs)                                                 \
+_Pragma("omp parallel for num_threads(nThread)")                              \
+  for (R_xlen_t i = 0; i < N; ++i) {                                          \
+    ansp[i] &= x[i] op rhs;                                                   \
+  }
+#else
+#define FORLOOP_ands(op, rhs)                                   \
+for (R_xlen_t i = 0; i < N; ++i) {                              \
+  ansp[i] &= x[i] op rhs;                                       \
+}
+#endif
+
+#if defined _OPENMP && _OPENMP >= 201511
+#define FORLOOP_redsum(content)                                                        \
+_Pragma("omp parallel for num_threads(nThread) reduction(+:o)")                        \
+  for (R_xlen_t i = 0; i < N; ++i) {                                                   \
+    content                                                                            \
+  }
+#else
+#define FORLOOP_redsum(content)                                       \
+for (R_xlen_t i = 0; i < N; ++i) {                                    \
+  content                                                             \
+}
+#endif
+
+#if defined _OPENMP && _OPENMP >= 201511
+#define FORLOOP_redand(content)                                                        \
+_Pragma("omp parallel for num_threads(nThread) reduction(&&:o)")                        \
+  for (R_xlen_t i = 0; i < N; ++i) {                                                   \
+    content                                                                            \
+  }
+#else
+#define FORLOOP_redand(content)                                       \
+for (R_xlen_t i = 0; i < N; ++i) {                                    \
+  content                                                             \
+}
+#endif
 
 
 extern int tens[10];
@@ -58,8 +116,13 @@ SEXP RawN(R_xlen_t N);
 // altrep
 bool is_altrep(SEXP x);
 
+// between.c
+bool betweeniiuu(unsigned int x, unsigned int a, unsigned b) ;
+
 int do_op2M(const char * x);
 int sex2op(SEXP oo);
+int rev_op(int op);
+int inv_op(int op);
 
 // asInteger2
 int asInteger2(SEXP x);

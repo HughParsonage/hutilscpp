@@ -31,4 +31,8 @@
   or(x <= a, x >= b)
 }
 
+Between <- function(x, a, b, m = 0L) {
+  .Call("CBetween", x, a, b, m, PACKAGE = "hutilscpp")
+}
+
 

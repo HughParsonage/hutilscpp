@@ -50,8 +50,44 @@ void do_uchar_in_II(unsigned char * ansp,
     ymin = ypi < ymin ? ypi : ymin;
     ymax = ypi > ymax ? ypi : ymax;
   }
+  if (ymin >= 0) {
+    // can assume range is ok and differences are integer, always
+    int y_range = ymax - ymin;
+    if (y_range > N * 2) {
+
+    }
+    unsigned char * yc = malloc(sizeof(char) * y_range);
+    if (yc == NULL) {
+      fail[0] = 1;
+      return;
+    }
+    memset(yc, opposite, sizeof(char) * y_range);
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread)
+#endif
+    for (int i = 0; i < M; ++i) {
+      yc[yp[i] - ymin] = !opposite;
+    }
+    memset(ansp, 0, sizeof(char) * N);
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread)
+#endif
+    for (R_xlen_t i = 0; i < N; ++i) {
+      unsigned int xpi = xp[i];
+      unsigned int upi = xpi - ymin;
+      if (upi >= y_range) {
+        continue;
+      }
+      ansp[i] = yc[upi];
+    }
+    free(yc);
+    fail[0] = 0;
+    return;
+  }
+  // Otherwise we have to be more careful
   int64_t y_range = ymax;
-  y_range -= ymin;
+  int64_t ymin64 = ymin;
+  y_range -= ymin64;
   y_range++;
   unsigned char * yc = malloc(sizeof(char) * y_range);
   if (yc == NULL) {
@@ -63,19 +99,21 @@ void do_uchar_in_II(unsigned char * ansp,
 #pragma omp parallel for num_threads(nThread)
 #endif
   for (int i = 0; i < M; ++i) {
-    yc[yp[i] - ymin] = 1;
+    int64_t ypi = yp[i];
+    yc[ypi - ymin64] = 1;
   }
-  memset(ansp, !opposite, sizeof(char) * N);
+  memset(ansp, 0, sizeof(char) * N);
 #if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
 #endif
   for (R_xlen_t i = 0; i < N; ++i) {
     int xpi = xp[i];
-    unsigned int upi = xpi - ymin;
-    if (upi >= y_range) {
+    if (xpi < ymin || xpi > ymax) {
       continue;
     }
-    ansp[i] ^= yc[upi];
+    int64_t upi = (int64_t)xpi - ymin64;
+
+    ansp[i] = yc[upi];
   }
   free(yc);
   fail[0] = 0;
