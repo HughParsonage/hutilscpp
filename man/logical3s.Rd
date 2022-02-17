@@ -11,8 +11,9 @@ and3s(
   exprB,
   exprC,
   ...,
+  nThread = getOption("hutilscpp.nThread", 1L),
   .parent_nframes = 1L,
-  nThread = getOption("hutilscpp.nThread", 1L)
+  type = c("logical", "raw", "which")
 )
 
 or3s(
@@ -20,8 +21,9 @@ or3s(
   exprB,
   exprC,
   ...,
+  nThread = getOption("hutilscpp.nThread", 1L),
   .parent_nframes = 1L,
-  nThread = getOption("hutilscpp.nThread", 1L)
+  type = c("logical", "raw", "which")
 )
 }
 \arguments{
@@ -30,13 +32,18 @@ with \code{<op>} one of the standard binary operators.
 
 Only \code{exprA} is required, all following expressions are optional.}
 
+\item{nThread}{\describe{
+\item{\code{integer(1)}}{Number of threads to use.}
+}}
+
 \item{.parent_nframes}{\describe{
 \item{\code{integer(1)}}{For internal use. Passed to \code{eval.parent}.}
 }}
 
-\item{nThread}{\describe{
-\item{\code{integer(1)}}{Number of threads to use.}
-}}
+\item{type}{The type of the result. \code{which} corresponds to the
+indices of \code{TRUE} in the result. Type \code{raw} is available
+for a memory-constrained result, though the result will not be
+interpreted as logical.}
 }
 \value{
 \code{and3s} and \code{or3s} return \code{exprA & exprB & exprC} and

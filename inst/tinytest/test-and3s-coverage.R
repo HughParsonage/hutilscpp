@@ -1,16 +1,9 @@
 # test_that("is_lgl_sym works", {
 if (at_home() || hutilscpp:::is_covr()) {
 library(hutilscpp)
-is_lgl_sym <- hutilscpp:::is_lgl_sym
 
 "%(between)%" <- hutilscpp:::`%(between)%`
 "%]between[%" <- hutilscpp:::`%]between[%`
-
-A <- 1L
-expect_false(is_lgl_sym(A))
-expect_false(is_lgl_sym(A == 1L))
-B <- A == 1L
-expect_true(B)
 # })
 
 # test_that("A in len>100 ", {

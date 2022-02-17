@@ -16,6 +16,11 @@
 #' \item{\code{integer(1)}}{Number of threads to use.}
 #' }
 #'
+#' @param type The type of the result. \code{which} corresponds to the
+#' indices of \code{TRUE} in the result. Type \code{raw} is available
+#' for a memory-constrained result, though the result will not be
+#' interpreted as logical.
+#'
 #'
 #'
 #'
@@ -31,439 +36,207 @@
 #'
 NULL
 
+#' @rdname logical3s
+#' @export
+and3s <- function(exprA, exprB, exprC,
+                  ...,
+                  nThread = getOption("hutilscpp.nThread", 1L),
+                  .parent_nframes = 1L,
+                  type = c("logical", "raw", "which")) {
 
-is_binary_sexp <- function(sexprA, .parent_nframes = 2L) {
-  # e.g.
-  #      x > -1L
-  isBinary <-
-    is.call(sexprA) &&
-    length(sexprA) == 3L &&
-    (M <- op2M(as.character(sexprA[[1L]]))) &&
-    is.name(lhs <- sexprA[[2L]])
+  sexprA <- substitute(exprA)
+  type <-
+    switch(type[[1L]],
+           raw = "raw",
+           logical = "logical",
+           which = "which",
+           "raw")
 
+  oo1 <- xx1 <- yy1 <-
+    oo2 <- xx2 <- yy2 <- NULL
 
-  if (isBinary) {
-    # c(1, 2)  gives rhs a language object, but rhs_eval is length-2 numeric
-    # lhs <- sexprA[[2]]
-    rhs <- sexprA[[3]]
-
-    # lhs_eval <- eval.parent(lhs)
-
-
-    attr(isBinary, "M") <- M
-    attr(isBinary, "lhs") <- lhs
-    attr(isBinary, "rhs") <- rhs
-    attr(isBinary, "rhs_eval") <- rhs_eval <- eval.parent(rhs, n = .parent_nframes)
-
-    if (OR(is.integer(rhs),
-           AND(is.integer(rhs_eval),
-               OR(length(rhs_eval) == 1L,
-                  OR((M == op2M("%between%") ||
-                      M == op2M("%(between)%") ||
-                      M == op2M("%]between[%")) &&
-                     length(rhs_eval) == 2L,
-                     M == op2M("%in%")))))) {
-      attr(isBinary, "rhs_eval") <- rhs_eval
-      return(isBinary)
+  if (length(sexprA) == 3L) {
+    oo1 <- as.character(sexprA[[1L]])
+    xx1 <- eval.parent(sexprA[[2L]], n = .parent_nframes)
+    yy1 <- eval.parent(sexprA[[3L]], n = .parent_nframes)
+  } else if (length(sexprA) == 2L) {
+    oo1 <- as.character(sexprA[[1L]])
+    xx1 <- eval.parent(sexprA[[2L]], n = .parent_nframes)
+  } else {
+    oo1 <- "=="
+    xx1 <- exprA
+  }
+  if (!is.null(xx1) && length(xx1) <= 1e3L) {
+    # Don't bother (or still NULL)
+    if (missing(exprC)) {
+      if (missing(exprB)) {
+        return(exprA)
+      }
+      return(exprA & exprB)
+    } else {
+      if (missing(exprB)) {
+        return(exprA & Reduce("&", list(exprC, ...)))
+      } else {
+        if (missing(exprC)) {
+          return(exprA & exprB & Reduce("&", list(...)))
+        } else {
+          return(exprA & exprB & exprC & Reduce("&", list(exprC, ...)))
+        }
+      }
     }
   }
-  FALSE
-}
 
-is_lgl_sym <- function(sexpr, expr) {
-  # Symbol first since is.logical will evaluate
-  # Keep expr from evaluating so that the call can
-  # be separated
-  is.symbol(sexpr) && is.logical(expr)
-}
-
-is_lgl_negation <- function(sexpr, expr) {
-  is.call(sexpr) && as.character(sexpr)[[1]] == "!" &&
-    length(sexpr) > 1L &&
-    is.symbol(sexpr[[2]])
+  if (!missing(exprB)) {
+    sexprB <- substitute(exprB)
+    if (length(sexprB) == 3L) {
+      oo2 <- as.character(sexprB[[1L]])
+      xx2 <- eval.parent(sexprB[[2L]], n = .parent_nframes)
+      yy2 <- eval.parent(sexprB[[3L]], n = .parent_nframes)
+    } else if (length(sexprB) == 2L) {
+      oo2 <- as.character(sexprB[[1L]])
+      xx2 <- eval.parent(sexprB[[2L]], n = .parent_nframes)
+    } else {
+      oo2 <- "=="
+      xx2 <- exprB
+    }
+  }
+  ans <-
+    .Call("Cands",
+          oo1, xx1, yy1,
+          oo2, xx2, yy2,
+          nThread,
+          PACKAGE = "hutilscpp")
+  if (is.null(ans)) {
+    message("Falling back to `&`")
+    # fall back
+    if (missing(exprC)) {
+      return(exprA & exprB)
+    } else {
+      return(exprA & exprB & exprC)
+    }
+  }
+  if (missing(exprC) && missing(..1)) {
+    return(switch(type,
+                  raw = ans,
+                  logical = raw2lgl(ans, nThread = nThread),
+                  which = which_raw(ans)))
+  }
+  .and_raw(ans,
+           eval.parent(substitute(and3s(exprC, ...,
+                                        nThread = nThread,
+                                        type = "raw"))),
+           nThread = nThread)
+  return(switch(type,
+                raw = ans,
+                logical = raw2lgl(ans, nThread = nThread),
+                which = which_raw(ans)))
 }
 
 #' @rdname logical3s
 #' @export
-and3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
-                  nThread = getOption("hutilscpp.nThread", 1L)) {
-  nThread <- check_omp(nThread)
-
+or3s <- function(exprA, exprB, exprC,
+                  ...,
+                  nThread = getOption("hutilscpp.nThread", 1L),
+                  .parent_nframes = 1L,
+                  type = c("logical", "raw", "which")) {
+  type <-
+    switch(type[[1L]],
+           raw = "raw",
+           logical = "logical",
+           which = "which",
+           "raw")
+  if (missing(exprB) && !missing(exprC)) {
+    if (missing(..1)) {
+      return(eval.parent(substitute(or3s(exprA, exprC, nThread = nThread, type = type))))
+    } else {
+      return(eval.parent(substitute(or3s(exprA, exprC, ..., nThread = nThread, type = type))))
+    }
+  }
   sexprA <- substitute(exprA)
-  sexprB <- substitute(exprB)
-  sexprC <- substitute(exprC)
 
-  X3 <- Y3 <- Z3 <- integer(0)
-  A <- B <- C <- logical(0)
-  x <- y <- z <- integer(0)
-  ox <- oy <- oz <- -1L
-  x1 <- y1 <- z1 <- 0L
-  x2 <- y2 <- z2 <- 0L
 
-  is_seq <- function(A) {
-    identical(A, seq.int(A[1L], along.with = A))
-  }
+  oo1 <- xx1 <- yy1 <-
+    oo2 <- xx2 <- yy2 <- NULL
 
-  isBinaryA <- is_binary_sexp(sexprA, .parent_nframes = .parent_nframes + 1L)
-  if (isBinaryA) {
-    x <- eval.parent(sexprA[[2]], n = .parent_nframes)
-    ox <- attr(isBinaryA, "M")
-    rhs_eval <- attr(isBinaryA, "rhs_eval")
-    if (ox == op2M("%between%") ||
-        ox == op2M("%(between)%") ||
-        ox == op2M("%]between[%")) {#  between so two elements
-      x1 <- rhs_eval[[1]]
-      x2 <- rhs_eval[[2]]
-    } else if (ox == op2M("%in%")) {
-      X3 <- rhs_eval
-
-      x1 <- X3[1]
-      if (is_seq(X3)) {
-        x2 <- X3[length(X3)]
-        ox <- op2M("%between%")
-      } else {
-        if (length(X3) > 100L) {
-          A <- x %in% X3
-        } else {
-          A <- do_par_in(x, X3, nThread = nThread)
-        }
-        x <- integer(0)
-        ox <- -1L
-        x2 <- X3[2]
-      }
-    } else {
-      x1 <- x2 <- attr(isBinaryA, "rhs_eval")
-    }
-
-  } else if (is_lgl_negation(sexprA, exprA)) {
-    A <- eval.parent(sexprA[[2]], n = .parent_nframes)
-    ox <- 1L
+  if (length(sexprA) == 3L) {
+    oo1 <- as.character(sexprA[[1L]])
+    xx1 <- eval.parent(sexprA[[2L]], n = .parent_nframes)
+    yy1 <- eval.parent(sexprA[[3L]], n = .parent_nframes)
+  } else if (length(sexprA) == 2L) {
+    oo1 <- as.character(sexprA[[1L]])
+    xx1 <- eval.parent(sexprA[[2L]], n = .parent_nframes)
   } else {
-    A <- exprA
+    oo1 <- "=="
+    xx1 <- exprA
   }
+  if (!is.null(xx1) && length(xx1) <= 1e3L) {
+    # Don't bother (or still NULL)
+    if (missing(..1)) {
+      if (missing(exprB)) {
+        return(exprA)
+      }
+      if (missing(exprC)) {
+        return(exprA | exprB)
+      } else {
+        return(exprA | exprB | exprC)
+      }
+    } else {
+      if (missing(exprB)) {
+        return(exprA | Reduce(`|`, list(...)))
+      } else {
+        if (missing(exprC)) {
+          return(exprA | exprB | Reduce(`|`, list(...)))
+        } else {
+          return(exprA | exprB | exprC | Reduce(`|`, list(...)))
+        }
+      }
+    }
+  }
+
   if (!missing(exprB)) {
-    isBinaryB <- is_binary_sexp(sexprB, .parent_nframes = .parent_nframes + 1L)
-    if (isBinaryB) {
-      y <- eval.parent(sexprB[[2]], n = .parent_nframes)
-      oy <- attr(isBinaryB, "M")
-      rhs_eval <- attr(isBinaryB, "rhs_eval")
-      if (oy == op2M("%between%") ||
-          oy == op2M("%(between)%") ||
-          oy == op2M("%]between[%")) { # between so two elements
-        y1 <- rhs_eval[[1]]
-        y2 <- rhs_eval[[2]]
-      } else if (oy == op2M("%in%")) {
-        Y3 <- rhs_eval
-        stopifnot(length(Y3) > 1)
-        y1 <- Y3[1L]
-        if (is_seq(Y3)) {
-          # Treat x %in% a:b as x %between% c(a, b)
-          y2 <- Y3[length(Y3)]
-          oy <- op2M("%between%")
-        } else {
-          if (length(Y3) > 100L) {
-            B <- y %in% Y3
-          } else {
-            B <- do_par_in(y, Y3, nThread = nThread)
-          }
-          y <- integer(0)
-          oy <- -1L
-          y2 <- Y3[2]
-        }
-      } else {
-        y1 <- y2 <- rhs_eval
-      }
-
-    } else if (is_lgl_negation(sexprB, exprB)) {
-      # Make coverage explicit
-      if (.parent_nframes > 1L) {
-        B <- eval.parent(sexprB[[2]], n = .parent_nframes)
-      } else {
-        B <- eval.parent(sexprB[[2]], n = .parent_nframes)
-      }
-      oy <- 1L
+    sexprB <- substitute(exprB)
+    if (length(sexprB) == 3L) {
+      oo2 <- as.character(sexprB[[1L]])
+      xx2 <- eval.parent(sexprB[[2L]], n = .parent_nframes)
+      yy2 <- eval.parent(sexprB[[3L]], n = .parent_nframes)
+    } else if (length(sexprB) == 2L) {
+      oo2 <- as.character(sexprB[[1L]])
+      xx2 <- eval.parent(sexprB[[2L]], n = .parent_nframes)
     } else {
-      B <- exprB
-    }
-  }
-
-
-  if (!missing(exprC)) {
-    isBinaryC <- is_binary_sexp(sexprC, .parent_nframes = .parent_nframes + 1L)
-
-    if (isBinaryC) {
-      z <- eval.parent(sexprC[[2]], n = .parent_nframes)
-      oz <- attr(isBinaryC, "M")
-      rhs_eval <- attr(isBinaryC, "rhs_eval")
-      if (oz == op2M("%between%") ||
-          oz == op2M("%(between)%") ||
-          oz == op2M("%]between[%")) { # between so two elements
-        z1 <- rhs_eval[[1]]
-        z2 <- rhs_eval[[2]]
-      } else if (oz == op2M("%in%")) {
-        Z3 <- rhs_eval
-        stopifnot(length(Z3) > 1)
-        z1 <- Z3[1]
-        if (is_seq(Z3)) {
-          z2 <- Z3[length(Z3)]
-          oz <- op2M("%between%")
-        } else {
-          if (length(Z3) > 100L) {
-            C <- z %in% Z3
-          } else {
-            C <- do_par_in(z, Z3, nThread = nThread)
-          }
-          z <- integer(0L)
-          oz <- -1L
-        }
-      } else {
-        z1 <- z2 <- rhs_eval
-      }
-
-    } else if (is_lgl_negation(sexprC, exprC)) {
-      C <- eval.parent(sexprC[[2]], n = .parent_nframes)
-      oz <- 1L
-    } else {
-      C <- exprC
-    }
-  }
-
-  ans <-
-    do_and3_par(x, ox, x1, x2,
-                y, oy, y1, y2,
-                z, oz, z1, z2,
-                A, B, C,
-                deparse(sexprA),
-                nThread = nThread)
-
-  if (missing(..1)) {
-    return(raw2lgl(ans))
-  }
-
-  and3s(raw2lgl(ans), ..., .parent_nframes = .parent_nframes + 1L, nThread = nThread)
-}
-
-#' @rdname logical3s
-#' @export
-
-or3s <- function(exprA, exprB, exprC, ..., .parent_nframes = 1L,
-                 nThread = getOption("hutilscpp.nThread", 1L)) {
-  nThread <- check_omp(nThread)
-
-  sexprA <- substitute(exprA)
-  sexprB <- substitute(exprB)
-  sexprC <- substitute(exprC)
-
-  X3 <- Y3 <- Z3 <- integer(0)
-  A <- B <- C <- logical(0)
-  x <- y <- z <- integer(0)
-  ox <- oy <- oz <- -1L
-  x1 <- y1 <- z1 <- 0L
-  x2 <- y2 <- z2 <- 0L
-
-  is_seq <- function(A) {
-    identical(A, seq.int(A[1L], along.with = A))
-  }
-
-  isBinaryA <- is_binary_sexp(sexprA, .parent_nframes = .parent_nframes + 1L)
-  if (isBinaryA) {
-    x <- eval.parent(sexprA[[2]], n = .parent_nframes)
-    ox <- attr(isBinaryA, "M")
-    rhs_eval <- attr(isBinaryA, "rhs_eval")
-    if (ox == op2M("%between%") ||
-        ox == op2M("%(between)%") ||
-        ox == op2M("%]between[%")) {#  between so two elements
-      x1 <- rhs_eval[[1]]
-      x2 <- rhs_eval[[2]]
-    } else if (ox == op2M("%in%")) {
-      X3 <- rhs_eval
-
-      x1 <- X3[1]
-      if (is_seq(X3)) {
-        x2 <- X3[length(X3)]
-        ox <- op2M("%between%")
-      } else {
-        if (length(X3) > 100L) {
-          A <- x %in% X3
-        } else {
-          A <- do_par_in(x, X3, nThread = nThread)
-        }
-        x <- integer(0)
-        ox <- -1L
-        x2 <- X3[2]
-      }
-    } else {
-      x1 <- x2 <- attr(isBinaryA, "rhs_eval")
-    }
-
-  } else if (is_lgl_negation(sexprA, exprA)) {
-    A <- eval.parent(sexprA[[2]], n = .parent_nframes)
-    ox <- 1L
-  } else {
-    A <- exprA
-  }
-  if (!missing(exprB)) {
-    isBinaryB <- is_binary_sexp(sexprB, .parent_nframes = .parent_nframes + 1L)
-    if (isBinaryB) {
-      y <- eval.parent(sexprB[[2]], n = .parent_nframes)
-      oy <- attr(isBinaryB, "M")
-      rhs_eval <- attr(isBinaryB, "rhs_eval")
-      if (oy == op2M("%between%") ||
-          oy == op2M("%(between)%") ||
-          oy == op2M("%]between[%")) { # between so two elements
-        y1 <- rhs_eval[[1]]
-        y2 <- rhs_eval[[2]]
-      } else if (oy == op2M("%in%")) {
-        Y3 <- rhs_eval
-        stopifnot(length(Y3) > 1)
-        y1 <- Y3[1L]
-        if (is_seq(Y3)) {
-          # Treat x %in% a:b as x %between% c(a, b)
-          y2 <- Y3[length(Y3)]
-          oy <- op2M("%between%")
-        } else {
-          if (length(Y3) > 100L) {
-            B <- y %in% Y3
-          } else {
-            B <- do_par_in(y, Y3, nThread = nThread)
-          }
-          y <- integer(0)
-          oy <- -1L
-          y2 <- Y3[2]
-        }
-      } else {
-        y1 <- y2 <- rhs_eval
-      }
-
-    } else if (is_lgl_negation(sexprB, exprB)) {
-      # Make coverage explicit
-      if (.parent_nframes > 1L) {
-        B <- eval.parent(sexprB[[2]], n = .parent_nframes)
-      } else {
-        B <- eval.parent(sexprB[[2]], n = .parent_nframes)
-      }
-      oy <- 1L
-    } else {
-      B <- exprB
-    }
-  }
-
-
-  if (!missing(exprC)) {
-    isBinaryC <- is_binary_sexp(sexprC, .parent_nframes = .parent_nframes + 1L)
-
-    if (isBinaryC) {
-      z <- eval.parent(sexprC[[2]], n = .parent_nframes)
-      oz <- attr(isBinaryC, "M")
-      rhs_eval <- attr(isBinaryC, "rhs_eval")
-      if (oz == op2M("%between%") ||
-          oz == op2M("%(between)%") ||
-          oz == op2M("%]between[%")) { # between so two elements
-        z1 <- rhs_eval[[1]]
-        z2 <- rhs_eval[[2]]
-      } else if (oz == op2M("%in%")) {
-        Z3 <- rhs_eval
-        stopifnot(length(Z3) > 1)
-        z1 <- Z3[1]
-        if (is_seq(Z3)) {
-          z2 <- Z3[length(Z3)]
-          oz <- op2M("%between%")
-        } else {
-          if (length(Z3) > 100L) {
-            C <- z %in% Z3
-          } else {
-            C <- do_par_in(z, Z3, nThread = nThread)
-          }
-          z <- integer(0L)
-          oz <- -1L
-        }
-      } else {
-        z1 <- z2 <- rhs_eval
-      }
-
-    } else if (is_lgl_negation(sexprC, exprC)) {
-      C <- eval.parent(sexprC[[2]], n = .parent_nframes)
-      oz <- 1L
-    } else {
-      C <- exprC
+      oo2 <- "=="
+      xx2 <- exprB
     }
   }
   ans <-
-    do_or3_par(x, ox, x1, x2,
-               y, oy, y1, y2,
-               z, oz, z1, z2,
-               A, B, C,
-               deparse(sexprA),
-               nThread = nThread)
-  if (missing(..1)) {
-    return(ans)
+    .Call("Cors",
+          oo1, xx1, yy1,
+          oo2, xx2, yy2,
+          nThread,
+          PACKAGE = "hutilscpp")
+  if (is.null(ans)) {
+    message("Falling back to `|`")
+    # fall back
+    return(exprA | exprB)
   }
-  if (missing(..2)) {
-    return(ans | ..1)
+
+  if (missing(exprC) && missing(..1)) {
+    return(switch(type,
+                  raw = ans,
+                  logical = raw2lgl(ans, nThread = nThread),
+                  which = which_raw(ans)))
   }
-  or3s(ans, ..., .parent_nframes = .parent_nframes + 1L, nThread = nThread)
+  .or_raw(ans,
+          eval.parent(substitute(or3s(exprC, ...,
+                                      nThread = nThread,
+                                      type = "raw"))),
+          nThread = nThread)
+  return(switch(type,
+                raw = ans,
+                logical = raw2lgl(ans, nThread = nThread),
+                which = which_raw(ans)))
 }
 
 
-do_and3_par <- function(x, ox, x1, x2,
-                        y, oy, y1, y2,
-                        z, oz, z1, z2,
-                        A, B, C, nom,
-                        nThread = 1L) {
-  stopifnot(is.integer(x),
-            is.integer(ox),
-            is.integer(x1),
-            is.integer(x2),
-            is.integer(y),
-            is.integer(oy),
-            is.integer(y1),
-            is.integer(y2),
-            is.integer(z),
-            is.integer(oz),
-            is.integer(z1),
-            is.integer(z2),
-            is.logical(A),
-            is.logical(B),
-            is.logical(C))
-  nThread <- check_omp(nThread)
-  .Call("Cand3s_par",
-        x, ox, x1, x2,
-        y, oy, y1, y2,
-        z, oz, z1, z2,
-        A, B, C,
-        nThread,
-        PACKAGE = packageName)
-}
-
-do_or3_par <- function(x, ox, x1, x2,
-                        y, oy, y1, y2,
-                        z, oz, z1, z2,
-                        A, B, C, nom,
-                        nThread = 1L) {
-  stopifnot(is.integer(x),
-            is.integer(ox),
-            is.integer(x1),
-            is.integer(x2),
-            is.integer(y),
-            is.integer(oy),
-            is.integer(y1),
-            is.integer(y2),
-            is.integer(z),
-            is.integer(oz),
-            is.integer(z1),
-            is.integer(z2),
-            is.logical(A),
-            is.logical(B),
-            is.logical(C))
-  nThread <- check_omp(nThread)
-  .Call("Cor3_par",
-        x, ox, x1, x2,
-        y, oy, y1, y2,
-        z, oz, z1, z2,
-        A, B, C,
-        nThread,
-        PACKAGE = packageName)
-}
 
 do_par_in <- function(x, tbl, nThread = 1L) {
   nThread <- check_omp(nThread)

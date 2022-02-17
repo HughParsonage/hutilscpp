@@ -24,41 +24,70 @@ sum_and3s <- function(exprA, exprB, exprC, ...,
   missingA <- missing(exprA)
   missingB <- missing(exprB)
   missingC <- missing(exprC)
+  oo1 <- xx1 <- yy1 <-
+    oo2 <- xx2 <- yy2 <- NULL
 
-  d <- decompose_expr(sexprA, sexprB, sexprC,
-                      missingA, missingB, missingC,
-                      .env = .env,
-                      nThread = nThread)
+  if (length(sexprA) == 3L) {
+    oo1 <- as.character(sexprA[[1L]])
+    xx1 <- eval(sexprA[[2L]], envir = .env)
+    yy1 <- eval(sexprA[[3L]], envir = .env)
+  } else if (length(sexprA) == 2L) {
+    oo1 <- as.character(sexprA[[1L]])
+    xx1 <- eval(sexprA[[2L]], envir = .env)
+  } else {
+    oo1 <- "=="
+    xx1 <- exprA
+  }
+  if (!is.null(xx1) && length(xx1) <= 1e3L) {
+    # Don't bother (or still NULL)
+    if (missing(exprC)) {
+      if (missing(exprB)) {
+        return(sum(exprA, na.rm = TRUE))
+      }
+      return(sum(exprA & exprB, na.rm = TRUE))
+    } else {
+      if (missing(exprB)) {
+        return(sum(exprA & Reduce("&", list(exprC, ...)), na.rm = TRUE))
+      } else {
+        if (missing(exprC)) {
+          return(sum(exprA & exprB & Reduce("&", list(...)), na.rm = TRUE))
+        } else {
+          return(sum(exprA & exprB & Reduce("&", list(exprC, ...)), na.rm = TRUE))
+        }
+      }
+    }
+  }
 
-  .Call("Csum3s_par",
-    d[[1]],
-    d[[2]],
-    d[[3]],
-    d[[4]],
-    d[[5]],
-    d[[6]],
-    d[[7]],
-    d[[8]],
-    d[[9]],
-    d[[10]],
-    d[[11]],
-    d[[12]],
-    d[[13]],
-    d[[14]],
-    d[[15]],
-    d[[16]],
-    d[[17]],
-    d[[18]],
-    d[[19]],
-    d[[20]],
-    d[[21]],
-    d[[22]],
-    d[[23]],
-    d[[24]],
-    TRUE, # ampersand
-    check_omp(nThread),
-    PACKAGE = packageName
-  )
+  if (!missing(exprB)) {
+    sexprB <- substitute(exprB)
+    if (length(sexprB) == 3L) {
+      oo2 <- as.character(sexprB[[1L]])
+      xx2 <- eval(sexprB[[2L]], envir = .env)
+      yy2 <- eval(sexprB[[3L]], envir = .env)
+    } else if (length(sexprB) == 2L) {
+      oo2 <- as.character(sexprB[[1L]])
+      xx2 <- eval(sexprB[[2L]], envir = .env)
+    } else {
+      oo2 <- "=="
+      xx2 <- exprB
+    }
+  }
+  ans <-
+    .Call("Cands",
+          oo1, xx1, yy1,
+          oo2, xx2, yy2,
+          nThread,
+          PACKAGE = "hutilscpp")
+  if (missing(exprB) || missing(exprC)) {
+    return(sum_raw(ans, nThread = nThread))
+  }
+  .and_raw(ans,
+           eval.parent(and3s(exprC, ...,
+                             nThread = nThread,
+                             type = "raw")),
+           nThread = nThread)
+
+  sum_raw(ans, nThread = nThread)
 }
 
 #' @rdname sum_and3s
@@ -67,46 +96,75 @@ sum_and3s <- function(exprA, exprB, exprC, ...,
 sum_or3s <- function(exprA, exprB, exprC, ...,
                      .env = parent.frame(),
                      nThread = getOption("hutilscpp.nThread", 1L)) {
-  nThread <- check_omp(nThread)
   sexprA <- substitute(exprA)
   sexprB <- substitute(exprB)
   sexprC <- substitute(exprC)
   missingA <- missing(exprA)
   missingB <- missing(exprB)
   missingC <- missing(exprC)
+  oo1 <- xx1 <- yy1 <-
+    oo2 <- xx2 <- yy2 <- NULL
 
-  d <- decompose_expr(sexprA, sexprB, sexprC,
-                      missingA, missingB, missingC,
-                      .env = .env,
-                      nThread = nThread)
+  if (length(sexprA) == 3L) {
+    oo1 <- as.character(sexprA[[1L]])
+    xx1 <- eval(sexprA[[2L]], envir = .env)
+    yy1 <- eval(sexprA[[3L]], envir = .env)
+  } else if (length(sexprA) == 2L) {
+    oo1 <- as.character(sexprA[[1L]])
+    xx1 <- eval(sexprA[[2L]], envir = .env)
+  } else {
+    oo1 <- "=="
+    xx1 <- exprA
+  }
+  if (!is.null(xx1) && length(xx1) <= 1e3L) {
+    # Don't bother (or still NULL)
+    if (missing(exprC)) {
+      if (missing(exprB)) {
+        return(sum(exprA, na.rm = TRUE))
+      }
+      return(sum(exprA | exprB, na.rm = TRUE))
+    } else {
+      if (missing(exprB)) {
+        return(sum(exprA | Reduce("|", list(exprC, ...)), na.rm = TRUE))
+      } else {
+        if (missing(exprC)) {
+          return(sum(exprA | exprB | Reduce("|", list(...)), na.rm = TRUE))
+        } else {
+          return(sum(exprA | exprB | Reduce("|", list(exprC, ...)), na.rm = TRUE))
+        }
+      }
+    }
+  }
 
-  .Call("Csum3s_par",
-    d[[1]],
-    d[[2]],
-    d[[3]],
-    d[[4]],
-    d[[5]],
-    d[[6]],
-    d[[7]],
-    d[[8]],
-    d[[9]],
-    d[[10]],
-    d[[11]],
-    d[[12]],
-    d[[13]],
-    d[[14]],
-    d[[15]],
-    d[[16]],
-    d[[17]],
-    d[[18]],
-    d[[19]],
-    d[[20]],
-    d[[21]],
-    d[[22]],
-    d[[23]],
-    d[[24]],
-    FALSE,  # ampersand
-    nThread = nThread
-  )
+  if (!missing(exprB)) {
+    sexprB <- substitute(exprB)
+    if (length(sexprB) == 3L) {
+      oo2 <- as.character(sexprB[[1L]])
+      xx2 <- eval(sexprB[[2L]], envir = .env)
+      yy2 <- eval(sexprB[[3L]], envir = .env)
+    } else if (length(sexprB) == 2L) {
+      oo2 <- as.character(sexprB[[1L]])
+      xx2 <- eval(sexprB[[2L]], envir = .env)
+    } else {
+      oo2 <- "=="
+      xx2 <- exprB
+    }
+  }
+  ans <-
+    .Call("Cors",
+          oo1, xx1, yy1,
+          oo2, xx2, yy2,
+          nThread,
+          PACKAGE = "hutilscpp")
+  if (missing(exprB) || missing(exprC)) {
+    return(sum_raw(ans, nThread = nThread))
+  }
+  .or_raw(ans,
+          eval.parent(or3s(exprC, ...,
+                           nThread = nThread,
+                           type = "raw")),
+          nThread = nThread)
+
+  sum_raw(ans, nThread = nThread)
 }
 
