@@ -1,10 +1,5 @@
 #include "hutilscpp.h"
 
-#define RHS_BAD_LEN -2
-#define BW_LEN_NE2 -3
-#define UNSUPPORTED_OP -4
-#define UNSUPPORTED_NA -5
-#define SUM1_UNSUPPORTED_TYPE -6
 
 
 static bool op2b(const int o, int x, int y) {
