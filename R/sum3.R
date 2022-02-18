@@ -82,9 +82,9 @@ sum_and3s <- function(exprA, exprB, exprC, ...,
     return(sum_raw(ans, nThread = nThread))
   }
   .and_raw(ans,
-           eval.parent(and3s(exprC, ...,
-                             nThread = nThread,
-                             type = "raw")),
+           eval.parent(substitute(and3s(exprC, ...,
+                                        nThread = nThread,
+                                        type = "raw"))),
            nThread = nThread)
 
   sum_raw(ans, nThread = nThread)
@@ -160,9 +160,9 @@ sum_or3s <- function(exprA, exprB, exprC, ...,
     return(sum_raw(ans, nThread = nThread))
   }
   .or_raw(ans,
-          eval.parent(or3s(exprC, ...,
-                           nThread = nThread,
-                           type = "raw")),
+          eval.parent(substitute(or3s(exprC, ...,
+                                      nThread = nThread,
+                                      type = "raw"))),
           nThread = nThread)
 
   sum_raw(ans, nThread = nThread)
