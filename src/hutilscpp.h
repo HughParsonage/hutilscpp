@@ -23,6 +23,14 @@
 
 #define DEBUG 0
 
+// Error codes
+#define RHS_BAD_LEN -2
+#define BW_LEN_NE2 -3
+#define UNSUPPORTED_OP -4
+#define UNSUPPORTED_NA -5
+#define SUM1_UNSUPPORTED_TYPE -6
+
+
 // int op = !(eq || gt || lt) ? 0 : (eq ? (gt ? 2 : (lt ? 3 : 1)) : (gt ? 4 : 5));
 // != == >= <=  >  <
 //  0  1  2  3  4  5
