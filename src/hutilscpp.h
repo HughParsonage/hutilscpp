@@ -29,6 +29,7 @@
 #define UNSUPPORTED_OP -4
 #define UNSUPPORTED_NA -5
 #define SUM1_UNSUPPORTED_TYPE -6
+#define INCOMPAT_LEN -7
 
 
 // int op = !(eq || gt || lt) ? 0 : (eq ? (gt ? 2 : (lt ? 3 : 1)) : (gt ? 4 : 5));
