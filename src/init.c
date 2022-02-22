@@ -81,6 +81,7 @@ extern SEXP Craw2lgl(SEXP, SEXP);
 extern SEXP CSquish(SEXP, SEXP);
 extern SEXP CStringEqual(SEXP, SEXP);
 extern SEXP Csum_isna(SEXP, SEXP);
+extern SEXP Csum_or2(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Csum_raw(SEXP, SEXP);
 extern SEXP Csummary3(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cuminus(SEXP, SEXP);
@@ -181,6 +182,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"CSquish",                       (DL_FUNC) &CSquish,                        2},
     {"CStringEqual",                  (DL_FUNC) &CStringEqual,                   2},
     {"Csum_isna",                     (DL_FUNC) &Csum_isna,                      2},
+    {"Csum_or2",                      (DL_FUNC) &Csum_or2,                       7},
     {"Csum_raw",                      (DL_FUNC) &Csum_raw,                       2},
     {"Csummary3",                     (DL_FUNC) &Csummary3,                      5},
     {"Cuminus",                       (DL_FUNC) &Cuminus,                        2},
