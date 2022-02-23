@@ -173,67 +173,67 @@ pre code {
 
 
 <pre class="r"><code>cat(as.character(START &lt;- Sys.time()), &quot;\n&quot;)</code></pre>
-<pre><code>## 2022-02-18 02:49:00</code></pre>
+<pre><code>## 2022-02-23 13:26:54</code></pre>
 <pre class="r"><code>options(digits = 2)
 options(hutilscpp.nThread = 10L)
 set.seed(1)</code></pre>
 <pre class="r"><code>cat(difftime(Sys.time(), START), &quot;\n&quot;)</code></pre>
-<pre><code>## 0.28</code></pre>
+<pre><code>## 0.63</code></pre>
 <pre class="r"><code>packageVersion(&quot;hutilscpp&quot;)</code></pre>
 <pre><code>## [1] &#39;0.9.0&#39;</code></pre>
 <pre class="r"><code>system_time(x1 &lt;- allocate0_except(2^31 - 2, c(1e8, 21e8), c(1L, -1L)))</code></pre>
 <pre><code>## process    real 
-##  1.969s  1.978s</code></pre>
+##  1.984s  1.985s</code></pre>
 <div id="which_first" class="section level2">
 <h2><code>which_first</code></h2>
 <pre class="r"><code>system_time(which_first(x1 != 0))</code></pre>
 <pre><code>##  process     real 
-## 46.875ms 50.101ms</code></pre>
+## 46.875ms 60.115ms</code></pre>
 <pre class="r"><code>system_time(which_last(x1 != 0))</code></pre>
 <pre><code>##  process     real 
-## 31.250ms 34.229ms</code></pre>
+## 31.250ms 23.273ms</code></pre>
 </div>
 <div id="and3s" class="section level2">
 <h2><code>and3s</code></h2>
 <pre class="r"><code>system_time(and3s(x1 != 23L, x1 &gt;= 0L, x1 == 0L))</code></pre>
 <pre><code>## process    real 
-## 17.328s  2.142s</code></pre>
+## 17.859s  2.051s</code></pre>
 <pre class="r"><code>system_time(and3s(x1 != 0L, x1 &gt;= 0L, x1 == 0L))</code></pre>
 <pre><code>## process    real 
-## 17.969s  2.535s</code></pre>
+## 19.047s  2.645s</code></pre>
 </div>
 <div id="sum_and3s" class="section level2">
 <h2><code>sum_and3s</code></h2>
 <pre class="r"><code>system_time(sum_and3s(x1 != 23L, x1 &gt;= 0L, x1 == 0L))</code></pre>
 <pre><code>## process    real 
-## 14.500s  2.257s</code></pre>
+## 13.297s  2.207s</code></pre>
 <pre class="r"><code>system_time(sum_and3s(x1 != 0L, x1 &gt;= 0L, x1 == 0L))</code></pre>
 <pre><code>## process    real 
-## 13.078s  1.418s</code></pre>
+## 13.344s  1.414s</code></pre>
 </div>
 <div id="divisible16" class="section level2">
 <h2><code>divisible16</code></h2>
 <pre class="r"><code>system_time(divisible16(x1))</code></pre>
 <pre><code>## process    real 
-##  7.625s  1.185s</code></pre>
+##  6.578s  1.135s</code></pre>
 </div>
 <div id="is_constant" class="section level2">
 <h2><code>is_constant</code></h2>
 <pre class="r"><code>system_time(is_constant(x1))</code></pre>
 <pre><code>##    process       real 
-## 1984.375ms  206.147ms</code></pre>
+## 1812.500ms  218.032ms</code></pre>
 </div>
 <div id="is_sorted" class="section level2">
 <h2><code>is_sorted</code></h2>
 <pre class="r"><code>system_time(is_sorted(x1))</code></pre>
 <pre><code>##  process     real 
-## 31.250ms 42.178ms</code></pre>
+## 46.875ms 43.174ms</code></pre>
 </div>
 <div id="minmax" class="section level2">
 <h2><code>minmax</code></h2>
 <pre class="r"><code>system_time(minmax(x1))</code></pre>
 <pre><code>##    process       real 
-## 2500.000ms  269.458ms</code></pre>
+## 2328.125ms  268.872ms</code></pre>
 </div>
 <div id="haversine" class="section level2">
 <h2>Haversine</h2>
@@ -246,15 +246,15 @@ yy &lt;- runif(100, -39, -38)
 xx &lt;- runif(100, 144, 145)
 system_time(haversineDistance(y, x, y, x))</code></pre>
 <pre><code>##   process      real 
-## 140.625ms 150.957ms</code></pre>
+## 156.250ms 160.804ms</code></pre>
 </div>
 <div id="match_nrst_haversine" class="section level2">
 <h2><code>match_nrst_haversine</code></h2>
 <pre class="r"><code>system_time(match_nrst_haversine(y, x, yy, xx))</code></pre>
 <pre><code>## process    real 
-##  6.609s  6.606s</code></pre>
+##  7.047s  7.138s</code></pre>
 <pre class="r"><code>cat(as.character(END &lt;- Sys.time()), &quot;\n&quot;)</code></pre>
-<pre><code>## 2022-02-18 02:49:19</code></pre>
+<pre><code>## 2022-02-23 13:27:14</code></pre>
 <pre class="r"><code>print(difftime(END, START))</code></pre>
 <pre><code>## Time difference of 20 secs</code></pre>
 </div>
