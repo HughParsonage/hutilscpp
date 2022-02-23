@@ -38,7 +38,7 @@ NULL
 
 #' @rdname logical3s
 #' @export
-and3s <- function(exprA, exprB, exprC,
+and3s <- function(exprA, exprB = NULL, exprC = NULL,
                   ...,
                   nThread = getOption("hutilscpp.nThread", 1L),
                   .parent_nframes = 1L,
@@ -67,27 +67,32 @@ and3s <- function(exprA, exprB, exprC,
     xx1 <- exprA
   }
   if (!is.null(xx1) && length(xx1) <= 1e3L) {
-    # Don't bother (or still NULL)
-    if (missing(exprC)) {
-      if (missing(exprB)) {
-        return(exprA)
-      }
-      return(exprA & exprB)
-    } else {
-      if (missing(exprB)) {
-        return(exprA & Reduce("&", list(exprC, ...)))
-      } else {
-        if (missing(exprC)) {
-          return(exprA & exprB & Reduce("&", list(...)))
+    ans <-
+      # Don't bother (or still NULL)
+      if (missing(exprC)) {
+        if (missing(exprB)) {
+          (exprA)
         } else {
-          return(exprA & exprB & exprC & Reduce("&", list(exprC, ...)))
+          (exprA & exprB)
+        }
+      } else {
+        if (missing(exprB)) {
+          (exprA & Reduce("&", list(exprC, ...)))
+        } else {
+          if (missing(exprC)) {
+            (exprA & exprB & Reduce("&", list(...)))
+          } else {
+            (exprA & exprB & exprC & Reduce("&", list(exprC, ...)))
+          }
         }
       }
-    }
+    return(switch(type,
+                  raw = lgl2raw(ans, nThread = nThread),
+                  logical = ans,
+                  which = which(ans)))
   }
 
-  if (!missing(exprB)) {
-    sexprB <- substitute(exprB)
+  if (!missing(exprB) && !is.null(sexprB <- substitute(exprB))) {
     if (length(sexprB) == 3L) {
       oo2 <- as.character(sexprB[[1L]])
       xx2 <- eval.parent(sexprB[[2L]], n = .parent_nframes)
@@ -109,13 +114,18 @@ and3s <- function(exprA, exprB, exprC,
   if (is.null(ans)) {
     message("Falling back to `&`")
     # fall back
-    if (missing(exprC)) {
-      return(exprA & exprB)
-    } else {
-      return(exprA & exprB & exprC)
-    }
+    ans <-
+      if (missing_or_null(exprC)) {
+        (exprA & exprB)
+      } else {
+        (exprA & exprB & exprC)
+      }
+    return(switch(type,
+                  raw = lgl2raw(ans),
+                  logical = ans,
+                  which = which(ans)))
   }
-  if (missing(exprC) && missing(..1)) {
+  if ((missing(exprC) || is.null(substitute(exprC))) && missing(..1)) {
     return(switch(type,
                   raw = ans,
                   logical = raw2lgl(ans, nThread = nThread),
@@ -134,7 +144,7 @@ and3s <- function(exprA, exprB, exprC,
 
 #' @rdname logical3s
 #' @export
-or3s <- function(exprA, exprB, exprC,
+or3s <- function(exprA, exprB = NULL, exprC = NULL,
                   ...,
                   nThread = getOption("hutilscpp.nThread", 1L),
                   .parent_nframes = 1L,
@@ -171,30 +181,33 @@ or3s <- function(exprA, exprB, exprC,
   }
   if (!is.null(xx1) && length(xx1) <= 1e3L) {
     # Don't bother (or still NULL)
-    if (missing(..1)) {
-      if (missing(exprB)) {
-        return(exprA)
-      }
-      if (missing(exprC)) {
-        return(exprA | exprB)
-      } else {
-        return(exprA | exprB | exprC)
-      }
-    } else {
-      if (missing(exprB)) {
-        return(exprA | Reduce(`|`, list(...)))
-      } else {
-        if (missing(exprC)) {
-          return(exprA | exprB | Reduce(`|`, list(...)))
+    ans <-
+      if (missing(..1)) {
+        if (missing(exprB)) {
+          (exprA)
+        } else if (missing(exprC)) {
+          (exprA | exprB)
         } else {
-          return(exprA | exprB | exprC | Reduce(`|`, list(...)))
+          (exprA | exprB | exprC)
+        }
+      } else {
+        if (missing(exprB)) {
+          (exprA | Reduce(`|`, list(...)))
+        } else {
+          if (missing(exprC)) {
+            (exprA | exprB | Reduce(`|`, list(...)))
+          } else {
+            (exprA | exprB | exprC | Reduce(`|`, list(...)))
+          }
         }
       }
-    }
+    return(switch(type,
+                  raw = lgl2raw(ans),
+                  logical = ans,
+                  which = which(ans)))
   }
 
-  if (!missing(exprB)) {
-    sexprB <- substitute(exprB)
+  if (!missing(exprB) && !is.null(sexprB <- substitute(exprB))) {
     if (length(sexprB) == 3L) {
       oo2 <- as.character(sexprB[[1L]])
       xx2 <- eval.parent(sexprB[[2L]], n = .parent_nframes)
@@ -216,7 +229,10 @@ or3s <- function(exprA, exprB, exprC,
   if (is.null(ans)) {
     message("Falling back to `|`")
     # fall back
-    return(exprA | exprB)
+    return(switch(type,
+                  "logical" = exprA | exprB,
+                  "raw" = .or_raw(exprA, exprB),
+                  "which" = which(exprA | exprB)))
   }
 
   if (missing(exprC) && missing(..1)) {
@@ -263,6 +279,7 @@ do_par_in2 <- function(x, tbl, nThread = getOption("hutilscpp.nThread", 1L),
   }
 }
 
+missing_or_null <- function(x) missing(x) || is.null(substitute(x))
 
 
 

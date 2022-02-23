@@ -18,76 +18,16 @@
 sum_and3s <- function(exprA, exprB, exprC, ...,
                       nThread = getOption("hutilscpp.nThread", 1L),
                       .env = parent.frame()) {
-  sexprA <- substitute(exprA)
-  sexprB <- substitute(exprB)
-  sexprC <- substitute(exprC)
-  missingA <- missing(exprA)
-  missingB <- missing(exprB)
-  missingC <- missing(exprC)
-  oo1 <- xx1 <- yy1 <-
-    oo2 <- xx2 <- yy2 <- NULL
-
-  if (length(sexprA) == 3L) {
-    oo1 <- as.character(sexprA[[1L]])
-    xx1 <- eval(sexprA[[2L]], envir = .env)
-    yy1 <- eval(sexprA[[3L]], envir = .env)
-  } else if (length(sexprA) == 2L) {
-    oo1 <- as.character(sexprA[[1L]])
-    xx1 <- eval(sexprA[[2L]], envir = .env)
-  } else {
-    oo1 <- "=="
-    xx1 <- exprA
+  if (missing(exprB) && missing(exprC)) {
+    return(sum_raw(eval.parent(substitute(and3s(exprA, nThread = nThread, type = "raw"))), nThread = nThread))
   }
-  if (!is.null(xx1) && length(xx1) <= 1e3L) {
-    # Don't bother (or still NULL)
-    if (missing(exprC)) {
-      if (missing(exprB)) {
-        return(sum(exprA, na.rm = TRUE))
-      }
-      return(sum(exprA & exprB, na.rm = TRUE))
-    } else {
-      if (missing(exprB)) {
-        return(sum(exprA & Reduce("&", list(exprC, ...)), na.rm = TRUE))
-      } else {
-        if (missing(exprC)) {
-          return(sum(exprA & exprB & Reduce("&", list(...)), na.rm = TRUE))
-        } else {
-          return(sum(exprA & exprB & Reduce("&", list(exprC, ...)), na.rm = TRUE))
-        }
-      }
-    }
+  if (missing(exprC)) {
+    return(sum_raw(eval.parent(substitute(and3s(exprA, exprB, nThread = nThread, type = "raw"))), nThread = nThread))
   }
-
-  if (!missing(exprB)) {
-    sexprB <- substitute(exprB)
-    if (length(sexprB) == 3L) {
-      oo2 <- as.character(sexprB[[1L]])
-      xx2 <- eval(sexprB[[2L]], envir = .env)
-      yy2 <- eval(sexprB[[3L]], envir = .env)
-    } else if (length(sexprB) == 2L) {
-      oo2 <- as.character(sexprB[[1L]])
-      xx2 <- eval(sexprB[[2L]], envir = .env)
-    } else {
-      oo2 <- "=="
-      xx2 <- exprB
-    }
+  if (missing(exprB)) {
+    return(sum_raw(eval.parent(substitute(and3s(exprA, exprC, nThread = nThread, type = "raw"))), nThread = nThread))
   }
-  ans <-
-    .Call("Cands",
-          oo1, xx1, yy1,
-          oo2, xx2, yy2,
-          nThread,
-          PACKAGE = "hutilscpp")
-  if (missing(exprB) || missing(exprC)) {
-    return(sum_raw(ans, nThread = nThread))
-  }
-  .and_raw(ans,
-           eval.parent(substitute(and3s(exprC, ...,
-                                        nThread = nThread,
-                                        type = "raw"))),
-           nThread = nThread)
-
-  sum_raw(ans, nThread = nThread)
+  sum_raw(eval.parent(substitute(and3s(exprA, exprB, exprC, ..., nThread = nThread, type = "raw"))), nThread = nThread)
 }
 
 #' @rdname sum_and3s
@@ -96,75 +36,6 @@ sum_and3s <- function(exprA, exprB, exprC, ...,
 sum_or3s <- function(exprA, exprB, exprC, ...,
                      .env = parent.frame(),
                      nThread = getOption("hutilscpp.nThread", 1L)) {
-  sexprA <- substitute(exprA)
-  sexprB <- substitute(exprB)
-  sexprC <- substitute(exprC)
-  missingA <- missing(exprA)
-  missingB <- missing(exprB)
-  missingC <- missing(exprC)
-  oo1 <- xx1 <- yy1 <-
-    oo2 <- xx2 <- yy2 <- NULL
-
-  if (length(sexprA) == 3L) {
-    oo1 <- as.character(sexprA[[1L]])
-    xx1 <- eval(sexprA[[2L]], envir = .env)
-    yy1 <- eval(sexprA[[3L]], envir = .env)
-  } else if (length(sexprA) == 2L) {
-    oo1 <- as.character(sexprA[[1L]])
-    xx1 <- eval(sexprA[[2L]], envir = .env)
-  } else {
-    oo1 <- "=="
-    xx1 <- exprA
-  }
-  if (!is.null(xx1) && length(xx1) <= 1e3L) {
-    # Don't bother (or still NULL)
-    if (missing(exprC)) {
-      if (missing(exprB)) {
-        return(sum(exprA, na.rm = TRUE))
-      }
-      return(sum(exprA | exprB, na.rm = TRUE))
-    } else {
-      if (missing(exprB)) {
-        return(sum(exprA | Reduce("|", list(exprC, ...)), na.rm = TRUE))
-      } else {
-        if (missing(exprC)) {
-          return(sum(exprA | exprB | Reduce("|", list(...)), na.rm = TRUE))
-        } else {
-          return(sum(exprA | exprB | Reduce("|", list(exprC, ...)), na.rm = TRUE))
-        }
-      }
-    }
-  }
-
-  if (!missing(exprB)) {
-    sexprB <- substitute(exprB)
-    if (length(sexprB) == 3L) {
-      oo2 <- as.character(sexprB[[1L]])
-      xx2 <- eval(sexprB[[2L]], envir = .env)
-      yy2 <- eval(sexprB[[3L]], envir = .env)
-    } else if (length(sexprB) == 2L) {
-      oo2 <- as.character(sexprB[[1L]])
-      xx2 <- eval(sexprB[[2L]], envir = .env)
-    } else {
-      oo2 <- "=="
-      xx2 <- exprB
-    }
-  }
-  ans <-
-    .Call("Cors",
-          oo1, xx1, yy1,
-          oo2, xx2, yy2,
-          nThread,
-          PACKAGE = "hutilscpp")
-  if (missing(exprB) || missing(exprC)) {
-    return(sum_raw(ans, nThread = nThread))
-  }
-  .or_raw(ans,
-          eval.parent(substitute(or3s(exprC, ...,
-                                      nThread = nThread,
-                                      type = "raw"))),
-          nThread = nThread)
-
-  sum_raw(ans, nThread = nThread)
+  sum_raw(eval.parent(substitute(or3s(exprA, exprB, exprC, ..., nThread = nThread, type = "raw"))), nThread = nThread)
 }
 

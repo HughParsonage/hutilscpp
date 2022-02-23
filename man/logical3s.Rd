@@ -8,8 +8,8 @@
 \usage{
 and3s(
   exprA,
-  exprB,
-  exprC,
+  exprB = NULL,
+  exprC = NULL,
   ...,
   nThread = getOption("hutilscpp.nThread", 1L),
   .parent_nframes = 1L,
@@ -18,8 +18,8 @@ and3s(
 
 or3s(
   exprA,
-  exprB,
-  exprC,
+  exprB = NULL,
+  exprC = NULL,
   ...,
   nThread = getOption("hutilscpp.nThread", 1L),
   .parent_nframes = 1L,
