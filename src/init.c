@@ -35,7 +35,7 @@ extern SEXP Cand3(SEXP, SEXP, SEXP);
 extern SEXP Cands(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP CAnyCharMatch(SEXP, SEXP, SEXP);
 extern SEXP CanyOutside(SEXP, SEXP, SEXP, SEXP, SEXP);
-extern SEXP CBetween(SEXP, SEXP, SEXP, SEXP);
+extern SEXP CBetween(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Ccoalesce0(SEXP, SEXP);
 extern SEXP Ccount_logical(SEXP, SEXP);
 extern SEXP Ccumsum_reset(SEXP, SEXP);
@@ -136,7 +136,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cands",                         (DL_FUNC) &Cands,                          7},
     {"CAnyCharMatch",                 (DL_FUNC) &CAnyCharMatch,                  3},
     {"CanyOutside",                   (DL_FUNC) &CanyOutside,                    5},
-    {"CBetween",                      (DL_FUNC) &CBetween,                       4},
+    {"CBetween",                      (DL_FUNC) &CBetween,                       5},
     {"Ccoalesce0",                    (DL_FUNC) &Ccoalesce0,                     2},
     {"Ccount_logical",                (DL_FUNC) &Ccount_logical,                 2},
     {"Ccumsum_reset",                 (DL_FUNC) &Ccumsum_reset,                  2},
