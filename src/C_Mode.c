@@ -106,5 +106,18 @@ SEXP Cunique_fmatch(SEXP xx, SEXP ff, SEXP nthreads) {
   return ans;
 }
 
+SEXP CuniqueN_fmatch(SEXP fx, SEXP nthreads) {
+  int nThread = as_nThread(nthreads);
+  R_xlen_t N = xlength(fx);
+  if (!isInteger(fx)) {
+    error("Expected fx to be integer."); // # nocov
+  }
+  const int * f = INTEGER(fx);
+  int o = 0;
+  FORLOOP_redsum(o += f[i] > i;)
+
+  return ScalarInteger(o);
+}
+
 
 
