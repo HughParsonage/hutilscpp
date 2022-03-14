@@ -3,6 +3,7 @@
 * New functions:
   - `abs_diff` for non-allocating versions of `abs(x - y)`.
   - `coalesce0` as a convenience function, equivalent to `coalesce(x, 0)` for correct type of 0.
+  - `ModeC` most common element of integer vectors. 
 
 * Internal changes
   - complex separation of expressions (`and3s` and friends) is now done using 

@@ -2,6 +2,7 @@
 
 export(Comma)
 export(Implies)
+export(ModeC)
 export(abs_diff)
 export(allNA)
 export(and3)
