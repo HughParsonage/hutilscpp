@@ -59,6 +59,9 @@
 // number of elements where we can just do a linear search for in
 #define MAX_NAIVE_IN 30
 
+#define STRINGIFY(str) #str
+
+
 #if defined _OPENMP && _OPENMP >= 201511
 #define FORLOOP(content)                                                \
 _Pragma("omp parallel for num_threads(nThread)")                        \
@@ -110,6 +113,22 @@ for (R_xlen_t i = 0; i < N; ++i) {                                    \
   content                                                             \
 }
 #endif
+
+#if defined _OPENMP && _OPENMP >= 201511
+#define FORLOOP_xminmax(content)                                                         \
+_Pragma("omp parallel for num_threads(nThread) reduction(min : xmin) reduction(max : xmax)")                        \
+  for (R_xlen_t i = 0; i < N; ++i) {                                                    \
+    content                                                                             \
+  }
+#else
+#define FORLOOP_xminmax(content)                                       \
+for (R_xlen_t i = 0; i < N; ++i) {                                    \
+  content                                                             \
+}
+#endif
+
+
+
 
 
 extern int tens[10];
@@ -204,6 +223,7 @@ double maxd3(double a, double b, double c);
 
 double Mind(const double * x, R_xlen_t N, int nThread);
 double Maxd(const double * x, R_xlen_t N, int nThread);
+int Maxi(const int * x, R_xlen_t N, int nThread);
 
 // sortedness
 bool sorted_int(const int * xp, R_xlen_t N, int nThreads);
