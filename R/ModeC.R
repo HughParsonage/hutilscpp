@@ -21,8 +21,5 @@ ModeC <- function(x,
   .Call("C_Mode", x, nThread, PACKAGE = "hutilscpp")
 }
 
-unique_fmatch <- function(x, nThread = 1L) {
-  fmatchx <- fmatchp(x, x, nThread = nThread, nomatch = 0L)
-  .Call("Cunique_fmatch", x, fmatchx, nThread, PACKAGE = "hutilscpp")
-}
+
 

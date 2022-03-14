@@ -86,6 +86,7 @@ extern SEXP Csum_raw(SEXP, SEXP);
 extern SEXP Csummary3(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cuminus(SEXP, SEXP);
 extern SEXP Cunique_fmatch(SEXP, SEXP, SEXP);
+extern SEXP CuniqueN_fmatch(SEXP, SEXP);
 extern SEXP Cwhere_square_bracket_opens(SEXP, SEXP);
 extern SEXP Cwhich_16(SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cwhich_even(SEXP);
@@ -188,6 +189,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Csummary3",                     (DL_FUNC) &Csummary3,                      5},
     {"Cuminus",                       (DL_FUNC) &Cuminus,                        2},
     {"Cunique_fmatch",                (DL_FUNC) &Cunique_fmatch,                 3},
+    {"CuniqueN_fmatch",               (DL_FUNC) &CuniqueN_fmatch,                2},
     {"Cwhere_square_bracket_opens",   (DL_FUNC) &Cwhere_square_bracket_opens,    2},
     {"Cwhich_16",                     (DL_FUNC) &Cwhich_16,                      4},
     {"Cwhich_even",                   (DL_FUNC) &Cwhich_even,                    1},
