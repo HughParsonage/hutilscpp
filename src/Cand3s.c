@@ -163,33 +163,6 @@ static void vand2s_II(unsigned char * ansp,
                       const int * y,
                       R_xlen_t M,
                       int nThread) {
-  if (o == OP_IN) {
-    if (M <= 30) {
-      // Rprintf("M <= 30\n");
-      for (R_xlen_t i = 0; i < N; ++i) {
-        if (ansp[i]) {
-          int xi = x[i];
-          unsigned char ans_i = 0;
-          for (int j = 0; j < M; ++j) {
-            if (xi == y[j]) {
-              ans_i = 1;
-              break;
-            }
-          }
-          ansp[i] = ans_i;
-        }
-      }
-    } else {
-      unsigned int fail[1] = {0};
-      do_uchar_in_II(ansp, fail,
-                     x, N,
-                     y, M,
-                     nThread,
-                     false);
-    }
-    return;
-  }
-
   if (M == 2) {
     switch(o) {
     case OP_BW: {
@@ -495,9 +468,9 @@ static void vand2s_DD(unsigned char * ansp,
 }
 
 static void vand2s_LL(unsigned char * ansp, const int o,
-                    const int * x, R_xlen_t N,
-                    const int * y, R_xlen_t M,
-                    int nThread) {
+                      const int * x, R_xlen_t N,
+                      const int * y, R_xlen_t M,
+                      int nThread) {
   if (M == 1) {
     const int y0 = y[0];
     switch(o) {
@@ -564,87 +537,6 @@ static void vand2s_LL(unsigned char * ansp, const int o,
     case OP_BC:
       return;
     }
-  }
-  if (o == OP_IN && o == OP_NI) {
-    if (M == 0) {
-      // No value is in RHS
-      if (o == OP_IN) {
-        FORLOOP(ansp[i] = 0;)
-      }
-      return;
-    }
-
-    // Reduce to unique elements
-    bool tbl[3] = {0};
-
-
-    for (R_xlen_t j = 0; j < M; ++j) {
-      if (y[j] == 0) {
-        tbl[0] = true;
-      } else if (y[j] == 1) {
-        tbl[1] = true;
-      } else {
-        tbl[2] = true;
-      }
-    }
-    if (tbl[0] && tbl[1] && tbl[2]) {
-      // Any value is in RHS
-      if (o == OP_NI) {
-        FORLOOP(ansp[i] = 0;)
-      } else {
-        // since "AND TRUE" doesn't modify
-        return;
-      }
-      return;
-    }
-    // 2-element table
-    if (tbl[0] && tbl[1]) {
-      if (o == OP_IN) {
-        FORLOOP(ansp[i] &= x[i] != NA_LOGICAL;)
-      } else {
-        FORLOOP(ansp[i] &= x[i] == NA_LOGICAL;)
-      }
-      return;
-    }
-    if (tbl[0] && tbl[2]) {
-      if (o == OP_IN) {
-        FORLOOP(ansp[i] &= x[i] != 1;)
-      } else {
-        FORLOOP(ansp[i] &= x[i] == 1;)
-      }
-      return;
-    }
-    if (tbl[1] && tbl[2]) {
-      if (o == OP_IN) {
-        FORLOOP(ansp[i] &= x[i] != 0;)
-      } else {
-        FORLOOP(ansp[i] &= x[i] == 0;)
-      }
-      return;
-    }
-    // y must be constant
-    if (tbl[0]) {
-      if (o == OP_IN) {
-        FORLOOP(ansp[i] &= x[i] == 0;)
-      } else {
-        FORLOOP(ansp[i] &= x[i] != 0;)
-      }
-    }
-    if (tbl[1]) {
-      if (o == OP_IN) {
-        FORLOOP(ansp[i] &= x[i] == 1;)
-      } else {
-        FORLOOP(ansp[i] &= x[i] != 1;)
-      }
-    }
-    if (tbl[2]) {
-      if (o == OP_IN) {
-        FORLOOP(ansp[i] &= x[i] == NA_LOGICAL;)
-      } else {
-        FORLOOP(ansp[i] &= x[i] != NA_LOGICAL;)
-      }
-    }
-    return;
   }
 
 
@@ -726,8 +618,8 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
   R_xlen_t N = xlength(xx1);
   const bool use2 = oo2 != R_NilValue;
   if (use2 && xlength(xx2) != N) {
-    error("`(Cands1): xlength(xx1) = %lld`, yet `xlength(xx2) = %lld`.",
-          xlength(xx1), xlength(xx2));
+    error("`(Cands1): xlength(xx1) = %lld`, yet `xlength(xx2) = %lld`. type '%s'",
+          xlength(xx1), xlength(xx2), type2char(TYPEOF(xx2)));
   }
 
   int nThread = as_nThread(nthreads);
@@ -747,6 +639,16 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
                    oo2, xx2, yy2,
                    nthreads);
     }
+    if (!isLogical(xx1)) {
+      SEXP xxx = PROTECT(fmatch(xx1, yy1, ScalarInteger(0),
+                                ScalarLogical(1),
+                                ScalarInteger(0),
+                                nthreads));
+      UNPROTECT(1);
+      return Cands(ScalarInteger(temp_o1 == OP_IN ? OP_EQ : OP_NE), xxx, R_NilValue,
+                   oo2, xx2, yy2,
+                   nthreads);
+    }
   }
   const int temp_o2 = sex2op(oo2);
   if (temp_o2 == OP_IN || temp_o2 == OP_NI) {
@@ -763,6 +665,18 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
                    xx1, yy1,
                    ScalarInteger(temp_o2 == OP_IN ? OP_BW : OP_BC),
                    xx2, yyy,
+                   nthreads);
+    }
+
+    if (!isLogical(xx2)) {
+      // fmatch returns NULL on logicals
+      SEXP xxx = PROTECT(fmatch(xx2, yy2, ScalarInteger(0),
+                                ScalarLogical(1),
+                                ScalarInteger(0),
+                                nthreads));
+      UNPROTECT(1);
+      return Cands(oo1, xx1, yy1,
+                   ScalarInteger(temp_o2 == OP_IN ? OP_EQ : OP_NE), xxx, R_NilValue,
                    nthreads);
     }
   }

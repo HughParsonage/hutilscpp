@@ -3,6 +3,8 @@ if (!at_home() && !hutilscpp:::is_covr()) {
   exit_file("neither at home nor covering")
 }
 library(hutilscpp)
+library(data.table)
+library(hutils)
 
 "%(between)%" <- hutilscpp:::`%(between)%`
 "%]between[%" <- hutilscpp:::`%]between[%`
@@ -86,14 +88,32 @@ A <-
     -1234120580L, 2138414482L, 2089828880L, -1494606089L, 1669541061L,
     -1635694586L, 913293496L, 657757461L)
 A <- rep_len(A, 1005)
+expect_equal(and3s(A > 2^32), A > 2^32)
+expect_equal(and3s(A < 2^32), A < 2^32)
 expect_equal(and3s(A == 913293496, A != 913293496),
              band3(A == 913293496, A != 913293496))
 expect_equal(and3s(A == 913293496.5, A != 913293496),
              band3(A == 913293496.5, A != 913293496))
+expect_equal(and3s(A != 913293496.5, A != 913293496),
+             band3(A != 913293496.5, A != 913293496))
 expect_equal(and3s(A >= -Inf, A > 0.5), A > 0.5)
 expect_equal(and3s(A >= -Inf, A < 0.5), A < 0.5)
 expect_equal(and3s(A >= -Inf, A <= 0.5), A <= 0.5)
 expect_equal(and3s(A >= -Inf, A >= 0.5), A >= 0.5)
+
+
+expect_equal(and3s(A == 913293496L), A == 913293496L)
+expect_equal(and3s(A != 913293496L), A != 913293496L)
+expect_equal(and3s(A >= 913293496L), A >= 913293496L)
+expect_equal(and3s(A <= 913293496L), A <= 913293496L)
+expect_equal(and3s(A > 913293496L), A > 913293496L)
+expect_equal(and3s(A < 913293496L), A < 913293496L)
+expect_equal(and3s(A == 913293496), A == 913293496)
+expect_equal(and3s(A != 913293496), A != 913293496)
+expect_equal(and3s(A >= 913293496), A >= 913293496)
+expect_equal(and3s(A <= 913293496), A <= 913293496)
+expect_equal(and3s(A > 913293496), A > 913293496)
+expect_equal(and3s(A < 913293496), A < 913293496)
 
 
 
@@ -126,8 +146,7 @@ expect_equal(and3s(xd %(between)% c(1.1, 10),
 
 
 
-library(data.table)
-library(hutils)
+
 #loud = FALSE
 samp <- function(x, size = length(x), replace = size > length(x), loud = FALSE, prob = NULL) {
   hutils::samp(x, size = size, replace = replace, loud = loud, prob = prob)

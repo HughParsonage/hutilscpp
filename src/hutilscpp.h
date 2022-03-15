@@ -190,6 +190,9 @@ void do_uchar_in_II(unsigned char * ansp,
                     int nThread,
                     bool opposite);
 
+// fastmatch_fastmatch
+SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthreads);
+
 // isntRaw
 bool isntRaw(SEXP x);
 bool isRaw(SEXP x);
