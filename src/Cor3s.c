@@ -26,12 +26,6 @@ for (R_xlen_t i = 0; i < N; ++i) {                              \
 }
 #endif
 
-static unsigned int b_subtract_a(int a, int b) {
-  // assumption a <= b
-  int64_t a64 = a, b64 = b;
-  return b64 - a64;
-}
-
 
 static void vor2s_II(unsigned char * ansp,
                       const int o,
