@@ -1,8 +1,10 @@
 #include "hutilscpp.h"
 
+// # nocov start
 SEXP C_and_raw(SEXP x, SEXP y, SEXP nthreads) {
   int nThread = asInteger(nthreads);
   R_xlen_t N = xlength(x);
+
   if (N == 0) {
     return x;
   }
@@ -37,6 +39,7 @@ SEXP C_and_raw(SEXP x, SEXP y, SEXP nthreads) {
   }
 
 
+
   switch(TYPEOF(x)) {
   case LGLSXP: {
     int * xp = LOGICAL(x);
@@ -54,6 +57,7 @@ SEXP C_and_raw(SEXP x, SEXP y, SEXP nthreads) {
     }
   }
     break;
+
   case RAWSXP: {
     unsigned char * xp = RAW(x);
     switch(TYPEOF(y)) {
@@ -74,6 +78,7 @@ SEXP C_and_raw(SEXP x, SEXP y, SEXP nthreads) {
 
   return x;
 }
+
 
 SEXP C_or_raw(SEXP x, SEXP y, SEXP nthreads) {
   int nThread = asInteger(nthreads);
@@ -149,14 +154,7 @@ SEXP C_or_raw(SEXP x, SEXP y, SEXP nthreads) {
 
   return x;
 }
-
-
-static unsigned int b_subtract_a(int a, int b) {
-  // assumption a <= b
-  int64_t a64 = a, b64 = b;
-  return b64 - a64;
-}
-
+// # nocov end
 
 static void vand2s_II(unsigned char * ansp,
                       const int o,
@@ -341,7 +339,8 @@ static void vand2s_ID(unsigned char * ansp,
         if (pre_y0 <= -2147483647) {
           return; // always true
         }
-        y0 -= (y0 < 0);  // if negative wil be truncated towards zero
+        y0 = (int)pre_y0;
+        y0 -= (pre_y0 < 0);  // if negative wil be truncated towards zero
       } else {
         if (safety == 2) {
           memset(ansp, 2, N);
@@ -356,9 +355,10 @@ static void vand2s_ID(unsigned char * ansp,
           memset(ansp, 0, N);
           return;
         }
-        if (y0 == 2147483647) {
+        if (pre_y0 >= 2147483647) {
           return;
         }
+        y0 = (int)pre_y0;
         y0 += (y0 < 0);
       }
       break;
