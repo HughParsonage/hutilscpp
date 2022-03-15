@@ -1,10 +1,21 @@
 # test_that("is_lgl_sym works", {
-if (at_home() || hutilscpp:::is_covr()) {
+if (!at_home() && !hutilscpp:::is_covr()) {
+  exit_file("neither at home nor covering")
+}
 library(hutilscpp)
 
 "%(between)%" <- hutilscpp:::`%(between)%`
 "%]between[%" <- hutilscpp:::`%]between[%`
 # })
+band3 <- function(x, y, z, ...) {
+  if (missing(z)) {
+    return(x & y)
+  }
+  if (missing(..1)) ((x & y) & z) else band3(x & y, z, ...)
+}
+
+
+
 
 # test_that("A in len>100 ", {
 A <-
@@ -14,11 +25,79 @@ A <-
     -1234120580L, 2138414482L, 2089828880L, -1494606089L, 1669541061L,
     -1635694586L, 913293496L, 657757461L)
 A <- rep_len(A, 101)
-B <- c(-705457251L, 1:1000)
-D <- rep(TRUE, length(B))
+B <- c(-705457251L, 1:10000)
+D <- DD <- rep(TRUE, length(B))
 E <- rep(TRUE, length(B))
+AA <- rep_len(A, length(B))
+expect_equal(and3s(AA %between% c(1L, 1L), AA %(between)% c(0L, 2L)),
+             AA == 1L)
 
-band3 <- function(x, y, z, ...) if (missing(..1)) ((x & y) & z) else band3(x & y, z, ...)
+AA <- rep_len(A, length(B))
+BB <- rep_len(B, length(AA))
+expect_equal(and3s(AA == AA, AA != BB), AA != BB)
+expect_equal(and3s(AA == AA, AA == BB), AA == BB)
+expect_equal(and3s(AA == AA, AA >= BB), AA >= BB)
+expect_equal(and3s(AA == AA, AA <= BB), AA <= BB)
+expect_equal(and3s(AA == AA, AA > BB), AA > BB)
+expect_equal(and3s(AA == AA, AA < BB), AA < BB)
+expect_equal(and3s(AA == AA, AA %in% BB), AA %in% BB)
+BB[2] <- BB[2] + 0.5
+expect_equal(and3s(AA == AA, AA != BB), AA != BB)
+expect_equal(and3s(AA == AA, AA == BB), AA == BB)
+expect_equal(and3s(AA == AA, AA >= BB), AA >= BB)
+expect_equal(and3s(AA == AA, AA <= BB), AA <= BB)
+expect_equal(and3s(AA == AA, AA > BB), AA > BB)
+expect_equal(and3s(AA == AA, AA < BB), AA < BB)
+expect_equal(and3s(AA == AA, AA %in% BB), AA %in% BB)
+AA <- as.double(AA)
+BB <- as.integer(BB)
+expect_equal(and3s(AA == AA, AA != BB), AA != BB)
+expect_equal(and3s(AA == AA, AA == BB), AA == BB)
+expect_equal(and3s(AA == AA, AA >= BB), AA >= BB)
+expect_equal(and3s(AA == AA, AA <= BB), AA <= BB)
+expect_equal(and3s(AA == AA, AA > BB), AA > BB)
+expect_equal(and3s(AA == AA, AA < BB), AA < BB)
+expect_equal(and3s(AA == AA, AA %in% BB), AA %in% BB)
+BB[2] <- BB[2] + 0.5
+expect_equal(and3s(AA == AA, AA != BB), AA != BB)
+expect_equal(and3s(AA == AA, AA == BB), AA == BB)
+expect_equal(and3s(AA == AA, AA >= BB), AA >= BB)
+expect_equal(and3s(AA == AA, AA <= BB), AA <= BB)
+expect_equal(and3s(AA == AA, AA > BB), AA > BB)
+expect_equal(and3s(AA == AA, AA < BB), AA < BB)
+expect_equal(and3s(AA == AA, AA %in% BB), AA %in% BB)
+
+AA <- rep_len(c(TRUE, FALSE, TRUE), length(AA))
+BB <- rep_len(c(FALSE, FALSE, TRUE, TRUE, TRUE), length(AA))
+expect_equal(and3s(DD, AA != BB), AA != BB)
+expect_equal(and3s(DD, AA == BB), AA == BB)
+expect_equal(and3s(DD, AA >= BB), AA >= BB)
+expect_equal(and3s(DD, AA <= BB), AA <= BB)
+expect_equal(and3s(DD, AA > BB), AA > BB)
+expect_equal(and3s(DD, AA < BB), AA < BB)
+expect_equal(and3s(DD, AA %in% BB), AA %in% BB)
+expect_equal(and3s(DD, AA %between% c(FALSE, TRUE)), DD)
+expect_equal(and3s(DD, AA %between% c(TRUE, FALSE)), logical(length(DD)))
+rm(AA)
+A <-
+  c(-945028649L, -705457251L, 807204080L, 1708708214L, -885957403L,
+    1862209884L, 1740762002L, 1546012157L, -1233491410L, 1256036667L,
+    1009745233L, -815497191L, 137228285L, 2012907335L, -314954938L,
+    -1234120580L, 2138414482L, 2089828880L, -1494606089L, 1669541061L,
+    -1635694586L, 913293496L, 657757461L)
+A <- rep_len(A, 1005)
+expect_equal(and3s(A == 913293496, A != 913293496),
+             band3(A == 913293496, A != 913293496))
+expect_equal(and3s(A == 913293496.5, A != 913293496),
+             band3(A == 913293496.5, A != 913293496))
+expect_equal(and3s(A >= -Inf, A > 0.5), A > 0.5)
+expect_equal(and3s(A >= -Inf, A < 0.5), A < 0.5)
+expect_equal(and3s(A >= -Inf, A <= 0.5), A <= 0.5)
+expect_equal(and3s(A >= -Inf, A >= 0.5), A >= 0.5)
+
+
+
+
 expect_equal(and3s(B %in% A, D, E),
              band3(B %in% A, D, E))
 expect_equal(and3s(D, B %in% A, D, E),
@@ -151,8 +230,8 @@ DT[, the_expr := paste0("expect_equal(",
                                if_else(e3, expr_three, ""), ")"),
                         ")")]
 
-generate_int <- function() rep_len(samp(-15:101, size = 99), 231)
-generate_lgl <- function() rep_len(hutils::samp(c(TRUE, FALSE), size = 20, loud = FALSE), 231)
+generate_int <- function() rep_len(samp(-15:101, size = 99), 1231)
+generate_lgl <- function() rep_len(hutils::samp(c(TRUE, FALSE), size = 20, loud = FALSE), 1231)
 
 for (tmp__0 in unique(c(DT[["lhs1"]], DT[["lhs2"]], DT[["lhs3"]], letters))) {
   assign(paste0("logi_", tmp__0), value = generate_lgl())
@@ -30697,4 +30776,4 @@ expect_equal(and3s(exprA >= 1L, exprB >= 1L, exprC >= 1L,
              and(and3(exprA >= 1L, exprB >= 1L, exprC >= 1L),
                  and3(exprA <= 6L, exprB <= 7L, exprC <= 10L)))
 
-}
+
