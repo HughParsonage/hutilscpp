@@ -106,30 +106,30 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
     }
   }
 
-  # switch(oo1,
-  #        "%in%" = {
-  #          xx1 <- finp(xx1, yy1, nThread = nThread)
-  #          yy1 <- NULL
-  #          oo1 <- "=="
-  #        },
-  #        "%notin%" = {
-  #          xx1 <- fnotinp(xx1, yy1, nThread = nThread)
-  #          yy1 <- NULL
-  #          oo1 <- "=="
-  #        })
-  # if (is.character(oo2)) {
-  #   switch(oo2,
-  #          "%in%" = {
-  #            xx2 <- finp(xx2, yy2, nThread = nThread)
-  #            yy2 <- NULL
-  #            oo2 <- "=="
-  #          },
-  #          "%notin%" = {
-  #            xx2 <- fnotinp(xx2, yy2, nThread = nThread)
-  #            yy2 <- NULL
-  #            oo2 <- "=="
-  #          })
-  # }
+  switch(oo1,
+         "%in%" = {
+           xx1 <- finp(xx1, yy1, nThread = nThread)
+           yy1 <- NULL
+           oo1 <- "=="
+         },
+         "%notin%" = {
+           xx1 <- fnotinp(xx1, yy1, nThread = nThread)
+           yy1 <- NULL
+           oo1 <- "=="
+         })
+  if (is.character(oo2)) {
+    switch(oo2,
+           "%in%" = {
+             xx2 <- finp(xx2, yy2, nThread = nThread)
+             yy2 <- NULL
+             oo2 <- "=="
+           },
+           "%notin%" = {
+             xx2 <- fnotinp(xx2, yy2, nThread = nThread)
+             yy2 <- NULL
+             oo2 <- "=="
+           })
+  }
 
   ans <-
     .Call("Cands",
@@ -137,6 +137,7 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
           oo2, xx2, yy2,
           nThread,
           PACKAGE = "hutilscpp")
+
   if (is.null(ans)) {
     message("Falling back to `&`")
     # fall back
@@ -246,6 +247,31 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
       xx2 <- exprB
     }
   }
+  switch(oo1,
+         "%in%" = {
+           xx1 <- finp(xx1, yy1, nThread = nThread)
+           yy1 <- NULL
+           oo1 <- "=="
+         },
+         "%notin%" = {
+           xx1 <- fnotinp(xx1, yy1, nThread = nThread)
+           yy1 <- NULL
+           oo1 <- "=="
+         })
+  if (is.character(oo2)) {
+    switch(oo2,
+           "%in%" = {
+             xx2 <- finp(xx2, yy2, nThread = nThread)
+             yy2 <- NULL
+             oo2 <- "=="
+           },
+           "%notin%" = {
+             xx2 <- fnotinp(xx2, yy2, nThread = nThread)
+             yy2 <- NULL
+             oo2 <- "=="
+           })
+  }
+
   ans <-
     .Call("Cors",
           oo1, xx1, yy1,

@@ -56,10 +56,18 @@
 #define CF_LEN_2 2
 #define CF_LEN_N -1
 
+#define DBL_INT 0
+#define DBL_NAN 1
+#define DBL_FRA 2
+#define DBL_XHI 3
+#define DBL_XLO 4
+
+#define ORAND_EQ 0
+#define ORAND_OR 1
+#define ORAND_AND 2
+
 // number of elements where we can just do a linear search for in
 #define MAX_NAIVE_IN 30
-
-#define STRINGIFY(str) #str
 
 
 #if defined _OPENMP && _OPENMP >= 201511
@@ -146,6 +154,7 @@ bool is_altrep(SEXP x);
 
 // between.c
 bool betweeniiuu(unsigned int x, unsigned int a, unsigned b) ;
+void uc_betweenidd(unsigned char * ansp, int ORAND, const int * xp, R_xlen_t N, int nThread, double y0, double y1);
 
 int do_op2M(const char * x);
 int sex2op(SEXP oo);
@@ -157,6 +166,7 @@ int asInteger2(SEXP x);
 bool is_true(SEXP x);
 
 int cf_xlen(SEXP x, SEXP y);
+int op_xlen2(int o);
 
 // diagnose_omp
 int as_nThread(SEXP x);
@@ -173,6 +183,7 @@ bool is_seq(SEXP x);
 bool do_is_safe2int(double x);
 int dbl_is_int(double x);
 int dbl2int(double x);
+int why_dbl_isnt_int(double x);
 int sex2int1(SEXP x);
 
 R_xlen_t sum_isna(SEXP x, SEXP nthreads) ;

@@ -43,6 +43,20 @@ expect_equal(and3s(AA == AA, AA <= BB), AA <= BB)
 expect_equal(and3s(AA == AA, AA > BB), AA > BB)
 expect_equal(and3s(AA == AA, AA < BB), AA < BB)
 expect_equal(and3s(AA == AA, AA %in% BB), AA %in% BB)
+expect_equal(and3s(AA == AA, AA %between% c(1L, 2L)), AA %between% c(1L, 2L))
+expect_equal(and3s(AA == AA, AA %between% c(1L, 2)), AA %between% c(1L, 2L))
+expect_equal(and3s(AA == AA, AA %between% c(1L, 2.2)), AA %between% c(1L, 2L))
+expect_equal(and3s(AA == AA, AA %between% c(NA, 1)), AA %between% c(NA, 1))
+expect_equal(and3s(AA == AA, AA %(between)% c(NA, 1)), AA %(between)% c(NA, 1))
+expect_equal(and3s(AA == AA, AA %]between[% c(NA, 1)), AA %]between[% c(NA, 1))
+expect_equal(and3s(AA == AA, AA %between% c(1L, NaN)), AA %between% c(1L, NaN))
+expect_equal(and3s(AA == AA, AA %(between)% c(1L, NaN)), AA %(between)% c(1L, NaN))
+expect_equal(and3s(AA == AA, AA %]between[% c(1L, NaN)), AA %]between[% c(1L, NaN))
+expect_equal(and3s(AA == AA, AA %between% c(.Machine$integer.max, .Machine$integer.max)), AA == .Machine$integer.max)
+expect_equal(and3s(AA == AA, AA %between% c(-.Machine$integer.max, -.Machine$integer.max)), AA == -.Machine$integer.max)
+expect_equal(and3s(AA == AA, AA %between% c(NA, .Machine$integer.max)), rep(TRUE, length(AA)))
+expect_equal(and3s(AA == AA, AA %between% c(2L, 1L)), logical(length(AA)))
+expect_equal(and3s(AA == AA, AA %between% c(2L, 1)), logical(length(AA)))
 BB[2] <- BB[2] + 0.5
 expect_equal(and3s(AA == AA, AA != BB), AA != BB)
 expect_equal(and3s(AA == AA, AA == BB), AA == BB)
@@ -60,6 +74,14 @@ expect_equal(and3s(AA == AA, AA <= BB), AA <= BB)
 expect_equal(and3s(AA == AA, AA > BB), AA > BB)
 expect_equal(and3s(AA == AA, AA < BB), AA < BB)
 expect_equal(and3s(AA == AA, AA %in% BB), AA %in% BB)
+expect_equal(and3s(AA == AA, AA != BB[1]), AA != BB[1])
+expect_equal(and3s(AA == AA, AA == BB[1]), AA == BB[1])
+expect_equal(and3s(AA == AA, AA >= BB[1]), AA >= BB[1])
+expect_equal(and3s(AA == AA, AA <= BB[1]), AA <= BB[1])
+expect_equal(and3s(AA == AA, AA > BB[1]), AA > BB[1])
+expect_equal(and3s(AA == AA, AA < BB[1]), AA < BB[1])
+expect_equal(and3s(AA == AA, AA %in% BB[1]), AA %in% BB[1])
+expect_equal(and3s(AA == AA, AA %between% BB[1:2]), AA %between% BB[1:2])
 BB[2] <- BB[2] + 0.5
 expect_equal(and3s(AA == AA, AA != BB), AA != BB)
 expect_equal(and3s(AA == AA, AA == BB), AA == BB)
@@ -77,6 +99,21 @@ expect_equal(and3s(DD, AA >= BB), AA >= BB)
 expect_equal(and3s(DD, AA <= BB), AA <= BB)
 expect_equal(and3s(DD, AA > BB), AA > BB)
 expect_equal(and3s(DD, AA < BB), AA < BB)
+
+expect_equal(and3s(DD, AA != TRUE), AA != TRUE)
+expect_equal(and3s(DD, AA == TRUE), AA == TRUE)
+expect_equal(and3s(DD, AA >= TRUE), AA >= TRUE)
+expect_equal(and3s(DD, AA <= TRUE), AA <= TRUE)
+expect_equal(and3s(DD, AA > TRUE), AA > TRUE)
+expect_equal(and3s(DD, AA < TRUE), AA < TRUE)
+
+expect_equal(and3s(DD, AA != FALSE), AA != FALSE)
+expect_equal(and3s(DD, AA == FALSE), AA == FALSE)
+expect_equal(and3s(DD, AA >= FALSE), AA >= FALSE)
+expect_equal(and3s(DD, AA <= FALSE), AA <= FALSE)
+expect_equal(and3s(DD, AA > FALSE), AA > FALSE)
+expect_equal(and3s(DD, AA < FALSE), AA < FALSE)
+
 expect_equal(and3s(DD, AA %in% BB), AA %in% BB)
 expect_equal(and3s(DD, AA %between% c(FALSE, TRUE)), DD)
 expect_equal(and3s(DD, AA %between% c(TRUE, FALSE)), logical(length(DD)))
@@ -116,8 +153,6 @@ expect_equal(and3s(A > 913293496), A > 913293496)
 expect_equal(and3s(A < 913293496), A < 913293496)
 
 
-
-
 expect_equal(and3s(B %in% A, D, E),
              band3(B %in% A, D, E))
 expect_equal(and3s(D, B %in% A, D, E),
@@ -130,7 +165,7 @@ expect_equal(and3s(D, E, E, B %in% A, D, E),
 # })
 
 # test_that("%(between)% and %]between[%", {
-xi <- 1:10 + 0L
+xi <- 1:10e3 + 0L
 xd <- as.double(xi)
 ans <- xi > 1L & xi < 10L & xi != 5L
 expect_equal(and3s(xi %(between)% c(1L, 10L),

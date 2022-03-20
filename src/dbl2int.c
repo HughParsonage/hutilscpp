@@ -1,5 +1,22 @@
 #include "hutilscpp.h"
 
+int why_dbl_isnt_int(double x) {
+  if (ISNAN(x)) {
+    return DBL_NAN; // # nocov
+  }
+  if (x > 2147483647) {
+    return DBL_XHI;
+  }
+  if (x < -2147483647) {
+    return DBL_XLO;
+  }
+  int xi = (int)x;
+  if (xi != x) {
+    return DBL_FRA;
+  }
+  return DBL_INT;
+}
+
 bool do_is_safe2int(double x) {
   return !ISNAN(x) && x <= 2147483647 && x >= -2147483647 && ((int)x == x);
 }
@@ -23,7 +40,6 @@ int dbl_is_int(double x) {
   }
   return 1;
 }
-
 
 int dbl2int(double x) {
   if (dbl_is_int(x) != 1) {

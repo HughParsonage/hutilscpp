@@ -14,3 +14,7 @@ int cf_xlen(SEXP x, SEXP y) {
   return 0;
 
 }
+
+int op_xlen2(int o) {
+  return o == OP_BW || o == OP_BC || o == OP_BO || o == OP_WB;
+}

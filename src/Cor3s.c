@@ -34,76 +34,53 @@ static void vor2s_II(unsigned char * ansp,
                       const int * y,
                       R_xlen_t M,
                       int nThread) {
-  if (o == OP_IN) {
-    if (M <= 30) {
-      // Rprintf("M <= 30\n");
-      for (R_xlen_t i = 0; i < N; ++i) {
-        if (ansp[i] == 0) {
-          int xi = x[i];
-          unsigned char ans_i = 0;
-          for (int j = 0; j < M; ++j) {
-            if (xi == y[j]) {
-              ans_i = 1;
-              break;
-            }
-          }
-          ansp[i] = ans_i;
-        }
-      }
-    } else {
-      unsigned int fail[1] = {0};
-      do_uchar_in_II(ansp, fail,
-                     x, N,
-                     y, M,
-                     nThread,
-                     false);
-    }
-    return;
-  }
 
-  if (M == 2) {
-    switch(o) {
-    case OP_BW: {
-      int y0 = y[0];
-      int y1 = y[1];
-      if (y0 == y1) {
+  if (M == 2 && op_xlen2(o)) {
+    const int y0 = y[0];
+    const int y1 = y[1];
+    if (y0 > y1) {
+      return;
+    }
+    if (y0 == y1) {
+      switch(o) {
+      case OP_BW:
         FORLOOP_ors(==, y0)
         break;
-      }
-      if (y0 > y1) {
+      case OP_BO:
         break;
+      case OP_BC:
+        memset(ansp, 1, N);
       }
+      return;
+    }
+    switch(o) {
+    case OP_BW: {
       // y0 < y1
+      unsigned int uy0 = y0, uy1 = y1;
+      unsigned int b = uy1 - uy0;
       if (y0 == 0) {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-        for (R_xlen_t i = 0; i < N; ++i) {
+        FORLOOP({
           unsigned int xi = x[i];
-          ansp[i] |= xi <= y1;
-        }
+          ansp[i] |= xi <= uy1;
+        })
       } else if (y0 > 0) {
-        unsigned int u0 = y0;
-        unsigned int u1 = y1 - u0;
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-        for (R_xlen_t i = 0; i < N; ++i) {
-          ansp[i] |= (x[i] - u0) <= u1;
-        }
+        FORLOOP({
+          ansp[i] |= (((unsigned int)x[i]) - y0) <= b;
+        });
       } else {
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
-        for (R_xlen_t i = 0; i < N; ++i) {
+        FORLOOP({
           int xi = x[i];
-          ansp[i] |= xi >= y0;
-          ansp[i] |= xi <= y1;
-        }
+          ansp[i] |= xi >= y0 && xi <= y1;
+        })
       }
     }
-
-
+      break;
+    case OP_BO:
+      FORLOOP(ansp[i] |= x[i] > y0 && x[i] < y1;)
+      break;
+    case OP_BC:
+      FORLOOP(ansp[i] |= x[i] <= y0 || x[i] >= y1;)
+      break;
     }
     return;
   }
@@ -155,12 +132,29 @@ static void vor2s_II(unsigned char * ansp,
 }
 
 static void vor2s_ID(unsigned char * ansp,
-                      const int o,
-                      const int * x,
-                      R_xlen_t N,
-                      const double * y,
-                      R_xlen_t M,
-                      int nThread) {
+                     const int o,
+                     const int * x,
+                     R_xlen_t N,
+                     const double * y,
+                     R_xlen_t M,
+                     int nThread) {
+  if (M == 2 && op_xlen2(o)) {
+    const double y0 = y[0], y1 = y[1];
+    const double yy0 = ISNAN(y0) ? R_NegInf : y0;
+    const double yy1 = ISNAN(y1) ? R_PosInf : y1;
+
+    switch(o) {
+    case OP_BW:
+      uc_betweenidd(ansp, ORAND_OR, x, N, nThread, y0, y1);
+      return;
+    case OP_BO:
+      FORLOOP(ansp[i] |= (x[i] > yy0) && (x[i] < yy1);)
+      return;
+    case OP_BC:
+      FORLOOP(ansp[i] |= (x[i] <= yy0) || (x[i] >= yy1);)
+      return;
+    }
+  }
   if (M == N) {
     switch(o) {
     case OP_NE:
@@ -185,71 +179,95 @@ static void vor2s_ID(unsigned char * ansp,
   }
   if (M == 1) {
     double pre_y0 = y[0];
-    int safety = dbl_is_int(pre_y0);
-    int y0 = dbl2int(pre_y0); // tempo
+    int safety = why_dbl_isnt_int(pre_y0);
+    int y0 = (safety == DBL_INT || safety == DBL_FRA) ? pre_y0 : 0;
     switch(o) {
     case OP_NE:
-      if (safety == 0) {
-        return;
-      }
-      break;
-    case OP_EQ:
-      if (safety == 0) {
-        memset(ansp, 0, N);
-        return;
-      }
-      break;
-    case OP_GE:
-    case OP_GT:
-      if (safety == 0) {
-        if (pre_y0 > INT_MAX) {
-          memset(ansp, 0, N);
-          return;
-        }
-        if (pre_y0 <= -2147483647) {
-          return; // always true
-        }
-        y0 -= (y0 < 0);  // if negative wil be truncated towards zero
+      if (safety != DBL_INT) {
+        memset(ansp, 1, N);
+        // return
       } else {
-        if (safety == 2) {
-          memset(ansp, 2, N);
-          return;
-        }
+        int y0 = pre_y0;
+        FORLOOP(ansp[i] |= x[i] != y0;)
       }
-      break;
-    case OP_LE:
-    case OP_LT:
-      if (safety == 0) {
-        if (pre_y0 < -2147483647) {
-          memset(ansp, 0, N);
-          return;
-        }
-        if (y0 == 2147483647) {
-          return;
-        }
-        y0 += (y0 < 0);
-      }
-      break;
-    }
-    switch(o) {
-    case OP_NE:
-      FORLOOP_ors(!=, y0)
-      break;
+      return;
     case OP_EQ:
-      FORLOOP_ors(==, y0)
-      break;
-    case OP_GT:
-      FORLOOP_ors(>, y0)
-      break;
-    case OP_LT:
-      FORLOOP_ors(<, y0)
-      break;
+      if (safety != DBL_INT) {
+        // can never be true
+        // return
+      } else {
+        int y0 = pre_y0;
+        FORLOOP(ansp[i] |= x[i] == y0;)
+      }
+      return;
     case OP_GE:
-      FORLOOP_ors(>=, y0)
-      break;
+      switch(safety) {
+      case DBL_INT:
+        FORLOOP(ansp[i] |= x[i] >= y0;)
+        return;
+      case DBL_FRA: {
+        y0 += (y0 > 0);
+        FORLOOP(ansp[i] |= x[i] >= y0;)
+      }
+        return;
+      case DBL_XHI:
+        return;
+      case DBL_XLO:
+        memset(ansp, 1, N);
+        return;
+      }
+      break; // # nocov
+    case OP_GT:
+      switch(safety) {
+      case DBL_INT:
+        FORLOOP(ansp[i] |= x[i] > y0;)
+        return;
+      case DBL_FRA: {
+        y0 += (y0 > 0);
+        FORLOOP(ansp[i] |= x[i] >= y0;)
+      }
+        return;
+      case DBL_XHI:
+        return;
+      case DBL_XLO:
+        memset(ansp, 1, N);
+        return;
+      }
+      break; // # nocov
     case OP_LE:
-      FORLOOP_ors(<=, y0)
-      break;
+      switch(safety) {
+      case DBL_INT:
+        FORLOOP(ansp[i] |= x[i] <= y0;)
+        return;
+      case DBL_FRA: {
+        y0 -= (y0 < 0);
+        FORLOOP(ansp[i] |= x[i] <= y0;)
+      }
+        return;
+      case DBL_XHI:
+        memset(ansp, 1, N);
+        return;
+      case DBL_XLO:
+        return;
+      }
+      break; // # nocov
+    case OP_LT:
+      switch(safety) {
+      case DBL_INT:
+        FORLOOP(ansp[i] |= x[i] < y0;)
+        return;
+      case DBL_FRA: {
+        y0 -= (y0 < 0);
+        FORLOOP(ansp[i] |= x[i] <= y0;)
+      }
+        return;
+      case DBL_XHI:
+        memset(ansp, 1, N);
+        return;
+      case DBL_XLO:
+        return;
+      }
+      break; // # nocov
     }
   }
 }
@@ -261,6 +279,22 @@ static void vor2s_DI(unsigned char * ansp,
                       const int * y,
                       R_xlen_t M,
                       int nThread) {
+  if (M == 2 && op_xlen2(o)) {
+    const double y0 = y[0];
+    const double y1 = y[1];
+    switch(o) {
+    case OP_BW:
+      FORLOOP(ansp[i] |= x[i] >= y0 && x[i] <= y1;)
+      break;
+    case OP_BO:
+      FORLOOP(ansp[i] |= x[i] > y0 && x[i] < y1;)
+      break;
+    case OP_BC:
+      FORLOOP(ansp[i] |= x[i] <= y0 || x[i] >= y1;)
+      break;
+    }
+    return;
+  }
   if (M == N) {
     switch(o) {
     case OP_NE:
@@ -315,6 +349,21 @@ static void vor2s_DD(unsigned char * ansp,
                       const double * y,
                       R_xlen_t M,
                       int nThread) {
+  if (M == 2 && op_xlen2(o)) {
+    const double y0 = y[0], y1 = y[1];
+    switch(o) {
+    case OP_BW:
+      FORLOOP(ansp[i] |= (x[i] >= y0) && (x[i] <= y1);)
+      break;
+    case OP_BO:
+      FORLOOP(ansp[i] |= (x[i] > y0) && (x[i] < y1);)
+      break;
+    case OP_BC:
+      FORLOOP(ansp[i] |= (x[i] <= y0) || (x[i] >= y1);)
+      break;
+    }
+    return;
+  }
   if (M == N) {
     switch(o) {
     case OP_NE:
@@ -557,6 +606,7 @@ static void vor2s(unsigned char * ansp, const int o,
                   SEXP x, SEXP y, int nThread) {
   R_xlen_t N = xlength(x);
   R_xlen_t M = xlength(y);
+
   switch(TYPEOF(x)) {
   case LGLSXP:
     switch(TYPEOF(y)) {
@@ -618,6 +668,17 @@ SEXP Cors(SEXP oo1, SEXP xx1, SEXP yy1,
                   oo2, xx2, yy2,
                   nthreads);
     }
+    if (!isLogical(xx1)) {
+      SEXP xxx = PROTECT(fmatch(xx1, yy1, ScalarInteger(0),
+                                ScalarLogical(1),
+                                ScalarInteger(0),
+                                nthreads));
+      UNPROTECT(1);
+      return Cors(ScalarInteger(temp_o1 == OP_IN ? OP_EQ : OP_NE), xxx, R_NilValue,
+                  oo2, xx2, yy2,
+                  nthreads);
+    }
+
   }
   const int temp_o2 = sex2op(oo2);
   if (temp_o2 == OP_IN || temp_o2 == OP_NI) {
@@ -634,6 +695,17 @@ SEXP Cors(SEXP oo1, SEXP xx1, SEXP yy1,
                   xx1, yy1,
                   ScalarInteger(temp_o2 == OP_IN ? OP_BW : OP_BC),
                   xx2, yyy,
+                  nthreads);
+    }
+    if (!isLogical(xx2)) {
+      // fmatch returns NULL on logicals
+      SEXP xxx = PROTECT(fmatch(xx2, yy2, ScalarInteger(0),
+                                ScalarLogical(1),
+                                ScalarInteger(0),
+                                nthreads));
+      UNPROTECT(1);
+      return Cors(oo1, xx1, yy1,
+                  ScalarInteger(temp_o2 == OP_IN ? OP_EQ : OP_NE), xxx, R_NilValue,
                   nthreads);
     }
   }
