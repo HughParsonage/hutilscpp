@@ -36,6 +36,7 @@ jobs:
       options: --user=root
     steps:
     - uses: actions/checkout@v2
+    - uses: r-lib/actions/setup-r-dependencies@v2
     - uses: r-lib/actions/run-rchk@v2
   test-r-sanitizers:
     name: ASAN-UBSAN

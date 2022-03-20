@@ -54,6 +54,8 @@ expect_equal(or3s(AA != AA, AA %between% c(1L, 2L)), AA %between% c(1L, 2L))
 expect_equal(or3s(AA != AA, AA %between% c(1L, 2)), AA %between% c(1L, 2L))
 expect_equal(or3s(AA != AA, AA %between% c(1L, 2.2)), AA %between% c(1L, 2L))
 expect_equal(or3s(AA != AA, AA %between% c(NA, 1)), AA %between% c(NA, 1))
+expect_equal(or3s(AA != AA, AA %(between)% c(1L, 1L), type = "raw"), raw(length(AA)))
+expect_equal(or3s(AA != AA, AA %]between[% c(1L, 1L)), AA %]between[% c(1L, 1L))
 expect_equal(or3s(AA != AA, AA %(between)% c(NA, 1)), AA < 1)
 expect_equal(or3s(AA != AA, AA %]between[% c(NA, 1)), AA >= 1)
 expect_equal(or3s(AA != AA, AA %between% c(1L, NaN)), AA %between% c(1L, NaN))
@@ -135,6 +137,12 @@ A <-
 A <- rep_len(A, 1005)
 expect_equal(or3s(A > 2^32), A > 2^32)
 expect_equal(or3s(A < 2^32), A < 2^32)
+expect_equal(or3s(A <= -2^32), A <= -2^32)
+expect_equal(or3s(A <= 2^32), A <= 2^32)
+expect_equal(or3s(A < 2^32), A < 2^32)
+expect_equal(or3s(A < -2^32), A < -2^32)
+expect_equal(or3s(A >= -2^32), A >= -2^32)
+expect_equal(or3s(A > -2^32), A > -2^32)
 expect_equal(or3s(A == 913293496, A != 913293496),
              bor3(A == 913293496, A != 913293496))
 expect_equal(or3s(A == 913293496.5, A != 913293496),
@@ -173,6 +181,9 @@ expect_equal(or3s(A >= Inf, A > 0.5), A > 0.5)
 expect_equal(or3s(A >= Inf, A < 0.5), A < 0.5)
 expect_equal(or3s(A >= Inf, A <= 0.5), A <= 0.5)
 expect_equal(or3s(A >= Inf, A >= 0.5), A >= 0.5)
+expect_equal(or3s(A %between% c(1, L)), A %(between)% c(1, 5))
+expect_equal(or3s(A %(between)% c(1L, 5L)), A %(between)% c(1L, 5L))
+expect_equal(or3s(A %]between[% c(1L, 5L)), A %]between[% c(1L, 5L))
 
 
 expect_equal(or3s(B %in% A, D, E),
