@@ -43,6 +43,17 @@ jobs:
          Rscript -e "install.packages('glue', repos ='https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
          Rscript -e "install.packages('pak', repos ='https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
     - uses: r-lib/actions/run-rchk@v2
+      with:
+        setup-only: true
+    - name: Install package
+      run: |
+		install.packages('remotes', repos = "https://cran.rstudio.com/")
+        remotes::install_local()
+      shell: Rscript {0}
+    - uses: r-lib/actions/run-rchk@v2
+      with:
+        run-only: true
+
   test-r-sanitizers:
     name: ASAN-UBSAN
     timeout-minutes: 60
