@@ -41,6 +41,7 @@ jobs:
         LLVM_COMPILER: "clang"
       run: |-
          Rscript -e "install.packages('glue', repos ='https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
+         Rscript -e "install.packages('pak', repos ='https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
     - uses: r-lib/actions/run-rchk@v2
   test-r-sanitizers:
     name: ASAN-UBSAN
