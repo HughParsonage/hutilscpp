@@ -47,8 +47,8 @@ jobs:
         setup-only: true
     - name: Install package
       run: |
-		     install.packages('remotes', repos = "https://cran.rstudio.com/")
-         remotes::install_local()
+		    install.packages('remotes', repos = 'https://cran.rstudio.com/')
+        remotes::install_local()
       shell: Rscript {0}
     - uses: r-lib/actions/run-rchk@v2
       with:
