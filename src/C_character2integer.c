@@ -303,7 +303,7 @@ double char2dblO(const char * x, int n, int opt) {
       ten /= 10.0;
     }
   }
-  return o;
+  return is_negative ? -o : o;
 }
 
 SEXP character2double(SEXP x, SEXP NaStrings, int option) {

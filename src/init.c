@@ -21,8 +21,6 @@ extern SEXP C_op2M(SEXP);
 extern SEXP C_or_raw(SEXP, SEXP, SEXP);
 extern SEXP C_theEmptiestQuarters(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_theEuclidDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
-extern SEXP C_which_and1s(SEXP, SEXP, SEXP, SEXP);
-extern SEXP C_which_and2s(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_which_first_lgl1(SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_which_min_HaversineDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_which_raw(SEXP, SEXP);
@@ -124,8 +122,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"C_or_raw",                      (DL_FUNC) &C_or_raw,                       3},
     {"C_theEmptiestQuarters",         (DL_FUNC) &C_theEmptiestQuarters,          7},
     {"C_theEuclidDistance",           (DL_FUNC) &C_theEuclidDistance,            5},
-    {"C_which_and1s",                 (DL_FUNC) &C_which_and1s,                  4},
-    {"C_which_and2s",                 (DL_FUNC) &C_which_and2s,                  8},
     {"C_which_first_lgl1",            (DL_FUNC) &C_which_first_lgl1,             4},
     {"C_which_min_HaversineDistance", (DL_FUNC) &C_which_min_HaversineDistance,  5},
     {"C_which_raw",                   (DL_FUNC) &C_which_raw,                    2},

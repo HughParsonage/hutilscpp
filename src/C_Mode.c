@@ -48,6 +48,9 @@ SEXP C_Mode(SEXP x, SEXP nthreads) {
   };)
 
   R_xlen_t xrange_t = (R_xlen_t)xmax - (R_xlen_t)xmin;
+  if (xrange_t > INT_MAX) {
+    return R_NilValue;
+  }
   unsigned int range = xmax + 1u;
   range += ((unsigned int)(-xmin));
   if ((range >> 2) > N) {
