@@ -39,8 +39,7 @@ jobs:
     - uses: r-lib/actions/setup-r-dependencies@v2
       with:
         cache-version: 0
-      extra-packages:
-        any::glue
+        extra-packages: any::glue
     - uses: r-lib/actions/run-rchk@v2
   test-r-sanitizers:
     name: ASAN-UBSAN
