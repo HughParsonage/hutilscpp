@@ -37,6 +37,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install glue only
+      env:
+        LLVM_COMPILER: "clang"
       run: |-
          Rscript -e "install.packages('glue', repos ='https://demo.rstudiopm.com/all/__linux__/bionic/latest')"
     - uses: r-lib/actions/setup-r-dependencies@v2
