@@ -756,43 +756,9 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
           xlength(xx1), xlength(xx2), type2char(TYPEOF(xx2)));
   }
 
+#if defined _OPENMP
   int nThread = as_nThread(nthreads);
-  const int temp_o1 = sex2op(oo1);
-  if (temp_o1 == OP_IN || temp_o1 == OP_NI) {
-    // x %in% a:b    => x %between% c(a, b)
-    // x %notin% a:b => x %]between[% c(a, b)
-    if (is_seq(yy1)) {
-      int y0 = INTEGER(yy1)[0] - (temp_o1 == OP_NI);
-      int y2 = INTEGER(yy1)[xlength(yy1) - 1] + (temp_o1 == OP_NI);
-      SEXP yyy = PROTECT(allocVector(INTSXP, 2));
-      INTEGER(yyy)[0] = y0;
-      INTEGER(yyy)[1] = y2;
-      UNPROTECT(1);
-      return Cands(ScalarInteger(temp_o1 == OP_IN ? OP_BW : OP_BC),
-                   xx1, yyy,
-                   oo2, xx2, yy2,
-                   nthreads);
-    }
-  }
-
-  const int temp_o2 = sex2op(oo2);
-  if (temp_o2 == OP_IN || temp_o2 == OP_NI) {
-    // x %in% a:b    => x %between% c(a, b)
-    // x %notin% a:b => x %]between[% c(a, b)
-    if (is_seq(yy2)) {
-      int y0 = INTEGER(yy2)[0] - (temp_o2 == OP_NI);
-      int y2 = INTEGER(yy2)[xlength(yy2) - 1] + (temp_o2 == OP_NI);
-      SEXP yyy = PROTECT(allocVector(INTSXP, 2));
-      INTEGER(yyy)[0] = y0;
-      INTEGER(yyy)[1] = y2;
-      UNPROTECT(1);
-      return Cands(oo1,
-                   xx1, yy1,
-                   ScalarInteger(temp_o2 == OP_IN ? OP_BW : OP_BC),
-                   xx2, yyy,
-                   nthreads);
-    }
-  }
+#endif
 
   const int o1 = sex2op(oo1);
   const int o2 = sex2op(oo2);
@@ -826,7 +792,9 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
 
 
 SEXP C_which_raw(SEXP X, SEXP nthreads) {
+#if defined _OPENMP
   int nThread = as_nThread(nthreads);
+#endif
   R_xlen_t N = xlength(X);
   const unsigned char * xp = RAW(X);
   R_xlen_t o = 0, last = 0;
