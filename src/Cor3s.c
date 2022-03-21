@@ -652,64 +652,6 @@ SEXP Cors(SEXP oo1, SEXP xx1, SEXP yy1,
   }
 
   int nThread = as_nThread(nthreads);
-  const int temp_o1 = sex2op(oo1);
-  if (temp_o1 == OP_IN || temp_o1 == OP_NI) {
-    // x %in% a:b    => x %between% c(a, b)
-    // x %notin% a:b => x %]between[% c(a, b)
-    if (is_seq(yy1)) {
-      int y0 = INTEGER(yy1)[0] - (temp_o1 == OP_NI);
-      int y2 = INTEGER(yy1)[xlength(yy1) - 1] + (temp_o1 == OP_NI);
-      SEXP yyy = PROTECT(allocVector(INTSXP, 2));
-      INTEGER(yyy)[0] = y0;
-      INTEGER(yyy)[1] = y2;
-      UNPROTECT(1);
-      return Cors(ScalarInteger(temp_o1 == OP_IN ? OP_BW : OP_BC),
-                  xx1, yyy,
-                  oo2, xx2, yy2,
-                  nthreads);
-    }
-    if (!isLogical(xx1)) {
-      SEXP xxx = PROTECT(fmatch(xx1, yy1, ScalarInteger(0),
-                                ScalarLogical(1),
-                                ScalarInteger(0),
-                                nthreads));
-      UNPROTECT(1);
-      return Cors(ScalarInteger(temp_o1 == OP_IN ? OP_EQ : OP_NE), xxx, R_NilValue,
-                  oo2, xx2, yy2,
-                  nthreads);
-    }
-
-  }
-  const int temp_o2 = sex2op(oo2);
-  if (temp_o2 == OP_IN || temp_o2 == OP_NI) {
-    // x %in% a:b    => x %between% c(a, b)
-    // x %notin% a:b => x %]between[% c(a, b)
-    if (is_seq(yy2)) {
-      int y0 = INTEGER(yy2)[0] - (temp_o2 == OP_NI);
-      int y2 = INTEGER(yy2)[xlength(yy2) - 1] + (temp_o2 == OP_NI);
-      SEXP yyy = PROTECT(allocVector(INTSXP, 2));
-      INTEGER(yyy)[0] = y0;
-      INTEGER(yyy)[1] = y2;
-      UNPROTECT(1);
-      return Cors(oo1,
-                  xx1, yy1,
-                  ScalarInteger(temp_o2 == OP_IN ? OP_BW : OP_BC),
-                  xx2, yyy,
-                  nthreads);
-    }
-    if (!isLogical(xx2)) {
-      // fmatch returns NULL on logicals
-      SEXP xxx = PROTECT(fmatch(xx2, yy2, ScalarInteger(0),
-                                ScalarLogical(1),
-                                ScalarInteger(0),
-                                nthreads));
-      UNPROTECT(1);
-      return Cors(oo1, xx1, yy1,
-                  ScalarInteger(temp_o2 == OP_IN ? OP_EQ : OP_NE), xxx, R_NilValue,
-                  nthreads);
-    }
-  }
-
   const int o1 = sex2op(oo1);
   const int o2 = sex2op(oo2);
   SEXP ans = PROTECT(allocVector(RAWSXP, N));

@@ -39,6 +39,16 @@ finp <- function(x, table, nThread = getOption("hutilscpp.nThread", 1L)) {
     # avoid constants
     table <- copy(table)
   }
+  if (is_seq(table)) {
+    ans <- .Call("Cors",
+                 "%between%", x, table[c(1L, length(table))],
+                 NULL, NULL, NULL,
+                 nThread,
+                 PACKAGE = "hutilscpp")
+    if (!is.null(ans)) {
+      return(raw2lgl(ans))
+    }
+  }
   fmatchp(x, table, nomatch = 0L, nThread = nThread, fin = TRUE)
 }
 
