@@ -755,10 +755,8 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
     error("`(Cands1): xlength(xx1) = %lld`, yet `xlength(xx2) = %lld`. type '%s'",
           xlength(xx1), xlength(xx2), type2char(TYPEOF(xx2)));
   }
-
-#if defined _OPENMP
   int nThread = as_nThread(nthreads);
-#endif
+
 
   const int o1 = sex2op(oo1);
   const int o2 = sex2op(oo2);
