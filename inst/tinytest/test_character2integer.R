@@ -21,6 +21,8 @@ cx <- as.character(x)
 expect_equal(character2integer(cx), x)
 cx <- Comma(x, big.mark = "_")
 expect_equal(character2integer(cx), x)
+cx <- Comma(x, big.mark = "'")
+expect_equal(character2integer(cx), x)
 
 expect_equal(character2integer("12345678901", allow.double = NA), NA_integer_)
 expect_equal(character2integer("12345678901", allow.double = TRUE), 12345678901)
@@ -32,3 +34,11 @@ expect_equal(character2integer(" -5,000.5", allow.double = TRUE), -5000.5)
 
 expect_equal(character2integer(" -7,000", na.strings = NA_character_), -7000)
 expect_equal(character2integer(c(" -7,000", NA), na.strings = NA_character_), c(-7000L, NA))
+expect_true(is.integer(character2integer("1234.00")))
+expect_true(is.integer(character2integer("2,012,345,345.00000")))
+expect_true(identical(character2integer(c(NA, "1  234  567  890"), na.strings = "NA"),
+                      c(NA, 1234567890L)))
+
+
+expect_equal(Comma(c(NA, 50, 1234.44, -14.1, Inf, -Inf), digits = 2L),
+             c("NA", "50.00", "1,234.44", "-14.10", "Inf", "-Inf"))
