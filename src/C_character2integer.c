@@ -88,6 +88,8 @@ static int64_t char2int0(const char * x, int nn) {
     ++j_ws;
   }
   if (j_ws < (n - 11)) {
+    // account for possibly wide strings containing integers
+    // "1  234  567  890"
     for (int j = 0; j < 11; ++j) {
       char x_j = x[j + j_ws];
       if (isdigit(x_j)) {
