@@ -145,37 +145,6 @@ static int char2int1(const char * x, int n) {
   return x_negative ? -o : o;
 }
 
-static double char2double0(const char * x, int n) {
-  int j_ws = firstnws(x, n);
-  double o = 0;
-  bool x_negative = is_negative(x, j_ws, n);
-  if (x_negative) {
-    ++j_ws;
-  }
-  const unsigned char ucZ = '0';
-  int j = j_ws;
-  for (; j < n; ++j) {
-    unsigned char xj = x[j];
-    if (xj == '.') {
-      break;
-    }
-    unsigned int c_rel_0 = ((unsigned char)(xj - ucZ));
-    unsigned int m10 = UCHAR2TEN[c_rel_0] + 1;
-    o *= m10;
-    unsigned int v10 = UCHAR2INT[c_rel_0];
-    o += v10;
-  }
-  double ten = 0.1;
-  while (j < n) {
-    unsigned char xj = x[j];
-    unsigned int c_rel_0 = ((unsigned char)(xj - ucZ));
-    unsigned int m10 = UCHAR2TEN[c_rel_0] + 1;
-    ten /= m10;
-    unsigned int v10 = UCHAR2INT[c_rel_0];
-    o += v10 * ten;
-  }
-  return o;
-}
 
 static bool is_NA0(const char * x, const char * na_string, int n) {
   for (int j = 0; j < n; ++j) {
@@ -257,7 +226,7 @@ static SEXP str2int0_(SEXP x) {
 static SEXP str2int0(SEXP x, const char * na_string, int na_len, const int allow_dbl) {
   R_xlen_t N = xlength(x);
   SEXP ans = PROTECT(allocVector(INTSXP, N));
-  R_xlen_t first_double = 0;
+  R_xlen_t first_double = needsDouble(x);
   int * restrict ansp = INTEGER(ans);
   const SEXP * xp = STRING_PTR(x);
 
@@ -272,8 +241,14 @@ static SEXP str2int0(SEXP x, const char * na_string, int na_len, const int allow
       ansp[i] = NA_INTEGER;
       continue;
     }
-    int anspi = char2int0(xi, n);
+    int anspi = 0;
+    if (first_double && first_double >= i) {
+      anspi = char2int0(xi, n) & 2147483647u;
+    } else {
+      anspi = char2int0(xi, n);
+    }
     ansp[i] = anspi;
+
   }
   UNPROTECT(1);
   return ans;
@@ -281,8 +256,8 @@ static SEXP str2int0(SEXP x, const char * na_string, int na_len, const int allow
 
 double char2dblO(const char * x, int n, int opt) {
   double o = 0;
-  int j = 0;
-  bool is_negative = x[0] == '-';
+  int j = firstnws(x, n);
+  bool is_negative = x[j] == '-';
   for (; j < n; ++j) {
     unsigned char xj = x[j];
     if (xj == '.') {
@@ -290,8 +265,7 @@ double char2dblO(const char * x, int n, int opt) {
     }
     if (isdigit(xj)) {
       o *= 10;
-      o += xj - '0';
-
+      o += (xj - '0');
     }
   }
   ++j;

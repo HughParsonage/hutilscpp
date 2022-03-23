@@ -28,3 +28,7 @@ expect_error(character2integer("12345678901", allow.double = FALSE))
 
 expect_equal(Comma(5700000.05, digits = 2), "5,700,000.05")
 
+expect_equal(character2integer(" -5,000.5", allow.double = TRUE), -5000.5)
+
+expect_equal(character2integer(" -7,000", na.strings = NA_character_), -7000)
+expect_equal(character2integer(c(" -7,000", NA), na.strings = NA_character_), c(-7000L, NA))
