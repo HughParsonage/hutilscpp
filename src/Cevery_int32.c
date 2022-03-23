@@ -1,5 +1,6 @@
 #include "hutilscpp.h"
 
+#ifdef LONG_VECTOR_SUPPORT
 SEXP Cevery_int32(SEXP nthreads, SEXP Na) {
   const int na_req = asInteger(Na);
   int nThread = as_nThread(nthreads);
@@ -16,4 +17,8 @@ SEXP Cevery_int32(SEXP nthreads, SEXP Na) {
   UNPROTECT(1);
   return ans;
 }
-
+#else
+SEXP Cevery_int32(SEXP nthreads, SEXP Na) {
+  return R_NilValue;
+}
+#endif
