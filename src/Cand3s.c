@@ -167,7 +167,8 @@ static void vand2s_II(unsigned char * ansp,
     int y0 = y[0];
     int y1 = y[1];
     if (y0 > y1) {
-      memset(ansp, 0, N);
+      // memset(ansp, 0, N);
+      FORLOOP(ansp[i] = 0;)
       return;
     }
     switch(o) {
