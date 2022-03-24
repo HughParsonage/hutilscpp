@@ -5,6 +5,19 @@ do_and3 <- hutilscpp:::do_and3
 "%]between[%" <- hutilscpp:::`%]between[%`
 # })
 # test_that("and3s works", {
+x <- rep_len(c(5L, -5:10), 1e5)
+expect_false(any(and3s(x %between% c(2e10, 3e10))))
+expect_true(all(and3s(x %between% c(-2e10, 3e10))))
+expect_equal(and3s(x %between% c(4.5, 5)), x %between% c(4.5, 5))
+expect_false(any(and3s(x %between% c(-2e10, -1e10))))
+expect_false(any(and3s(x %(between)% c(2e10, 3e10))))
+expect_true(all(and3s(x %]between[% c(2e10, 3e10))))
+
+expect_equal(and3s(x %(between)% c(1.2, 1e10)),
+             x %(between)% c(1.2, 1e10))
+expect_equal(and3s(x %]between[% c(1.2, 1e10)),
+             x %]between[% c(1.2, 1e10))
+
 x <- 1:10000
 expect_true(all(and3s(x != 0L,
                       x >= 1L,

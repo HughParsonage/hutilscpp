@@ -42,3 +42,4 @@ expect_true(identical(character2integer(c(NA, "1  234  567  890"), na.strings = 
 
 expect_equal(Comma(c(NA, 50, 1234.44, -14.1, Inf, -Inf), digits = 2L),
              c("NA", "50.00", "1,234.44", "-14.10", "Inf", "-Inf"))
+
