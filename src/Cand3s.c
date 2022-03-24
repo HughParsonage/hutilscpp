@@ -271,95 +271,76 @@ static void vand2s_ID(unsigned char * ansp,
                       const double * y,
                       R_xlen_t M,
                       int nThread) {
-  if (M == 2) {
-    double pre_y0 = y[0];
-    double pre_y1 = y[1];
-    if (pre_y0 > pre_y1) {
-      memset(ansp, 0, N);
-      return;
-    }
-    int y0 = 0;
-    int pre_y0_is_int = dbl_is_int(pre_y0);
-    if (pre_y0_is_int == 2) {
-      // c(NA, y1)  ===>  "<=,<,>= y1"
-      double y1[1] = {y[1]};
-      switch(o) {
-      case OP_BW:
-        vand2s_ID(ansp, OP_LE, x, N, y1, 1, nThread);
-        break;
-      case OP_BO:
-        vand2s_ID(ansp, OP_LT, x, N, y1, 1, nThread);
-        break;
-      case OP_BC:
-        vand2s_ID(ansp, OP_GE, x, N, y1, 1, nThread);
-        break;
-      }
-      return;
-    }
-    switch(pre_y0_is_int) {
-    case 0:
-      if (pre_y0 >= INT_MIN && pre_y0 <= INT_MAX) {
-        y0 = pre_y0;
-        y0 -= (pre_y0 < 0);
-      } else {
-        if (o == OP_BC) {
-          if (pre_y0 > INT_MAX) {
-            return;
-          }
-        }
-      }
-      break;
-    case 1:
-      y0 = pre_y0;
-      break;
-    }
-    int y1 = 0;
-    int pre_y1_is_int = dbl_is_int(pre_y1);
-
-    if (pre_y1_is_int == 2) {
-      double y0[1] = {y[0]};
-      switch(o) {
-      case OP_BW:
-        vand2s_ID(ansp, OP_GE, x, N, y0, 1, nThread);
-        break;
-      case OP_BO:
-        vand2s_ID(ansp, OP_GT, x, N, y0, 1, nThread);
-        break;
-      case OP_BC:
-        vand2s_ID(ansp, OP_LE, x, N, y0, 1, nThread);
-        break;
-      }
-      return;
-    }
-    switch(pre_y1_is_int) {
-    case 0:
-      if (pre_y1 >= INT_MIN && pre_y1 <= INT_MAX) {
-        y1 = pre_y1;
-        y1 -= (pre_y1 < 0);
-      } else {
-        if (o == OP_BC) {
-          if (pre_y1 < INT_MIN) {
-            return;
-          }
-        }
-      }
-      break;
-    case 1:
-      y1 = pre_y1;
-      break;
-    case 2:
-      y1 = INT_MAX;
-      break;
-    }
+  if (M == 2 && op_xlen2(o)) {
+    double pre_y0 = ISNAN(y[0]) ? R_NegInf : y[0];
+    double pre_y1 = ISNAN(y[1]) ? R_PosInf : y[1];
     switch(o) {
     case OP_BW:
-      FORLOOP(ansp[i] &= betweeniiuu(x[i], y0, y1);)
-      break;
+      switch(why_dbl_isnt_int(pre_y0)) {
+      case DBL_INT:
+        switch(why_dbl_isnt_int(pre_y1)) {
+        case DBL_INT:
+          FORLOOP(ansp[i] &= betweeniiuu(x[i], (int)pre_y0, (int)pre_y1);)
+          return;
+        case DBL_FRA:
+          FORLOOP(ansp[i] &= betweeniiuu(x[i], (int)pre_y0, (int)pre_y1 + (pre_y1 < 0));)
+          return;
+        case DBL_XLO:
+          FORLOOP(ansp[i] &= 0;)
+          return;
+        case DBL_XHI:
+          FORLOOP(ansp[i] &= x[i] >= ((int)pre_y0);)
+          return;
+        }
+        break;
+
+      case DBL_FRA: {
+        int yy0 = (int)pre_y0;
+        yy0 += (pre_y0 > 0);
+        int yy1 = (int)pre_y1;
+        switch(why_dbl_isnt_int(pre_y1)) {
+        case DBL_INT:
+          FORLOOP(ansp[i] &= betweeniiuu(x[i], yy0, yy1);)
+          return;
+        case DBL_FRA:
+          FORLOOP(ansp[i] &= betweeniiuu(x[i], (int)pre_y0 , (int)pre_y1 + (pre_y1 < 0));)
+          return;
+        case DBL_XLO:
+          FORLOOP(ansp[i] &= 0;)
+          return;
+        case DBL_XHI:
+          FORLOOP(ansp[i] &= x[i] >= ((int)pre_y0);)
+          return;
+        }
+      }
+        break;
+      case DBL_XLO:
+        switch(why_dbl_isnt_int(pre_y1)) {
+        case DBL_INT: {
+          int y1 = pre_y1;
+          FORLOOP(ansp[i] &= x[i] <= y1;)
+        }
+          return;
+        case DBL_FRA:
+          FORLOOP(ansp[i] &= x[i] < pre_y1;)
+          return;
+        case DBL_XLO:
+          FORLOOP(ansp[i] &= 0;)
+          return;
+        case DBL_XHI:
+          // nothing to be done
+          return;
+        }
+        break;
+      case DBL_XHI:
+        // always false
+        FORLOOP(ansp[i] = 0;)
+      }
     case OP_BO:
-      FORLOOP(ansp[i] &= betweeniiuu(x[i], y0 + 1u, y1 - 1u);)
+      FORLOOP(ansp[i] &= (x[i] > pre_y0) && (x[i] < pre_y1);)
       break;
     case OP_BC:
-      FORLOOP(ansp[i] &= !betweeniiuu(x[i], y0 + 1u, y1 - 1u);)
+      FORLOOP(ansp[i] &= (x[i] <= pre_y0) || (x[i] >= pre_y1);)
       break;
     }
     return;
