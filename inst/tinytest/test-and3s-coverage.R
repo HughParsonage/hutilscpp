@@ -82,6 +82,8 @@ expect_equal(and3s(AA == AA, AA > BB[1]), AA > BB[1])
 expect_equal(and3s(AA == AA, AA < BB[1]), AA < BB[1])
 expect_equal(and3s(AA == AA, AA %in% BB[1]), AA %in% BB[1])
 expect_equal(and3s(AA == AA, AA %between% BB[1:2]), AA %between% BB[1:2])
+expect_equal(and3s(AA == AA, AA %(between)% BB[1:2]), AA %(between)% BB[1:2])
+expect_equal(and3s(AA == AA, AA %]between[% BB[1:2]), AA %]between[% BB[1:2])
 BB[2] <- BB[2] + 0.5
 expect_equal(and3s(AA == AA, AA != BB), AA != BB)
 expect_equal(and3s(AA == AA, AA == BB), AA == BB)
