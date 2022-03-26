@@ -105,7 +105,6 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
       xx2 <- exprB
     }
   }
-
   switch(oo1,
          "%in%" = {
            xx1 <- finp(xx1, yy1, nThread = nThread)

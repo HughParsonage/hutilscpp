@@ -21,6 +21,9 @@
 fmatchp <- function(x, table, nomatch = NA_integer_, nThread = getOption("hutilscpp.nThread", 1L), fin = FALSE,
                     whichFirst = 0L) {
   nThread <- check_omp(nThread)
+  if (is.logical(x)) {
+    return(.Call("fmatchp_lgl", x, as.logical(table), nThread, fin, PACKAGE = "hutilscpp"))
+  }
   stopifnot(is.integer(nomatch))
   check_TF(fin)
   if (!is.symbol(substitute(table))) {
