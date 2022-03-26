@@ -614,6 +614,9 @@ R_xlen_t do_which_first_xi_aii(const int * x, int op, int a1, int a2, R_xlen_t N
   if (a2 == NA_INTEGER) {
     a2 = INT_MAX;
   }
+  if (a1 > a2) {
+    return 0;
+  }
   switch(op) {
   case OP_BW:
     for (R_xlen_t i = 0; i < N; ++i) {
@@ -645,11 +648,15 @@ R_xlen_t do_which_first_xd_add(const double * x,
                                double a1,
                                double a2,
                                R_xlen_t N) {
+
   if (ISNAN(a1)) {
     a1 = R_NegInf;
   }
   if (ISNAN(a2)) {
     a2 = R_PosInf;
+  }
+  if (a1 > a2) {
+    return 0;
   }
   switch(op) {
   case OP_BW:
@@ -850,13 +857,16 @@ R_xlen_t do_which_first_xi_ad(const int * x,
 }
 
 R_xlen_t do_which_first_xi_add(const int * x, int op, double a1, double a2, R_xlen_t N) {
+
   if (ISNAN(a1) || a1 < -2147483647) {
     a1 = R_NegInf;
   }
   if (ISNAN(a2) || a1 > 2147483647) {
     a2 = R_PosInf;
   }
-
+  if (a1 > a2) {
+    return 0;
+  }
   switch(op) {
   case OP_BW:
     for (R_xlen_t i = 0; i < N; ++i) {

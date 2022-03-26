@@ -92,6 +92,13 @@ expect_equal(and3s(AA == AA, AA <= BB), AA <= BB)
 expect_equal(and3s(AA == AA, AA > BB), AA > BB)
 expect_equal(and3s(AA == AA, AA < BB), AA < BB)
 expect_equal(and3s(AA == AA, AA %in% BB), AA %in% BB)
+expect_equal(and3s(AA == AA, AA != BB[1]), AA != BB[1])
+expect_equal(and3s(AA == AA, AA == BB[1]), AA == BB[1])
+expect_equal(and3s(AA == AA, AA >= BB[1]), AA >= BB[1])
+expect_equal(and3s(AA == AA, AA <= BB[1]), AA <= BB[1])
+expect_equal(and3s(AA == AA, AA > BB[1]), AA > BB[1])
+expect_equal(and3s(AA == AA, AA < BB[1]), AA < BB[1])
+
 
 AA <- rep_len(c(TRUE, FALSE, TRUE), length(AA))
 BB <- rep_len(c(FALSE, FALSE, TRUE, TRUE, TRUE), length(AA))

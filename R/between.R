@@ -28,6 +28,9 @@
   if (is.na(b)) {
     return(x <= a)
   }
+  if (b < a) {
+    return(logical(length(x)))
+  }
   or(x <= a, x >= b)
 }
 

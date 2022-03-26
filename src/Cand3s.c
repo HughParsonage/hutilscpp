@@ -273,8 +273,28 @@ static void vand2s_ID(unsigned char * ansp,
                       R_xlen_t M,
                       int nThread) {
   if (M == 2 && op_xlen2(o)) {
-    double pre_y0 = ISNAN(y[0]) ? R_NegInf : y[0];
-    double pre_y1 = ISNAN(y[1]) ? R_PosInf : y[1];
+    bool y0_NAN = ISNAN(y[0]);
+    bool y1_NAN = ISNAN(y[1]);
+
+    if (o == OP_BC) {
+      if (y0_NAN && y1_NAN) {
+        return;
+      }
+      if (y0_NAN) {
+        FORLOOP(ansp[i] &= x[i] >= y[1];)
+        return;
+      }
+      if (y1_NAN) {
+        FORLOOP(ansp[i] &= x[i] <= y[0];)
+        return;
+      }
+    }
+    double pre_y0 = y0_NAN ? R_NegInf : y[0];
+    double pre_y1 = y1_NAN ? R_PosInf : y[1];
+    if (pre_y0 > pre_y1) {
+      FORLOOP(ansp[i] = 0;)
+      return;
+    }
     switch(o) {
     case OP_BW:
       switch(why_dbl_isnt_int(pre_y0)) {
@@ -448,7 +468,7 @@ static void vand2s_DI(unsigned char * ansp,
                       const int * y,
                       R_xlen_t M,
                       int nThread) {
-  if (M == 2) {
+  if (M == 2 && op_xlen2(o)) {
     int y0 = y[0];
     int y1 = y[1];
     switch(o) {
@@ -459,7 +479,7 @@ static void vand2s_DI(unsigned char * ansp,
       FORLOOP(ansp[i] = x[i] > y0 && x[i] < y1;)
       return;
     case OP_BC:
-      FORLOOP(ansp[i] = x[i] <= y0 && x[i] >= y1;)
+      FORLOOP(ansp[i] = x[i] <= y0 || x[i] >= y1;)
       return;
     }
   }
