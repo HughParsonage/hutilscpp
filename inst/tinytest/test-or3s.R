@@ -1,8 +1,16 @@
 library(hutilscpp)
 library(hutils)
 library(data.table)
+
+x <- rep_len(c(TRUE, FALSE), 1e4)
+expect_false(any(or3s(x %between% c(TRUE, FALSE))))
+expect_false(any(or3s(x %(between)% c(FALSE, TRUE))))
+expect_false(any(or3s(x %]between[% c(FALSE, TRUE))))
+expect_true(all(or3s(x %between% c(FALSE, TRUE))))
+
+
 # test_that("big doubles", {
-x <- 1:5 + 0.5 + .Machine$integer.max
+x <- rep_len(1:5 + 0.5 + .Machine$integer.max, 1e4)
 expect_equal(or3s(x > 2147483649.5), x > 2147483649.5)
 expect_equal(sum_or3s(x > 2147483649.5), sum(x > 2147483649.5))
 expect_equal(and3s(x > 2147483649.5), x > 2147483649.5)
@@ -30854,9 +30862,9 @@ expect_equal(or3s(vnp >= 9L, d >= 9L, v >= 9L),
 x <- integer(0)
 y <- integer(0)
 
-exprA <- c(1:10)
-exprB <- 1:10 + 5L
-exprC <- 1:10 + 1L
+exprA <- c(1:1001)
+exprB <- 1:1001 + 5L
+exprC <- 1:1001 + 1L
 
 or <- `|`
 or3 <- function(i, j, k) i | j | k

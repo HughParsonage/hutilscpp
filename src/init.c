@@ -107,6 +107,7 @@ extern SEXP Cwhich_true_onwards(SEXP);
 extern SEXP Cwhich3(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cwhich3_mem(SEXP, SEXP, SEXP, SEXP);
 extern SEXP fmatch(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP fmatchp_lgl(SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
     {"C_abs_diff",                    (DL_FUNC) &C_abs_diff,                     4},
@@ -208,6 +209,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cwhich3",                       (DL_FUNC) &Cwhich3,                        7},
     {"Cwhich3_mem",                   (DL_FUNC) &Cwhich3_mem,                    4},
     {"fmatch",                        (DL_FUNC) &fmatch,                         6},
+    {"fmatchp_lgl",                   (DL_FUNC) &fmatchp_lgl,                    4},
     {NULL, NULL, 0}
 };
 
