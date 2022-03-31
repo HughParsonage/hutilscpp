@@ -18,7 +18,9 @@
 #' finp(x, y)
 #'
 #' @export
-fmatchp <- function(x, table, nomatch = NA_integer_, nThread = getOption("hutilscpp.nThread", 1L), fin = FALSE,
+fmatchp <- function(x, table, nomatch = NA_integer_,
+                    nThread = getOption("hutilscpp.nThread", 1L),
+                    fin = FALSE,
                     whichFirst = 0L) {
   nThread <- check_omp(nThread)
   if (is.logical(x)) {
@@ -52,7 +54,8 @@ finp <- function(x, table, nThread = getOption("hutilscpp.nThread", 1L)) {
       return(raw2lgl(ans))
     }
   }
-  fmatchp(x, table, nomatch = 0L, nThread = nThread, fin = TRUE)
+
+  raw2lgl(fmatchp(x, table, nomatch = 0L, nThread = nThread, fin = TRUE))
 }
 
 #' @rdname fmatchp
@@ -64,9 +67,11 @@ fnotinp <- function(x, table, nThread = getOption("hutilscpp.nThread", 1L)) {
     table <- copy(table)
   }
   ans <- fmatchp(x, table, nomatch = 0L, nThread = nThread, fin = TRUE)
-  FLIP(ans);
+  raw2lgl(FLIP(ans))
 }
-FLIP <- `!`
+FLIP <- function(x) {
+  .Call("C_FLIP", x, PACKAGE = "hutilscpp")
+}
 do_par_in_hash_int <- finp
 do_par_in_hash_dbl <- finp
 

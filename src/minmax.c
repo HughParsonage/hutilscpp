@@ -69,3 +69,7 @@ double Maxd(const double * x, R_xlen_t N, int nThread) {
   }
   return o;
 }
+
+
+
+

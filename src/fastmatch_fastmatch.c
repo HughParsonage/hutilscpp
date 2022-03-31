@@ -224,6 +224,14 @@ static double NA_int2real(hash_index_t res) {
 }
 // # nocov end
 
+static bool use_uchar(SEXP x, SEXP y, bool fin, int nThread, int yminmax[2]) {
+  if (!isInteger(x) || !isInteger(y) || !fin) {
+    return false;
+  }
+  return thinner(INTEGER(y), xlength(y), nThread, UCHAR_THRESH, yminmax);
+}
+
+
 /* the only externally visible function to be called from R */
 SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthreads) {
   int nThread = asInteger(nthreads);
@@ -233,6 +241,10 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
   }
   const int whichfirst = asInteger(WhichFirst);
   const bool fin = asLogical(Fin);
+  int yminmax[2] = {1, -1};
+  if (use_uchar(x, y, fin, nThread, yminmax)) {
+    return par_in_intchar(x, y, nThread, yminmax, false);
+  }
   SEXP a;
   SEXPTYPE type;
   hash_t *h = 0;

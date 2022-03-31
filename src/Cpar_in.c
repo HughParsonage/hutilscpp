@@ -40,28 +40,27 @@ void do_uchar_in_II(unsigned char * ansp,
                     const int * yp,
                     R_xlen_t M,
                     int nThread,
-                    bool opposite) {
-  int ymin = yp[0], ymax = yp[0];
+                    bool opposite,
+                    int yminmax[2]) {
+  int ymin = yminmax[0], ymax = yminmax[1];
+  if (ymax < ymin) {
 #if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread) reduction(min : ymin) reduction(max : ymax)
 #endif
-  for (int i = 1; i < M; ++i) {
-    int ypi = yp[i];
-    ymin = ypi < ymin ? ypi : ymin;
-    ymax = ypi > ymax ? ypi : ymax;
+    for (int i = 1; i < M; ++i) {
+      int ypi = yp[i];
+      ymin = ypi < ymin ? ypi : ymin;
+      ymax = ypi > ymax ? ypi : ymax;
+    }
   }
   if (ymin >= 0) {
     // can assume range is ok and differences are integer, always
-    int y_range = ymax - ymin;
-    if (y_range > N * 2) {
-
-    }
-    unsigned char * yc = malloc(sizeof(char) * y_range);
+    int y_range = ymax + 1 - ymin;
+    unsigned char * yc = calloc(y_range, sizeof(char));
     if (yc == NULL) {
       fail[0] = 1;
       return;
     }
-    memset(yc, opposite, sizeof(char) * y_range);
 #if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
 #endif
@@ -102,22 +101,31 @@ void do_uchar_in_II(unsigned char * ansp,
     int64_t ypi = yp[i];
     yc[ypi - ymin64] = 1;
   }
-  memset(ansp, 0, sizeof(char) * N);
-#if defined _OPENMP && _OPENMP >= 201511
-#pragma omp parallel for num_threads(nThread)
-#endif
+
   for (R_xlen_t i = 0; i < N; ++i) {
+    ansp[i] = 0;
     int xpi = xp[i];
     if (xpi < ymin || xpi > ymax) {
       continue;
     }
     int64_t upi = (int64_t)xpi - ymin64;
-
     ansp[i] = yc[upi];
   }
   free(yc);
   fail[0] = 0;
 
+}
+
+SEXP par_in_intchar(SEXP xx, SEXP yy, int nThread, int yminmax[2], bool opposite) {
+  const int * xp = INTEGER(xx);
+  const int * yp = INTEGER(yy);
+  R_xlen_t N = xlength(xx);
+  SEXP ans = PROTECT(allocVector(RAWSXP, N));
+  unsigned char * ansp = RAW(ans);
+  unsigned int fail[2] = {0};
+  do_uchar_in_II(ansp, fail, xp, N, yp, xlength(yy), nThread, opposite, yminmax);
+  UNPROTECT(1);
+  return ans;
 }
 
 SEXP Cpar_in_intchar(SEXP xx, SEXP yy, SEXP nthreads) {
@@ -145,7 +153,8 @@ SEXP Cpar_in_intchar(SEXP xx, SEXP yy, SEXP nthreads) {
 
 
   unsigned int fail[1] = {0};
-  do_uchar_in_II(ansp, fail, xp, N, yp, M, nThread, true);
+  int yminmax[2] = {0};
+  do_uchar_in_II(ansp, fail, xp, N, yp, M, nThread, true, yminmax);
   if (fail[0]) {
     UNPROTECT(1);
     return R_NilValue;
