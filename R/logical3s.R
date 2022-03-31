@@ -107,24 +107,24 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
   }
   switch(oo1,
          "%in%" = {
-           xx1 <- finp(xx1, yy1, nThread = nThread)
+           xx1 <- finp(xx1, yy1, nThread = nThread, .raw = 1L)
            yy1 <- NULL
            oo1 <- "=="
          },
          "%notin%" = {
-           xx1 <- fnotinp(xx1, yy1, nThread = nThread)
+           xx1 <- fnotinp(xx1, yy1, nThread = nThread, .raw = 1L)
            yy1 <- NULL
            oo1 <- "=="
          })
   if (is.character(oo2)) {
     switch(oo2,
            "%in%" = {
-             xx2 <- finp(xx2, yy2, nThread = nThread)
+             xx2 <- finp(xx2, yy2, nThread = nThread, .raw = 1L)
              yy2 <- NULL
              oo2 <- "=="
            },
            "%notin%" = {
-             xx2 <- fnotinp(xx2, yy2, nThread = nThread)
+             xx2 <- fnotinp(xx2, yy2, nThread = nThread, .raw = 1L)
              yy2 <- NULL
              oo2 <- "=="
            })
@@ -277,14 +277,13 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
           oo2, xx2, yy2,
           nThread,
           PACKAGE = "hutilscpp")
+  # nocov start
   if (is.null(ans)) {
     message("Falling back to `|`")
     # fall back
-    return(switch(type,
-                  "logical" = exprA | exprB,
-                  "raw" = .or_raw(exprA, exprB),
-                  "which" = which(exprA | exprB)))
+    return(Reduce("|", list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...)))
   }
+  # nocov end
 
   if (missing(exprC) && missing(..1)) {
     return(switch(type,
@@ -314,23 +313,7 @@ do_par_in <- function(x, tbl, nThread = 1L) {
   }
 }
 
-do_par_in2 <- function(x, tbl, nThread = getOption("hutilscpp.nThread", 1L),
-                       raw_result = FALSE) {
-  nThread <- check_omp(nThread)
-  ans <-
-    if (is.integer(x) && is.integer(tbl)) {
-      .Call("Cpar_in_intchar", x, tbl, nThread, PACKAGE = packageName)
-    } else {
-      x %in% tbl # nocov
-    }
-  if (isTRUE(raw_result)) {
-    as.raw(ans)
-  } else {
-    raw2lgl(ans)
-  }
-}
 
-missing_or_null <- function(x) missing(x) || is.null(substitute(x))
 
 
 

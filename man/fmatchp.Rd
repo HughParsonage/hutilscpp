@@ -12,12 +12,13 @@ fmatchp(
   nomatch = NA_integer_,
   nThread = getOption("hutilscpp.nThread", 1L),
   fin = FALSE,
-  whichFirst = 0L
+  whichFirst = 0L,
+  .raw = 0L
 )
 
-finp(x, table, nThread = getOption("hutilscpp.nThread", 1L))
+finp(x, table, nThread = getOption("hutilscpp.nThread", 1L), .raw = 0L)
 
-fnotinp(x, table, nThread = getOption("hutilscpp.nThread", 1L))
+fnotinp(x, table, nThread = getOption("hutilscpp.nThread", 1L), .raw = 0L)
 }
 \arguments{
 \item{x, table, nomatch}{As in \code{match}.}
@@ -31,6 +32,12 @@ if \code{TRUE}, return \code{TRUE}.}
 \item{whichFirst}{\code{integer(1)} If \code{0L}, not used. If positive,
 returns the index of the first element in \code{x} found in \code{table};
 if negative, returns the last element in \code{x} found in \code{table}.}
+
+\item{.raw}{\code{integer(1)}
+\describe{
+\item{0}{Return integer or logical as required.}
+\item{1}{Return raw if possible.}
+}}
 }
 \description{
 \code{fastmatch::fmatch} and logical versions, with parallelization.

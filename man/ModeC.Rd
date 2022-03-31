@@ -4,7 +4,11 @@
 \alias{ModeC}
 \title{Most common element}
 \usage{
-ModeC(x, nThread = getOption("hutilscpp.nThread", 1L), .range_fmatch = 1e+09)
+ModeC(
+  x,
+  nThread = getOption("hutilscpp.nThread", 1L),
+  .range_fmatch = 1000000000
+)
 }
 \arguments{
 \item{x}{An integer vector.}
