@@ -10,6 +10,12 @@
 #' returns the index of the first element in \code{x} found in \code{table};
 #' if negative, returns the last element in \code{x} found in \code{table}.
 #'
+#' @param .raw \code{integer(1)}
+#' \describe{
+#' \item{0}{Return integer or logical as required.}
+#' \item{1}{Return raw if possible.}
+#' }
+#'
 #' @examples
 #' x <- c(1L, 4:5)
 #' y <- c(2L, 4:5)
@@ -21,7 +27,8 @@
 fmatchp <- function(x, table, nomatch = NA_integer_,
                     nThread = getOption("hutilscpp.nThread", 1L),
                     fin = FALSE,
-                    whichFirst = 0L) {
+                    whichFirst = 0L,
+                    .raw = 0L) {
   nThread <- check_omp(nThread)
   if (is.logical(x)) {
     return(.Call("fmatchp_lgl", x, as.logical(table), nThread, fin, PACKAGE = "hutilscpp"))
@@ -32,13 +39,18 @@ fmatchp <- function(x, table, nomatch = NA_integer_,
     # avoid constants
     table <- copy(table)
   }
-  .Call("fmatch", x, table, nomatch, fin, whichFirst, nThread, PACKAGE = packageName) %||%
-    match_last_resort(x, table, nomatch, nThread, fin, whichFirst) # nocov
+  ans <- .Call("fmatch", x, table, nomatch, fin, whichFirst, nThread, PACKAGE = packageName)
+  if (is.null(ans)) {
+    return(match_last_resort(x, table, nomatch, nThread, fin, whichFirst)) # nocov
+  }
+  ans
+
 }
 
 #' @rdname fmatchp
 #' @export
-finp <- function(x, table, nThread = getOption("hutilscpp.nThread", 1L)) {
+finp <- function(x, table, nThread = getOption("hutilscpp.nThread", 1L),
+                 .raw = 0L) {
   nThread <- check_omp(nThread)
   if (!is.symbol(substitute(table))) {
     # avoid constants
@@ -55,28 +67,40 @@ finp <- function(x, table, nThread = getOption("hutilscpp.nThread", 1L)) {
     }
   }
 
-  raw2lgl(fmatchp(x, table, nomatch = 0L, nThread = nThread, fin = TRUE))
+  ans <- fmatchp(x, table, nomatch = 0L, nThread = nThread, fin = TRUE)
+  if (.raw) {
+    return(ans)
+  }
+  raw2lgl(ans)
 }
 
 #' @rdname fmatchp
 #' @export
-fnotinp <- function(x, table, nThread = getOption("hutilscpp.nThread", 1L)) {
+fnotinp <- function(x, table, nThread = getOption("hutilscpp.nThread", 1L),
+                    .raw = 0L) {
   nThread <- check_omp(nThread)
   if (!is.symbol(substitute(table))) {
     # avoid constants
     table <- copy(table)
   }
   ans <- fmatchp(x, table, nomatch = 0L, nThread = nThread, fin = TRUE)
+  if (.raw) {
+    return(FLIP(ans))
+  }
   raw2lgl(FLIP(ans))
+
 }
 FLIP <- function(x) {
   .Call("C_FLIP", x, PACKAGE = "hutilscpp")
 }
+
+
 do_par_in_hash_int <- finp
 do_par_in_hash_dbl <- finp
 
 # nocov start
-match_last_resort <- function(x, table, nomatch = NA_integer_, nThread = getOption("hutilscpp.nThread", 1L),
+match_last_resort <- function(x, table, nomatch = NA_integer_,
+                              nThread = getOption("hutilscpp.nThread", 1L),
                               fin = FALSE,
                               whichFirst = 0L) {
   if (isTRUE(fin)) {
@@ -84,10 +108,10 @@ match_last_resort <- function(x, table, nomatch = NA_integer_, nThread = getOpti
   }
   if (whichFirst) {
     if (whichFirst == 1L) {
-      first_which(x %in% table)
+      return(first_which(x %in% table))
     }
     if (whichFirst == -1L) {
-      last_which(x %in% table)
+      return(last_which(x %in% table))
     }
   }
   match(x, table, nomatch = nomatch)

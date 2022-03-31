@@ -65,7 +65,6 @@ extern SEXP Cna_and(SEXP);
 extern SEXP Cor3(SEXP, SEXP, SEXP);
 extern SEXP Cors(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cpar_in_int(SEXP, SEXP, SEXP);
-extern SEXP Cpar_in_intchar(SEXP, SEXP, SEXP);
 extern SEXP Cpmax(SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cpmax0_bitwise(SEXP, SEXP, SEXP);
 extern SEXP Cpmax0_radix_sorted_dbl(SEXP, SEXP, SEXP);
@@ -169,7 +168,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cor3",                          (DL_FUNC) &Cor3,                           3},
     {"Cors",                          (DL_FUNC) &Cors,                           7},
     {"Cpar_in_int",                   (DL_FUNC) &Cpar_in_int,                    3},
-    {"Cpar_in_intchar",               (DL_FUNC) &Cpar_in_intchar,                3},
     {"Cpmax",                         (DL_FUNC) &Cpmax,                          4},
     {"Cpmax0_bitwise",                (DL_FUNC) &Cpmax0_bitwise,                 3},
     {"Cpmax0_radix_sorted_dbl",       (DL_FUNC) &Cpmax0_radix_sorted_dbl,        3},

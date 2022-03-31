@@ -21,6 +21,7 @@ expect_equal(sum_and3s(x > 2147483649.5), sum(x > 2147483649.5))
 x <- c(1L, 3L, 4L, -3L, 2L, -1L, -2L, 0L, -5L, 5L, -4L, 6L)
 x <- rep_len(x, 1001)
 expect_equal(and3s(x %in% -1:5), x %in% -1:5)
+expect_equal(or3s(x == -1L,,x == 2L), x %in% c(-1L, 2L))
 
 "%(between)%" <- hutilscpp:::`%(between)%`
 "%]between[%" <- hutilscpp:::`%]between[%`

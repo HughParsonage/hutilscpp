@@ -69,12 +69,14 @@ int64_t max_abs_diffii(const int * x, const int * y, R_xlen_t N, R_xlen_t M, int
 
 SEXP abs_dbl_dbl(SEXP x, SEXP y, SEXP nthreads, SEXP Option) {
   if (xlength(x) == 0 || xlength(y) == 0) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
+  // # nocov start
   if (!isReal(x) || !isReal(y)) {
     error("Internal error(abs_dbl_dbl): x was type '%s' and y was type '%s' but REALSXP were expected",
           type2char(TYPEOF(x)), type2char(TYPEOF(y)));
   }
+  // # nocov end
   if (xlength(x) == 1 && xlength(y) > 1) {
     return abs_dbl_dbl(y, x, nthreads, Option);
   }
@@ -136,10 +138,12 @@ SEXP C_abs_diff(SEXP x, SEXP y, SEXP nthreads, SEXP Option) {
     return abs_dbl_dbl(x, y, nthreads, Option);
   }
   const int opt = asInteger(Option);
+  // # nocov start
   if (!isInteger(x) || !isInteger(y) || xlength(x) == 0 ||
       opt < 0 || opt > 2) {
     return R_NilValue;
   }
+  // # nocov end
   int nThread = as_nThread(nthreads);
   R_xlen_t N = xlength(x);
   const int * xp = INTEGER(x);
