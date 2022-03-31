@@ -69,6 +69,9 @@
 // number of elements where we can just do a linear search for in
 #define MAX_NAIVE_IN 30
 
+// fastmatch_fastmatch
+#define UCHAR_THRESH 100
+
 
 #if defined _OPENMP && _OPENMP >= 201511
 #define FORLOOP(content)                                                \
@@ -192,14 +195,10 @@ R_xlen_t sum_isna(SEXP x, SEXP nthreads) ;
 bool string_equaln(const char * x, int nx, const char * y);
 
 // Cpar_in.c
-void do_uchar_in_II(unsigned char * ansp,
-                    unsigned int * fail,
-                    const int * xp,
-                    R_xlen_t N,
-                    const int * yp,
-                    R_xlen_t M,
-                    int nThread,
-                    bool opposite);
+SEXP par_in_intchar(SEXP x, SEXP y, int nThread, int yminmax[2], bool opposite);
+
+// extent.c
+bool thinner(const int * xp, R_xlen_t N, int nThread, unsigned int width, int * aminmax);
 
 // fastmatch_fastmatch
 SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthreads);

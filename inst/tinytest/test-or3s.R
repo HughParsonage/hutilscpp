@@ -7,6 +7,8 @@ expect_false(any(or3s(x %between% c(TRUE, FALSE))))
 expect_false(any(or3s(x %(between)% c(FALSE, TRUE))))
 expect_false(any(or3s(x %]between[% c(FALSE, TRUE))))
 expect_true(all(or3s(x %between% c(FALSE, TRUE))))
+expect_equal(or3s(x %between% c(TRUE, TRUE), type = "which"), which(x))
+expect_equal(or3s(x %between% c(FALSE, FALSE), type = "which"), which(!x))
 
 
 # test_that("big doubles", {

@@ -7,8 +7,9 @@
 bool has_openmp() {
 #ifdef _OPENMP
   return true;
-#endif
+#else
   return false;
+#endif
 }
 
 #define OPENMP_REQUEST_OK 0

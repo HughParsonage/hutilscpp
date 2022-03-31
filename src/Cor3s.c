@@ -457,10 +457,15 @@ static void vo2s_LL(unsigned char * ansp, const int o,
         }
         if (y[1] == 1) {
           FORLOOP(ansp[i] = 1;)
+          return;
+        }
+        if (y[0] == 0 && y[1] == 0) {
+          FORLOOP(ansp[i] |= x[i] == 0;)
         }
         return;
       }
       break;
+      // # nocov start
     case OP_WB:
       if (y[0] == 0 && y[1] == 1) {
         return;
@@ -479,94 +484,13 @@ static void vo2s_LL(unsigned char * ansp, const int o,
         return;
       }
       break;
+      // # nocov end
     case OP_BO:
       return;
     case OP_BC:
       return;
     }
   }
-  if (o == OP_IN || o == OP_NI) {
-    if (M == 0) {
-      // No value is in RHS
-      if (o == OP_NI) {
-        FORLOOP(ansp[i] = 1;)
-      }
-      return;
-    }
-
-    // Reduce to unique elements
-    bool tbl[3] = {0};
-
-
-    for (R_xlen_t j = 0; j < M; ++j) {
-      if (y[j] == 0) {
-        tbl[0] = true;
-      } else if (y[j] == 1) {
-        tbl[1] = true;
-      } else {
-        tbl[2] = true;
-      }
-    }
-    if (tbl[0] && tbl[1] && tbl[2]) {
-      // Any value is in RHS
-      if (o == OP_IN) {
-        FORLOOP(ansp[i] = 1;)
-      } else {
-        // since "OR FALSE" doesn't modify
-        return;
-      }
-      return;
-    }
-    // 2-element table
-    if (tbl[0] && tbl[1]) {
-      if (o == OP_IN) {
-        FORLOOP(ansp[i] |= x[i] != NA_LOGICAL;)
-      } else {
-        FORLOOP(ansp[i] |= x[i] == NA_LOGICAL;)
-      }
-      return;
-    }
-    if (tbl[0] && tbl[2]) {
-      if (o == OP_IN) {
-        FORLOOP(ansp[i] |= x[i] != 1;)
-      } else {
-        FORLOOP(ansp[i] |= x[i] == 1;)
-      }
-      return;
-    }
-    if (tbl[1] && tbl[2]) {
-      if (o == OP_IN) {
-        FORLOOP(ansp[i] |= x[i] != 0;)
-      } else {
-        FORLOOP(ansp[i] |= x[i] == 0;)
-      }
-      return;
-    }
-    // y must be constant
-    if (tbl[0]) {
-      if (o == OP_IN) {
-        FORLOOP(ansp[i] |= x[i] == 0;)
-      } else {
-        FORLOOP(ansp[i] |= x[i] != 0;)
-      }
-    }
-    if (tbl[1]) {
-      if (o == OP_IN) {
-        FORLOOP(ansp[i] |= x[i] == 1;)
-      } else {
-        FORLOOP(ansp[i] |= x[i] != 1;)
-      }
-    }
-    if (tbl[2]) {
-      if (o == OP_IN) {
-        FORLOOP(ansp[i] |= x[i] == NA_LOGICAL;)
-      } else {
-        FORLOOP(ansp[i] |= x[i] != NA_LOGICAL;)
-      }
-    }
-    return;
-  }
-
 
   if (N == M) {
     switch(o) {
@@ -647,8 +571,10 @@ SEXP Cors(SEXP oo1, SEXP xx1, SEXP yy1,
   R_xlen_t N = xlength(xx1);
   const bool use2 = oo2 != R_NilValue;
   if (use2 && xlength(xx2) != N) {
+    // # nocov start
     error("`(Cors): xlength(xx1) = %lld`, yet `xlength(xx2) = %lld`.",
           xlength(xx1), xlength(xx2));
+    // # nocov end
   }
 
   int nThread = as_nThread(nthreads);

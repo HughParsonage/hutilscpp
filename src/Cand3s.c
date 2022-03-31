@@ -174,9 +174,9 @@ static void vand2s_II(unsigned char * ansp,
     switch(o) {
     case OP_BW: {
       if (y0 == y1) {
-        FORLOOP_ands(==, y0)
-        break;
-      }
+      FORLOOP_ands(==, y0)
+      break;
+    }
       // y0 < y1
       if (y0 == 0) {
 #if defined _OPENMP && _OPENMP >= 201511
@@ -648,6 +648,7 @@ static void vand2s_LL(unsigned char * ansp, const int o,
         return;
       }
       break;
+      // # nocov start
     case OP_WB:
       if (y[0] == 0 && y[1] == 1) {
         return;
@@ -671,6 +672,7 @@ static void vand2s_LL(unsigned char * ansp, const int o,
     case OP_BC:
       return;
     }
+    // # nocov end
   }
 
 
@@ -706,6 +708,16 @@ static void vand2s_L(unsigned char * ansp, const int o,
     FORLOOP(ansp[i] &= x[i] == 1;)
   } else {
     FORLOOP(ansp[i] &= x[i] != 1;)
+  }
+}
+
+static void vand2s_R(unsigned char * ansp, const int o,
+                     const unsigned char * x, R_xlen_t N,
+                     int nThread) {
+  if (o == OP_EQ) {
+    FORLOOP(ansp[i] &= x[i];)
+  } else {
+    FORLOOP(ansp[i] ^= x[i];)
   }
 }
 
@@ -745,8 +757,11 @@ static void vand2s(unsigned char * ansp, const int o,
       break;
     }
     break;
+  case RAWSXP:
+    vand2s_R(ansp, o, RAW(x), N, nThread);
   }
 }
+
 
 SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
            SEXP oo2, SEXP xx2, SEXP yy2,
@@ -759,12 +774,13 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
   }
   int nThread = as_nThread(nthreads);
 
-
   const int o1 = sex2op(oo1);
   const int o2 = sex2op(oo2);
   SEXP ans = PROTECT(allocVector(RAWSXP, N));
   unsigned char * ansp = RAW(ans);
-  if (TYPEOF(yy1) == NILSXP) {
+
+  switch(TYPEOF(xx1)) {
+  case LGLSXP: {
     const int * xx1p = LOGICAL(xx1);
     if (o1 == OP_NE) {
       FORLOOP(
@@ -775,11 +791,27 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
         ansp[i] = xx1p[i] != 0;
       )
     }
-  } else {
-    FORLOOP(
+  }
+    break;
+  case RAWSXP: {
+    const unsigned char * xx1p = RAW(xx1);
+    if (o1 == OP_NE) {
+      FORLOOP(
+        ansp[i] = xx1p[i] != 1;
+      )
+    } else {
+      FORLOOP(
+        ansp[i] = xx1p[i] != 0;
+      )
+    }
+  }
+    break;
+  default: {
+    FORLOOP({
       ansp[i] = 1;
-    )
+    })
     vand2s(ansp, o1, xx1, yy1, nThread);
+  }
   }
   if (use2) {
     vand2s(ansp, o2, xx2, yy2, nThread);
