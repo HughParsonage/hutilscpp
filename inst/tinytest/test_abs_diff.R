@@ -3,7 +3,8 @@ library(hutilscpp)
 x <- c(5L, 3L, 2L, 8L)
 y <- x + 0L
 expect_equal(abs_diff(x, y), integer(length(x)))
-expect_equal(max_abs_diff(x, y), max(abs(x - 6)))
+expect_equal(max_abs_diff(x, y), max(abs(x - y)))
+expect_equal(max_abs_diff(x, 6), max(abs(x - 6)))
 
 x <- c(5L, 3L, 2L, 8L)
 y <- c(4L, -1L, 2L, 3L)

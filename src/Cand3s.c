@@ -297,66 +297,8 @@ static void vand2s_ID(unsigned char * ansp,
     }
     switch(o) {
     case OP_BW:
-      switch(why_dbl_isnt_int(pre_y0)) {
-      case DBL_INT:
-        switch(why_dbl_isnt_int(pre_y1)) {
-        case DBL_INT:
-          FORLOOP(ansp[i] &= betweeniiuu(x[i], (int)pre_y0, (int)pre_y1);)
-          return;
-        case DBL_FRA:
-          FORLOOP(ansp[i] &= betweeniiuu(x[i], (int)pre_y0, (int)pre_y1 + (pre_y1 < 0));)
-          return;
-        case DBL_XLO:
-          FORLOOP(ansp[i] &= 0;)
-          return;
-        case DBL_XHI:
-          FORLOOP(ansp[i] &= x[i] >= ((int)pre_y0);)
-          return;
-        }
-        break;
-
-      case DBL_FRA: {
-        int yy0 = (int)pre_y0;
-        yy0 += (pre_y0 > 0);
-        int yy1 = (int)pre_y1;
-        switch(why_dbl_isnt_int(pre_y1)) {
-        case DBL_INT:
-          FORLOOP(ansp[i] &= betweeniiuu(x[i], yy0, yy1);)
-          return;
-        case DBL_FRA:
-          FORLOOP(ansp[i] &= betweeniiuu(x[i], (int)pre_y0 , (int)pre_y1 + (pre_y1 < 0));)
-          return;
-        case DBL_XLO:
-          FORLOOP(ansp[i] &= 0;)
-          return;
-        case DBL_XHI:
-          FORLOOP(ansp[i] &= x[i] >= ((int)pre_y0);)
-          return;
-        }
-      }
-        break;
-      case DBL_XLO:
-        switch(why_dbl_isnt_int(pre_y1)) {
-        case DBL_INT: {
-          int y1 = pre_y1;
-          FORLOOP(ansp[i] &= x[i] <= y1;)
-        }
-          return;
-        case DBL_FRA:
-          FORLOOP(ansp[i] &= x[i] < pre_y1;)
-          return;
-        case DBL_XLO:
-          FORLOOP(ansp[i] &= 0;)
-          return;
-        case DBL_XHI:
-          // nothing to be done
-          return;
-        }
-        break;
-      case DBL_XHI:
-        // always false
-        FORLOOP(ansp[i] = 0;)
-      }
+      uc_betweenidd(ansp, ORAND_AND, x, N, nThread, pre_y0, pre_y1);
+      break;
     case OP_BO:
       FORLOOP(ansp[i] &= (x[i] > pre_y0) && (x[i] < pre_y1);)
       break;

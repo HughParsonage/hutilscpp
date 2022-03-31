@@ -82,12 +82,21 @@ void bw_y0_y1(int y0y1[2], double y0, double y1) {
   }
 }
 
-void uc_betweenidd(unsigned char * ansp, int ORAND, const int * xp, R_xlen_t N, int nThread, double y0, double y1) {
+void uc_betweenidd(unsigned char * ansp,
+                   int ORAND, /* int for OR AND EQUAL */
+                   const int * xp,
+                   R_xlen_t N,
+                   int nThread,
+                   double y0,
+                   double y1) {
   int y0y1[2] = {0};
   bw_y0_y1(y0y1, y0, y1);
   const int y0i = y0y1[0];
   const int y1i = y0y1[1];
   if (y0i > y1i) {
+    if (ORAND == ORAND_OR) {
+      return;
+    }
     FORLOOP(ansp[i] = 0;)
     return;
   }
@@ -97,10 +106,10 @@ void uc_betweenidd(unsigned char * ansp, int ORAND, const int * xp, R_xlen_t N, 
   }
   switch(ORAND) {
   case ORAND_OR:
-    FORLOOP(ansp[i] = betweenii64(xp[i], y0i, y1i);)
+    FORLOOP(ansp[i] |= betweenii64(xp[i], y0i, y1i);)
     break;
   case ORAND_AND:
-    FORLOOP(ansp[i] = betweenii64(xp[i], y0i, y1i);)
+    FORLOOP(ansp[i] &= betweenii64(xp[i], y0i, y1i);)
     break;
   case ORAND_EQ:
     FORLOOP(ansp[i] = betweenii64(xp[i], y0i, y1i);)
