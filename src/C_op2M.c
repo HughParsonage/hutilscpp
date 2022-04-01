@@ -42,6 +42,7 @@ int do_op2M(const char * x) {
   return 0;
 }
 
+// # nocov start
 // if  a op b  what is  b op a?
 int rev_op(int op) {
   switch(op) {
@@ -96,6 +97,7 @@ int inv_op(int op) {
 }
 
 
+
 int sex2op(SEXP oo) {
   switch(TYPEOF(oo)) {
   case STRSXP:
@@ -105,6 +107,7 @@ int sex2op(SEXP oo) {
   }
   return 0;
 }
+// # nocov end
 
 SEXP C_op2M(SEXP xx) {
   if (TYPEOF(xx) != STRSXP ||
