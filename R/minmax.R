@@ -10,6 +10,4 @@ minmax <- function(x, empty_result = NULL, nThread = getOption("hutilscpp.nThrea
   .Call("Cminmax", x, empty_result, check_omp(nThread), PACKAGE = packageName)
 }
 
-Extent <- function(x, nThread = getOption("hutilscpp.nThread", 1L), n_passes = 1L) {
-  .Call("Cextent", x, nThread, n_passes, PACKAGE = "hutilscpp")
-}
+

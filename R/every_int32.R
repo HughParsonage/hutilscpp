@@ -4,7 +4,7 @@
 #' @export
 
 every_int <- function(nThread = getOption("hutilsc.nThread", 1L), na = NA_integer_) {
-  .Call("Cevery_int32", nThread, na, PACKAGE = "hutilscpp")
+  .Call("Cevery_int32", nThread, na, PACKAGE = "hutilscpp") # nocov
 }
 
 

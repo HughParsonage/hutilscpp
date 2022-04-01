@@ -1,15 +1,15 @@
 #include "hutilscpp.h"
 
-SEXP C_Mode(SEXP x, SEXP nthreads) {
+SEXP C_Mode(SEXP x, SEXP nthreads, SEXP Xminmax) {
   int nThread = as_nThread(nthreads);
   if (!isInteger(x)) {
-    error("not integer.");
+    error("Internal error(C_Mode): type '%s' not integer.", type2char(TYPEOF(x))); // # nocov
   }
   R_xlen_t N = xlength(x);
   const int * xp = INTEGER(x);
-  if (N <= 256) {
-    unsigned int tbl[256] = {0};
-    bool dup[256] = {0};
+  if (N <= 255) {
+    unsigned int tbl[255] = {0};
+    bool dup[255] = {0};
     tbl[0] = 1;
     for (R_xlen_t i = 0; i < N; ++i) {
       if (dup[i]) {
@@ -26,7 +26,7 @@ SEXP C_Mode(SEXP x, SEXP nthreads) {
     }
     int ans = 0;
     int tbl_max = 1;
-    for (int k = 0; k < 256; ++k) {
+    for (int k = 0; k < 255; ++k) {
       if (tbl[k] > tbl_max) {
         ans = k;
         tbl_max = tbl[k];
@@ -37,32 +37,36 @@ SEXP C_Mode(SEXP x, SEXP nthreads) {
 
   int xmin = xp[0];
   int xmax = xp[0];
+  if (!isInteger(Xminmax) || xlength(Xminmax) != 2) {
+    FORLOOP_xminmax({
+      int xpi = xp[i];
+      if (xpi < xmin) {
+        xmin = xpi;
+      } else if (xpi > xmax) {
+        xmax = xpi;
+      }
+    };)
 
-  FORLOOP_xminmax({
-    int xpi = xp[i];
-    if (xpi < xmin) {
-      xmin = xpi;
-    } else if (xpi > xmax) {
-      xmax = xpi;
-    }
-  };)
+  } else {
+    xmin = INTEGER(Xminmax)[0];
+    xmax = INTEGER(Xminmax)[1];
+  }
 
   R_xlen_t xrange_t = (R_xlen_t)xmax - (R_xlen_t)xmin;
   if (xrange_t > INT_MAX) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
   unsigned int range = xmax + 1u;
   range += ((unsigned int)(-xmin));
   if ((range >> 2) > N) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
 
-  unsigned int * tbl = malloc(sizeof(int) * range);
+  unsigned int * tbl = calloc(sizeof(int), range);
   if (tbl == NULL) {
-    free(tbl);
-    error("tbl could not be malloc'd."); // # nocov
+    free(tbl); // # nocov
+    error("tbl could not be calloc'd."); // # nocov
   }
-  memset(tbl, 0, sizeof(int) * range);
 
   for (R_xlen_t i = 0; i < N; ++i) {
     int64_t xpi = xp[i];
@@ -84,7 +88,7 @@ SEXP C_Mode(SEXP x, SEXP nthreads) {
 
 SEXP Cunique_fmatch(SEXP xx, SEXP ff, SEXP nthreads) {
   if (!isInteger(xx) || !isInteger(ff) || xlength(xx) <= 1) {
-    return xx;
+    return R_NilValue; // # nocov
   }
   int nThread = as_nThread(nthreads);
   R_xlen_t N = xlength(xx);

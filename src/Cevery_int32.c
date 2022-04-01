@@ -1,5 +1,6 @@
 #include "hutilscpp.h"
 
+// # nocov start
 #ifdef LONG_VECTOR_SUPPORT
 SEXP Cevery_int32(SEXP nthreads, SEXP Na) {
   const int na_req = asInteger(Na);
@@ -22,3 +23,4 @@ SEXP Cevery_int32(SEXP nthreads, SEXP Na) {
   return R_NilValue;
 }
 #endif
+// # nocov end

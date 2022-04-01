@@ -12,12 +12,14 @@
 
 unique_fmatch <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
   fmatchx <- fmatchp(x, x, nThread = nThread, nomatch = 0L)
-  .Call("Cunique_fmatch", x, fmatchx, nThread, PACKAGE = "hutilscpp")
+  .Call("Cunique_fmatch", x, fmatchx, nThread, PACKAGE = "hutilscpp") %||%
+    unique(x) # nocov
 }
 
 #' @rdname unique_fmatch
 #' @export
 uniqueN_fmatch <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
   fmatchx <- fmatchp(x, x, nThread = nThread, nomatch = 0L)
-  .Call("CuniqueN_fmatch", fmatchx, nThread, PACKAGE = "hutilscpp")
+  .Call("CuniqueN_fmatch", fmatchx, nThread, PACKAGE = "hutilscpp") %||%
+    length(unique(x)) # nocov
 }

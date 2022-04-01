@@ -228,7 +228,7 @@ static bool use_uchar(SEXP x, SEXP y, bool fin, int nThread, int yminmax[2]) {
   if (!isInteger(x) || !isInteger(y) || !fin) {
     return false;
   }
-  return thinner(INTEGER(y), xlength(y), nThread, UCHAR_THRESH, yminmax);
+  return ithinner(INTEGER(y), xlength(y), nThread, UCHAR_THRESH, yminmax);
 }
 
 
