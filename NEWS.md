@@ -3,12 +3,14 @@
 * New functions:
   - `abs_diff` for non-allocating versions of `abs(x - y)`.
   - `coalesce0` as a convenience function, equivalent to `coalesce(x, 0)` for correct type of 0.
+  - `extent` and `thinner` for direct versions of `diff(minmax(x))`.
+  - `every_int32` Returns a vector of every `integer`
   - `ModeC` most common element of integer vectors. 
-  - `unique_fmatch` and `uniqueN_fmatch` for distinct elements
+  - `unique_fmatch` and `uniqueN_fmatch` for distinct elements.
 
 * Internal changes
   - complex separation of expressions (`and3s` and friends) is now done using 
-    a different basis, and performs internal logical operations on raw (`char`)
+    a different logic, and performs internal logical operations on raw (`char`)
     vectors.
 
 ## hutilscpp 0.8.2

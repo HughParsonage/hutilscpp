@@ -198,7 +198,7 @@ bool string_equaln(const char * x, int nx, const char * y);
 SEXP par_in_intchar(SEXP x, SEXP y, int nThread, int yminmax[2], bool opposite);
 
 // extent.c
-bool thinner(const int * xp, R_xlen_t N, int nThread, unsigned int width, int * aminmax);
+bool ithinner(const int * xp, R_xlen_t N, int nThread, unsigned int width, int * aminmax);
 
 // fastmatch_fastmatch
 SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthreads);

@@ -17,7 +17,7 @@ extern SEXP C_FLIP(SEXP);
 extern SEXP C_hausdorffEuclid(SEXP, SEXP);
 extern SEXP C_haversineDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_match_min_Haversine(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-extern SEXP C_Mode(SEXP, SEXP);
+extern SEXP C_Mode(SEXP, SEXP, SEXP);
 extern SEXP C_op2M(SEXP);
 extern SEXP C_or_raw(SEXP, SEXP, SEXP);
 extern SEXP C_theEmptiestQuarters(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
@@ -46,7 +46,6 @@ extern SEXP Cdivisible16(SEXP, SEXP);
 extern SEXP Cdivisible2(SEXP, SEXP, SEXP);
 extern SEXP CEmptiestQuarter(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cevery_int32(SEXP, SEXP);
-extern SEXP Cextent(SEXP, SEXP, SEXP);
 extern SEXP CextractMandatory(SEXP, SEXP, SEXP);
 extern SEXP CfirstNonNegativeRadix(SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cforce_as_integer(SEXP, SEXP);
@@ -120,7 +119,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"C_hausdorffEuclid",             (DL_FUNC) &C_hausdorffEuclid,              2},
     {"C_haversineDistance",           (DL_FUNC) &C_haversineDistance,            5},
     {"C_match_min_Haversine",         (DL_FUNC) &C_match_min_Haversine,         11},
-    {"C_Mode",                        (DL_FUNC) &C_Mode,                         2},
+    {"C_Mode",                        (DL_FUNC) &C_Mode,                         3},
     {"C_op2M",                        (DL_FUNC) &C_op2M,                         1},
     {"C_or_raw",                      (DL_FUNC) &C_or_raw,                       3},
     {"C_theEmptiestQuarters",         (DL_FUNC) &C_theEmptiestQuarters,          7},
@@ -149,7 +148,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cdivisible2",                   (DL_FUNC) &Cdivisible2,                    3},
     {"CEmptiestQuarter",              (DL_FUNC) &CEmptiestQuarter,               6},
     {"Cevery_int32",                  (DL_FUNC) &Cevery_int32,                   2},
-    {"Cextent",                       (DL_FUNC) &Cextent,                        3},
     {"CextractMandatory",             (DL_FUNC) &CextractMandatory,              3},
     {"CfirstNonNegativeRadix",        (DL_FUNC) &CfirstNonNegativeRadix,         4},
     {"Cforce_as_integer",             (DL_FUNC) &Cforce_as_integer,              2},
