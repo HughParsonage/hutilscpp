@@ -141,7 +141,7 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
     message("Falling back to `&`")
     # fall back
     ans <-
-      if (missing_or_null(exprC)) {
+      if (missing(exprC) || is.null(exprC)) {
         (exprA & exprB)
       } else {
         (exprA & exprB & exprC)

@@ -407,49 +407,10 @@ R_xlen_t do_which_first_xd_yd(const double * x,
                               int op,
                               const double * y,
                               R_xlen_t N) {
-  switch(op) {
-  case OP_NE:
-    for (R_xlen_t i = 0; i < N; ++i) {
-      if (x[i] != y[i]) {
-        return i + 1;
-      }
+  for (R_xlen_t i = 0; i < N; ++i) {
+    if (dsingle_ox_x1_x2(x[i], op, y[i], 0)) {
+      return i + 1;
     }
-    break;
-  case OP_EQ:
-    for (R_xlen_t i = 0; i < N; ++i) {
-      if (x[i] == y[i]) {
-        return i + 1;
-      }
-    }
-    break;
-  case OP_GE:
-    for (R_xlen_t i = 0; i < N; ++i) {
-      if (x[i] >= y[i]) {
-        return i + 1;
-      }
-    }
-    break;
-  case OP_GT:
-    for (R_xlen_t i = 0; i < N; ++i) {
-      if (x[i] > y[i]) {
-        return i + 1;
-      }
-    }
-    break;
-  case OP_LE:
-    for (R_xlen_t i = 0; i < N; ++i) {
-      if (x[i] <= y[i]) {
-        return i + 1;
-      }
-    }
-    break;
-  case OP_LT:
-    for (R_xlen_t i = 0; i < N; ++i) {
-      if (x[i] < y[i]) {
-        return i + 1;
-      }
-    }
-    break;
   }
 
   return 0;

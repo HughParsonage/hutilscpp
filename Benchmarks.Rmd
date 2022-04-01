@@ -1,7 +1,7 @@
 ---
 title: "Benchmarks"
 author: "Hugh Parsonage"
-date: "2022-02-23"
+date: "2022-04-01"
 output: html_document
 ---
 
@@ -99,9 +99,20 @@ system_time(match_nrst_haversine(y, x, yy, xx))
 
 
 
-```{r FINALLY}
+```{r FINALLY1}
 cat(as.character(END <- Sys.time()), "\n")
 print(difftime(END, START))
+```
+
+```{r whichfirstlastdbl}
+# double
+x1 <- as.double(x1)
+system_time(which_first(x1 != 0))
+```
+
+```{r and3s_double}
+bench::system_time(and3s(x1 > 1, x1 == 0))
+bench::system_time(and3s(x1 > 1, x1 == 0, x1 %in% yy))
 ```
 
 
