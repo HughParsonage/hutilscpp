@@ -440,7 +440,7 @@ SEXP C_comma_dbl(SEXP x, SEXP Digits, SEXP BigMark) {
     error("digits = %d which is an unlikely high value", d);
   }
   if (!isReal(x)) {
-    error("`x` was type '%s' but must be double.", type2char(TYPEOF(x)));
+    error("`x` was type '%s' but must be numeric.", type2char(TYPEOF(x)));
   }
   const double * xp = REAL(x);
   SEXP ans = PROTECT(allocVector(STRSXP, N));
@@ -452,12 +452,10 @@ SEXP C_comma_dbl(SEXP x, SEXP Digits, SEXP BigMark) {
 }
 
 SEXP C_comma(SEXP x, SEXP Digits, SEXP BigMark) {
-  if (isReal(x)) {
+  if (!isInteger(x)) {
     return C_comma_dbl(x, Digits, BigMark);
   }
-  if (!isInteger(x)) {
-    error("`x` must be type integer.");
-  }
+
   R_xlen_t N = xlength(x);
   const int * xp = INTEGER(x);
   SEXP ans = PROTECT(allocVector(STRSXP, N));
