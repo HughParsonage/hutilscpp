@@ -72,6 +72,10 @@
 // fastmatch_fastmatch
 #define UCHAR_THRESH 100
 
+#define FORLOOP1(content)                                      \
+  for (R_xlen_t i = 0; i < N; ++i) {                           \
+    content                                                     \
+    }                                                          \
 
 #if defined _OPENMP && _OPENMP >= 201511
 #define FORLOOP(content)                                                \
