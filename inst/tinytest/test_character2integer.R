@@ -42,4 +42,11 @@ expect_true(identical(character2integer(c(NA, "1  234  567  890"), na.strings = 
 
 expect_equal(Comma(c(NA, 50, 1234.44, -14.1, Inf, -Inf), digits = 2L),
              c("NA", "50.00", "1,234.44", "-14.10", "Inf", "-Inf"))
+expect_equal(character2integer(c(NA, "5,300")), c(NA, 5300L))
+expect_equal(Comma(c(0, 0.5, 1234.56), digits = 2L), c("0.00", "0.50", "1,234.56"))
+
+expect_error(character2integer(55), "must be type char")
+expect_error(character2integer("5300", na.strings = 0), "must be character")
+
+expect_error(Comma(5300.2, digits = .Machine$integer.max), "unlikely high value")
 
