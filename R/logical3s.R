@@ -137,6 +137,7 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
           nThread,
           PACKAGE = "hutilscpp")
 
+  # nocov start
   if (is.null(ans)) {
     message("Falling back to `&`")
     # fall back
@@ -151,6 +152,7 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
                   logical = ans,
                   which = which(ans)))
   }
+  # nocov end
   if ((missing(exprC) || is.null(substitute(exprC))) && missing(..1)) {
     return(switch(type,
                   raw = ans,

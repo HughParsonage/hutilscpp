@@ -50,3 +50,6 @@ expect_error(character2integer("5300", na.strings = 0), "must be character")
 
 expect_error(Comma(5300.2, digits = .Machine$integer.max), "unlikely high value")
 
+expect_equal(character2integer(c("-99", "5300"), na.strings = "-99"), c(NA, 5300L))
+expect_equal(Comma(c(0.000001, 55), digits = 1L), c("0.0", "55.0"))
+
