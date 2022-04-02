@@ -31,7 +31,14 @@ fmatchp <- function(x, table, nomatch = NA_integer_,
                     .raw = 0L) {
   nThread <- check_omp(nThread)
   if (is.logical(x)) {
-    return(.Call("fmatchp_lgl", x, as.logical(table), nThread, fin, PACKAGE = "hutilscpp"))
+    ans <- .Call("fmatchp_lgl", x, as.logical(table), nThread, fin, PACKAGE = "hutilscpp")
+    if (is.null(ans)) {
+      return(match_last_resort(x, table, nomatch, nThread, fin, whichFirst))
+    }
+    if (is.na(nomatch) && is.integer(ans)) {
+      .Call("Cuncoalesce0", ans, PACKAGE = "hutilscpp")
+    }
+    return(ans)
   }
   stopifnot(is.integer(nomatch))
   check_TF(fin)
