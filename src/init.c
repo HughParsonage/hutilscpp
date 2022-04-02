@@ -82,7 +82,6 @@ extern SEXP CStringEqual(SEXP, SEXP);
 extern SEXP Csum_isna(SEXP, SEXP);
 extern SEXP Csum_raw(SEXP, SEXP);
 extern SEXP Csummary3(SEXP, SEXP, SEXP, SEXP, SEXP);
-extern SEXP Cuminus(SEXP, SEXP);
 extern SEXP Cuncoalesce0(SEXP);
 extern SEXP Cunique_fmatch(SEXP, SEXP, SEXP);
 extern SEXP CuniqueN_fmatch(SEXP, SEXP);
@@ -185,7 +184,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"Csum_isna",                     (DL_FUNC) &Csum_isna,                      2},
     {"Csum_raw",                      (DL_FUNC) &Csum_raw,                       2},
     {"Csummary3",                     (DL_FUNC) &Csummary3,                      5},
-    {"Cuminus",                       (DL_FUNC) &Cuminus,                        2},
     {"Cuncoalesce0",                  (DL_FUNC) &Cuncoalesce0,                   1},
     {"Cunique_fmatch",                (DL_FUNC) &Cunique_fmatch,                 3},
     {"CuniqueN_fmatch",               (DL_FUNC) &CuniqueN_fmatch,                2},
