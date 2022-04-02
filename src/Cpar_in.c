@@ -128,37 +128,4 @@ SEXP par_in_intchar(SEXP xx, SEXP yy, int nThread, int yminmax[2], bool opposite
   return ans;
 }
 
-SEXP Cpar_in_intchar(SEXP xx, SEXP yy, SEXP nthreads) {
 
-  R_xlen_t N = xlength(xx);
-  if (TYPEOF(xx) != INTSXP) {
-    error("Internal error(Cpar_in_int): TYPEOF(xx) != INTSXP."); // # nocov
-  }
-  if (xlength(yy) > INT_MAX) {
-    error("xlength(yy) > INT_MAX"); // # nocov
-  }
-  int M = xlength(yy);
-  if (M == 0) {
-    return RawN(N);
-  }
-  if (is_seq(yy)) {
-
-  }
-
-  int nThread = as_nThread(nthreads);
-  SEXP ans = PROTECT(allocVector(RAWSXP, N));
-  unsigned char * ansp = RAW(ans);
-  const int * xp = INTEGER(xx);
-  const int * yp = INTEGER(yy);
-
-
-  unsigned int fail[1] = {0};
-  int yminmax[2] = {0};
-  do_uchar_in_II(ansp, fail, xp, N, yp, M, nThread, true, yminmax);
-  if (fail[0]) {
-    UNPROTECT(1);
-    return R_NilValue;
-  }
-  UNPROTECT(1);
-  return ans;
-}
