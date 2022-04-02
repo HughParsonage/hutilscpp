@@ -19,13 +19,18 @@
 #'
 #' @export
 abs_diff <- function(x, y, nThread = getOption("hutilscpp.nThread", 1L), option = 1L) {
+  if (is.double(y) && length(y) == 1L) {
+    y <- as_integer_if_safe(y)
+  }
   ans <- .Call("C_abs_diff", x, y, nThread, option, PACKAGE = "hutilscpp")
+  # nocov start
   if (is.null(ans)) {
     if (option == 0L) {
       return(max(abs(x - y)))
     }
     return(abs(x - y))
   }
+  # nocov end
   ans
 }
 
