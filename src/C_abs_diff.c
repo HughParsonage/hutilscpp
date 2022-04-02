@@ -132,7 +132,7 @@ SEXP abs_dbl_dbl(SEXP x, SEXP y, SEXP nthreads, SEXP Option) {
 
 SEXP C_abs_diff(SEXP x, SEXP y, SEXP nthreads, SEXP Option) {
   if (xlength(x) != xlength(y) && xlength(y) != 1) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
   if (isReal(x) && isReal(y)) {
     return abs_dbl_dbl(x, y, nthreads, Option);

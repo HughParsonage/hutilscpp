@@ -50,6 +50,11 @@ expect_equal(finp(1:5, integer(0)), logical(5))
 expect_equal(fnotinp(1:5, integer(0)), !logical(5))
 expect_equal(fmatchp(1:5, integer(0), nomatch = 0L), integer(5))
 
+x <- c(TRUE, FALSE)
+expect_equal(fmatchp(x, TRUE), c(1L, NA))
+expect_equal(fmatchp(x, c(TRUE, FALSE)), c(1L, 2L))
+expect_equal(fmatchp(x, c(TRUE, FALSE, TRUE)), c(1L, 2L))
+expect_equal(fmatchp(x, c(TRUE, FALSE, NA, TRUE)), c(1L, 2L))
 
 
 

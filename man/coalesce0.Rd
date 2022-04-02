@@ -2,19 +2,30 @@
 % Please edit documentation in R/coalesce0.R
 \name{coalesce0}
 \alias{coalesce0}
+\alias{COALESCE0}
 \title{Convenience function for coalescing to zero}
 \usage{
 coalesce0(x, nThread = getOption("hutilscpp.nThread", 1L))
+
+COALESCE0(x, nThread = getOption("hutilscpp.nThread", 1L))
 }
 \arguments{
-\item{x}{An atomic vector.}
+\item{x}{An atomic vector. Or a list for \code{COALESCE0}.}
 
 \item{nThread}{Number of threads to use.}
 }
 \value{
 Equivalent to \code{hutils::coalesce(x, 0)} for
-an appropriate type of zero.
+an appropriate type of zero. \code{COALESCE0(x)}
+
+For complex numbers, each component is coalesced. For unsupported
+types, the vector is returned, silently.
 }
 \description{
 Convenience function for coalescing to zero
+}
+\examples{
+coalesce0(c(NA, 2:3))
+coalesce0(NaN + 1i)
+
 }

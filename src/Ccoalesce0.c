@@ -4,7 +4,7 @@
 
 
 
-SEXP lcoalesce0(const int * xp, R_xlen_t N, int nThread) {
+static SEXP lcoalesce0(const int * xp, R_xlen_t N, int nThread) {
   SEXP ans = PROTECT(allocVector(LGLSXP, N));
   int * restrict ansp = LOGICAL(ans);
   FORLOOP(ansp[i] = xp[i] == NA_LOGICAL ? 0 : xp[i];);
@@ -59,7 +59,7 @@ static bool inanyNA(const int * x, R_xlen_t N, int nThread) {
   return o;
 }
 
-SEXP icoalesce0(const int * xp, R_xlen_t N, int nThread) {
+static SEXP icoalesce0(const int * xp, R_xlen_t N, int nThread) {
   SEXP ans = PROTECT(allocVector(INTSXP, N));
   int * restrict ansp = INTEGER(ans);
   FORLOOP({
@@ -69,12 +69,29 @@ SEXP icoalesce0(const int * xp, R_xlen_t N, int nThread) {
   return ans;
 }
 
-SEXP dcoalesce0(const double * xp, R_xlen_t N, int nThread) {
+static SEXP dcoalesce0(const double * xp, R_xlen_t N, int nThread) {
   SEXP ans = PROTECT(allocVector(REALSXP, N));
   double * restrict ansp = REAL(ans);
   FORLOOP({
     ansp[i] = ISNAN(xp[i]) ? 0 : xp[i];
   });
+  UNPROTECT(1);
+  return ans;
+}
+
+static SEXP ccoalesce0(SEXP x, R_xlen_t N, int nThread) {
+  // complex
+  SEXP ans = PROTECT(allocVector(CPLXSXP, N));
+  Rcomplex * ansp = COMPLEX(ans);
+  for (R_xlen_t i = 0; i < N; ++i) {
+    Rcomplex v = COMPLEX_ELT(x, i);
+    double vi = v.i;
+    double vr = v.r;
+    Rcomplex ai;
+    ai.i = ISNAN(vi) ? 0 : vi;
+    ai.r = ISNAN(vr) ? 0 : vr;
+    ansp[i] = ai;
+  }
   UNPROTECT(1);
   return ans;
 }
@@ -93,6 +110,8 @@ SEXP Ccoalesce0(SEXP x, SEXP nthreads) {
     break;
   case REALSXP:
     return dcoalesce0(REAL(x), xlength(x), nThread);
+  case CPLXSXP:
+    return ccoalesce0(x, xlength(x), nThread);
   case RAWSXP:
     return x;
   }

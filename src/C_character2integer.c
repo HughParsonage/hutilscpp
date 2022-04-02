@@ -78,7 +78,7 @@ static int64_t char2int0(const char * x, int nn) {
   int k = anyDecimal(x, nn);
   bool trail00 = trail_dot00(x, nn, k);
   if (k && !trail00) {
-    return NA_INTEGER;
+    return NA_INTEGER; // # nocov
   }
   int n = k ? k : nn; // use the location of the decimal
   int j_ws = firstnws(x, n);
@@ -98,7 +98,7 @@ static int64_t char2int0(const char * x, int nn) {
       }
     }
     if (o > INT_MAX) {
-      return NA_INTEGER;
+      return NA_INTEGER; // # nocov
     }
     for (int j = 11 + j_ws; j < n; ++j) {
       char x_j = x[j];
@@ -107,7 +107,7 @@ static int64_t char2int0(const char * x, int nn) {
         o += x_j - '0';
       }
       if (o > INT_MAX) {
-        return NA_INTEGER;
+        return NA_INTEGER; // # nocov
       }
     }
   } else {
@@ -142,7 +142,7 @@ static int char2int1(const char * x, int n) {
     o += v10;
   }
   if (o > INT_MAX) {
-    return NA_INTEGER;
+    return NA_INTEGER; // # nocov
   }
   return x_negative ? -o : o;
 }
@@ -440,7 +440,7 @@ SEXP C_comma_dbl(SEXP x, SEXP Digits, SEXP BigMark) {
     error("digits = %d which is an unlikely high value", d);
   }
   if (!isReal(x)) {
-    error("`x` was type '%s' but must be numeric.", type2char(TYPEOF(x)));
+    error("`x` was type '%s' but must be numeric.", type2char(TYPEOF(x))); // # nocov
   }
   const double * xp = REAL(x);
   SEXP ans = PROTECT(allocVector(STRSXP, N));

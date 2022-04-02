@@ -18,7 +18,7 @@ SEXP fmatchp_lgl(SEXP x, SEXP table, SEXP nthreads, SEXP Fin) {
     return LogicalN(N);
   }
   if (!isLogical(table)) {
-    error("`table` was type '%s' but must be logical.", type2char(TYPEOF(table)));
+    error("`table` was type '%s' but must be logical.", type2char(TYPEOF(table))); // # nocov
   }
   const int * tp = LOGICAL(table);
   for (int j = 0; j < M; ++j) {
