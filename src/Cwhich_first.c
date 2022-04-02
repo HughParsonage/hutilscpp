@@ -578,28 +578,10 @@ R_xlen_t do_which_first_xi_aii(const int * x, int op, int a1, int a2, R_xlen_t N
   if (a1 > a2) {
     return 0;
   }
-  switch(op) {
-  case OP_BW:
-    for (R_xlen_t i = 0; i < N; ++i) {
-      if (x[i] >= a1 && x[i] <= a2) {
-        return i + 1;
-      }
+  for (R_xlen_t i = 0; i < N; ++i) {
+    if (isingle_ox_x1_x2(x[i], op, a1, a2)) {
+      return i + 1;
     }
-    break;
-  case OP_BO:
-    for (R_xlen_t i = 0; i < N; ++i) {
-      if (x[i] > a1 && x[i] < a2) {
-        return i + 1;
-      }
-    }
-    break;
-  case OP_BC:
-    for (R_xlen_t i = 0; i < N; ++i) {
-      if (x[i] <= a1 || x[i] >= a2) {
-        return i + 1;
-      }
-    }
-    break;
   }
   return 0;
 }
@@ -619,28 +601,10 @@ R_xlen_t do_which_first_xd_add(const double * x,
   if (a1 > a2) {
     return 0;
   }
-  switch(op) {
-  case OP_BW:
-    for (R_xlen_t i = 0; i < N; ++i) {
-      if (x[i] >= a1 && x[i] <= a2) {
-        return i + 1;
-      }
+  for (R_xlen_t i = 0; i < N; ++i) {
+    if (dsingle_ox_x1_x2(x[i], op, a1, a2)) {
+      return i + 1;
     }
-    break;
-  case OP_BO:
-    for (R_xlen_t i = 0; i < N; ++i) {
-      if (x[i] > a1 && x[i] < a2) {
-        return i + 1;
-      }
-    }
-    break;
-  case OP_BC:
-    for (R_xlen_t i = 0; i < N; ++i) {
-      if (x[i] <= a1 || x[i] >= a2) {
-        return i + 1;
-      }
-    }
-    break;
   }
   return 0;
 }
