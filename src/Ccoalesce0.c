@@ -98,3 +98,39 @@ SEXP Ccoalesce0(SEXP x, SEXP nthreads) {
   }
   return x;
 }
+
+static void iuncoalesce0(int * xp, R_xlen_t N) {
+  for (R_xlen_t i = 0; i < N; ++i) {
+    if (!xp[i]) {
+      xp[i] = NA_INT;
+    }
+  }
+}
+
+static void duncoalesce0(double * xp, R_xlen_t N) {
+  for (R_xlen_t i = 0; i < N; ++i) {
+    if (!xp[i]) {
+      xp[i] = NA_REAL;
+    }
+  }
+}
+
+SEXP Cuncoalesce0(SEXP x) {
+  switch(TYPEOF(x)) {
+  case LGLSXP:
+    iuncoalesce0(LOGICAL(x), xlength(x));
+    break;
+  case INTSXP:
+    iuncoalesce0(INTEGER(x), xlength(x));
+    break;
+  case REALSXP:
+    duncoalesce0(REAL(x), xlength(x));
+    break;
+  default:
+    warning("Unsupported type: '%s'", type2char(TYPEOF(x))); // # nocov
+  }
+  return x;
+}
+
+
+

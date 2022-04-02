@@ -12,4 +12,6 @@ coalesce0 <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
   .Call("Ccoalesce0", x, nThread, PACKAGE = "hutilscpp")
 }
 
-
+uncoalesce0 <- function(x) {
+  .Call("Cuncoalesce0", x, PACKAGE = "hutilscpp")
+}
