@@ -22,8 +22,8 @@ SEXP CanyOutside(SEXP xx, SEXP aa, SEXP bb, SEXP nasAbsent, SEXP naIsOutside) {
     // x[i] < a || x[i] > b
     if (TYPEOF(xx) == INTSXP) {
       const int * xp = INTEGER(xx);
-      const int a = asInteger(aa);
-      const int b = asInteger(bb);
+      const int a = asInteger2(aa);
+      const int b = asInteger2(bb);
       for (R_xlen_t i = 0; i < N; ++i) {
         int xpi = xp[i];
         if (xpi == NA_INTEGER) {

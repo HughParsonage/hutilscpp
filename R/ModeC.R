@@ -30,6 +30,7 @@ ModeC <- function(x,
     return(x[mode_fx])
   }
   ans <- .Call("C_Mode", x, nThread, xminmax, PACKAGE = "hutilscpp")
+  # nocov start
   if (is.null(ans)) {
     if (.option) {
       switch(.option,
@@ -40,6 +41,7 @@ ModeC <- function(x,
              })
     }
   }
+  # nocov end
   ans
 }
 

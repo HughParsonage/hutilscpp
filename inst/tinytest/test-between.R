@@ -15,8 +15,10 @@ expect_true(all(x %]between[% c(NA_integer_, NA)))
 x <- seq.int(-.Machine$integer.max, .Machine$integer.max,
              by = 4096L)
 ok <- as.raw(x >= -1e9L & x <= 1e9L)
+expect_equal(hutilscpp:::Between(x, -1e9L, 1e9L, m = 0L), ok)
 expect_equal(hutilscpp:::Between(x, -1e9L, 1e9L, m = 1L), ok)
 expect_equal(hutilscpp:::Between(x, -1e9L, 1e9L, m = 2L), ok)
 expect_equal(hutilscpp:::Between(x, -1e9L, 1e9L, m = 3L), ok)
+expect_equal(hutilscpp:::Between(x, 5L, 4L), raw(length(x)))
 
 

@@ -10,7 +10,7 @@
 
 count_logical <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
   if (!is.logical(x)) {
-    stop(g("`x` was type {typeof(x)}, but must be type logical."))
+    stop("`x` was type ", typeof(x), ", but must be type logical.")
   }
   nThread <- check_omp(nThread)
   as_integer_if_safe(.Call("Ccount_logical", x, nThread, PACKAGE = packageName))

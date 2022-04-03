@@ -85,18 +85,6 @@ firstNonNegativeRadix <- function(x, mini = 0L, maxi = -1L, desc = FALSE) {
         PACKAGE = packageName)
 }
 
-g <- glue::glue
-
-
-is_wholer <- function(dbl) {
-  length(dbl) == 1L &&
-  !is.na(dbl) &&
-  dbl >= -2147483647 &&
-  dbl <= 2147483647 &&
-  dbl == as.integer(dbl)
-}
-
-
 is_safe2int <- function(x) {
   .Call("Cis_safe2int", x, PACKAGE = packageName)
 }
@@ -122,13 +110,15 @@ qd2i <- function(x) {
   }
 }
 
-"%||%" <- function(a, b) {
-  if (is.null(a)) b else a
-}
+
 
 
 
 # nocov start
+"%||%" <- function(a, b) {
+  if (is.null(a)) b else a
+}
+
 is64bit <- function() .Machine$sizeof.pointer == 8L
 
 is_covr <- function() {

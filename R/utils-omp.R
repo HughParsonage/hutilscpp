@@ -10,12 +10,13 @@ check_omp <- function(nThread) {
     stop("`nThread = ", nThread, "` was not a whole number.")
   }
   omp_diagnosis_int <- .Call("Cdiagnose_omp", nThread, PACKAGE = packageName)
+  g <- paste0
   diagnosis <-
     switch(omp_diagnosis_int,
            g("No OpenMP detected."),
-           g("`nThread = {nThread}`, a negative number, but must be a positive integer."),
+           g("`nThread = ", nThread, "`, a negative number, but must be a positive integer."),
            g("`nThread` was not a positive integer but the problem with it could not be diagnosed."),
-           g("`nThread = {nThread}` which exceeds the number of threads available on this computer."))
+           g("`nThread = ", nThread, "`, which exceeds the number of threads available on this computer."))
   if (omp_diagnosis_int) {
     stop(diagnosis)
   }

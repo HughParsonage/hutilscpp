@@ -26,7 +26,7 @@ COALESCE0 <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
     return(x)
   }
   if (is.data.frame(x)) {
-    # ncov start
+    # nocov start
     if (!is.data.table(x)) {
       message("Coercing to data.table")
       setDT(x)

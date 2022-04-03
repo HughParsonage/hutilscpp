@@ -58,8 +58,8 @@ void do_uchar_in_II(unsigned char * ansp,
     int y_range = ymax + 1 - ymin;
     unsigned char * yc = calloc(y_range, sizeof(char));
     if (yc == NULL) {
-      fail[0] = 1;
-      return;
+      fail[0] = 1; // # nocov
+      return; // # nocov
     }
 #if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
@@ -90,8 +90,8 @@ void do_uchar_in_II(unsigned char * ansp,
   y_range++;
   unsigned char * yc = malloc(sizeof(char) * y_range);
   if (yc == NULL) {
-    fail[0] = 1;
-    return;
+    fail[0] = 1; // # nocov
+    return; // # nocov
   }
   memset(yc, 0, sizeof(char) * y_range);
 #if defined _OPENMP && _OPENMP >= 201511
