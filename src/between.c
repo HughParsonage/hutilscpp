@@ -111,9 +111,11 @@ void uc_betweenidd(unsigned char * ansp,
   case ORAND_AND:
     FORLOOP(ansp[i] &= betweenii64(xp[i], y0i, y1i);)
     break;
+    // # nocov start
   case ORAND_EQ:
     FORLOOP(ansp[i] = betweenii64(xp[i], y0i, y1i);)
     break;
+    // # nocov end
   }
 }
 
@@ -152,7 +154,7 @@ SEXP BetweenIii(SEXP x, int a, int b, int m, int nThread) {
 SEXP CBetween(SEXP x, SEXP a, SEXP b, SEXP m, SEXP nthreads) {
   int nThread = as_nThread(nthreads);
   if (!isInteger(m)) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
   if (xlength(a) == 1) {
     switch(TYPEOF(x)) {
@@ -163,5 +165,5 @@ SEXP CBetween(SEXP x, SEXP a, SEXP b, SEXP m, SEXP nthreads) {
       }
     }
   }
-  return R_NilValue;
+  return R_NilValue; // # nocov
 }

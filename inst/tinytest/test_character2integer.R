@@ -51,5 +51,27 @@ expect_error(character2integer("5300", na.strings = 0), "must be character")
 expect_error(Comma(5300.2, digits = .Machine$integer.max), "unlikely high value")
 
 expect_equal(character2integer(c("-99", "5300"), na.strings = "-99"), c(NA, 5300L))
+expect_equal(character2integer(c("-99", "-8", "-99", "-9", "5300"),
+                               na.strings = "-99"),
+             c(NA, -8L, NA, -9L, 5300L))
+expect_equal(character2integer(c("-99", "-8", "-99", "-9", "5300",
+                                 "3,000,000,000"),
+                               na.strings = "-99",
+                               allow.double = TRUE),
+             c(NA, -8L, NA, -9L, 5300L, 3e9))
+expect_equal(character2integer(c("-99", "-8", "-99", "-9", "5300",
+                                 "3,000,000,000"),
+                               na.strings = c("-99", "-9"),
+                               allow.double = TRUE),
+             c(NA, -8L, NA, NA, 5300L, 3e9))
+expect_equal(Comma(c(0.00000, 55), digits = 1L), c("0.0", "55.0"))
 expect_equal(Comma(c(0.000001, 55), digits = 1L), c("0.0", "55.0"))
+expect_equal(Comma(c(1.000001, 55), digits = 1L), c("1.0", "55.0"))
+expect_equal(Comma(c(5123L), big.mark = " "), "5 123")
+expect_equal(Comma(c(5123L), big.mark = '"'), '5"123')
+expect_equal(Comma(c(5, 4, 5.5), big.mark = ",", digits = 1L),
+             c("5.0", "4.0", "5.5"))
+expect_equal(character2integer(c("5.0", "4.0", "5.5"), allow.double = TRUE,
+                               na.strings = "na"),
+             c(5, 4, 5.5))
 

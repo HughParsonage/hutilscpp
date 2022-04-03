@@ -7,10 +7,6 @@ int64_t single_abs_diff(int x, int y) {
   return d >= 0 ? d : -d;
 }
 
-int isingle_abs_diff(int x, int y) {
-  return (x > y) ? (x - y) : (y - x);
-}
-
 static double dsingle_abs_diff(double x, double y) {
   return x > y ? x - y : y - x;
 }
@@ -137,7 +133,7 @@ SEXP C_abs_diff(SEXP x, SEXP y, SEXP nthreads, SEXP Option) {
   if (isReal(x) && isReal(y)) {
     return abs_dbl_dbl(x, y, nthreads, Option);
   }
-  const int opt = asInteger(Option);
+  const int opt = asInteger2(Option);
   // # nocov start
   if (!isInteger(x) || !isInteger(y) || xlength(x) == 0 ||
       opt < 0 || opt > 2) {

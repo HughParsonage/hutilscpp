@@ -278,7 +278,8 @@ static void vand2s_ID(unsigned char * ansp,
 
     if (o == OP_BC) {
       if (y0_NAN && y1_NAN) {
-        return;
+        // Unusual x %between% c(NA, NA)
+        return; // # nocov
       }
       if (y0_NAN) {
         FORLOOP(ansp[i] &= x[i] >= y[1];)
@@ -659,7 +660,7 @@ static void vand2s_R(unsigned char * ansp, const int o,
   if (o == OP_EQ) {
     FORLOOP(ansp[i] &= x[i];)
   } else {
-    FORLOOP(ansp[i] ^= x[i];)
+    FORLOOP(ansp[i] ^= x[i];) // # nocov
   }
 }
 
@@ -710,19 +711,21 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
            SEXP nthreads) {
   R_xlen_t N = xlength(xx1);
   const bool use2 = oo2 != R_NilValue;
+  // # nocov start
   if (use2 && xlength(xx2) != N) {
     error("`(Cands1): xlength(xx1) = %lld`, yet `xlength(xx2) = %lld`. type '%s'",
           xlength(xx1), xlength(xx2), type2char(TYPEOF(xx2)));
   }
+  // # nocov end
   int nThread = as_nThread(nthreads);
 
   const int o1 = sex2op(oo1);
   const int o2 = sex2op(oo2);
   SEXP ans = PROTECT(allocVector(RAWSXP, N));
   unsigned char * ansp = RAW(ans);
-
-  switch(TYPEOF(xx1)) {
-  case LGLSXP: {
+  if (TYPEOF(yy1) == NILSXP) {
+    switch(TYPEOF(xx1)) {
+    case LGLSXP: {
     const int * xx1p = LOGICAL(xx1);
     if (o1 == OP_NE) {
       FORLOOP(
@@ -754,6 +757,12 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
     })
     vand2s(ansp, o1, xx1, yy1, nThread);
   }
+  }
+  } else {
+    FORLOOP({
+      ansp[i] = 1;
+    })
+    vand2s(ansp, o1, xx1, yy1, nThread);
   }
   if (use2) {
     vand2s(ansp, o2, xx2, yy2, nThread);

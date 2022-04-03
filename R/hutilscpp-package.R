@@ -3,7 +3,6 @@
 #' @importFrom utils hasName
 #' @importFrom utils head
 #' @importFrom utils ls.str
-#' @importFrom glue glue
 #' @importFrom hutils %<->%
 #' @importFrom hutils NOR
 #' @importFrom hutils XOR

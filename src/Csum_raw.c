@@ -2,7 +2,7 @@
 
 SEXP Csum_raw(SEXP x, SEXP nthreads) {
   if (isntRaw(x) && !isInteger(x)) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
   int nThread = as_nThread(nthreads);
   R_xlen_t N = xlength(x);

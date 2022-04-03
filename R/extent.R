@@ -15,12 +15,13 @@
 #' @export
 extent <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
   # C version not faster
-  diff(minmax(x, nThread = nThread))
+  ans <- minmax(x, nThread = nThread)
+  ans[2] - ans[1]
 }
 
 #' @rdname extent
 #' @export
 thinner <- function(x, width, nThread = getOption("hutilscpp.nThread", 1L)) {
-  return(diff(minmax(ans, nThread = nThread)) <= width)
+  extent(x, nThread = nThread) <= width
 }
 

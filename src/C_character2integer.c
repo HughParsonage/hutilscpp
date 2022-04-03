@@ -15,14 +15,14 @@ static const char i2bigmark(int x) {
     return '\'';
   case 4:
     return '_';
-  case 5:
-    return '~';
+  // case 5:
+  //   return '~';
   case 6:
     return '"';
   case 7:
     return '/';
   }
-  return ',';
+  return ','; // # nocov
 }
 
 
@@ -207,7 +207,7 @@ static R_xlen_t needsDouble(SEXP x) {
   return 0;
 }
 
-static SEXP str2int0_(SEXP x) {
+static SEXP str2int0_NullNaStrings(SEXP x) {
   R_xlen_t N = xlength(x);
   SEXP ans = PROTECT(allocVector(INTSXP, N));
   int * restrict ansp = INTEGER(ans);
@@ -225,10 +225,9 @@ static SEXP str2int0_(SEXP x) {
   return ans;
 }
 
-static SEXP str2int0(SEXP x, const char * na_string, int na_len, const int allow_dbl) {
+static SEXP str2int0_1NaStrings(SEXP x, const char * na_string, int na_len, const int allow_dbl) {
   R_xlen_t N = xlength(x);
   SEXP ans = PROTECT(allocVector(INTSXP, N));
-  R_xlen_t first_double = needsDouble(x);
   int * restrict ansp = INTEGER(ans);
   const SEXP * xp = STRING_PTR(x);
 
@@ -243,12 +242,9 @@ static SEXP str2int0(SEXP x, const char * na_string, int na_len, const int allow
       ansp[i] = NA_INTEGER;
       continue;
     }
-    int anspi = 0;
-    if (first_double && first_double >= i) {
-      anspi = char2int0(xi, n) & 2147483647u;
-    } else {
-      anspi = char2int0(xi, n);
-    }
+
+    int anspi = char2int0(xi, n);
+
     ansp[i] = anspi;
 
   }
@@ -287,10 +283,51 @@ SEXP character2double(SEXP x, SEXP NaStrings, int option) {
   SEXP ans = PROTECT(allocVector(REALSXP, N));
   double * restrict ansp = REAL(ans);
   const SEXP * xp = STRING_PTR(x);
-  for (R_xlen_t i = 0; i < N; ++i) {
+
+  switch(TYPEOF(NaStrings)) {
+  case NILSXP: {
+    for (R_xlen_t i = 0; i < N; ++i) {
     const char * xi = CHAR(xp[i]);
     int n = length(xp[i]);
     ansp[i] = char2dblO(xi, n, option);
+  }
+  }
+    break;
+  case STRSXP: {
+    if (xlength(NaStrings) == 1) {
+    const char * na_string = CHAR(STRING_ELT(NaStrings, 0));
+    int na_stringn = length(STRING_ELT(NaStrings, 0));
+    for (R_xlen_t i = 0; i < N; ++i) {
+      const char * xi = CHAR(xp[i]);
+      int n = length(xp[i]);
+      if (n == na_stringn && is_NA0(xi, na_string, n)) {
+        ansp[i] = NA_REAL;
+        continue;
+      }
+      ansp[i] = char2dblO(xi, n, option);
+    }
+
+  } else {
+    for (R_xlen_t i = 0; i < N; ++i) {
+      const char * xi = CHAR(xp[i]);
+      int n = length(xp[i]);
+      bool i_is_na = false;
+      for (R_xlen_t j = 0; j < xlength(NaStrings); ++j) {
+        if (length(STRING_ELT(NaStrings, j)) == n && is_NA0(xi, CHAR(STRING_ELT(NaStrings, j)), n)) {
+          i_is_na = true;
+          break;
+        }
+      }
+      if (i_is_na) {
+        ansp[i] = NA_REAL;
+        continue;
+      }
+      ansp[i] = char2dblO(xi, n, option);
+    }
+  }
+  break;
+
+  }
   }
   UNPROTECT(1);
   return ans;
@@ -318,17 +355,16 @@ SEXP C_character2integer(SEXP x, SEXP NaStrings, SEXP AllowDbl, SEXP Option) {
 
 
   if (option == 0 && NaStrings == R_NilValue) {
-    return str2int0_(x);
+    return str2int0_NullNaStrings(x);
   }
 
   if (length(NaStrings) == 1) {
     const char * na_string = CHAR(STRING_ELT(NaStrings, 0));
     int na_len = length(STRING_ELT(NaStrings, 0));
-    return str2int0(x, na_string, na_len, allow_dbl);
+    return str2int0_1NaStrings(x, na_string, na_len, allow_dbl);
   }
 
-  return R_NilValue;
-
+  return R_NilValue; // # nocov
 }
 
 static int width_dbl(double x, int d) {
@@ -492,20 +528,6 @@ SEXP C_comma(SEXP x, SEXP Digits, SEXP BigMark) {
       if (axpi < 10e3) {
         char oi[7] = {'-',
                       digits[axpi / 1000],
-                      bigmark,
-                      digits[(axpi / 100) % 10],
-                            digits[(axpi / 10) % 10],
-                                  digits[axpi % 10],
-                                        '\0'};
-        const char * coi = (const char *)oi;
-
-        SET_STRING_ELT(ans, i, mkCharCE(coi, CE_UTF8));
-        continue;
-      }
-      if (axpi < 100e3) {
-        char oi[8] = {'-',
-                      digits[(axpi / 10000) % 10],
-                      digits[(axpi / 1000) % 10],
                             bigmark,
                             digits[(axpi / 100) % 10],
                                   digits[(axpi / 10) % 10],
@@ -516,9 +538,8 @@ SEXP C_comma(SEXP x, SEXP Digits, SEXP BigMark) {
         SET_STRING_ELT(ans, i, mkCharCE(coi, CE_UTF8));
         continue;
       }
-      if (axpi < 1e6) {
-        char oi[9] = {'-',
-                      digits[(axpi / 100000) % 10],
+      if (axpi < 100e3) {
+        char oi[8] = {'-',
                       digits[(axpi / 10000) % 10],
                             digits[(axpi / 1000) % 10],
                                   bigmark,
@@ -531,26 +552,23 @@ SEXP C_comma(SEXP x, SEXP Digits, SEXP BigMark) {
         SET_STRING_ELT(ans, i, mkCharCE(coi, CE_UTF8));
         continue;
       }
-      if (axpi < 1e7) {
-        char oi[11] = {'-',
-                       digits[(axpi / 1000000) % 10],
-                       bigmark,
-                       digits[(axpi / 100000) % 10],
-                             digits[(axpi / 10000) % 10],
-                                   digits[(axpi / 1000) % 10],
-                                         bigmark,
-                                         digits[(axpi / 100) % 10],
-                                               digits[(axpi / 10) % 10],
-                                                     digits[axpi % 10],
-                                                           '\0'};
+      if (axpi < 1e6) {
+        char oi[9] = {'-',
+                      digits[(axpi / 100000) % 10],
+                            digits[(axpi / 10000) % 10],
+                                  digits[(axpi / 1000) % 10],
+                                        bigmark,
+                                        digits[(axpi / 100) % 10],
+                                              digits[(axpi / 10) % 10],
+                                                    digits[axpi % 10],
+                                                          '\0'};
         const char * coi = (const char *)oi;
 
         SET_STRING_ELT(ans, i, mkCharCE(coi, CE_UTF8));
         continue;
       }
-      if (axpi < 1e8) {
-        char oi[12] = {'-',
-                       digits[(axpi / 10000000) % 10],
+      if (axpi < 1e7) {
+        char oi[11] = {'-',
                        digits[(axpi / 1000000) % 10],
                              bigmark,
                              digits[(axpi / 100000) % 10],
@@ -566,9 +584,8 @@ SEXP C_comma(SEXP x, SEXP Digits, SEXP BigMark) {
         SET_STRING_ELT(ans, i, mkCharCE(coi, CE_UTF8));
         continue;
       }
-      if (axpi < 1e9) {
-        char oi[13] = {'-',
-                       digits[(axpi / 100000000) % 10],
+      if (axpi < 1e8) {
+        char oi[12] = {'-',
                        digits[(axpi / 10000000) % 10],
                              digits[(axpi / 1000000) % 10],
                                    bigmark,
@@ -585,22 +602,41 @@ SEXP C_comma(SEXP x, SEXP Digits, SEXP BigMark) {
         SET_STRING_ELT(ans, i, mkCharCE(coi, CE_UTF8));
         continue;
       }
+      if (axpi < 1e9) {
+        char oi[13] = {'-',
+                       digits[(axpi / 100000000) % 10],
+                             digits[(axpi / 10000000) % 10],
+                                   digits[(axpi / 1000000) % 10],
+                                         bigmark,
+                                         digits[(axpi / 100000) % 10],
+                                               digits[(axpi / 10000) % 10],
+                                                     digits[(axpi / 1000) % 10],
+                                                           bigmark,
+                                                           digits[(axpi / 100) % 10],
+                                                                 digits[(axpi / 10) % 10],
+                                                                       digits[axpi % 10],
+                                                                             '\0'};
+        const char * coi = (const char *)oi;
+
+        SET_STRING_ELT(ans, i, mkCharCE(coi, CE_UTF8));
+        continue;
+      }
 
       char oi[15] = {'-',
                      digits[(axpi / 1000000000) % 10],
-                     bigmark,
-                     digits[(axpi / 100000000) % 10],
-                           digits[(axpi / 10000000) % 10],
-                                 digits[(axpi / 1000000) % 10],
-                                       bigmark,
-                                       digits[(axpi / 100000) % 10],
-                                             digits[(axpi / 10000) % 10],
-                                                   digits[(axpi / 1000) % 10],
-                                                         bigmark,
-                                                         digits[(axpi / 100) % 10],
-                                                               digits[(axpi / 10) % 10],
-                                                                     digits[axpi % 10],
-                                                                           '\0'};
+                           bigmark,
+                           digits[(axpi / 100000000) % 10],
+                                 digits[(axpi / 10000000) % 10],
+                                       digits[(axpi / 1000000) % 10],
+                                             bigmark,
+                                             digits[(axpi / 100000) % 10],
+                                                   digits[(axpi / 10000) % 10],
+                                                         digits[(axpi / 1000) % 10],
+                                                               bigmark,
+                                                               digits[(axpi / 100) % 10],
+                                                                     digits[(axpi / 10) % 10],
+                                                                           digits[axpi % 10],
+                                                                                 '\0'};
       const char * coi = (const char *)oi;
 
       SET_STRING_ELT(ans, i, mkCharCE(coi, CE_UTF8));
@@ -631,19 +667,6 @@ SEXP C_comma(SEXP x, SEXP Digits, SEXP BigMark) {
       char oi[6] = {digits[axpi / 1000],
                     bigmark,
                     digits[(axpi / 100) % 10],
-                    digits[(axpi / 10) % 10],
-                    digits[axpi % 10],
-                    '\0'};
-      const char * coi = (const char *)oi;
-
-      SET_STRING_ELT(ans, i, mkCharCE(coi, CE_UTF8));
-      continue;
-    }
-    if (axpi < 100e3) {
-      char oi[7] = {digits[(axpi / 10000) % 10],
-                    digits[(axpi / 1000) % 10],
-                    bigmark,
-                    digits[(axpi / 100) % 10],
                           digits[(axpi / 10) % 10],
                                 digits[axpi % 10],
                                       '\0'};
@@ -652,15 +675,28 @@ SEXP C_comma(SEXP x, SEXP Digits, SEXP BigMark) {
       SET_STRING_ELT(ans, i, mkCharCE(coi, CE_UTF8));
       continue;
     }
+    if (axpi < 100e3) {
+      char oi[7] = {digits[(axpi / 10000) % 10],
+                    digits[(axpi / 1000) % 10],
+                          bigmark,
+                          digits[(axpi / 100) % 10],
+                                digits[(axpi / 10) % 10],
+                                      digits[axpi % 10],
+                                            '\0'};
+      const char * coi = (const char *)oi;
+
+      SET_STRING_ELT(ans, i, mkCharCE(coi, CE_UTF8));
+      continue;
+    }
     if (axpi < 1e6) {
       char oi[8] = {digits[(axpi / 100000) % 10],
                     digits[(axpi / 10000) % 10],
-                    digits[(axpi / 1000) % 10],
-                    bigmark,
-                    digits[(axpi / 100) % 10],
-                    digits[(axpi / 10) % 10],
-                    digits[axpi % 10],
-                    '\0'};
+                          digits[(axpi / 1000) % 10],
+                                bigmark,
+                                digits[(axpi / 100) % 10],
+                                      digits[(axpi / 10) % 10],
+                                            digits[axpi % 10],
+                                                  '\0'};
       const char * coi = (const char *)oi;
 
       SET_STRING_ELT(ans, i, mkCharCE(coi, CE_UTF8));
@@ -668,15 +704,15 @@ SEXP C_comma(SEXP x, SEXP Digits, SEXP BigMark) {
     }
     if (axpi < 1e7) {
       char oi[10] = {digits[(axpi / 1000000) % 10],
-                    bigmark,
-                    digits[(axpi / 100000) % 10],
-                    digits[(axpi / 10000) % 10],
-                    digits[(axpi / 1000) % 10],
-                    bigmark,
-                    digits[(axpi / 100) % 10],
-                    digits[(axpi / 10) % 10],
-                    digits[axpi % 10],
-                    '\0'};
+                     bigmark,
+                     digits[(axpi / 100000) % 10],
+                           digits[(axpi / 10000) % 10],
+                                 digits[(axpi / 1000) % 10],
+                                       bigmark,
+                                       digits[(axpi / 100) % 10],
+                                             digits[(axpi / 10) % 10],
+                                                   digits[axpi % 10],
+                                                         '\0'};
       const char * coi = (const char *)oi;
 
       SET_STRING_ELT(ans, i, mkCharCE(coi, CE_UTF8));
@@ -684,16 +720,16 @@ SEXP C_comma(SEXP x, SEXP Digits, SEXP BigMark) {
     }
     if (axpi < 1e8) {
       char oi[11] = {digits[(axpi / 10000000) % 10],
-                    digits[(axpi / 1000000) % 10],
-                    bigmark,
-                    digits[(axpi / 100000) % 10],
-                    digits[(axpi / 10000) % 10],
-                    digits[(axpi / 1000) % 10],
-                    bigmark,
-                    digits[(axpi / 100) % 10],
-                    digits[(axpi / 10) % 10],
-                    digits[axpi % 10],
-                    '\0'};
+                     digits[(axpi / 1000000) % 10],
+                           bigmark,
+                           digits[(axpi / 100000) % 10],
+                                 digits[(axpi / 10000) % 10],
+                                       digits[(axpi / 1000) % 10],
+                                             bigmark,
+                                             digits[(axpi / 100) % 10],
+                                                   digits[(axpi / 10) % 10],
+                                                         digits[axpi % 10],
+                                                               '\0'};
       const char * coi = (const char *)oi;
 
       SET_STRING_ELT(ans, i, mkCharCE(coi, CE_UTF8));
@@ -701,17 +737,17 @@ SEXP C_comma(SEXP x, SEXP Digits, SEXP BigMark) {
     }
     if (axpi < 1e9) {
       char oi[12] = {digits[(axpi / 100000000) % 10],
-                    digits[(axpi / 10000000) % 10],
-                    digits[(axpi / 1000000) % 10],
-                    bigmark,
-                    digits[(axpi / 100000) % 10],
-                    digits[(axpi / 10000) % 10],
-                    digits[(axpi / 1000) % 10],
-                    bigmark,
-                    digits[(axpi / 100) % 10],
-                    digits[(axpi / 10) % 10],
-                    digits[axpi % 10],
-                    '\0'};
+                     digits[(axpi / 10000000) % 10],
+                           digits[(axpi / 1000000) % 10],
+                                 bigmark,
+                                 digits[(axpi / 100000) % 10],
+                                       digits[(axpi / 10000) % 10],
+                                             digits[(axpi / 1000) % 10],
+                                                   bigmark,
+                                                   digits[(axpi / 100) % 10],
+                                                         digits[(axpi / 10) % 10],
+                                                               digits[axpi % 10],
+                                                                     '\0'};
       const char * coi = (const char *)oi;
 
       SET_STRING_ELT(ans, i, mkCharCE(coi, CE_UTF8));
@@ -721,17 +757,17 @@ SEXP C_comma(SEXP x, SEXP Digits, SEXP BigMark) {
     char oi[14] = {digits[(axpi / 1000000000) % 10],
                    bigmark,
                    digits[(axpi / 100000000) % 10],
-                   digits[(axpi / 10000000) % 10],
-                   digits[(axpi / 1000000) % 10],
-                    bigmark,
-                   digits[(axpi / 100000) % 10],
-                   digits[(axpi / 10000) % 10],
-                   digits[(axpi / 1000) % 10],
-                    bigmark,
-                   digits[(axpi / 100) % 10],
-                   digits[(axpi / 10) % 10],
-                   digits[axpi % 10],
-                   '\0'};
+                         digits[(axpi / 10000000) % 10],
+                               digits[(axpi / 1000000) % 10],
+                                     bigmark,
+                                     digits[(axpi / 100000) % 10],
+                                           digits[(axpi / 10000) % 10],
+                                                 digits[(axpi / 1000) % 10],
+                                                       bigmark,
+                                                       digits[(axpi / 100) % 10],
+                                                             digits[(axpi / 10) % 10],
+                                                                   digits[axpi % 10],
+                                                                         '\0'};
     const char * coi = (const char *)oi;
 
     SET_STRING_ELT(ans, i, mkCharCE(coi, CE_UTF8));

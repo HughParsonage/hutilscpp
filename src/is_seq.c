@@ -18,9 +18,7 @@ bool is_seq(SEXP x) {
       return true;
     }
   case REALSXP:
-    if (is_altrep(x)) {
-      return true;
-    }
+    return is_altrep(x);
   }
   return false;
 }
