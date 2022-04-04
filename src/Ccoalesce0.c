@@ -145,7 +145,7 @@ SEXP Cuncoalesce0(SEXP x) {
   case REALSXP:
     duncoalesce0(REAL(x), xlength(x));
     break;
-  default:
+  default: // # nocov
     warning("Unsupported type: '%s'", type2char(TYPEOF(x))); // # nocov
   }
   return x;
