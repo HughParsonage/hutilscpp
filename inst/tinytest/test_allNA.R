@@ -44,6 +44,7 @@ expect_false(allNA(c("", NA, "", NA_character_)))
 expect_false(allNA(complex(2)))
 expect_true(allNA(complex(2) * NA))
 expect_false(allNA(sqrt))
+expect_false(allNA(c(NA, NA, NA, NA, 1L, NA, NA, NA, NA)))
 
 
 

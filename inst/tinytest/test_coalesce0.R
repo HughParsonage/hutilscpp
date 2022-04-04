@@ -22,7 +22,8 @@ expect_equal(coalesce0(1:2), 1:2)
 expect_equal(coalesce0(integer(2)), integer(2))
 expect_equal(coalesce0(integer(3)), integer(3))
 expect_equal(coalesce0(c(1:6, NA)), .coalesce0(c(1:6, NA)))
-expect_equal(coalesce0(c(1:253, NA, NA, NA, 1:253)), .coalesce0(c(1:253, NA, NA, NA, 1:253)))
+expect_equal(coalesce0(c(1:253, NA, NA, NA, NA, NA, 1:253)),
+             .coalesce0(c(1:253, NA, NA, NA, NA, NA, 1:253)))
 
 
 x <- c(1L, -.Machine$integer.max, .Machine$integer.max, 0L)

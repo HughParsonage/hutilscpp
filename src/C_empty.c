@@ -79,9 +79,6 @@ static bool cempty(const Rcomplex * xp, R_xlen_t N) {
 
 static bool empty(SEXP x, bool e, int nThread) {
   R_xlen_t N = xlength(x);
-  if (N == 0) {
-    return false;
-  }
   switch(TYPEOF(x)) {
   case LGLSXP:
     return iempty(LOGICAL(x), N, e, nThread);

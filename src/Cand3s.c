@@ -580,14 +580,7 @@ static void vand2s_LL(unsigned char * ansp, const int o,
       if (y[0] == 0 && y[1] == 1) {
         return;
       } else {
-        if (y[0] == 1) {
-          if (y[1] == 0) {
-            FORLOOP(ansp[i] = 0;)
-            return;
-          }
-          FORLOOP(ansp[i] &= x[i] == 1;)
-            return;
-        }
+        FORLOOP(ansp[i] &= x[i] >= y[0] && x[i] <= y[1];)
         return;
       }
       break;

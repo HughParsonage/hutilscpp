@@ -96,6 +96,7 @@
 
 # test_that("sum_isna(raw)", {
   expect_equal(sum_isna(raw(5)), 0)
+  expect_equal(sum_isna(raw(5), do_anyNA = FALSE), 0)
 
 
 

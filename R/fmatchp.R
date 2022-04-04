@@ -33,7 +33,7 @@ fmatchp <- function(x, table, nomatch = NA_integer_,
   if (is.logical(x)) {
     ans <- .Call("fmatchp_lgl", x, as.logical(table), nThread, fin, PACKAGE = "hutilscpp")
     if (is.null(ans)) {
-      return(match_last_resort(x, table, nomatch, nThread, fin, whichFirst))
+      return(match_last_resort(x, table, nomatch, nThread, fin, whichFirst)) # nocov
     }
     if (is.na(nomatch) && is.integer(ans)) {
       .Call("Cuncoalesce0", ans, PACKAGE = "hutilscpp")
