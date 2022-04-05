@@ -73,9 +73,6 @@ SEXP abs_dbl_dbl(SEXP x, SEXP y, SEXP nthreads, SEXP Option) {
           type2char(TYPEOF(x)), type2char(TYPEOF(y)));
   }
   // # nocov end
-  if (xlength(x) == 1 && xlength(y) > 1) {
-    return abs_dbl_dbl(y, x, nthreads, Option);
-  }
   const int opt = asInteger(Option);
   int nThread = asInteger(nthreads);
   R_xlen_t N = xlength(x);

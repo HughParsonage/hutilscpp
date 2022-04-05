@@ -744,13 +744,12 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
     }
   }
     break;
+    // # nocov start
   default: {
-    FORLOOP({
-      ansp[i] = 1;
-    })
-    vand2s(ansp, o1, xx1, yy1, nThread);
+    error("Internal error(Cand3s): unsupported xx1 with NILSXP yy1;");
   }
   }
+    // # nocov end
   } else {
     FORLOOP({
       ansp[i] = 1;

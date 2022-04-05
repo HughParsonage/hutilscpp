@@ -12,7 +12,13 @@ sum_band3 <- function(exprA, exprB = TRUE, exprC = TRUE, ..., .parent_nframes = 
   }
 }
 expect_equal(sum_and3s(1:100 > 101, 1:100 > 101,,1:100 > 101), 0)
+expect_equal(sum_and3s(1:100 > 101,, 1:100 > 101,,,1:100 > 101), 0)
+expect_equal(sum_and3s(1:100 > 101,,, 1:100 > 101,,,1:100 > 101), 0)
+expect_equal(sum_and3s(1:100 > 101, 1:100 > 101,,,1:100 > 101), 0)
 expect_equal(sum_or3s(1:100 > 101, 1:100 > 101,,1:100 > 101), 0)
+expect_equal(sum_or3s(1:100 > 101,, 1:100 > 101,,1:100 > 101), 0)
+expect_equal(sum_or3s(1:100 > 101,,, 1:100 > 101,,1:100 > 101), 0)
+expect_equal(sum_or3s(1:100 > 101, 1:100 > 101,,,1:100 > 101), 0)
 
 expect_equal(sum_and3s(1:1001 > NaN), 0)
 expect_equal(sum_and3s(1:1001 < NaN), 0)

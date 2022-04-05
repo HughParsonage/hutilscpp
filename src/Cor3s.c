@@ -448,20 +448,12 @@ static void vo2s_LL(unsigned char * ansp, const int o,
         FORLOOP(ansp[i] = 1;)
         return;
       } else {
-        if (y[0] == 1) {
-          if (y[1] == 0) {
-            return;
-          }
-          FORLOOP(ansp[i] |= x[i] == 1;)
-            return;
-        }
-        if (y[1] == 1) {
-          FORLOOP(ansp[i] = 1;)
+        int y00 = y[0] == NA_LOGICAL ? 0 : y[0];
+        int y01 = y[1] == NA_LOGICAL ? 1 : y[1];
+        if (y01 < y00) {
           return;
         }
-        if (y[0] == 0 && y[1] == 0) {
-          FORLOOP(ansp[i] |= x[i] == 0;)
-        }
+        FORLOOP(ansp[i] |= x[i] == y01 || x[i] == y01;)
         return;
       }
       break;
