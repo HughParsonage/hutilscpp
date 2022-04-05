@@ -67,25 +67,8 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
     xx1 <- exprA
   }
   if (!is.null(xx1) && length(xx1) <= 1e3L) {
-    ans <-
-      # Don't bother (or still NULL)
-      if (missing(exprC)) {
-        if (missing(exprB)) {
-          (exprA)
-        } else {
-          (exprA & exprB)
-        }
-      } else {
-        if (missing(exprB)) {
-          (exprA & Reduce("&", list(exprC, ...)))
-        } else {
-          if (missing(exprC)) {
-            (exprA & exprB & Reduce("&", list(...)))
-          } else {
-            (exprA & exprB & exprC & Reduce("&", list(exprC, ...)))
-          }
-        }
-      }
+    # Don't bother (or still NULL)
+    ans <- .et3(exprA, exprB, exprC, ...)
     return(switch(type,
                   raw = lgl2raw(ans, nThread = nThread),
                   logical = ans,
@@ -187,7 +170,7 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
     if (missing(..1)) {
       return(eval.parent(substitute(or3s(exprA, exprC, nThread = nThread, type = type))))
     } else {
-      return(eval.parent(substitute(or3s(exprA, exprC, ..., nThread = nThread, type = type))))
+      return(eval.parent(substitute(or3s(exprA, exprC, ..., nThread = nThread, type = type)))) # nocov
     }
   }
   sexprA <- substitute(exprA)
@@ -209,26 +192,7 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
   }
   if (!is.null(xx1) && length(xx1) <= 1e3L) {
     # Don't bother (or still NULL)
-    ans <-
-      if (missing(..1)) {
-        if (missing(exprB)) {
-          (exprA)
-        } else if (missing(exprC)) {
-          (exprA | exprB)
-        } else {
-          (exprA | exprB | exprC)
-        }
-      } else {
-        if (missing(exprB)) {
-          (exprA | Reduce(`|`, list(...)))
-        } else {
-          if (missing(exprC)) {
-            (exprA | exprB | Reduce(`|`, list(...)))
-          } else {
-            (exprA | exprB | exprC | Reduce(`|`, list(...)))
-          }
-        }
-      }
+    ans <- .or3(exprA, exprB, exprC, ...)
     return(switch(type,
                   raw = lgl2raw(ans),
                   logical = ans,
@@ -313,6 +277,39 @@ do_par_in <- function(x, tbl, nThread = 1L) {
   } else {
     x %in% tbl # nocov
   }
+}
+
+.or3 <- function(x, y, ...) {
+  if ((missing(x) || is.null(x)) && (missing(y) || is.null(y))) {
+    if (missing(..1)) {
+      return(FALSE)
+    } else {
+      return(.or3(...))
+    }
+  }
+  if (missing(y) || is.null(y)) {
+    return(x)
+  }
+  if (missing(..1)) {
+    return(x | y)
+  }
+  x | y| .or3(...)
+}
+.et3 <- function(x, y, ...) {
+  if ((missing(x) || is.null(x)) && (missing(y) || is.null(y))) {
+    if (missing(..1)) {
+      return(TRUE)
+    } else {
+      return(.et3(...)) # nocov
+    }
+  }
+  if (missing(y) || is.null(y)) {
+    return(x)
+  }
+  if (missing(..1)) {
+    return(x & y)
+  }
+  x & y & .et3(...)
 }
 
 

@@ -91,6 +91,8 @@ expect_equal(finp(x, c(FALSE, NA)), x %in% c(FALSE, NA))
 expect_equal(finp(x, c(FALSE, TRUE, NA)), rep(TRUE, length(x)))
 
 expect_equal(finp(x, logical(0)), logical(length(x)))
+expect_equal(finp(1:5, integer(0)), logical(5))
+expect_equal(fmatchp(integer(0), 1:5), integer(0))
 
 
 

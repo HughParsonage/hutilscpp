@@ -225,7 +225,7 @@ static double NA_int2real(hash_index_t res) {
 // # nocov end
 
 static bool use_uchar(SEXP x, SEXP y, bool fin, int nThread, int yminmax[2]) {
-  if (!isInteger(x) || !isInteger(y) || !fin) {
+  if (xlength(y) == 0 || !isInteger(x) || !isInteger(y) || !fin) {
     return false;
   }
   return ithinner(INTEGER(y), xlength(y), nThread, UCHAR_THRESH, yminmax);
@@ -266,7 +266,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
       return ScalarLength(0);
     }
     if (fin) {
-      return LogicalN(n);
+      return RawN(n);
     }
     // empty table -> vector full of nmv
 
