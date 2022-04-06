@@ -72,6 +72,10 @@ expect_equal(Comma(c(0.00000, 55, 5.1), digits = 1L),
 expect_equal(Comma(c(0.000001, 55), digits = 1L), c("0.0", "55.0"))
 expect_equal(Comma(c(0.000001, 55, 5.1), digits = 1L), c("0.0", "55.0", "5.1"))
 expect_equal(Comma(c(1.000001, 55), digits = 1L), c("1.0", "55.0"))
+expect_equal(Comma(-0.1, digits = 0L), "-0")
+expect_equal(Comma(0.1, digits = 0L), "0")
+
+
 expect_equal(Comma(c(5123L), big.mark = " "), "5 123")
 expect_equal(Comma(c(5123L), big.mark = '"'), '5"123')
 expect_equal(Comma(c(5, 4, 5.5), big.mark = ",", digits = 1L),

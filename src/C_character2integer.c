@@ -368,26 +368,15 @@ SEXP C_character2integer(SEXP x, SEXP NaStrings, SEXP AllowDbl, SEXP Option) {
 }
 
 static int width_dbl(double x, int d) {
+  int w = (x < 0); // '-'
+  w += d;
+  w += (d > 0); // decimal not required for zero
   double ax = fabs(x);
   if (ax < 1) {
-    if (d == 0) {
-      return 1; // will be 0
-    }
-    return 2 + d; // '0' + '.' + d
-  }
-  int w = (x < 0); // '-'
-
-  // if close to zero
-  if (ax <= pow(0.1, d)) {
     return w;
   }
   int log10_ax = log10(ax);
   w += 1 + log10_ax + (log10_ax / 3); // front of '.', with bigmarks
-  if (d > 0) {
-    w += 1; // decimal point (not needed if d <= 0)
-    w += d;
-  }
-
   return w;
 }
 
