@@ -8,7 +8,7 @@ ModeC(
   x,
   nThread = getOption("hutilscpp.nThread", 1L),
   .range_fmatch = 1000000000,
-  .option = 1L
+  option = 1L
 )
 }
 \arguments{
@@ -19,7 +19,7 @@ ModeC(
 \item{.range_fmatch}{If the range of \code{x} differs by more than
 this amount, the mode will be calculated via \code{fmatchp}.}
 
-\item{.option}{\code{integer(1)} Handle exceptional cases:
+\item{option}{\code{integer(1)} Handle exceptional cases:
 \describe{
 \item{0}{Returns \code{NULL} quietly.}
 \item{1}{Returns an error if the mode cannot be calculated.}
