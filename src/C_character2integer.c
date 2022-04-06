@@ -15,8 +15,8 @@ static const char i2bigmark(int x) {
     return '\'';
   case 4:
     return '_';
-  // case 5:
-  //   return '~';
+  case 5:
+    return '~';
   case 6:
     return '"';
   case 7:

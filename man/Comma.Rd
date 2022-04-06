@@ -2,20 +2,21 @@
 % Please edit documentation in R/Comma.R
 \name{Comma}
 \alias{Comma}
-\title{Faster version}
+\title{Faster version of \code{scales::comma}}
 \usage{
-Comma(x, digits = 0L, big.mark = ",")
+Comma(x, digits = 0L, big.mark = c(",", " ", "'", "_", "~", "\\"", "/"))
 }
 \arguments{
 \item{x}{A numeric vector.}
 
 \item{digits}{An integer, similar to \code{round}.}
 
-\item{big.mark}{A single character.}
+\item{big.mark}{A single character, the thousands separator.}
 }
 \value{
-Similar to \code{prettyNum(round(x, digits), big.mark = ',')}.
+Similar to \code{prettyNum(round(x, digits), big.mark = ',')} but rounds down
+and \code{-1 < x < 0} will output \code{"-0"}.
 }
 \description{
-Faster version
+Faster version of \code{scales::comma}
 }
