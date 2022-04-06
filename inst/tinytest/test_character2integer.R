@@ -74,5 +74,5 @@ expect_equal(Comma(c(5, 4, 5.5), big.mark = ",", digits = 1L),
 expect_equal(character2integer(c("5.0", "4.0", "5.5"), allow.double = TRUE,
                                na.strings = "na"),
              c(5, 4, 5.5))
-expect_error(character2integer(c("5", "55", "55.005"), allow_double = FALSE))
-expect_true(is.double(character2integer(c("5", "55", "55.005"), allow_double = TRUE)))
+expect_error(character2integer(c("5", "55", "55.005"), allow.double = FALSE))
+expect_true(is.double(character2integer(c("5", "55", "55.005"), allow.double = TRUE)))
