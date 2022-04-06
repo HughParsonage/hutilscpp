@@ -78,6 +78,7 @@ expect_equal(Comma(0.1, digits = 0L), "0")
 
 expect_equal(Comma(c(5123L), big.mark = " "), "5 123")
 expect_equal(Comma(c(5123L), big.mark = '"'), '5"123')
+expect_equal(Comma(c(5123L), big.mark = '~'), '5~123')
 expect_equal(Comma(c(5, 4, 5.5), big.mark = ",", digits = 1L),
              c("5.0", "4.0", "5.5"))
 expect_equal(character2integer(c("5.0", "4.0", "5.5"), allow.double = TRUE,
