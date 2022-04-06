@@ -64,8 +64,13 @@ expect_equal(character2integer(c("-99", "-8", "-99", "-9", "5300",
                                na.strings = c("-99", "-9"),
                                allow.double = TRUE),
              c(NA, -8L, NA, NA, 5300L, 3e9))
-expect_equal(Comma(c(0.00000, 55), digits = 1L), c("0.0", "55.0"))
+# test small numbers (ensuring they are )
+expect_equal(Comma(c(0.00000, 55), digits = 1L),
+             c("0.0", "55.0"))
+expect_equal(Comma(c(0.00000, 55, 5.1), digits = 1L),
+             c("0.0", "55.0", "5.1"))
 expect_equal(Comma(c(0.000001, 55), digits = 1L), c("0.0", "55.0"))
+expect_equal(Comma(c(0.000001, 55, 5.1), digits = 1L), c("0.0", "55.0", "5.1"))
 expect_equal(Comma(c(1.000001, 55), digits = 1L), c("1.0", "55.0"))
 expect_equal(Comma(c(5123L), big.mark = " "), "5 123")
 expect_equal(Comma(c(5123L), big.mark = '"'), '5"123')
@@ -74,5 +79,6 @@ expect_equal(Comma(c(5, 4, 5.5), big.mark = ",", digits = 1L),
 expect_equal(character2integer(c("5.0", "4.0", "5.5"), allow.double = TRUE,
                                na.strings = "na"),
              c(5, 4, 5.5))
-expect_error(character2integer(c("5", "55", "55.005"), allow.double = FALSE))
+expect_error(character2integer(c("5", "55", "55.005"), allow.double = FALSE),
+             "FALSE")
 expect_true(is.double(character2integer(c("5", "55", "55.005"), allow.double = TRUE)))
