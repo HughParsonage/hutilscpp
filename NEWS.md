@@ -2,8 +2,10 @@
 
 * New functions:
   - `abs_diff` for non-allocating versions of `abs(x - y)`.
+  - `character2integer` for a faster version of `as.integer(gsub("[^0-9]", "", x))`
+  - `Comma`, relatedly, `prettyNum(x, big.mark = ",")`
   - `coalesce0` as a convenience function, equivalent to `coalesce(x, 0)` for correct type of 0.
-  - `extent` and `thinner` for direct versions of `diff(minmax(x))`.
+  - `diam` and `thinner` for direct versions of `diff(minmax(x))`.
   - `every_int32` Returns a vector of every `integer`
   - `ModeC` most common element of integer vectors. 
   - `unique_fmatch` and `uniqueN_fmatch` for distinct elements.

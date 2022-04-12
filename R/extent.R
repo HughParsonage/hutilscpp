@@ -1,4 +1,4 @@
-#' How wide is the extent of vector?
+#' What is the diameter of set of points?
 #' @description Equivalent to \code{diff(minmax(x))}
 #'
 #' @param x A numeric vector.
@@ -8,20 +8,24 @@
 #' @return
 #' A single value:
 #' \describe{
-#' \item{\code{extent}}{The difference of \code{minmax(x)}}
-#' \item{\code{thinner}}{Equivalent to \code{extent(x) <= width}}
+#' \item{\code{diam}}{The difference of \code{minmax(x)}}
+#' \item{\code{thinner}}{Equivalent to \code{diam(x) <= width}}
 #' }
 #'
 #' @export
-extent <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
+diam <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
   # C version not faster
   ans <- minmax(x, nThread = nThread)
+  if (is.integer(x) && ans[1] < 0) {
+    out <- as.double(ans[2]) - ans[1]
+    return(R_xlen_t(out))
+  }
   ans[2] - ans[1]
 }
 
-#' @rdname extent
+#' @rdname diam
 #' @export
 thinner <- function(x, width, nThread = getOption("hutilscpp.nThread", 1L)) {
-  extent(x, nThread = nThread) <= width
+  diam(x, nThread = nThread) <= width
 }
 
