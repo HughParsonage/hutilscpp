@@ -1,4 +1,4 @@
-Fix for new clang 13 strictness about omp.h header order
+Update
 
 ## Test environments
 * local Windows 4.0.0
@@ -8,6 +8,4 @@ Fix for new clang 13 strictness about omp.h header order
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
-
-Note relates to recent submission. rchk and valgrind seemed urgent
+0 errors | 0 warnings | 0 note
