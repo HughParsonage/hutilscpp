@@ -1,5 +1,5 @@
 #' Most common element
-#' @param x An integer vector.
+#' @param x An atomic vector.
 #' @param nThread Number of threads to use.
 #' @param .range_fmatch If the range of \code{x} differs by more than
 #' this amount, the mode will be calculated via \code{fmatchp}.
@@ -21,9 +21,8 @@ ModeC <- function(x,
                   nThread = getOption("hutilscpp.nThread", 1L),
                   .range_fmatch = 1e9,
                   option = 1L) {
-  xminmax <- minmax(x, nThread = nThread)
-  if (anyNA(xminmax) ||
-      !is.integer(x) ||
+  if (!is.integer(x) ||
+      anyNA(xminmax <- minmax(x, nThread = nThread)) ||
       xminmax[1] + .range_fmatch <= xminmax[2]) {
     fx <- fmatchp(x, x, nThread = nThread)
     mode_fx <- .Call("C_Mode", fx, nThread, NULL, PACKAGE = "hutilscpp")

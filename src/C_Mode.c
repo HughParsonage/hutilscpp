@@ -16,6 +16,7 @@ SEXP C_Mode(SEXP x, SEXP nthreads, SEXP Xminmax) {
         continue;
       }
       int xpi = xp[i];
+      tbl[i] = 1;
       for (R_xlen_t j = i + 1; j < N; ++j) {
         int xpj = xp[j];
         if (xpj == xpi) {

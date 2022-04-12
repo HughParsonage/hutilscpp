@@ -2,7 +2,7 @@
 
 // # nocov start
 SEXP C_and_raw(SEXP x, SEXP y, SEXP nthreads) {
-  int nThread = asInteger(nthreads);
+  int nThread = as_nThread(nthreads);
   R_xlen_t N = xlength(x);
 
   if (N == 0) {
