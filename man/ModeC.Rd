@@ -7,12 +7,12 @@
 ModeC(
   x,
   nThread = getOption("hutilscpp.nThread", 1L),
-  .range_fmatch = 1000000000,
+  .range_fmatch = 1e+09,
   option = 1L
 )
 }
 \arguments{
-\item{x}{An integer vector.}
+\item{x}{An atomic vector.}
 
 \item{nThread}{Number of threads to use.}
 
