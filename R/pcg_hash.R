@@ -27,3 +27,8 @@
 # FLIP <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
 #   .Call("CNot", x, nThread, PACKAGE = packageName)
 # }
+
+
+pcg_hash64 <- function(n, r = NULL) {
+  .Call("C_pcg_hash", n, r, PACKAGE = "hutilscpp")
+}
