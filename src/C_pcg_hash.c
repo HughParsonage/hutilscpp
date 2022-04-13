@@ -1,5 +1,6 @@
 #include "hutilscpp.h"
 
+#ifdef __SIZEOF_INT128__
 __uint128_t g_lehmer64_state;
 
 void reset_state(const int * rp, R_xlen_t N) {
@@ -44,3 +45,9 @@ SEXP C_pcg_hash(SEXP NN, SEXP RR) {
   UNPROTECT(1);
   return ans;
 }
+
+#else
+SEXP C_pcg_hash(SEXP NN, SEXP RR) {
+  return R_NilValue;
+}
+#endif
