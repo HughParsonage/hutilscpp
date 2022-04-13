@@ -23,3 +23,7 @@ Comma <- function(x, digits = 0L, big.mark = c(",", " ", "'", "_", "~", '"', "/"
         PACKAGE = "hutilscpp")
 }
 
+test_width_dbl <- function(x, d) {
+  .Call("Ctest_width_dbl", as.double(x), as.integer(d), PACKAGE = "hutilscpp")
+}
+
