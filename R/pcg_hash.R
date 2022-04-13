@@ -30,5 +30,6 @@
 
 
 pcg_hash64 <- function(n, r = NULL) {
-  .Call("C_pcg_hash", n, r, PACKAGE = "hutilscpp")
+  .Call("C_pcg_hash", n, r, PACKAGE = "hutilscpp") %||% sample.int(n)
+
 }
