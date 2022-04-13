@@ -368,7 +368,8 @@ SEXP C_character2integer(SEXP x, SEXP NaStrings, SEXP AllowDbl, SEXP Option) {
 }
 
 static int width_dbl(double x, int d) {
-  int w = (x < 0); // '-'
+  int w = 1;
+  w += (x < 0); // '-'
   w += d;
   w += (d > 0); // decimal not required for zero
   double ax = fabs(x);
@@ -376,8 +377,17 @@ static int width_dbl(double x, int d) {
     return w;
   }
   int log10_ax = log10(ax);
-  w += 1 + log10_ax + (log10_ax / 3); // front of '.', with bigmarks
+  w += log10_ax + (log10_ax / 3); // front of '.', with bigmarks
   return w;
+}
+
+SEXP Ctest_width_dbl(SEXP xx, SEXP dd) {
+  if (!isReal(xx) || !isInteger(dd)) {
+    error("Wrong types."); // # nocov
+  }
+  double x = asReal(xx);
+  int d = asInteger(dd);
+  return ScalarInteger(width_dbl(x, d));
 }
 
 static SEXP dbl2string(double x, int d, const char bigmark) {

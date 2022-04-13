@@ -1,4 +1,5 @@
 library(hutilscpp)
+expect_equal(hutilscpp:::test_width_dbl(0, 1L), nchar("0.0"))
 
 x <- c(1626783884L, 969909421L, 205541854L, -1L, 0L, 1L, -1214788235L,
        -709260613L, -795055625L)
@@ -12,4 +13,6 @@ expect_equal(Comma(9843.123453, digits = 5L, big.mark = "'"), "9'843.12345")
 
 # test 1234.1 != '1234.0
 expect_equal(Comma(1234.1, digits = 1L, big.mark = "/"), "1/234.1")
+
+
 
