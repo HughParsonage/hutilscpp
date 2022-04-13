@@ -1,0 +1,6 @@
+x <- hutilscpp:::pcg_hash64(10L)
+expect_equal(length(x))
+expect_true(is.integer(x))
+ya <- hutilscpp:::pcg_hash64(10L, 1:100)
+yb <- hutilscpp:::pcg_hash64(10L, 1:100)
+expect_equal(ya, yb)
