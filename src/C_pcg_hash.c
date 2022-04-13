@@ -18,7 +18,7 @@ uint64_t lehmer64() {
 
 SEXP C_pcg_hash(SEXP NN, SEXP RR) {
   if ((!isInteger(NN) && !isReal(NN)) || (!isInteger(RR) && !isNull(RR))) {
-    return R_NilValue;
+    return R_NilValue; // # nocov
   }
   R_xlen_t N = isReal(NN) ? asReal(NN) : asInteger(NN);
   if (isInteger(RR)) {
