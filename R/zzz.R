@@ -6,6 +6,7 @@
   if (is.double(nThread <- getOption("hutilscpp.nThread"))) {
     options("hutilscpp.nThread" = as.integer(nThread))
   }
+
   invisible(NULL)
 }
 

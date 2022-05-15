@@ -8,6 +8,7 @@
 */
 
 /* .Call calls */
+extern SEXP C__alloc(SEXP);
 extern SEXP C_abs_diff(SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_and_raw(SEXP, SEXP, SEXP);
 extern SEXP C_character2integer(SEXP, SEXP, SEXP, SEXP);
@@ -16,11 +17,12 @@ extern SEXP C_empty(SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_FLIP(SEXP);
 extern SEXP C_hausdorffEuclid(SEXP, SEXP);
 extern SEXP C_haversineDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP C_lehmer64(SEXP, SEXP);
+extern SEXP C_lehmer64_par(SEXP, SEXP, SEXP);
 extern SEXP C_match_min_Haversine(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_Mode(SEXP, SEXP, SEXP);
 extern SEXP C_op2M(SEXP);
 extern SEXP C_or_raw(SEXP, SEXP, SEXP);
-extern SEXP C_pcg_hash(SEXP, SEXP);
 extern SEXP C_theEmptiestQuarters(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_theEuclidDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_which_first_lgl1(SEXP, SEXP, SEXP, SEXP);
@@ -65,6 +67,7 @@ extern SEXP Cna_and(SEXP);
 extern SEXP Cor3(SEXP, SEXP, SEXP);
 extern SEXP Cors(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cpar_in_int(SEXP, SEXP, SEXP);
+extern SEXP Cpcg_hash(SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cpmax(SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cpmax0_bitwise(SEXP, SEXP, SEXP);
 extern SEXP Cpmax0_radix_sorted_dbl(SEXP, SEXP, SEXP);
@@ -112,6 +115,7 @@ extern SEXP fmatch(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP fmatchp_lgl(SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
+    {"C__alloc",                      (DL_FUNC) &C__alloc,                       1},
     {"C_abs_diff",                    (DL_FUNC) &C_abs_diff,                     4},
     {"C_and_raw",                     (DL_FUNC) &C_and_raw,                      3},
     {"C_character2integer",           (DL_FUNC) &C_character2integer,            4},
@@ -120,11 +124,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"C_FLIP",                        (DL_FUNC) &C_FLIP,                         1},
     {"C_hausdorffEuclid",             (DL_FUNC) &C_hausdorffEuclid,              2},
     {"C_haversineDistance",           (DL_FUNC) &C_haversineDistance,            5},
+    {"C_lehmer64",                    (DL_FUNC) &C_lehmer64,                     2},
+    {"C_lehmer64_par",                (DL_FUNC) &C_lehmer64_par,                 3},
     {"C_match_min_Haversine",         (DL_FUNC) &C_match_min_Haversine,         11},
     {"C_Mode",                        (DL_FUNC) &C_Mode,                         3},
     {"C_op2M",                        (DL_FUNC) &C_op2M,                         1},
     {"C_or_raw",                      (DL_FUNC) &C_or_raw,                       3},
-    {"C_pcg_hash",                    (DL_FUNC) &C_pcg_hash,                     2},
     {"C_theEmptiestQuarters",         (DL_FUNC) &C_theEmptiestQuarters,          7},
     {"C_theEuclidDistance",           (DL_FUNC) &C_theEuclidDistance,            5},
     {"C_which_first_lgl1",            (DL_FUNC) &C_which_first_lgl1,             4},
@@ -169,6 +174,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Cor3",                          (DL_FUNC) &Cor3,                           3},
     {"Cors",                          (DL_FUNC) &Cors,                           7},
     {"Cpar_in_int",                   (DL_FUNC) &Cpar_in_int,                    3},
+    {"Cpcg_hash",                     (DL_FUNC) &Cpcg_hash,                      4},
     {"Cpmax",                         (DL_FUNC) &Cpmax,                          4},
     {"Cpmax0_bitwise",                (DL_FUNC) &Cpmax0_bitwise,                 3},
     {"Cpmax0_radix_sorted_dbl",       (DL_FUNC) &Cpmax0_radix_sorted_dbl,        3},
