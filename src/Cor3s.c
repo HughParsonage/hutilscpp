@@ -605,7 +605,8 @@ SEXP Cors(SEXP oo1, SEXP xx1, SEXP yy1,
   }
   UNPROTECT(1);
   if (err[0]) {
-    error("Error %d", err[0]);
+    REprintf("Falling back to |");
+    return R_NilValue;
   }
   return ans;
 }
