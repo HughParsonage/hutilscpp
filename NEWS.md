@@ -1,3 +1,9 @@
+## hutilscpp 0.9.2
+
+* Bug fixes:
+  - `logical3`. When passes expression with non-numeric components, no longer 
+    skips as if empty
+
 ## hutilscpp 0.9.1
 
 * Bug fixes:

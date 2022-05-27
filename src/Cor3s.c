@@ -519,7 +519,8 @@ static void vo2s_L(unsigned char * ansp, const int o,
 }
 
 static void vor2s(unsigned char * ansp, const int o,
-                  SEXP x, SEXP y, int nThread) {
+                  SEXP x, SEXP y, int nThread,
+                  int * err) {
   R_xlen_t N = xlength(x);
   R_xlen_t M = xlength(y);
 
@@ -541,6 +542,8 @@ static void vor2s(unsigned char * ansp, const int o,
     case REALSXP:
       vor2s_ID(ansp, o, INTEGER(x), N, REAL(y), M, nThread);
       break;
+    default:
+      *err = OR3__UNSUPPORTED_TYPEY;
     }
     break;
   case REALSXP:
@@ -551,8 +554,12 @@ static void vor2s(unsigned char * ansp, const int o,
     case REALSXP:
       vor2s_DD(ansp, o, REAL(x), N, REAL(y), M, nThread);
       break;
+    default:
+      *err = OR3__UNSUPPORTED_TYPEY;
     }
     break;
+  default:
+    *err = OR3__UNSUPPORTED_TYPEX;
   }
 }
 
@@ -574,6 +581,7 @@ SEXP Cors(SEXP oo1, SEXP xx1, SEXP yy1,
   const int o2 = sex2op(oo2);
   SEXP ans = PROTECT(allocVector(RAWSXP, N));
   unsigned char * ansp = RAW(ans);
+  int err[1] = {0};
 
   if (yy1 == R_NilValue && isLogical(xx1)) {
     const int * xx1p = LOGICAL(xx1);
@@ -590,12 +598,15 @@ SEXP Cors(SEXP oo1, SEXP xx1, SEXP yy1,
     FORLOOP(
       ansp[i] = 0;
     )
-    vor2s(ansp, o1, xx1, yy1, nThread);
+    vor2s(ansp, o1, xx1, yy1, nThread, err);
   }
   if (use2) {
-    vor2s(ansp, o2, xx2, yy2, nThread);
+    vor2s(ansp, o2, xx2, yy2, nThread, err);
   }
   UNPROTECT(1);
+  if (err[0]) {
+    error("Error %d", err[0]);
+  }
   return ans;
 }
 
