@@ -518,6 +518,71 @@ static void vo2s_L(unsigned char * ansp, const int o,
   }
 }
 
+static void vor2_SeqS1(unsigned char * ansp, const SEXP * xp, R_xlen_t N, const char * y, const int ny) {
+  for (R_xlen_t i = 0; i < N; ++i) {
+    if (ansp[i]) {
+      continue;
+    }
+    int nxi = length(xp[i]);
+    if (nxi != ny) {
+      continue;
+    }
+    const char * xi = CHAR(xp[i]);
+    ansp[i] = string_equal(xi, y);
+  }
+}
+
+static void vor2_SneqS1(unsigned char * ansp, const SEXP * xp, R_xlen_t N, const char * y, const int ny) {
+  for (R_xlen_t i = 0; i < N; ++i) {
+    if (ansp[i]) {
+      continue;
+    }
+    int nxi = length(xp[i]);
+    if (nxi != ny) {
+      ansp[i] = 1;
+      continue;
+    }
+    const char * xi = CHAR(xp[i]);
+    ansp[i] = !string_equal(xi, y);
+  }
+}
+
+static void vor2_SeqS(unsigned char * ansp, const SEXP * xp, R_xlen_t N, const SEXP * yp) {
+  for (R_xlen_t i = 0; i < N; ++i) {
+    if (ansp[i]) {
+      continue;
+    }
+    ansp[i] = string_equal(CHAR(xp[i]), CHAR(yp[i]));
+  }
+}
+
+static void vor2_SneqS(unsigned char * ansp, const SEXP * xp, R_xlen_t N, const SEXP * yp) {
+  for (R_xlen_t i = 0; i < N; ++i) {
+    if (ansp[i]) {
+      continue;
+    }
+    ansp[i] = !string_equal(CHAR(xp[i]), CHAR(yp[i]));
+  }
+}
+
+static void vor2_SS(unsigned char * ansp, const int o,
+                     const SEXP * x, R_xlen_t N,
+                     const SEXP * y, R_xlen_t M) {
+  if (M == 1) {
+    if (o == OP_EQ) {
+      vor2_SeqS1(ansp, x, N, CHAR(y[0]), length(y[0]));
+    } else {
+      vor2_SneqS1(ansp, x, N, CHAR(y[0]), length(y[0]));
+    }
+  } else {
+    if (o == OP_EQ) {
+      vor2_SeqS(ansp, x, N, y);
+    } else {
+      vor2_SneqS(ansp, x, N, y);
+    }
+  }
+}
+
 static void vor2s(unsigned char * ansp, const int o,
                   SEXP x, SEXP y, int nThread,
                   int * err) {
@@ -555,6 +620,14 @@ static void vor2s(unsigned char * ansp, const int o,
       vor2s_DD(ansp, o, REAL(x), N, REAL(y), M, nThread);
       break;
     default:
+      *err = OR3__UNSUPPORTED_TYPEY;
+    }
+    break;
+  case STRSXP:
+    if (TYPEOF(y) == STRSXP && (o == OP_EQ || o == OP_NE)) {
+      // only support == and !=
+      vor2_SS(ansp, o, STRING_PTR(x), N, STRING_PTR(y), M);
+    } else {
       *err = OR3__UNSUPPORTED_TYPEY;
     }
     break;
@@ -605,7 +678,7 @@ SEXP Cors(SEXP oo1, SEXP xx1, SEXP yy1,
   }
   UNPROTECT(1);
   if (err[0]) {
-    REprintf("Falling back to |");
+    REprintf("Unsupported type");
     return R_NilValue;
   }
   return ans;

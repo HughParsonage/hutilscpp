@@ -657,6 +657,71 @@ static void vand2s_R(unsigned char * ansp, const int o,
   }
 }
 
+static void vand2_SeqS1(unsigned char * ansp, const SEXP * xp, R_xlen_t N, const char * y, const int ny) {
+  for (R_xlen_t i = 0; i < N; ++i) {
+    if (ansp[i] == 0) {
+      continue;
+    }
+    int nxi = length(xp[i]);
+    if (nxi != ny) {
+      ansp[i] = 0;
+      continue;
+    }
+    const char * xi = CHAR(xp[i]);
+    ansp[i] = string_equal(xi, y);
+  }
+}
+
+static void vand2_SneqS1(unsigned char * ansp, const SEXP * xp, R_xlen_t N, const char * y, const int ny) {
+  for (R_xlen_t i = 0; i < N; ++i) {
+    if (ansp[i] == 0) {
+      continue;
+    }
+    int nxi = length(xp[i]);
+    if (nxi != ny) {
+      continue;
+    }
+    const char * xi = CHAR(xp[i]);
+    ansp[i] = !string_equal(xi, y);
+  }
+}
+
+static void vand2_SeqS(unsigned char * ansp, const SEXP * xp, R_xlen_t N, const SEXP * yp) {
+  for (R_xlen_t i = 0; i < N; ++i) {
+    if (ansp[i] == 0) {
+      continue;
+    }
+    ansp[i] = string_equal(CHAR(xp[i]), CHAR(yp[i]));
+  }
+}
+
+static void vand2_SneqS(unsigned char * ansp, const SEXP * xp, R_xlen_t N, const SEXP * yp) {
+  for (R_xlen_t i = 0; i < N; ++i) {
+    if (ansp[i] == 0) {
+      continue;
+    }
+    ansp[i] = !string_equal(CHAR(xp[i]), CHAR(yp[i]));
+  }
+}
+
+static void vand2_SS(unsigned char * ansp, const int o,
+                     const SEXP * x, R_xlen_t N,
+                     const SEXP * y, R_xlen_t M) {
+  if (M == 1) {
+    if (o == OP_EQ) {
+      vand2_SeqS1(ansp, x, N, CHAR(y[0]), length(y[0]));
+    } else {
+      vand2_SneqS1(ansp, x, N, CHAR(y[0]), length(y[0]));
+    }
+  } else {
+    if (o == OP_EQ) {
+      vand2_SeqS(ansp, x, N, y);
+    } else {
+      vand2_SneqS(ansp, x, N, y);
+    }
+  }
+}
+
 static void vand2s(unsigned char * ansp, const int o,
                    SEXP x, SEXP y, int nThread,
                    int * err) {
@@ -700,6 +765,15 @@ static void vand2s(unsigned char * ansp, const int o,
     break;
   case RAWSXP:
     vand2s_R(ansp, o, RAW(x), N, nThread);
+    break;
+  case STRSXP:
+    if (TYPEOF(y) == STRSXP && (o == OP_EQ || o == OP_NE)) {
+    // only support == and !=
+      vand2_SS(ansp, o, STRING_PTR(x), N, STRING_PTR(y), M);
+    } else {
+      *err = AND3_UNSUPPORTED_TYPEY;
+    }
+    break;
   default:
     *err = AND3_UNSUPPORTED_TYPEX;
   }

@@ -200,6 +200,7 @@ int sex2int1(SEXP x);
 R_xlen_t sum_isna(SEXP x, SEXP nthreads) ;
 
 // character
+bool string_equal(const char * x, const char * y);
 bool string_equaln(const char * x, int nx, const char * y);
 
 // Cpar_in.c
