@@ -7,6 +7,7 @@ const char OPEN_SQBRK = 91;
 const char STOP_SQBRK = 93;
 
 bool string_equal(const char * x, const char * y) {
+  // return x == y; // this may be sufficient
   if (x == y) {
     return true;
   }
