@@ -33,6 +33,11 @@ pcg_hash <- function(n,
 
 
 lehmer64 <- function(n, r = NULL, nThread = NULL) {
+  # nocov start
+  if (!is64bit()) {
+    return(sample.int(n))
+  }
+  # nocov end
   if (is.null(nThread) || identical(nThread, 1L)) {
     .Call("C_lehmer64", n, r, PACKAGE = "hutilscpp") %||% sample.int(n)
   }
