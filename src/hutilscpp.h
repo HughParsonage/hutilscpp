@@ -30,6 +30,10 @@
 #define UNSUPPORTED_NA -5
 #define SUM1_UNSUPPORTED_TYPE -6
 #define INCOMPAT_LEN -7
+#define AND3_UNSUPPORTED_TYPEX -8
+#define AND3_UNSUPPORTED_TYPEY -9
+#define OR3__UNSUPPORTED_TYPEX -10
+#define OR3__UNSUPPORTED_TYPEY -11
 
 
 // int op = !(eq || gt || lt) ? 0 : (eq ? (gt ? 2 : (lt ? 3 : 1)) : (gt ? 4 : 5));

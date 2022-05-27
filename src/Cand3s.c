@@ -658,7 +658,8 @@ static void vand2s_R(unsigned char * ansp, const int o,
 }
 
 static void vand2s(unsigned char * ansp, const int o,
-                   SEXP x, SEXP y, int nThread) {
+                   SEXP x, SEXP y, int nThread,
+                   int * err) {
   R_xlen_t N = xlength(x);
   R_xlen_t M = xlength(y);
 
@@ -681,6 +682,8 @@ static void vand2s(unsigned char * ansp, const int o,
     case REALSXP:
       vand2s_ID(ansp, o, INTEGER(x), N, REAL(y), M, nThread);
       break;
+    default:
+      *err = AND3_UNSUPPORTED_TYPEY;
     }
     break;
   case REALSXP:
@@ -691,10 +694,14 @@ static void vand2s(unsigned char * ansp, const int o,
     case REALSXP:
       vand2s_DD(ansp, o, REAL(x), N, REAL(y), M, nThread);
       break;
+    default:
+      *err = AND3_UNSUPPORTED_TYPEY;
     }
     break;
   case RAWSXP:
     vand2s_R(ansp, o, RAW(x), N, nThread);
+  default:
+    *err = AND3_UNSUPPORTED_TYPEX;
   }
 }
 
@@ -716,6 +723,8 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
   const int o2 = sex2op(oo2);
   SEXP ans = PROTECT(allocVector(RAWSXP, N));
   unsigned char * ansp = RAW(ans);
+  int err[1] = {0};
+
   if (TYPEOF(yy1) == NILSXP) {
     switch(TYPEOF(xx1)) {
     case LGLSXP: {
@@ -754,12 +763,15 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
     FORLOOP({
       ansp[i] = 1;
     })
-    vand2s(ansp, o1, xx1, yy1, nThread);
+    vand2s(ansp, o1, xx1, yy1, nThread, err);
   }
   if (use2) {
-    vand2s(ansp, o2, xx2, yy2, nThread);
+    vand2s(ansp, o2, xx2, yy2, nThread, err);
   }
   UNPROTECT(1);
+  if (err[0]) {
+    error("Error %d", err[0]);
+  }
   return ans;
 }
 
