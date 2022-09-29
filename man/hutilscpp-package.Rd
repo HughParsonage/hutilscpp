@@ -6,12 +6,7 @@
 \alias{hutilscpp-package}
 \title{hutilscpp: Miscellaneous Functions in C++}
 \description{
-Provides utility functions that are simply, frequently used, 
-    but may require higher performance that what can be obtained from base R.
-    Incidentally provides support for 'reverse geocoding', such as matching a point
-    with its nearest neighbour in another array. Used as a complement to package
-    'hutils' by sacrificing compilation or installation time for higher running 
-    speeds. The name is a portmanteau of the author and 'Rcpp'.
+Provides utility functions that are simply, frequently used, but may require higher performance that what can be obtained from base R. Incidentally provides support for 'reverse geocoding', such as matching a point with its nearest neighbour in another array. Used as a complement to package 'hutils' by sacrificing compilation or installation time for higher running speeds. The name is a portmanteau of the author and 'Rcpp'.
 }
 \seealso{
 Useful links:
