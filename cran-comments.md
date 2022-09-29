@@ -1,4 +1,4 @@
-Fix for UBSAN error on CRAN
+Package update
 
 
 ## Test environments
