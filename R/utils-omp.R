@@ -25,6 +25,7 @@ check_omp <- function(nThread) {
 }
 
 has_openmp <- function() {
-  .Call("Chas_openmp", PACKAGE = packageName)
+  # Use NULL because SEXP C functions cannot accept void
+  .Call("Chas_openmp", NULL, PACKAGE = packageName)
 }
 

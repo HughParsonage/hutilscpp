@@ -1,3 +1,8 @@
+## hutilscpp 0.9.3
+
+* Internal
+  - Fix poor coding standards Wstrict-prototypes (`f()` now `f(void)`)
+
 ## hutilscpp 0.9.2
 
 * Bug fixes:

@@ -14,7 +14,7 @@ static void reset_state(const int * rp, R_xlen_t N) {
   g_lehmer64_state = o;
 }
 
-static uint64_t lehmer64() {
+static uint64_t lehmer64(void) {
   g_lehmer64_state *= 0xda942042e4dd58b5;
   return g_lehmer64_state >> 64;
 }

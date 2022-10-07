@@ -1,4 +1,4 @@
-Package update
+Earlier than usual update to fix CRAN warnings from -Wstrict-prototypes
 
 
 ## Test environments

@@ -10,7 +10,7 @@ SEXP CResetRNG(SEXP x) {
   return ScalarInteger(rng_state);
 }
 
-unsigned int rand_pcg() {
+unsigned int rand_pcg(void) {
   unsigned int state = rng_state;
   rng_state = rng_state * 747796405u + 2891336453u;
   unsigned int word = ((state >> ((state >> 28u) + 4u)) ^ state) * 277803737u;
@@ -34,7 +34,7 @@ unsigned int pcg_sample1(unsigned int max) {
   unsigned int r = rand_pcg();
   return r % max;
 }
-unsigned int pcg_sample_halfmax() {
+unsigned int pcg_sample_halfmax(void) {
   unsigned int r = rand_pcg();
   return r & 1073741823u;
 }

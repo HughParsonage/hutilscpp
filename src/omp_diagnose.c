@@ -4,7 +4,7 @@
 
 // # nocov start
 
-bool has_openmp() {
+bool has_openmp(void) {
 #ifdef _OPENMP
   return true;
 #else
@@ -17,7 +17,7 @@ bool has_openmp() {
 #define OPENMP_THREADS_EXCEEDED 2
 
 
-SEXP Chas_openmp() {
+SEXP Chas_openmp(SEXP x) {
   return ScalarLogical(has_openmp());
 }
 

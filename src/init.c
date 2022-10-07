@@ -52,7 +52,7 @@ extern SEXP Cevery_int32(SEXP, SEXP);
 extern SEXP CextractMandatory(SEXP, SEXP, SEXP);
 extern SEXP CfirstNonNegativeRadix(SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cforce_as_integer(SEXP, SEXP);
-extern SEXP Chas_openmp();
+extern SEXP Chas_openmp(SEXP);
 extern SEXP CImplies(SEXP, SEXP, SEXP, SEXP);
 extern SEXP Cis_altrep(SEXP);
 extern SEXP Cis_constant(SEXP, SEXP);
@@ -159,7 +159,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"CextractMandatory",             (DL_FUNC) &CextractMandatory,              3},
     {"CfirstNonNegativeRadix",        (DL_FUNC) &CfirstNonNegativeRadix,         4},
     {"Cforce_as_integer",             (DL_FUNC) &Cforce_as_integer,              2},
-    {"Chas_openmp",                   (DL_FUNC) &Chas_openmp,                    0},
+    {"Chas_openmp",                   (DL_FUNC) &Chas_openmp,                    1},
     {"CImplies",                      (DL_FUNC) &CImplies,                       4},
     {"Cis_altrep",                    (DL_FUNC) &Cis_altrep,                     1},
     {"Cis_constant",                  (DL_FUNC) &Cis_constant,                   2},
