@@ -11,3 +11,4 @@
 ^Benchmarks\.Rmd$
 ^Benchmarks\.html$
 ^Moving-from-Rcpp-to-C\.md$
+^CRAN-SUBMISSION$
