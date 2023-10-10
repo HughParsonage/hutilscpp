@@ -1,6 +1,6 @@
 Package: hutilscpp
 Title: Miscellaneous Functions in C++
-Version: 0.9.3
+Version: 0.10.0
 Authors@R: 
     c(person(given = "Hugh",
            family = "Parsonage",

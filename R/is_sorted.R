@@ -15,19 +15,24 @@
 #' @export
 
 is_sorted <- function(x, asc = NA) {
-  stopifnot(is.atomic(x),
-            is.logical(asc),
-            length(asc) == 1L)
-  ans <- .Call("Cis_sorted", x, asc, PACKAGE = packageName)
-  if (is.null(ans)) {
-    return(!is.unsorted(x)) # nocov
+  is.null(x) || {
+    stopifnot(is.atomic(x),
+              is.logical(asc),
+              length(asc) == 1L)
+    ans <- .Call("Cis_sorted", x, asc, PACKAGE = packageName)
+    if (is.null(ans)) {
+      return(!is.unsorted(x)) # nocov
+    }
+    ans
   }
-  ans
 }
 
 #' @rdname is_sorted
 #' @export
 isntSorted <- function(x, asc = NA) {
+  if (is.null(x)) {
+    return(0L) # nocov
+  }
   stopifnot(is.atomic(x),
             is.logical(asc),
             length(asc) == 1L)
