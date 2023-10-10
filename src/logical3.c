@@ -156,9 +156,12 @@ SEXP Cwhich3(SEXP xx, SEXP yy, SEXP zz,
   }
 
   SEXP Ans = PROTECT(allocVector(VECSXP, 2));
-  SET_VECTOR_ELT(Ans, 0, ScalarInteger(j));
+
+  // rchk complains unless this is protected explicitly
+  SEXP SIJ = PROTECT(ScalarInteger(j));
+  SET_VECTOR_ELT(Ans, 0, SIJ);
   SET_VECTOR_ELT(Ans, 1, ans);
-  UNPROTECT(2);
+  UNPROTECT(3);
   return Ans;
 }
 
