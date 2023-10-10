@@ -6,6 +6,12 @@ last_which <- hutilscpp:::last_which
 # test_that("fmatchp works", {
 expect_true(TRUE)
 
+x <- sample.int(1e5)
+y <- sample.int(99)
+xd <- as.double(sample.int(1e5))
+yd <- as.double(sample.int(99))
+z <- sample(99, size = 98)
+
 if (requireNamespace("withr", quietly = TRUE)) {
   withr::with_seed(3, {
     x <- sample.int(1e5)
