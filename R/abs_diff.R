@@ -9,6 +9,7 @@
 #' \item{1}{Return \code{abs(x - y)} with the expectation that every element will be \code{integer},
 #' returning a \code{double} only if required.}
 #' \item{2}{Return \code{abs(x - y)} but always a \code{double} vector, regardless of necessity.}
+#' \item{3}{Return \code{which.max(abs(x - y))}}
 #' }
 #'
 #' @examples
@@ -21,6 +22,9 @@
 abs_diff <- function(x, y, nThread = getOption("hutilscpp.nThread", 1L), option = 1L) {
   if (is.double(y) && length(y) == 1L) {
     y <- as_integer_if_safe(y)
+  }
+  if (option == 3L) {
+    return(.Call("C_which_abs_diff", x, y, nThread, PACKAGE = "hutilscpp"))
   }
   ans <- .Call("C_abs_diff", x, y, nThread, option, PACKAGE = "hutilscpp")
   # nocov start

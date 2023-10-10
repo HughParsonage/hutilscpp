@@ -20,6 +20,7 @@ max_abs_diff(x, y, nThread = getOption("hutilscpp.nThread", 1L))
 \item{1}{Return \code{abs(x - y)} with the expectation that every element will be \code{integer},
 returning a \code{double} only if required.}
 \item{2}{Return \code{abs(x - y)} but always a \code{double} vector, regardless of necessity.}
+\item{3}{Return \code{which.max(abs(x - y))}}
 }}
 }
 \description{

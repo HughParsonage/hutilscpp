@@ -177,6 +177,135 @@ SEXP C_abs_diff(SEXP x, SEXP y, SEXP nthreads, SEXP Option) {
   }
   UNPROTECT(1);
   return ans;
+}
 
+static R_xlen_t wii(const int * xp, R_xlen_t N, const int * yp, R_xlen_t Ny, int nThread) {
+  if (Ny > N) {
+    return wii(yp, Ny, xp, N, nThread);
+  }
+  R_xlen_t o = 1;
+  if (Ny == N) {
+    unsigned int m = 0;
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread)
+#endif
+    for (R_xlen_t i = 0; i < N; ++i) {
+      unsigned int mi = single_abs_diff(xp[i], yp[i]);
+      if (mi <= m) {
+        continue;
+      }
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp critical
+#endif
+      if (mi > m) {
+        m = mi;
+        o = i + 1;
+      }
+    }
+  } else if (Ny == 1) {
+    int64_t m = 0;
+    int yp0 = yp[0];
+    for (R_xlen_t i = 0; i < N; ++i) {
+      int64_t di = single_abs_diff(xp[i], yp0);
+      if (di > m) {
+        o = i + 1;
+        m = di;
+      }
+    }
+  }
+  return o;
+}
 
+static R_xlen_t wdi(const double * x, R_xlen_t N, const int * y, R_xlen_t M) {
+  R_xlen_t o = 1;
+  double r = 0;
+  if (N == M) {
+    for (R_xlen_t i = 0; i < N; ++i) {
+      double dxy = dsingle_abs_diff(x[i], y[i]);
+      if (dxy > r) {
+        r = dxy;
+        o = i + 1;
+      }
+    }
+  } else if (N == 1) {
+    for (R_xlen_t i = 0; i < M; ++i) {
+      double dxy = dsingle_abs_diff(x[0], y[i]);
+      if (dxy > r) {
+        r = dxy;
+        o = i + 1;
+      }
+    }
+  } else {
+    for (R_xlen_t i = 0; i < N; ++i) {
+      double dxy = dsingle_abs_diff(x[i], y[0]);
+      if (dxy > r) {
+        r = dxy;
+        o = i + 1;
+      }
+    }
+  }
+  return o;
+}
+
+static R_xlen_t wdd(const double * x, R_xlen_t N, const double * y, R_xlen_t M, int nThread) {
+  R_xlen_t o = 0;
+  double r =  dsingle_abs_diff(x[0], y[0]);
+  if (N == M) {
+#if _OPENMP
+#pragma omp parallel for num_threads(nThread)
+#endif
+    for (R_xlen_t i = 0; i < N; ++i) {
+      double dxy = dsingle_abs_diff(x[i], y[i]);
+      if (dxy <= r) {
+        continue;
+      }
+#if _OPENMP
+#pragma omp critical
+#endif
+      if (dxy > r) {
+        r = dxy;
+        o = i + 1;
+      }
+    }
+  } else if (N == 1) {
+    for (R_xlen_t i = 0; i < M; ++i) {
+      double dxy = dsingle_abs_diff(x[0], y[i]);
+      if (dxy > r) {
+        r = dxy;
+        o = i + 1;
+      }
+    }
+  } else {
+    for (R_xlen_t i = 0; i < N; ++i) {
+      double dxy = dsingle_abs_diff(x[i], y[0]);
+      if (dxy > r) {
+        r = dxy;
+        o = i + 1;
+      }
+    }
+  }
+  return o;
+}
+
+SEXP C_which_abs_diff(SEXP x, SEXP y, SEXP nthreads) {
+  int nThread = as_nThread(nthreads);
+  switch(TYPEOF(x)) {
+  case INTSXP:
+    switch(TYPEOF(y)) {
+    case INTSXP:
+      return ScalarLength(wii(INTEGER(x), xlength(x), INTEGER(y), xlength(y), nThread));
+    case REALSXP:
+      return ScalarLength(wdi(REAL(y), xlength(y), INTEGER(x), xlength(x)));
+    }
+    break;
+  case REALSXP:
+    switch(TYPEOF(y)) {
+    case INTSXP:
+      return ScalarLength(wdi(REAL(x), xlength(x), INTEGER(y), xlength(y)));
+    case REALSXP:
+      return ScalarLength(wdd(REAL(x), xlength(x), REAL(y), xlength(y), nThread));
+    }
+    break;
+  }
+  return R_NilValue;
 }
