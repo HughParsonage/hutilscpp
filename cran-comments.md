@@ -1,5 +1,4 @@
-Earlier than usual update to fix CRAN warnings from -Wstrict-prototypes
-
+Fix for is.atomic(NULL) now returning FALSE
 
 ## Test environments
 * local Windows 4.2.1
