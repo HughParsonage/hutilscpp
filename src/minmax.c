@@ -70,6 +70,22 @@ double Maxd(const double * x, R_xlen_t N, int nThread) {
   return o;
 }
 
+int Maxi(const int * x, R_xlen_t N, int nThread) {
+  if (N == 0) {
+    return NA_INTEGER; // # nocov
+  }
+  int o = x[0];
+#if defined _OPENMP && _OPENMP >= 201511
+#pragma omp parallel for num_threads(nThread) reduction(max : o)
+#endif
+  for (R_xlen_t i = 1; i < N; ++i) {
+    if (x[i] > o) {
+      o = x[i];
+    }
+  }
+  return o;
+}
+
 
 
 

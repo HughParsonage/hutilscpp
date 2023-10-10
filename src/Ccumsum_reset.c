@@ -113,3 +113,56 @@ SEXP Ccumsum_reset_sorted_int(SEXP xx) {
   return ans;
 }
 
+
+SEXP C_shift_by_sorted_int(SEXP x, SEXP y, SEXP z, SEXP nthreads) {
+  AS_NTHREAD;
+  R_xlen_t N = xlength(x);
+  if (N != xlength(y) || N != xlength(z)) {
+    error("Lengths of x, by, y, differ.");
+  }
+  if (!isInteger(x) || !isInteger(y) || !isInteger(z)) {
+    error("x, by, y, were not integer.");
+  }
+  const int * xp = INTEGER(x);
+  const int * yp = INTEGER(y);
+  const int * zp = INTEGER(z);
+  bool o = true;
+  FORLOOP_redand({
+    if (i == 0) {
+      continue;
+    }
+    if (xp[i - 1] < xp[i]) {
+      continue;
+    }
+    if (xp[i - 1] > xp[i]) {
+      o = false;
+      continue;
+    }
+    if (yp[i - 1] <= yp[i]) {
+      continue;
+    }
+
+    o = false;
+  })
+  if (!o) {
+    error("x, by not sorted.");
+  }
+
+  SEXP ans = PROTECT(allocVector(INTSXP, N));
+  int * restrict ansp = INTEGER(ans);
+  ansp[0] = 0;
+  FORLOOP({
+    if (i == 0 || xp[i] != xp[i - 1]) {
+      ansp[i] = 0;
+    } else {
+      if (yp[i] == yp[i - 1] + 1) {
+        ansp[i] = zp[i - 1];
+      } else {
+        ansp[i] = 0;
+      }
+    }
+  })
+  UNPROTECT(1);
+  return ans;
+}
+

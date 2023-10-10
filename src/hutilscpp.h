@@ -181,6 +181,12 @@ int op_xlen2(int o);
 
 // diagnose_omp
 int as_nThread(SEXP x);
+#if _OPENMP
+#define AS_NTHREAD int nThread = as_nThread(nthreads);
+#else
+#define AS_NTHREAD do {;} while (0);
+#endif
+
 bool has_openmp(void);
 
 SEXP ScalarLength(R_xlen_t o);

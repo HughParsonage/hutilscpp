@@ -98,22 +98,28 @@
 #' @export is_constant isntConstant
 
 is_constant <- function(x, nThread = getOption("hutilscpp.nThread", 1L)) {
-  if (!is.atomic(x)) {
-    stop("`x` was not atomic. ",
-         "Such objects are not supported.")
+  # is atomic no longer applies to NULL
+  is.null(x) || {
+    if (!is.atomic(x)) {
+      stop("`x` was not atomic. ",
+           "Such objects are not supported.")
+    }
+    nThread <- check_omp(nThread)
+    ans <- .Call("Cis_constant", x, nThread, PACKAGE = packageName)
+    # nocov start
+    if (is.null(ans)) {
+      return(identical(rep_len(x[1], length(x)), x))
+    }
+    # nocov end
+    ans
   }
-  nThread <- check_omp(nThread)
-  ans <- .Call("Cis_constant", x, nThread, PACKAGE = packageName)
-  # nocov start
-  if (is.null(ans)) {
-    return(identical(rep_len(x[1], length(x)), x))
-  }
-  # nocov end
-  ans
 }
 
 #' @rdname is_constant
 isntConstant <- function(x) {
+  if (is.null(x)) {
+    return(0L)
+  }
   if (!is.atomic(x)) {
     stop("`x` was not atomic. ",
          "Such objects are not supported.")
