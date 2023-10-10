@@ -48,7 +48,10 @@ expect_equal(x, pmax(5:-6, 0))
 
 
 # test_that("pmax0 radix extrema", {
-if ((at_home()) && hutilscpp:::is64bit()) {
+# Some systems cannot handle this much memory
+can_do <- tryCatch(is.integer(every_int()), error = function(e) FALSE)
+
+if (can_do && (at_home()) && hutilscpp:::is64bit()) {
   min_int <- -.Machine$integer.max
   max_int <- +.Machine$integer.max
   x <- min_int:max_int
