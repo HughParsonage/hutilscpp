@@ -14,6 +14,9 @@
 
 #' @export
 which_firstNA <- function(x) {
+  if (is.null(x)) {
+    return(0L)
+  }
   stopifnot(is.atomic(x))
   return(R_xlen_t(do_which_firstNA(x)))
 }
@@ -21,6 +24,9 @@ which_firstNA <- function(x) {
 #' @rdname which_firstNA
 #' @export
 which_lastNA <- function(x) {
+  if (is.null(x)) {
+    return(0L)
+  }
   stopifnot(is.atomic(x))
   return(R_xlen_t(do_which_lastNA(x)))
 }
