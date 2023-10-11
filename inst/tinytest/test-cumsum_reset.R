@@ -1,5 +1,5 @@
 #context "test-cumsum_reset")
-
+library(hutilscpp)
 # test_that("Error handling", {
   expect_error(cumsum_reset(1),
                pattern = "logical")
