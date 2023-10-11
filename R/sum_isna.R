@@ -19,12 +19,13 @@
 #' @export
 
 sum_isna <- function(x, do_anyNA = TRUE, nThread = getOption("hutilscpp.nThread", 1L)) {
-  if (!is.atomic(x)) {
-    stop("`x` was class ", paste0(class(x), collapse = " "), ", but must be atomic.")
-  }
   if (length(x) == 0L) {
     return(0L)
   }
+  if (!is.atomic(x)) {
+    stop("`x` was class ", paste0(class(x), collapse = " "), ", but must be atomic.")
+  }
+
   nThread <- check_omp(nThread)
 
   if (do_anyNA && nThread == 1L && !anyNA(x)) {
