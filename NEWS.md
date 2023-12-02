@@ -1,3 +1,11 @@
+## hutilscpp 0.10.3
+
+* Fix for -Wformat checks
+
+## hutilscpp 0.10.2
+
+* Fix for new is.atomic behaviour
+
 ## hutilscpp 0.10.0
 
 * New features

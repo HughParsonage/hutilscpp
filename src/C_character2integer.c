@@ -346,7 +346,7 @@ SEXP C_character2integer(SEXP x, SEXP NaStrings, SEXP AllowDbl, SEXP Option) {
   R_xlen_t needsDoublex = needsDouble(x);
   if (needsDoublex) {
     if (allow_dbl == 0) {
-      error("`allow_double = FALSE` but double is required at position %lld.", needsDoublex);
+      error("`allow_double = FALSE` but double is required at position %lld.", (long long)needsDoublex);
     }
     if (allow_dbl == 1) {
       return character2double(x, NaStrings, option);

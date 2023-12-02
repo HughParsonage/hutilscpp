@@ -788,7 +788,7 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
   // # nocov start
   if (use2 && xlength(xx2) != N) {
     error("`(Cands1): xlength(xx1) = %lld`, yet `xlength(xx2) = %lld`. type '%s'",
-          xlength(xx1), xlength(xx2), type2char(TYPEOF(xx2)));
+          (long long)xlength(xx1), (long long)xlength(xx2), type2char(TYPEOF(xx2)));
   }
   // # nocov end
   int nThread = as_nThread(nthreads);

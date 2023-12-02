@@ -343,7 +343,7 @@ SEXP Cwhich_first_lgl_lgl_op(SEXP xx, SEXP yy, SEXP opp, SEXP reverse) {
   }
   if (op == OP_IN || op == OP_BW) {
     if (op == OP_BW && Ny != 2) {
-      error("%between% expects RHS to be a vector of length-2."); // # nocov
+      error("between expects RHS to be a vector of length-2."); // # nocov
     }
   }
   if (TYPEOF(xx) != LGLSXP || TYPEOF(yy) != LGLSXP) {
