@@ -30908,5 +30908,16 @@ expect_equal(DT$ans1, DT$bns1)
 expect_equal(DT$ans2, DT$bns2)
 expect_equal(DT$ans3, DT$bns3)
 
+rr <- raw(2e5)
+expect_true(all(or3s(rr == rr)))
+expect_true(all(or3s(rr == 0L)))
+expect_true(all(or3s(rr == 0)))
+expect_true(all(or3s(rr %in% rr)))
+expect_true(all(or3s(rr %in% 0L)))
+expect_true(all(or3s(rr %in% 0)))
+expect_false(any(or3s(rr %notin% rr)))
+expect_false(any(or3s(rr %notin% 0L)))
+expect_false(any(or3s(rr %notin% 0)))
+
 
 

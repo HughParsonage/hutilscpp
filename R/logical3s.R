@@ -209,6 +209,7 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
       xx2 <- exprB
     }
   }
+
   switch(oo1,
          "%in%" = {
            xx1 <- finp(xx1, yy1, nThread = nThread)
@@ -220,6 +221,7 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
            yy1 <- NULL
            oo1 <- "=="
          })
+
   if (is.character(oo2)) {
     switch(oo2,
            "%in%" = {

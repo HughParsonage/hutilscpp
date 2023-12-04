@@ -46,7 +46,7 @@ fmatchp <- function(x, table, nomatch = NA_integer_,
     # avoid constants
     table <- copy(table)
   }
-  ans <- .Call("fmatch", x, table, nomatch, fin, whichFirst, nThread, PACKAGE = packageName)
+  ans <- .Call("fmatch", x, if (is.raw(x)) as.raw(table) else table, nomatch, fin, whichFirst, nThread, PACKAGE = packageName)
   if (is.null(ans)) {
     return(match_last_resort(x, table, nomatch, nThread, fin, whichFirst)) # nocov
   }
