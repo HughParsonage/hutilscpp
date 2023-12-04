@@ -1,3 +1,9 @@
+## hutilscpp 0.10.4
+
+### Internal
+
+- `is_constant` does not inherit data.table multithreading
+
 ## hutilscpp 0.10.3
 
 ### Bug fixes:

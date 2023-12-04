@@ -40,6 +40,7 @@
 #' @examples
 #' library(hutilscpp)
 #' library(data.table)
+#' setDTthreads(1L)
 #' N <- 1e9L
 #' N <- 1e6  # to avoid long-running examples on CRAN
 #'

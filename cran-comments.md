@@ -1,4 +1,4 @@
-Fix for -Wformat plus minor bug fixes
+Fix for -Wformat plus minor bug fixes, fixed example multithread
 
 ## Test environments
 * local Windows 4.2.1
