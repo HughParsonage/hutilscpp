@@ -78,7 +78,7 @@ expect_equal(fmatchp(x, c(TRUE, FALSE, NA, TRUE)), c(1L, 2L))
 
 # test_that("edge cases", {
 expect_equal(fmatchp(raw(5), 0:5),
-             match(raw(5), 0:5))
+             match(raw(5), as.raw(0:5)))
 z <- as.POSIXlt(Sys.time() + 0:5)
 tt <- as.POSIXlt(Sys.time() + 1e6 + 1:5)
 expect_equal(fmatchp(z, tt, nomatch = 0L),
