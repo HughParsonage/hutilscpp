@@ -85,4 +85,4 @@ jobs:
           Rdevel -q -e "x <- c(1626783884L, 969909421L, 205541854L, -1L, 0L, 1L, -1214788235L, -709260613L, -795055625L); y <- prettyNum(as.double(x), big.mark = ','); cat(y, '\n'); hutilscpp::character2integer(y)"
           Rdevel -q -e "tinytest::run_test_file('inst/tinytest/test_character2integer.R')"
           Rdevel -q -e "tinytest::run_test_file('inst/tinytest/test_Comma.R')"
-          Rdevel -q -e "library(hutilscpp); library(data.table); tinytest::test_all()"
+          Rdevel -q -e "library(hutilscpp); library(data.table); options(tt.verbose = 0); tinytest::test_all()"
