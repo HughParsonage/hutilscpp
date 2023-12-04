@@ -657,6 +657,207 @@ static void vand2s_R(unsigned char * ansp, const int o,
   }
 }
 
+static void vand2s_RR(unsigned char * ansp, const int o,
+                      const unsigned char * x, R_xlen_t N,
+                      const unsigned char * y, R_xlen_t M,
+                      int nThread,
+                      int * err) {
+  if (M == 1) {
+    const unsigned char y0 = y[0];
+    switch(o) {
+    case OP_NI:
+      FORLOOP({ansp[i] &= x[i] != y0;})
+      break;
+    case OP_NE:
+      FORLOOP({ansp[i] &= x[i] != y0;})
+      break;
+    case OP_IN:
+      FORLOOP({ansp[i] &= x[i] == y0;})
+      break;
+    case OP_EQ:
+      FORLOOP({ansp[i] &= x[i] == y0;})
+      break;
+    default:
+      *err = AND3_UNSUPPORTED_TYPEY;
+    }
+  } else {
+    switch(o) {
+    case OP_NI:
+      FORLOOP({
+        unsigned char xi = x[i];
+        if (ansp[i]) {
+          for (R_xlen_t j = 0; j < M; ++j) {
+            if (xi == y[j]) {
+              ansp[i] = 0;
+              break;
+            }
+          }
+        }
+      })
+    case OP_NE:
+      FORLOOP({ansp[i] &= x[i] != y[i];})
+      break;
+    case OP_EQ:
+      FORLOOP({ansp[i] &= x[i] == y[i];})
+      break;
+    case OP_IN:
+      FORLOOP({
+        unsigned char xi = x[i];
+        if (ansp[i]) {
+          bool oi = false;
+          for (R_xlen_t j = 0; j < M; ++j) {
+            if (xi == y[j]) {
+              oi = true;
+              break;
+            }
+          }
+          ansp[i] = oi;
+        }
+      })
+      break;
+    default:
+      *err = AND3_UNSUPPORTED_TYPEY;
+    }
+  }
+}
+
+static void vand2s_RI(unsigned char * ansp, const int o,
+                      const unsigned char * x, R_xlen_t N,
+                      const int * y, R_xlen_t M,
+                      int nThread,
+                      int * err) {
+  if (M == 1) {
+    if (y[0] < 0 || y[0] > 255) {
+      memset(ansp, o == OP_NI || o == OP_NE, N);
+      return;
+    }
+
+    const unsigned char y0 = y[0];
+    switch(o) {
+    case OP_NI:
+      FORLOOP({ansp[i] &= x[i] != y0;})
+      break;
+    case OP_NE:
+      FORLOOP({ansp[i] &= x[i] != y0;})
+      break;
+    case OP_IN:
+      FORLOOP({ansp[i] &= x[i] == y0;})
+      break;
+    case OP_EQ:
+      FORLOOP({ansp[i] &= x[i] == y0;})
+      break;
+    default:
+      *err = AND3_UNSUPPORTED_TYPEY;
+    }
+  } else {
+    switch(o) {
+    case OP_NI:
+      FORLOOP({
+        unsigned char xi = x[i];
+        if (ansp[i]) {
+          for (R_xlen_t j = 0; j < M; ++j) {
+            if (xi == y[j]) {
+              ansp[i] = 0;
+              break;
+            }
+          }
+        }
+      })
+    case OP_NE:
+      FORLOOP({ansp[i] &= x[i] != y[i];})
+      break;
+    case OP_EQ:
+      FORLOOP({ansp[i] &= x[i] == y[i];})
+      break;
+    case OP_IN:
+      FORLOOP({
+        unsigned char xi = x[i];
+        if (ansp[i]) {
+          bool oi = false;
+          for (R_xlen_t j = 0; j < M; ++j) {
+            if (xi == y[j]) {
+              oi = true;
+              break;
+            }
+          }
+          ansp[i] = oi;
+        }
+      })
+      break;
+    default:
+      *err = AND3_UNSUPPORTED_TYPEY;
+    }
+  }
+}
+
+static void vand2s_RD(unsigned char * ansp, const int o,
+                      const unsigned char * x, R_xlen_t N,
+                      const double * y, R_xlen_t M,
+                      int nThread,
+                      int * err) {
+  if (M == 1) {
+    if (ISNAN(y[0]) || y[0] < 0 || y[0] > 255) {
+      memset(ansp, o == OP_NI || o == OP_NE, N);
+      return;
+    }
+    const unsigned char y0 = y[0];
+    switch(o) {
+    case OP_NI:
+      FORLOOP({ansp[i] &= x[i] != y0;})
+      break;
+    case OP_NE:
+      FORLOOP({ansp[i] &= x[i] != y0;})
+      break;
+    case OP_IN:
+      FORLOOP({ansp[i] &= x[i] == y0;})
+      break;
+    case OP_EQ:
+      FORLOOP({ansp[i] &= x[i] == y0;})
+      break;
+    default:
+      *err = AND3_UNSUPPORTED_TYPEY;
+    }
+  } else {
+    switch(o) {
+    case OP_NI:
+      FORLOOP({
+        unsigned char xi = x[i];
+        if (ansp[i]) {
+          for (R_xlen_t j = 0; j < M; ++j) {
+            if (xi == (y[j])) {
+              ansp[i] = 0;
+              break;
+            }
+          }
+        }
+      })
+    case OP_NE:
+      FORLOOP({ansp[i] &= x[i] != y[i];})
+      break;
+    case OP_EQ:
+      FORLOOP({ansp[i] &= x[i] == y[i];})
+      break;
+    case OP_IN:
+      FORLOOP({
+        unsigned char xi = x[i];
+        if (ansp[i]) {
+          bool oi = false;
+          for (R_xlen_t j = 0; j < M; ++j) {
+            if (xi == (y[j])) {
+              oi = true;
+              break;
+            }
+          }
+          ansp[i] = oi;
+        }
+      })
+      break;
+    default:
+      *err = AND3_UNSUPPORTED_TYPEY;
+    }
+  }
+}
+
 static void vand2_SeqS1(unsigned char * ansp, const SEXP * xp, R_xlen_t N, const char * y, const int ny) {
   for (R_xlen_t i = 0; i < N; ++i) {
     if (ansp[i] == 0) {
@@ -764,7 +965,21 @@ static void vand2s(unsigned char * ansp, const int o,
     }
     break;
   case RAWSXP:
-    vand2s_R(ansp, o, RAW(x), N, nThread);
+    switch(TYPEOF(y)) {
+    case RAWSXP:
+      vand2s_RR(ansp, o, RAW(x), N, RAW(y), M, nThread, err);
+      break;
+    case INTSXP:
+      vand2s_RI(ansp, o, RAW(x), N, INTEGER(y), M, nThread, err);
+      break;
+    case REALSXP:
+      vand2s_RD(ansp, o, RAW(x), N, REAL(y), M, nThread, err);
+      break;
+    default:
+      vand2s_R(ansp, o, RAW(x), N, nThread);
+      break;
+    }
+
     break;
   case STRSXP:
     if (TYPEOF(y) == STRSXP && (o == OP_EQ || o == OP_NE)) {
@@ -801,37 +1016,38 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
 
   if (TYPEOF(yy1) == NILSXP) {
     switch(TYPEOF(xx1)) {
-    case LGLSXP: {
-    const int * xx1p = LOGICAL(xx1);
-    if (o1 == OP_NE) {
-      FORLOOP(
-        ansp[i] = xx1p[i] != 1;
-      )
-    } else {
-      FORLOOP(
-        ansp[i] = xx1p[i] != 0;
-      )
+    case LGLSXP:
+    {
+      const int * xx1p = LOGICAL(xx1);
+      if (o1 == OP_NE) {
+        FORLOOP(
+          ansp[i] = xx1p[i] != 1;
+        )
+      } else {
+        FORLOOP(
+          ansp[i] = xx1p[i] != 0;
+        )
+      }
     }
-  }
-    break;
-  case RAWSXP: {
-    const unsigned char * xx1p = RAW(xx1);
-    if (o1 == OP_NE) {
-      FORLOOP(
-        ansp[i] = xx1p[i] != 1;
-      )
-    } else {
-      FORLOOP(
-        ansp[i] = xx1p[i] != 0;
-      )
+      break;
+    case RAWSXP: {
+      const unsigned char * xx1p = RAW(xx1);
+      if (o1 == OP_NE) {
+        FORLOOP(
+          ansp[i] = xx1p[i] != 1;
+        )
+      } else {
+        FORLOOP(
+          ansp[i] = xx1p[i] != 0;
+        )
+      }
     }
-  }
-    break;
-    // # nocov start
-  default: {
-    error("Internal error(Cand3s): unsupported xx1 with NILSXP yy1;");
-  }
-  }
+      break;
+      // # nocov start
+    default: {
+      error("Internal error(Cand3s): unsupported xx1 with NILSXP yy1;");
+    }
+    }
     // # nocov end
   } else {
     FORLOOP({

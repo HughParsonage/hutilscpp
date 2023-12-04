@@ -289,3 +289,17 @@ expect_equal( or3s(xx == 2, xx %in% bb, bb >= 5), ((xx %in% bb) | (xx == 2 | bb 
 expect_equal( or3s(xx == 2, bb >= 5, xx %in% bb), ((xx %in% bb) | (xx == 2 | bb >= 5)))
 # })
 
+rr <- raw(1e5)
+expect_true(all(and3s(rr == rr)))
+expect_true(all(and3s(rr == 0L)))
+expect_true(all(and3s(rr == 0)))
+expect_true(all(and3s(rr %in% rr)))
+expect_true(all(and3s(rr %in% 0L)))
+expect_true(all(and3s(rr %in% 0)))
+expect_false(any(and3s(rr %notin% rr)))
+expect_false(any(and3s(rr %notin% 0L)))
+expect_false(any(and3s(rr %notin% 0)))
+rr <- as.raw(bb)
+expect_true(all(and3s(rr == rr)))
+
+

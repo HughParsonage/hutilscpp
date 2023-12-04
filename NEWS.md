@@ -1,6 +1,14 @@
 ## hutilscpp 0.10.3
 
+### Bug fixes:
+
+* `and3s(rr == 0L)` works for raw `rr`
+
+### Internal:
+
 * Fix for -Wformat checks
+
+
 
 ## hutilscpp 0.10.2
 
