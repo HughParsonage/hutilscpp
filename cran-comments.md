@@ -1,4 +1,4 @@
-Fix for is.atomic(NULL) now returning FALSE
+Fix for -Wformat plus minor bug fixes
 
 ## Test environments
 * local Windows 4.2.1
