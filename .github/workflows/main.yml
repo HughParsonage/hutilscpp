@@ -88,5 +88,5 @@ jobs:
           Rdevel -q -e "#library(hutilscpp); library(data.table); options(tt.verbose = 0); tinytest::test_all()"
           Rdevel -q -e "library(data.table); test.data.table('nafill.Rraw')"
           Rdevel -q -e "install.packages('remotes', quiet=T)"
-          Rdevel -q -e "remotes::install_github('Rdatatable/data.table')"
+          Rdevel -q -e "data.table::update_dev_pkg()"
           Rdevel -q -e "data.table::test.data.table('nafill.Rraw')"
