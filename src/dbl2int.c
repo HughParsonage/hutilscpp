@@ -170,3 +170,15 @@ SEXP Cforce_as_integer(SEXP xx, SEXP Na_code) {
   return out;
 }
 
+SEXP C_unsafe_int(SEXP x) {
+  if (!isReal(x)) return ScalarLogical(0);
+  const double * xp = REAL(x);
+  for (R_xlen_t i = 0; i < xlength(x); ++i) {
+    if (xp[i] != (int)xp[i]) {
+      return ScalarLogical(0);
+    }
+  }
+  return ScalarLogical(1);
+}
+
+

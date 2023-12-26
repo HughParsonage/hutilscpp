@@ -68,5 +68,7 @@ jobs:
       - name: Install packages
         shell: bash
         run: |
-          Rdevel -q -e "install.packages('data.table', repos = 'https://cran.rstudio.com/', quiet=T); data.table::update_dev_pkg(quiet=T); data.table:::isRealReallyInt(2147483648 + 100*rev(1:1e8)); warnings()"
-          Rdevel -q -e "#library(hutilscpp); library(data.table); options(tt.verbose = 0); tinytest::test_all()"
+          Rdevel -q -e "ip <- function(x) install.packages(x[!sapply(x, requireNamespace, quietly = TRUE)], quiet = TRUE, repos = 'https://cran.r-project.org'); ip(c('tinytest', 'data.table', 'glue', 'hutils', 'magrittr'))"
+          Rdevel CMD build .
+          Rdevel CMD INSTALL --install-tests hutilscpp*.tar.gz
+          Rdevel -q -e "hutilscpp:::unsafe_int(2147483648)"
