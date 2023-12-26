@@ -45,7 +45,8 @@ as_integer_if_safe <- function(x) {
   x
 }
 
-
-
+unsafe_int <- function(x) {
+  .Call("C_unsafe_int", x, PACKAGE = "hutilscpp")
+}
 
 

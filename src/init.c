@@ -26,6 +26,7 @@ extern SEXP C_or_raw(SEXP, SEXP, SEXP);
 extern SEXP C_shift_by_sorted_int(SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_theEmptiestQuarters(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_theEuclidDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP C_unsafe_int(SEXP);
 extern SEXP C_which_abs_diff(SEXP, SEXP, SEXP);
 extern SEXP C_which_first_lgl1(SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_which_min_HaversineDistance(SEXP, SEXP, SEXP, SEXP, SEXP);
@@ -135,6 +136,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"C_shift_by_sorted_int",         (DL_FUNC) &C_shift_by_sorted_int,          4},
     {"C_theEmptiestQuarters",         (DL_FUNC) &C_theEmptiestQuarters,          7},
     {"C_theEuclidDistance",           (DL_FUNC) &C_theEuclidDistance,            5},
+    {"C_unsafe_int",                  (DL_FUNC) &C_unsafe_int,                   1},
     {"C_which_abs_diff",              (DL_FUNC) &C_which_abs_diff,               3},
     {"C_which_first_lgl1",            (DL_FUNC) &C_which_first_lgl1,             4},
     {"C_which_min_HaversineDistance", (DL_FUNC) &C_which_min_HaversineDistance,  5},
