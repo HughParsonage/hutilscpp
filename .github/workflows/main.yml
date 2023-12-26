@@ -68,5 +68,5 @@ jobs:
       - name: Install packages
         shell: bash
         run: |
-          Rdevel -q -e "install.packages('data.table', repos = 'https://cran.rstudio.com/'); data.table::update_dev_pkg(quiet=T); data.table:::isRealReallyInt(2147483648 + 100*(1:1e8))"
+          Rdevel -q -e "install.packages('data.table', repos = 'https://cran.rstudio.com/'); data.table::update_dev_pkg(quiet=T); data.table:::isRealReallyInt(2147483648 + 100*rev(1:1e8))"
           Rdevel -q -e "#library(hutilscpp); library(data.table); options(tt.verbose = 0); tinytest::test_all()"
