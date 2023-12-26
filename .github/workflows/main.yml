@@ -86,6 +86,3 @@ jobs:
           Rdevel -q -e "#tinytest::run_test_file('inst/tinytest/test_character2integer.R')"
           Rdevel -q -e "#tinytest::run_test_file('inst/tinytest/test_Comma.R')"
           Rdevel -q -e "#library(hutilscpp); library(data.table); options(tt.verbose = 0); tinytest::test_all()"
-          Rdevel -q -e "install.packages(c('remotes', 'nanotime', 'bit64'), quiet=T)"
-          Rdevel -q -e "data.table::update_dev_pkg()"
-          Rdevel -q -e "library(data.table); data.table:::coerceAs(2^31, 0L)"
