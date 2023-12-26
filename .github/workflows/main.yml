@@ -68,22 +68,5 @@ jobs:
       - name: Install packages
         shell: bash
         run: |
-          Rdevel -q -e "ip <- function(x) install.packages(x[!sapply(x, requireNamespace, quietly = TRUE)], quiet = TRUE, repos = 'https://cran.r-project.org'); ip(c('tinytest', 'data.table', 'glue', 'hutils', 'magrittr'))"
-          Rdevel CMD build .
-          Rdevel CMD INSTALL --install-tests hutilscpp*.tar.gz
-          Rdevel -q -e "max(sapply(dir(path = find.package('hutilscpp'), recursive = TRUE, full.names = TRUE), function(x) file.size(x) / 1024))"
-          Rdevel -q -e "library(hutilscpp); expr <- c(0L, 5L, 3L, 2L); o <- 0; for (i in 1:1000) o <- o + which_first(expr %in% c(8L, 9L))"
-          Rdevel -q -e "z3 <- integer(3); hutilscpp::which_first(z3 == NaN)"
-          Rdevel -q -e "z3 <- integer(3); hutilscpp::which_first(z3 != NaN)"
-          Rdevel -q -e "z3 <- integer(3); hutilscpp::which_first(z3 >= 2147483647.1)"
-          Rdevel -q -e "z3 <- integer(3); hutilscpp:::first_which(z3 >= 2147483647.1)"
-          Rdevel -q -e "z3 <- integer(3); hutilscpp::which_last(z3 >= -2147483647.1)"
-          Rdevel -q -e "z3 <- c(0L, 1:9); hutilscpp::which_last(z3 >= -2147483647.1)"
-          Rdevel -q -e "z3 <- integer(3); hutilscpp::which_last(z3 >= -2147483647.1)"
-          Rdevel -q -e "z3 <- c(0L, 1:9, -2147483647L); hutilscpp::which_last(z3 >= -2147483647)"
-          Rdevel -q -e "z3 <- c(0L, 1:9, -2147483647L); hutilscpp::which_last(z3 < -2147483647)"
-          Rdevel -q -e "x <- c(1626783884L, 969909421L, 205541854L, -1L, 0L, 1L, -1214788235L, -709260613L, -795055625L); y <- prettyNum(as.double(x), big.mark = ','); cat(y, '\n'); hutilscpp::character2integer(y)"
-          Rdevel -q -e "#tinytest::run_test_file('inst/tinytest/test_character2integer.R')"
-          Rdevel -q -e "#tinytest::run_test_file('inst/tinytest/test_Comma.R')"
-          Rdevel -q -e "data.table:::isRealReallyInt(.Machine$integer.max + 1)"
+          Rdevel -q -e "data.table::update_dev_pkg(); data.table:::isRealReallyInt(.Machine$integer.max + 1)"
           Rdevel -q -e "#library(hutilscpp); library(data.table); options(tt.verbose = 0); tinytest::test_all()"
