@@ -189,6 +189,9 @@ int as_nThread(SEXP x);
 
 bool has_openmp(void);
 
+// error-warnings.c
+void assertInteger(SEXP x, const char * var);
+
 SEXP ScalarLength(R_xlen_t o);
 
 bool dsingle_ox_x1_x2(double x, int oix, double x1, double x2);

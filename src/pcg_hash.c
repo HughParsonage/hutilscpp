@@ -105,3 +105,57 @@ SEXP Cpcg_hash(SEXP n, SEXP r, SEXP nthreads, SEXP rawres) {
   UNPROTECT(1);
   return ans;
 }
+
+// https://github.com/skeeto/hash-prospector
+uint32_t lowbias32_h(uint32_t x) {
+  x ^= x >> 16;
+  x *= 0x7feb352d;
+  x ^= x >> 15;
+  x *= 0x846ca68b;
+  x ^= x >> 16;
+  return x;
+}
+
+// inverse
+uint32_t lowbias32_i(uint32_t x) {
+  x ^= x >> 16;
+  x *= 0x43021123;
+  x ^= x >> 15 ^ x >> 30;
+  x *= 0x1d69e2a5;
+  x ^= x >> 16;
+  return x;
+}
+
+SEXP C_prospect_hash(SEXP n, SEXP r) {
+  assertInteger(r, "random_seed");
+  int nr = length(r);
+  const int * rp = INTEGER(r);
+  uint32_t * rpp = malloc(sizeof(int) * nr);
+  if (rpp == NULL) {
+    warning("Unable to malloc(C_prospect_hash)");
+    return r;
+  }
+  for (int j = 0; j < nr; ++j) {
+    rpp[j] = rp[j];
+  }
+  R_xlen_t N = asReal(n);
+  SEXP ans = PROTECT(allocVector(INTSXP, N));
+  int * restrict ansp = INTEGER(ans);
+  R_xlen_t N_m_nr = N - nr;
+  for (R_xlen_t i = 0; i < N_m_nr; i += nr) {
+    for (int j = 0; j < nr; ++j) {
+      rpp[j] = lowbias32_h(rpp[j]);
+      ansp[i + j] = rpp[j];
+    }
+  }
+  for (int j = 0; j < nr; ++j) {
+    rpp[j] = lowbias32_h(rpp[j]);
+    unsigned int ii = N_m_nr + j; // avoid both negative and over N
+    if (ii < N) {
+      ansp[ii] = rpp[j];
+    }
+  }
+  free(rpp);
+  UNPROTECT(1);
+  return ans;
+}

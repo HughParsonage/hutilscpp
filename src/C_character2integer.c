@@ -193,7 +193,7 @@ static bool charNeedsDbl(const char * x, int n) {
 
 static R_xlen_t needsDouble(SEXP x) {
   R_xlen_t N = xlength(x);
-  const SEXP * xp = STRING_PTR(x);
+  const SEXP * xp = STRING_PTR_RO(x);
   for (R_xlen_t i = 0; i < N; ++i) {
     if (xp[i] == NA_STRING) {
       continue;
@@ -211,7 +211,7 @@ static SEXP str2int0_NullNaStrings(SEXP x) {
   R_xlen_t N = xlength(x);
   SEXP ans = PROTECT(allocVector(INTSXP, N));
   int * restrict ansp = INTEGER(ans);
-  const SEXP * xp = STRING_PTR(x);
+  const SEXP * xp = STRING_PTR_RO(x);
   for (R_xlen_t i = 0; i < N; ++i) {
     if (xp[i] == NA_STRING) {
       ansp[i] = NA_INTEGER;
@@ -229,7 +229,7 @@ static SEXP str2int0_1NaStrings(SEXP x, const char * na_string, int na_len, cons
   R_xlen_t N = xlength(x);
   SEXP ans = PROTECT(allocVector(INTSXP, N));
   int * restrict ansp = INTEGER(ans);
-  const SEXP * xp = STRING_PTR(x);
+  const SEXP * xp = STRING_PTR_RO(x);
 
   for (R_xlen_t i = 0; i < N; ++i) {
     if (xp[i] == NA_STRING) {
@@ -282,7 +282,7 @@ SEXP character2double(SEXP x, SEXP NaStrings, int option) {
   R_xlen_t N = xlength(x);
   SEXP ans = PROTECT(allocVector(REALSXP, N));
   double * restrict ansp = REAL(ans);
-  const SEXP * xp = STRING_PTR(x);
+  const SEXP * xp = STRING_PTR_RO(x);
 
   switch(TYPEOF(NaStrings)) {
   case NILSXP: {
