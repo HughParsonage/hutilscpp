@@ -87,7 +87,7 @@ static bool empty(SEXP x, bool e, int nThread) {
   case REALSXP:
     return dempty(REAL(x), N, e, nThread);
   case STRSXP:
-    return sempty(STRING_PTR(x), N);
+    return sempty(STRING_PTR_RO(x), N);
   case CPLXSXP:
     return cempty(COMPLEX(x), N);
   case RAWSXP:

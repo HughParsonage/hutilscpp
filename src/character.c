@@ -57,8 +57,8 @@ SEXP CStringEqual(SEXP x, SEXP y) {
     return ScalarLogical(0);
   }
   R_xlen_t N = xlength(x);
-  const SEXP * xp = STRING_PTR(x);
-  const SEXP * yp = STRING_PTR(y);
+  const SEXP * xp = STRING_PTR_RO(x);
+  const SEXP * yp = STRING_PTR_RO(y);
   for (R_xlen_t i = 0; i < N; ++i) {
     const char * xi = CHAR(xp[i]);
     const char * yi = CHAR(yp[i]);

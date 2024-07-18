@@ -626,7 +626,7 @@ static void vor2s(unsigned char * ansp, const int o,
   case STRSXP:
     if (TYPEOF(y) == STRSXP && (o == OP_EQ || o == OP_NE)) {
       // only support == and !=
-      vor2_SS(ansp, o, STRING_PTR(x), N, STRING_PTR(y), M);
+      vor2_SS(ansp, o, STRING_PTR_RO(x), N, STRING_PTR_RO(y), M);
     } else {
       *err = OR3__UNSUPPORTED_TYPEY;
     }
