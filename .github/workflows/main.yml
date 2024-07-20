@@ -27,6 +27,7 @@ jobs:
         extra-packages: any::rcmdcheck
         needs: check
     - uses: r-lib/actions/check-r-package@v2
+    container: rocker/verse:latest
   rchk:
     runs-on: ubuntu-latest
     container:
