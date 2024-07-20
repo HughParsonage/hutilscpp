@@ -71,3 +71,4 @@ jobs:
           Rdevel CMD build .
           Rdevel CMD INSTALL --install-tests hutilscpp*.tar.gz
           Rdevel -q -e "hutilscpp:::unsafe_int(2147483648)"
+          Rdevel -q -e "tinytest::run_test_file(file = 'inst/tinytest/test-valgrind.R')"

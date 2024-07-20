@@ -1,5 +1,10 @@
 #context "valgrind stressor")
+library(hutilscpp)
+library(tinytest)
 
+if (!at_home()) {
+  exit_file("Not at home")
+}
 # test_that("pminC large", {
   x <- rep_len(c(0, -0.5, 1.2), 7e6)
   for (i in 1:128) {
