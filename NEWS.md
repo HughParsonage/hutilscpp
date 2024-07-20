@@ -1,3 +1,10 @@
+## hutilscpp 0.10.5
+
+### Internal
+
+- `STRING_PTR` changed to `STRING_PTR_RO` as required by new CRAN policies
+
+
 ## hutilscpp 0.10.4
 
 ### Internal
