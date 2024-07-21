@@ -12,7 +12,7 @@ jobs:
       - name: Install Package Dependencies
         run: |-
           Rscript -e "install.packages(c('rcmdcheck', 'remotes', 'covr'), repos = 'https://cran.rstudio.com')"
-          Rscript -e "remotes::install_deps(dependencies = TRUE, repos = https://cran.rstudio.com')"
+          Rscript -e "remotes::install_deps(dependencies = TRUE, repos = 'https://cran.rstudio.com')"
       - name: codecov
         run: Rscript -e "covr::codecov(quiet = FALSE)"
     container: rocker/verse:latest
