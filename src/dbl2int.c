@@ -171,6 +171,10 @@ SEXP Cforce_as_integer(SEXP xx, SEXP Na_code) {
 }
 
 SEXP C_unsafe_int(SEXP x) {
+  // This function purports to determine whether an array of doubles
+  // isn't safe to convert to integer.
+  // It is unsafe (i.e. invokes undefined behaviour for large doubles),
+  // yet does not fail ASAN-UBSAN checks.
   if (!isReal(x)) return ScalarLogical(0);
   const double * xp = REAL(x);
   for (R_xlen_t i = 0; i < xlength(x); ++i) {
