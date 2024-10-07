@@ -1,12 +1,15 @@
 #include "hutilscpp.h"
 
 bool is_seq(SEXP x) {
+  if (xlength(x) == 0) {
+    // since xp[0] is assumed
+    return false;
+  }
   switch(TYPEOF(x)) {
   case INTSXP:
     if (is_altrep(x)) {
       return true;
     } else {
-
       const int * xp = INTEGER(x);
       int x0 = xp[0];
       R_xlen_t N = xlength(x);

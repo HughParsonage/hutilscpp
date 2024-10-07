@@ -1,3 +1,9 @@
+## hutilscpp 0.10.6
+
+### Bug fix
+
+- `is_seq` (internal function in `finp`): fixed UB when `length(table) == 0`.
+
 ## hutilscpp 0.10.5
 
 ### Internal
