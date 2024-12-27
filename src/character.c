@@ -123,7 +123,7 @@ SEXP CextractMandatory(SEXP x, SEXP command, SEXP NCommands) {
   bool finish_extract = false;
   bool within_brace = false;
   // bool within_optional = false;
-  int opt_group = 0;
+
   int cj = 0;
 
   int command_no = 0;
@@ -181,7 +181,6 @@ SEXP CextractMandatory(SEXP x, SEXP command, SEXP NCommands) {
             continue;
           }
           if (xk == '[') {
-            ++opt_group;
             int rel_opt_group = 1;
             while (rel_opt_group && k < N - 1) {
               // just keep moving forward until we get out of the current
@@ -193,7 +192,6 @@ SEXP CextractMandatory(SEXP x, SEXP command, SEXP NCommands) {
               xk = CHAR(STRING_ELT(x, k))[0];
               if (xk == ']') {
                 --rel_opt_group;
-                --opt_group;
               } else {
                 if (xk == '{') {
                   ++rel_group;
@@ -214,7 +212,6 @@ SEXP CextractMandatory(SEXP x, SEXP command, SEXP NCommands) {
                 }
                 if (xk == '[') {
                   ++rel_opt_group;
-                  ++opt_group;
                 }
               }
             }
