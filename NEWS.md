@@ -1,3 +1,10 @@
+## hutilscpp 
+
+### Internal
+
+- Attempted resolution of a compiler backend error in the `Cminmax()` function with OpenMP on Clang19. 
+  Updated array reduction logic for `RAW` inputs to improve compatibility and reliability.
+
 ## hutilscpp 0.10.6
 
 ### Bug fix

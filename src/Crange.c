@@ -284,7 +284,8 @@ SEXP Cminmax(SEXP x, SEXP emptyResult, SEXP nthreads) {
     const unsigned char * xp = RAW(x);
     unsigned char xmax = 0;
     unsigned char xmin = 255;
-    bool o[256] = {0};
+    // using bool caused problems in clang19, perhaps because it treats it as i8
+    unsigned int o[256] = {0};
 #if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread) reduction(|| : o[:256])
 #endif
