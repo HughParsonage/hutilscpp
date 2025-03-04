@@ -1,3 +1,3 @@
-Fix to STRING_PTR -> STRING_PTR_RO 
+Attempted fix of LLVM complaining about i8 load
 
-Checked on rhub, winbuilder
+RM dead opt_group variable
