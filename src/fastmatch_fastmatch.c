@@ -36,7 +36,7 @@ typedef struct hash {
   hash_index_t m, els; /* hash size, added elements (unused!) */
 int k;               /* used bits */
 SEXPTYPE type;       /* payload type */
-void *src;           /* the data array of the hashed object */
+const void *src;           /* the data array of the hashed object */
 SEXP prot;           /* object to protect along whith this hash */
 SEXP parent;         /* hashed object */
 struct hash *next;   /* next hash table - typically for another type */
@@ -46,7 +46,7 @@ hash_index_t ix[];  /* actual table of indices */
 /* create a new hash table with the given source and length.
  we store only the index - values are picked from the source
  so you must make sure the source is still alive when used */
-static hash_t *new_hash(void *src, hash_index_t len) {
+static hash_t *new_hash(const void *src, hash_index_t len) {
   hash_t *h;
   int k = 1;
   hash_index_t m = 2, desired = len * 2; /* we want a maximal load of 50% */
@@ -335,7 +335,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
   }
   /* if there is no cache or not of the needed coerced type, create one */
   if (a == R_NilValue || !h) {
-    h = new_hash(DATAPTR(y), XLENGTH(y));
+    h = new_hash(DATAPTR_RO(y), XLENGTH(y));
     h->type = type;
     h->parent = y;
 #if HASH_VERBOSE
@@ -363,7 +363,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
         Rprintf("   (need to coerce table to %d)\n", type);
 #endif
       y = y_to_char ? (y_factor ? asCharacterFactor(y) : asCharacter(y, R_GlobalEnv)) : coerceVector(y, type);
-      h->src = DATAPTR(y); /* this is ugly, but we need to adjust the source since we changed it */
+      h->src = DATAPTR_RO(y); /* this is ugly, but we need to adjust the source since we changed it */
   h->prot = y; /* since the coerced object is temporary, we let the hash table handle its life span */
   R_PreserveObject(y);
     }
@@ -408,7 +408,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
         v[i] = get_hash_real(h, k[i], nmv) != 0;
       }
     } else {
-      SEXP *k = (SEXP*) DATAPTR(x);
+      SEXP *k = (SEXP*) DATAPTR_RO(x);
       for (i = 0; i < n; i++)
         v[i] = get_hash_ptr(h, k[i], nmv) != 0;
     }
@@ -438,7 +438,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
           }
         }
       } else {
-        SEXP *k = (SEXP*) DATAPTR(x);
+        SEXP *k = (SEXP*) DATAPTR_RO(x);
         for (R_xlen_t i = 0; i < n; i++) {
           if (get_hash_ptr(h, k[i], nmv) != 0) {
             wo = i + 1;
@@ -466,7 +466,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
           }
         }
       } else {
-        SEXP *k = (SEXP*) DATAPTR(x);
+        SEXP *k = (SEXP*) DATAPTR_RO(x);
         for (R_xlen_t i = n - 1; i >= 0; i--) {
           if (get_hash_ptr(h, k[i], nmv) != 0) {
             wo = i + 1;
@@ -509,7 +509,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
           v[i] = NA_int2real(get_hash_real(h, k[i], NA_INTEGER));
         }
       } else {
-        SEXP *k = (SEXP*) DATAPTR(x);
+        SEXP *k = (SEXP*) DATAPTR_RO(x);
         for (i = 0; i < n; i++)
           v[i] = NA_int2real(get_hash_ptr(h, k[i], NA_INTEGER));
       }
@@ -531,7 +531,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
           v[i] = (double) get_hash_real(h, k[i], nmv);
         }
       } else {
-        SEXP *k = (SEXP*) DATAPTR(x);
+        SEXP *k = (SEXP*) DATAPTR_RO(x);
         for (i = 0; i < n; i++)
           v[i] = (double) get_hash_ptr(h, k[i], nmv);
       }
@@ -562,7 +562,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
       v[i] = get_hash_real(h, k[i], nmv);
     }
   } else {
-    SEXP *k = (SEXP*) DATAPTR(x);
+    SEXP *k = (SEXP*) DATAPTR_RO(x);
     for (R_xlen_t i = 0; i < N; i++)
       v[i] = get_hash_ptr(h, k[i], nmv);
   }
