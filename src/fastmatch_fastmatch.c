@@ -68,7 +68,7 @@ static void free_hash(hash_t *h) {
 
 /* R finalized for the hash table object */
 static void hash_fin(SEXP ho) {
-  hash_t *h = (hash_t*) EXTPTR_PTR(ho);
+  hash_t *h = (hash_t*) R_ExternalPtrAddr(ho);
   if (h) free_hash(h);
 }
 
@@ -283,7 +283,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
   }
 
   /* implicitly convert factors/POSIXlt to character */
-  if (OBJECT(x)) {
+  if (isObject(x)) {
     if (inherits(x, "factor")) {
       x = PROTECT(asCharacterFactor(x));
       np++;
