@@ -294,8 +294,8 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
   }
 
   /* for y we may need to do that later */
-  y_factor = OBJECT(y) && inherits(y, "factor");
-  y_to_char = y_factor || (OBJECT(y) && inherits(y, "POSIXlt"));
+  y_factor = isObject(y) && inherits(y, "factor");
+  y_to_char = y_factor || (isObject(y) && inherits(y, "POSIXlt"));
 
   /* coerce to common type - in the order of SEXP types */
   if(TYPEOF(x) >= STRSXP || TYPEOF(y) >= STRSXP)
@@ -322,7 +322,7 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
   if (!hs) hs = Rf_install(".match.hash");
   a = Rf_getAttrib(y, hs);
   if (a != R_NilValue) { /* if there is a cache, try to find the matching type */
-  h = (hash_t*) EXTPTR_PTR(a);
+  h = (hash_t*) R_ExternalPtrAddr(a);
     /* could the object be out of sync ? If so, better remove the hash and ignore it */
     if (!h || h->parent != y) {
 #if HASH_VERBOSE
@@ -341,13 +341,13 @@ SEXP fmatch(SEXP x, SEXP y, SEXP nonmatch, SEXP Fin, SEXP WhichFirst, SEXP nthre
 #if HASH_VERBOSE
     Rprintf(" - creating new hash for type %d\n", type);
 #endif
-    if (a == R_NilValue || !EXTPTR_PTR(a)) { /* if there is no cache attribute, create one */
+    if (a == R_NilValue || !R_ExternalPtrAddr(a)) { /* if there is no cache attribute, create one */
   a = R_MakeExternalPtr(h, R_NilValue, R_NilValue);
       Rf_setAttrib(y, hs, a);
       Rf_setAttrib(a, R_ClassSymbol, Rf_mkString("match.hash"));
       R_RegisterCFinalizer(a, hash_fin);
     } else { /* otherwise append the new cache */
-  hash_t *lh = (hash_t*) EXTPTR_PTR(a);
+  hash_t *lh = (hash_t*) R_ExternalPtrAddr(a);
       while (lh->next) lh = lh->next;
       lh->next = h;
 #if HASH_VERBOSE

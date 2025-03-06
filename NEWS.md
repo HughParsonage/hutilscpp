@@ -4,6 +4,7 @@
 
 - Attempted resolution of a compiler backend error in the `Cminmax()` function with OpenMP on Clang19. 
   Updated array reduction logic for `RAW` inputs to improve compatibility and reliability.
+- Fix UBSAN and non-API calls in fastmatch
 
 ## hutilscpp 0.10.6
 
