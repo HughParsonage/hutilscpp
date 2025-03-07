@@ -8,6 +8,6 @@ if (requireNamespace("tinytest", quietly = TRUE) &&
   if (requireNamespace("covr", quietly = TRUE) && covr::in_covr()) {
     options(hutilscpp.nThread = 1L)
   }
-  tinytest::test_package("hutilscpp")
+  tinytest::test_package("hutilscpp", verbose = 0L)
 }
 
