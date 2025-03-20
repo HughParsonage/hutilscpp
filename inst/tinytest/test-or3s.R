@@ -2,6 +2,10 @@ library(hutilscpp)
 library(hutils)
 library(data.table)
 
+if (!at_home() && !hutilscpp:::is_covr()) {
+  exit_file("neither at home nor covering")
+}
+
 x <- rep_len(c(TRUE, FALSE), 1e4)
 expect_false(any(or3s(x %between% c(TRUE, FALSE))))
 expect_false(any(or3s(x %(between)% c(FALSE, TRUE))))

@@ -11,6 +11,7 @@
 extern SEXP C__alloc(SEXP);
 extern SEXP C_abs_diff(SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_and_raw(SEXP, SEXP, SEXP);
+extern SEXP C_antiMode(SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_character2integer(SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_comma(SEXP, SEXP, SEXP);
 extern SEXP C_empty(SEXP, SEXP, SEXP, SEXP);
@@ -122,6 +123,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"C__alloc",                      (DL_FUNC) &C__alloc,                       1},
     {"C_abs_diff",                    (DL_FUNC) &C_abs_diff,                     4},
     {"C_and_raw",                     (DL_FUNC) &C_and_raw,                      3},
+    {"C_antiMode",                    (DL_FUNC) &C_antiMode,                     4},
     {"C_character2integer",           (DL_FUNC) &C_character2integer,            4},
     {"C_comma",                       (DL_FUNC) &C_comma,                        3},
     {"C_empty",                       (DL_FUNC) &C_empty,                        4},

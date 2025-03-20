@@ -1,4 +1,12 @@
-## hutilscpp 
+## hutilscpp 0.10.10
+
+- New function `antiMode` for the least common element
+
+### Internal
+
+- Reduce tinytest verbosity to avoid excessive test logs. Thanks to CRAN for reporting.
+
+
 
 ### Internal
 

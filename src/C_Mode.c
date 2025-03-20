@@ -127,5 +127,55 @@ SEXP CuniqueN_fmatch(SEXP fx, SEXP nthreads) {
   return ScalarInteger(o);
 }
 
+SEXP C_antiMode(SEXP x, SEXP Domain, SEXP DomainIsMinMax, SEXP doWhich) {
+  if (!isInteger(x) || !isInteger(Domain)) {
+    error("non-integer not supported");
+  }
+  const int is_minmax = asLogical(DomainIsMinMax);
+  const int is_doWhich = asLogical(doWhich);
+
+  const int * dp = INTEGER(Domain);
+  R_xlen_t N_d = xlength(Domain);
+  const int * xp = INTEGER(x);
+  R_xlen_t N = xlength(x);
+  if (N == 0) {
+    error("`xlength(x) == 0` so no least common element.");
+  }
+
+  int candidate = xp[0];
+  if (N == 1) {
+    return ScalarInteger(candidate);
+  }
+  if (is_minmax == 1) {
+    const int dp0 = dp[0];
+    int64_t range = dp[1];
+    range -= dp0;
+    if (range < 256) {
+      uint64_t tbl[256] = {0};
+      for (R_xlen_t i = 0; i < N; ++i) {
+        tbl[xp[i] - dp0]++;
+      }
+      int which_min_ = 0;
+      int n_min = tbl[0]; // note that the minimum should be occupied
+      if (n_min == 0) {
+        error("Internal error(n_min_antiMode) n_min = 0");
+      }
+      for (int j = 1; j < 256; ++j) {
+        if (tbl[j] && tbl[j] < n_min) {
+          which_min_ = j;
+          n_min = tbl[j];
+        }
+      }
+      return is_doWhich == 1 ? ScalarInteger(which_min_ + 1) : ScalarInteger(dp0 + which_min_);
+    }
+  }
+
+
+
+  return R_NilValue;
+}
+
+
+
 
 

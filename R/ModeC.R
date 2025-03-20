@@ -45,4 +45,22 @@ ModeC <- function(x,
 }
 
 
+antiModeC <- function(x, domain = NULL, domain_is_minmax = NULL, do_which = NA) {
+
+  ans <- .Call("C_antiMode", x,
+               sort(domain %||% minmax(x), na.last = FALSE),
+               domain_is_minmax %||% TRUE,
+               isTRUE(do_which),
+               PACKAGE = "hutilscpp")
+  if (is.null(ans)) {
+    ans <- which.min(tx <- table(x))
+    if (isTRUE(do_which)) {
+      return(unclass(ans))
+    }
+    ans <- tx[[ans]]
+  }
+  ans
+}
+
+
 
