@@ -1,6 +1,6 @@
 ## hutilscpp 0.10.10
 
-- New function `antiMode` for the least common element
+- New unexported function `antiMode` for the least common element
 
 ### Internal
 
