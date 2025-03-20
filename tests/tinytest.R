@@ -8,6 +8,6 @@ if (requireNamespace("tinytest", quietly = TRUE) &&
   if (requireNamespace("covr", quietly = TRUE) && covr::in_covr()) {
     options(hutilscpp.nThread = 1L)
   }
-  tinytest::test_package("hutilscpp", verbose = 0L + (Sys.getenv("GITHUB_JOB") == "valgrind"))
+  tinytest::test_package("hutilscpp", verbose = 0L + 2 * (Sys.getenv("GITHUB_JOB") == "valgrind"))
 }
 
