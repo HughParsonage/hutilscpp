@@ -312,6 +312,18 @@ expect_equal(and3s(xdb != 5, xdb %(between)% c(2L, 8L)),
 expect_equal(and3s(xdb == 5, xdb %]between[% c(3L, 7L)),
              (xdb == 5) & (xdb <= 3 | xdb >= 7))
 
+# Regression for #47: vand2s_II M==2 OP_BO/OP_BC with y0==y1.
+# The y0==y1 branch was only handled for OP_BW; OP_BO and OP_BC fell
+# through to the general y0<y1 code which gave wrong answers due to
+# unsigned wrap-around in `betweeniiuu(x, y0+1, y0-1)`.
+expect_equal(and3s(ib != 0L, ib %(between)% c(5L, 5L)),
+             (ib != 0L) & (ib > 5L & ib < 5L))
+expect_equal(and3s(ib != 0L, ib %]between[% c(5L, 5L)),
+             (ib != 0L) & (ib <= 5L | ib >= 5L))
+# y0==y1 in first position too (not just second)
+expect_equal(and3s(ib %]between[% c(5L, 5L), ib != 0L),
+             (ib %]between[% c(5L, 5L)) & (ib != 0L))
+
 # Regression for #40: when the C dispatcher returns NULL and we fall back
 # to base `&`, the user's `type` argument must be honoured. An inner
 # `return()` was previously short-circuiting before the type conversion.
