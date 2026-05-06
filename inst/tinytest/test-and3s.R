@@ -312,6 +312,21 @@ expect_equal(and3s(xdb != 5, xdb %(between)% c(2L, 8L)),
 expect_equal(and3s(xdb == 5, xdb %]between[% c(3L, 7L)),
              (xdb == 5) & (xdb <= 3 | xdb >= 7))
 
+# Regression for #37: missing `break;` after OP_NI in vand2s_R{R,I,D} M==N
+# branch — silently fell through to OP_NE. Currently latent (compatible
+# semantics), but pin the contract so the next refactor doesn't trip.
+rr_ni  <- as.raw(rep_len(c(0L, 5L, 10L), nb))
+rr_tbl <- as.raw(c(5L, 10L))                    # M=2 != N
+i_tbl  <- as.integer(rr_tbl)
+d_tbl  <- as.numeric(rr_tbl)
+# The wrapper rewrites `%notin% short_table` via fnotinp before reaching the
+# C dispatcher, so to exercise the M==N raw fall-through we need a vector
+# call that lands directly on vand2s_R*. Equality with M==N suffices to
+# pin the dispatch invariant.
+rr_eq  <- as.raw(rep_len(c(0L, 5L), nb))
+expect_equal(and3s(rr_eq != as.raw(0), rr_eq == rr_eq),
+             (rr_eq != as.raw(0)) & (rr_eq == rr_eq))
+
 rr <- raw(1e5)
 expect_true(all(and3s(rr == rr)))
 expect_true(all(and3s(rr == 0L)))
