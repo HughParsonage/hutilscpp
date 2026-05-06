@@ -1,3 +1,15 @@
+## hutilscpp 0.10.11
+
+### Bug fixes
+
+- `and3s` with a `%between%` term against a degenerate range
+  (e.g. `c(5, 5)`, or fractional bounds that collapse to a single
+  integer such as `c(4.5, 5.4)`) no longer overwrites the
+  accumulating AND-chain in the integer fast path of `uc_betweenidd`.
+- `and3s` with a `%between%`/`%(between)%`/`%]between[%` term where
+  `x` is double and the bounds are integer no longer overwrites the
+  accumulating AND-chain in the `M == 2` fast path of `vand2s_DI`.
+
 ## hutilscpp 0.10.10
 
 - New unexported function `antiMode` for the least common element

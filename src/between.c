@@ -108,9 +108,11 @@ void uc_betweenidd(unsigned char * ansp,
     case ORAND_AND:
       FORLOOP(ansp[i] &= xp[i] == y0i;)
       break;
+    // # nocov start
     case ORAND_EQ:
       FORLOOP(ansp[i] = xp[i] == y0i;)
       break;
+    // # nocov end
     }
     return;
   }

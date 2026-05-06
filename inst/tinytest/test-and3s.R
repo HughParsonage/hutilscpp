@@ -289,6 +289,29 @@ expect_equal( or3s(xx == 2, xx %in% bb, bb >= 5), ((xx %in% bb) | (xx == 2 | bb 
 expect_equal( or3s(xx == 2, bb >= 5, xx %in% bb), ((xx %in% bb) | (xx == 2 | bb >= 5)))
 # })
 
+# Regression: AND-chain accumulator must not be overwritten by the
+# `uc_betweenidd` y0i == y1i fast path. Constructed so the first term
+# is FALSE exactly where the between term is TRUE — an overwrite would
+# flip those positions to TRUE.
+nb <- 5e3
+ib <- rep_len(1:10, nb)
+expect_equal(and3s(ib != 5L, ib %between% c(5, 5)),
+             (ib != 5L) & (ib >= 5L & ib <= 5L))
+expect_equal(and3s(ib != 5L, ib %between% c(4.5, 5.4)),
+             (ib != 5L) & (ib >= 5L & ib <= 5L))
+expect_equal(and3s(ib != 5L, ib %between% c(5, 5), ib < 11L),
+             (ib != 5L) & (ib >= 5L & ib <= 5L) & (ib < 11L))
+
+# Regression: AND-chain accumulator must not be overwritten by the
+# `vand2s_DI` M == 2 fast path (double x, integer bounds).
+xdb <- as.double(rep_len(1:10, nb))
+expect_equal(and3s(xdb != 5, xdb %between% c(3L, 7L)),
+             (xdb != 5) & (xdb >= 3 & xdb <= 7))
+expect_equal(and3s(xdb != 5, xdb %(between)% c(2L, 8L)),
+             (xdb != 5) & (xdb > 2 & xdb < 8))
+expect_equal(and3s(xdb == 5, xdb %]between[% c(3L, 7L)),
+             (xdb == 5) & (xdb <= 3 | xdb >= 7))
+
 rr <- raw(1e5)
 expect_true(all(and3s(rr == rr)))
 expect_true(all(and3s(rr == 0L)))
