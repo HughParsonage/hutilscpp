@@ -741,19 +741,26 @@ static void vand2s_RI(unsigned char * ansp, const int o,
                       int * err) {
   if (M == 1) {
     if (y[0] < 0 || y[0] > 255) {
-      // No raw equals an out-of-range scalar.
-      // OP_IN/OP_EQ: predicate is always-false, AND with 0.
-      // OP_NI/OP_NE: predicate is always-true, no-op against the running mask.
-      // Order ops are not handled in this kernel; signal err so the R
-      // wrapper falls back to base `&` rather than silently no-op'ing.
+      // Raw x is in [0, 255]; for an out-of-range scalar y the result of
+      // every supported predicate is constant. Apply directly so the
+      // call doesn't need to drop out to the R fallback.
+      const bool y_lt_zero = y[0] < 0;
       switch(o) {
       case OP_IN:
       case OP_EQ:
-        memset(ansp, 0, N);
+        memset(ansp, 0, N);              // never equal
         break;
       case OP_NI:
       case OP_NE:
-        break;
+        break;                           // always not equal: no-op
+      case OP_GT:
+      case OP_GE:
+        if (!y_lt_zero) memset(ansp, 0, N);  // x >= 0; if y > 255, never
+        break;                                // if y < 0, always: no-op
+      case OP_LT:
+      case OP_LE:
+        if (y_lt_zero) memset(ansp, 0, N);   // x >= 0; if y < 0, never
+        break;                                // if y > 255, always: no-op
       default:
         *err = AND3_UNSUPPORTED_TYPEY;
       }
@@ -825,12 +832,14 @@ static void vand2s_RD(unsigned char * ansp, const int o,
                       int nThread,
                       int * err) {
   if (M == 1) {
-    if (ISNAN(y[0]) || y[0] < 0 || y[0] > 255 || y[0] != (int)y[0]) {
-      // No raw equals NaN, an out-of-range, or a non-integer scalar.
-      // OP_IN/OP_EQ: always-false → AND with 0.
-      // OP_NI/OP_NE: always-true → no-op.
-      // Order ops are not handled in this kernel; signal err so the R
-      // wrapper falls back to base `&` rather than silently no-op'ing.
+    // Three short-circuit shapes for the M==1 RHS:
+    //   (a) NaN or non-integer in [0, 255]: ==/!= are constant; order ops
+    //       depend on x and need fallback (raw NaN comparisons return NA
+    //       in base R, which the 2-valued mask can't represent).
+    //   (b) Out-of-range integer: every supported predicate is constant.
+    //   (c) Integer in [0, 255]: dispatch as before; order ops set *err
+    //       and rely on fallback (this kernel only implements ==/!=).
+    if (ISNAN(y[0]) || (y[0] >= 0 && y[0] <= 255 && y[0] != (int)y[0])) {
       switch(o) {
       case OP_IN:
       case OP_EQ:
@@ -838,6 +847,29 @@ static void vand2s_RD(unsigned char * ansp, const int o,
         break;
       case OP_NI:
       case OP_NE:
+        break;
+      default:
+        *err = AND3_UNSUPPORTED_TYPEY;
+      }
+      return;
+    }
+    if (y[0] < 0 || y[0] > 255) {
+      const bool y_lt_zero = y[0] < 0;
+      switch(o) {
+      case OP_IN:
+      case OP_EQ:
+        memset(ansp, 0, N);
+        break;
+      case OP_NI:
+      case OP_NE:
+        break;
+      case OP_GT:
+      case OP_GE:
+        if (!y_lt_zero) memset(ansp, 0, N);
+        break;
+      case OP_LT:
+      case OP_LE:
+        if (y_lt_zero) memset(ansp, 0, N);
         break;
       default:
         *err = AND3_UNSUPPORTED_TYPEY;

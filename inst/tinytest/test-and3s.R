@@ -353,17 +353,35 @@ expect_equal(and3s(rr_chain == as.raw(5), rr_chain != 256L),
 expect_false(any(and3s(rr_chain == as.raw(5), rr_chain %in% c(-1L))))
 
 # Regression for #38 (review follow-up): out-of-range raw order comparisons
-# must not silently no-op. The original out-of-range short-circuit covered
-# IN/EQ/NI/NE only; for order ops the kernel must signal err so the R
-# wrapper falls back to base `&`, matching base R semantics.
-expect_equal(suppressMessages(and3s(rr_chain != as.raw(0), rr_chain > 256L)),
+# are now handled in C — every supported predicate has a constant truth
+# value when y is out of [0, 255], so apply directly rather than punt to
+# fallback (which previously errored on raw-mask exprA inputs).
+expect_equal(and3s(rr_chain != as.raw(0), rr_chain > 256L),
              (rr_chain != as.raw(0)) & (as.integer(rr_chain) > 256L))
-expect_equal(suppressMessages(and3s(rr_chain != as.raw(0), rr_chain > -1L)),
+expect_equal(and3s(rr_chain != as.raw(0), rr_chain > -1L),
              (rr_chain != as.raw(0)) & (as.integer(rr_chain) > -1L))
-expect_equal(suppressMessages(and3s(rr_chain != as.raw(0), rr_chain < -1L)),
+expect_equal(and3s(rr_chain != as.raw(0), rr_chain < -1L),
              (rr_chain != as.raw(0)) & (as.integer(rr_chain) < -1L))
-expect_equal(suppressMessages(and3s(rr_chain != as.raw(0), rr_chain <= 256L)),
+expect_equal(and3s(rr_chain != as.raw(0), rr_chain <= 256L),
              (rr_chain != as.raw(0)) & (as.integer(rr_chain) <= 256L))
+
+# Regression: precomputed raw mask + raw order op with out-of-range RHS
+# (the reviewer's example). C-side handling means no fallback is needed
+# here; the result must match base R after `raw2lgl` on the mask.
+mask_raw <- and3s(rr_chain != as.raw(0), type = "raw")
+expect_equal(and3s(mask_raw, rr_chain > 256L),
+             hutilscpp:::raw2lgl(mask_raw) & (as.integer(rr_chain) > 256L))
+expect_equal(and3s(mask_raw, rr_chain < -1L),
+             hutilscpp:::raw2lgl(mask_raw) & (as.integer(rr_chain) < -1L))
+
+# Regression: raw fallback path. Order ops with in-range integer RHS
+# aren't implemented in vand2s_RI's M==1 switch, so they set *err and
+# the R wrapper falls back. The fallback must coerce raw arguments to
+# logical before `Reduce("&", ...)` — base `&` rejects raw + logical.
+expect_equal(suppressMessages(and3s(mask_raw, rr_chain > 5L)),
+             hutilscpp:::raw2lgl(mask_raw) & (as.integer(rr_chain) > 5L))
+expect_equal(suppressMessages(and3s(mask_raw, rr_chain > 5.5)),
+             hutilscpp:::raw2lgl(mask_raw) & (as.integer(rr_chain) > 5.5))
 
 # Regression for #39: vand2s_RD M==1 must not truncate non-integer scalars.
 # `raw_x %in% c(5.5)` should be all FALSE; `%notin% c(5.5)` should be all TRUE.

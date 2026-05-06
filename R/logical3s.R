@@ -125,7 +125,9 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
 
   if (is.null(ans)) {
     message("Falling back to `&`")
-    ans <- Reduce("&", list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...))
+    args <- list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...)
+    args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
+    ans <- Reduce("&", args)
     return(switch(type,
                   raw = lgl2raw(ans),
                   logical = ans,
@@ -244,8 +246,9 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
   # nocov start
   if (is.null(ans)) {
     message("Falling back to `|`")
-    # fall back
-    return(Reduce("|", list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...)))
+    args <- list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...)
+    args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
+    return(Reduce("|", args))
   }
   # nocov end
 
