@@ -291,7 +291,7 @@ expect_equal( or3s(xx == 2, bb >= 5, xx %in% bb), ((xx %in% bb) | (xx == 2 | bb 
 
 # Regression: AND-chain accumulator must not be overwritten by the
 # `uc_betweenidd` y0i == y1i fast path. Constructed so the first term
-# is FALSE exactly where the between term is TRUE — an overwrite would
+# is FALSE exactly where the between term is TRUE -- an overwrite would
 # flip those positions to TRUE.
 nb <- 5e3
 ib <- rep_len(1:10, nb)
@@ -341,7 +341,7 @@ expect_equal(suppressMessages(and3s(ix_fb == ry_fb, type = "which")),
 
 # Regression for #38: vand2s_RI/RD M==1 must not clobber the AND-chain when
 # the scalar is out of raw range. OP_NI/OP_NE with out-of-range scalar is
-# always-true → no-op; previously memset to 1 wiped earlier predicates.
+# always-true -> no-op; previously memset to 1 wiped earlier predicates.
 rr_chain <- as.raw(rep_len(c(0L, 5L), nb))
 expect_equal(and3s(rr_chain == as.raw(5), rr_chain %notin% c(-1L)),
              (rr_chain == as.raw(5)) & (rep_len(TRUE, nb)))
@@ -353,7 +353,7 @@ expect_equal(and3s(rr_chain == as.raw(5), rr_chain != 256L),
 expect_false(any(and3s(rr_chain == as.raw(5), rr_chain %in% c(-1L))))
 
 # Regression for #38 (review follow-up): out-of-range raw order comparisons
-# are now handled in C — every supported predicate has a constant truth
+# are now handled in C -- every supported predicate has a constant truth
 # value when y is out of [0, 255], so apply directly rather than punt to
 # fallback (which previously errored on raw-mask exprA inputs).
 expect_equal(and3s(rr_chain != as.raw(0), rr_chain > 256L),
@@ -377,7 +377,7 @@ expect_equal(and3s(mask_raw, rr_chain < -1L),
 # Regression: raw fallback path. Order ops with in-range integer RHS
 # aren't implemented in vand2s_RI's M==1 switch, so they set *err and
 # the R wrapper falls back. The fallback must coerce raw arguments to
-# logical before `Reduce("&", ...)` — base `&` rejects raw + logical.
+# logical before `Reduce("&", ...)` -- base `&` rejects raw + logical.
 expect_equal(suppressMessages(and3s(mask_raw, rr_chain > 5L)),
              hutilscpp:::raw2lgl(mask_raw) & (as.integer(rr_chain) > 5L))
 expect_equal(suppressMessages(and3s(mask_raw, rr_chain > 5.5)),
