@@ -125,8 +125,7 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
 
   if (is.null(ans)) {
     message("Falling back to `&`")
-    # fall back
-    ans <- return(Reduce("&", list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...)))
+    ans <- Reduce("&", list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...))
     return(switch(type,
                   raw = lgl2raw(ans),
                   logical = ans,

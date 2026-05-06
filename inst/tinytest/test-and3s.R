@@ -312,6 +312,21 @@ expect_equal(and3s(xdb != 5, xdb %(between)% c(2L, 8L)),
 expect_equal(and3s(xdb == 5, xdb %]between[% c(3L, 7L)),
              (xdb == 5) & (xdb <= 3 | xdb >= 7))
 
+# Regression for #40: when the C dispatcher returns NULL and we fall back
+# to base `&`, the user's `type` argument must be honoured. An inner
+# `return()` was previously short-circuiting before the type conversion.
+# Trigger via INTSXP x with RAWSXP y, which lands on the unsupported-y
+# branch in vand2s and forces a NULL return from `Cands`.
+ix_fb <- 1:nb
+ry_fb <- as.raw(rep_len(c(0L, 1L), nb))
+out_l <- suppressMessages(and3s(ix_fb == ry_fb, type = "logical"))
+expect_true(is.logical(out_l))
+out_r <- suppressMessages(and3s(ix_fb == ry_fb, type = "raw"))
+expect_true(is.raw(out_r))
+out_w <- suppressMessages(and3s(ix_fb == ry_fb, type = "which"))
+expect_true(is.integer(out_w))
+expect_equal(out_w, which(ix_fb == ry_fb))
+
 # Regression for #38: vand2s_RI/RD M==1 must not clobber the AND-chain when
 # the scalar is out of raw range. OP_NI/OP_NE with out-of-range scalar is
 # always-true → no-op; previously memset to 1 wiped earlier predicates.
