@@ -171,12 +171,24 @@ static void vand2s_II(unsigned char * ansp,
       FORLOOP(ansp[i] = 0;)
       return;
     }
+    if (y0 == y1) {
+      switch(o) {
+      case OP_BW:
+        // x in [y0, y0] iff x == y0
+        FORLOOP_ands(==, y0)
+        break;
+      case OP_BO:
+        // x in (y0, y0) is always false
+        FORLOOP(ansp[i] = 0;)
+        break;
+      case OP_BC:
+        // x <= y0 || x >= y0 is always true; no-op against the AND mask
+        break;
+      }
+      return;
+    }
     switch(o) {
     case OP_BW: {
-      if (y0 == y1) {
-      FORLOOP_ands(==, y0)
-      break;
-    }
       // y0 < y1
       if (y0 == 0) {
 #if defined _OPENMP && _OPENMP >= 201511
