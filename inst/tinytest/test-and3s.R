@@ -312,6 +312,26 @@ expect_equal(and3s(xdb != 5, xdb %(between)% c(2L, 8L)),
 expect_equal(and3s(xdb == 5, xdb %]between[% c(3L, 7L)),
              (xdb == 5) & (xdb <= 3 | xdb >= 7))
 
+# Regression for #38: vand2s_RI/RD M==1 must not clobber the AND-chain when
+# the scalar is out of raw range. OP_NI/OP_NE with out-of-range scalar is
+# always-true → no-op; previously memset to 1 wiped earlier predicates.
+rr_chain <- as.raw(rep_len(c(0L, 5L), nb))
+expect_equal(and3s(rr_chain == as.raw(5), rr_chain %notin% c(-1L)),
+             (rr_chain == as.raw(5)) & (rep_len(TRUE, nb)))
+expect_equal(and3s(rr_chain == as.raw(5), rr_chain %notin% c(-1)),
+             (rr_chain == as.raw(5)) & (rep_len(TRUE, nb)))
+expect_equal(and3s(rr_chain == as.raw(5), rr_chain != 256L),
+             (rr_chain == as.raw(5)) & (rep_len(TRUE, nb)))
+# Always-false direction (OP_IN with out-of-range) should AND with 0.
+expect_false(any(and3s(rr_chain == as.raw(5), rr_chain %in% c(-1L))))
+
+# Regression for #39: vand2s_RD M==1 must not truncate non-integer scalars.
+# `raw_x %in% c(5.5)` should be all FALSE; `%notin% c(5.5)` should be all TRUE.
+expect_false(any(and3s(rr_chain == as.raw(5), rr_chain %in% c(5.5))))
+expect_equal(and3s(rr_chain == as.raw(5), rr_chain %notin% c(5.5)),
+             rr_chain == as.raw(5))
+expect_false(any(and3s(rr_chain != as.raw(0), rr_chain == 5.5)))
+
 # Regression for #37: missing `break;` after OP_NI in vand2s_R{R,I,D} M==N
 # branch — silently fell through to OP_NE. Currently latent (compatible
 # semantics), but pin the contract so the next refactor doesn't trip.

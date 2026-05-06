@@ -729,7 +729,12 @@ static void vand2s_RI(unsigned char * ansp, const int o,
                       int * err) {
   if (M == 1) {
     if (y[0] < 0 || y[0] > 255) {
-      memset(ansp, o == OP_NI || o == OP_NE, N);
+      // No raw equals an out-of-range scalar.
+      // OP_IN/OP_EQ: predicate is always-false, AND with 0.
+      // OP_NI/OP_NE: predicate is always-true, no-op against the running mask.
+      if (o == OP_IN || o == OP_EQ) {
+        memset(ansp, 0, N);
+      }
       return;
     }
 
@@ -798,8 +803,13 @@ static void vand2s_RD(unsigned char * ansp, const int o,
                       int nThread,
                       int * err) {
   if (M == 1) {
-    if (ISNAN(y[0]) || y[0] < 0 || y[0] > 255) {
-      memset(ansp, o == OP_NI || o == OP_NE, N);
+    if (ISNAN(y[0]) || y[0] < 0 || y[0] > 255 || y[0] != (int)y[0]) {
+      // No raw equals NaN, an out-of-range, or a non-integer scalar.
+      // OP_IN/OP_EQ: always-false → AND with 0.
+      // OP_NI/OP_NE: always-true → no-op.
+      if (o == OP_IN || o == OP_EQ) {
+        memset(ansp, 0, N);
+      }
       return;
     }
     const unsigned char y0 = y[0];
