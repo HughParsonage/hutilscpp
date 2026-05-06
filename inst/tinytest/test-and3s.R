@@ -331,13 +331,13 @@ expect_equal(and3s(ib %]between[% c(5L, 5L), ib != 0L),
 # branch in vand2s and forces a NULL return from `Cands`.
 ix_fb <- 1:nb
 ry_fb <- as.raw(rep_len(c(0L, 1L), nb))
-out_l <- suppressMessages(and3s(ix_fb == ry_fb, type = "logical"))
-expect_true(is.logical(out_l))
-out_r <- suppressMessages(and3s(ix_fb == ry_fb, type = "raw"))
-expect_true(is.raw(out_r))
-out_w <- suppressMessages(and3s(ix_fb == ry_fb, type = "which"))
-expect_true(is.integer(out_w))
-expect_equal(out_w, which(ix_fb == ry_fb))
+ref_fb <- ix_fb == ry_fb
+expect_equal(suppressMessages(and3s(ix_fb == ry_fb, type = "logical")),
+             ref_fb)
+expect_equal(suppressMessages(and3s(ix_fb == ry_fb, type = "raw")),
+             hutilscpp:::lgl2raw(ref_fb))
+expect_equal(suppressMessages(and3s(ix_fb == ry_fb, type = "which")),
+             which(ref_fb))
 
 # Regression for #38: vand2s_RI/RD M==1 must not clobber the AND-chain when
 # the scalar is out of raw range. OP_NI/OP_NE with out-of-range scalar is
@@ -383,6 +383,17 @@ expect_equal(suppressMessages(and3s(mask_raw, rr_chain > 5L)),
 expect_equal(suppressMessages(and3s(mask_raw, rr_chain > 5.5)),
              hutilscpp:::raw2lgl(mask_raw) & (as.integer(rr_chain) > 5.5))
 
+# Documented divergence from base R (see ?and3s "Note on NA / NaN"):
+# NaN comparisons evaluate to FALSE in the mask (TRUE for `!=`/`%notin%`),
+# rather than propagating NA. Pin this so future changes don't regress
+# the on-CRAN convention.
+expect_equal(and3s(rr_chain != as.raw(0), rr_chain > NaN),
+             logical(nb))
+expect_equal(and3s(rr_chain != as.raw(0), rr_chain == NaN),
+             logical(nb))
+expect_equal(and3s(rr_chain != as.raw(0), rr_chain != NaN),
+             rr_chain != as.raw(0))
+
 # Regression for #39: vand2s_RD M==1 must not truncate non-integer scalars.
 # `raw_x %in% c(5.5)` should be all FALSE; `%notin% c(5.5)` should be all TRUE.
 expect_false(any(and3s(rr_chain == as.raw(5), rr_chain %in% c(5.5))))
@@ -395,20 +406,22 @@ expect_equal(suppressMessages(and3s(rr_chain != as.raw(0), rr_chain > 5.5)),
 expect_equal(suppressMessages(and3s(rr_chain != as.raw(0), rr_chain <= 5.5)),
              (rr_chain != as.raw(0)) & (as.integer(rr_chain) <= 5.5))
 
-# Regression for #37: missing `break;` after OP_NI in vand2s_R{R,I,D} M==N
-# branch — silently fell through to OP_NE. Currently latent (compatible
-# semantics), but pin the contract so the next refactor doesn't trip.
-rr_ni  <- as.raw(rep_len(c(0L, 5L, 10L), nb))
-rr_tbl <- as.raw(c(5L, 10L))                    # M=2 != N
-i_tbl  <- as.integer(rr_tbl)
-d_tbl  <- as.numeric(rr_tbl)
-# The wrapper rewrites `%notin% short_table` via fnotinp before reaching the
-# C dispatcher, so to exercise the M==N raw fall-through we need a vector
-# call that lands directly on vand2s_R*. Equality with M==N suffices to
-# pin the dispatch invariant.
-rr_eq  <- as.raw(rep_len(c(0L, 5L), nb))
-expect_equal(and3s(rr_eq != as.raw(0), rr_eq == rr_eq),
-             (rr_eq != as.raw(0)) & (rr_eq == rr_eq))
+# Regression for #37: OP_NI in `vand2s_R{R,I,D}` M==N branches lacked a
+# `break;` and fell through to OP_NE. The fall-through happens to be
+# semantically idempotent (`x notin y[*]` implies `x != y[i]`, so the
+# extra `&=` is always with TRUE where the mask is still TRUE), so no
+# input value distinguishes pre-fix from post-fix output. These tests
+# pin the *path*: any future change to the OP_NE body that breaks the
+# implication would now surface here. The path is reachable because
+# the R wrapper preprocesses %notin% via `fnotinp` only for non-raw
+# `xx1` (R/logical3s.R:91), so raw %notin% raw lands on vand2s_RR.
+rr_x_ni <- as.raw(rep_len(c(0L, 5L, 10L), nb))
+rr_y_ni <- as.raw(rep_len(c(5L, 10L), nb))      # length == nb (M == N)
+expect_equal(and3s(rr_x_ni != as.raw(0), rr_x_ni %notin% rr_y_ni),
+             (rr_x_ni != as.raw(0)) & !(rr_x_ni %in% rr_y_ni))
+# Reverse order to verify position invariance.
+expect_equal(and3s(rr_x_ni %notin% rr_y_ni, rr_x_ni != as.raw(0)),
+             (rr_x_ni != as.raw(0)) & !(rr_x_ni %in% rr_y_ni))
 
 rr <- raw(1e5)
 expect_true(all(and3s(rr == rr)))

@@ -32,7 +32,17 @@
 #' it is considered \code{TRUE} for \code{and3s} and \code{FALSE} for \code{or3s};
 #' in other words only the results of the other expressions count towards the result.
 #'
+#' @section Note on NA / NaN:
 #'
+#' The fast path uses a two-valued mask, so an \code{NA}-valued comparison
+#' is treated as \code{FALSE} in the mask rather than propagated. The most
+#' common case is a \code{NaN} numeric scalar against a \code{raw} vector:
+#' under base R, \code{as.raw(5) > NaN} is \code{NA}; under \code{and3s}
+#' / \code{or3s} on long inputs, the corresponding mask entry is
+#' \code{FALSE} (always-true predicates such as \code{!=} / \code{\%notin\%}
+#' against \code{NaN} remain \code{TRUE}). For filter-mask use this is
+#' usually the desired behaviour; to obtain base-R semantics, evaluate
+#' the predicates separately and combine with \code{&} / \code{|}.
 #'
 NULL
 
