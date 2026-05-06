@@ -744,8 +744,18 @@ static void vand2s_RI(unsigned char * ansp, const int o,
       // No raw equals an out-of-range scalar.
       // OP_IN/OP_EQ: predicate is always-false, AND with 0.
       // OP_NI/OP_NE: predicate is always-true, no-op against the running mask.
-      if (o == OP_IN || o == OP_EQ) {
+      // Order ops are not handled in this kernel; signal err so the R
+      // wrapper falls back to base `&` rather than silently no-op'ing.
+      switch(o) {
+      case OP_IN:
+      case OP_EQ:
         memset(ansp, 0, N);
+        break;
+      case OP_NI:
+      case OP_NE:
+        break;
+      default:
+        *err = AND3_UNSUPPORTED_TYPEY;
       }
       return;
     }
@@ -819,8 +829,18 @@ static void vand2s_RD(unsigned char * ansp, const int o,
       // No raw equals NaN, an out-of-range, or a non-integer scalar.
       // OP_IN/OP_EQ: always-false → AND with 0.
       // OP_NI/OP_NE: always-true → no-op.
-      if (o == OP_IN || o == OP_EQ) {
+      // Order ops are not handled in this kernel; signal err so the R
+      // wrapper falls back to base `&` rather than silently no-op'ing.
+      switch(o) {
+      case OP_IN:
+      case OP_EQ:
         memset(ansp, 0, N);
+        break;
+      case OP_NI:
+      case OP_NE:
+        break;
+      default:
+        *err = AND3_UNSUPPORTED_TYPEY;
       }
       return;
     }

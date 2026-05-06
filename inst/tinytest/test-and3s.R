@@ -352,12 +352,30 @@ expect_equal(and3s(rr_chain == as.raw(5), rr_chain != 256L),
 # Always-false direction (OP_IN with out-of-range) should AND with 0.
 expect_false(any(and3s(rr_chain == as.raw(5), rr_chain %in% c(-1L))))
 
+# Regression for #38 (review follow-up): out-of-range raw order comparisons
+# must not silently no-op. The original out-of-range short-circuit covered
+# IN/EQ/NI/NE only; for order ops the kernel must signal err so the R
+# wrapper falls back to base `&`, matching base R semantics.
+expect_equal(suppressMessages(and3s(rr_chain != as.raw(0), rr_chain > 256L)),
+             (rr_chain != as.raw(0)) & (as.integer(rr_chain) > 256L))
+expect_equal(suppressMessages(and3s(rr_chain != as.raw(0), rr_chain > -1L)),
+             (rr_chain != as.raw(0)) & (as.integer(rr_chain) > -1L))
+expect_equal(suppressMessages(and3s(rr_chain != as.raw(0), rr_chain < -1L)),
+             (rr_chain != as.raw(0)) & (as.integer(rr_chain) < -1L))
+expect_equal(suppressMessages(and3s(rr_chain != as.raw(0), rr_chain <= 256L)),
+             (rr_chain != as.raw(0)) & (as.integer(rr_chain) <= 256L))
+
 # Regression for #39: vand2s_RD M==1 must not truncate non-integer scalars.
 # `raw_x %in% c(5.5)` should be all FALSE; `%notin% c(5.5)` should be all TRUE.
 expect_false(any(and3s(rr_chain == as.raw(5), rr_chain %in% c(5.5))))
 expect_equal(and3s(rr_chain == as.raw(5), rr_chain %notin% c(5.5)),
              rr_chain == as.raw(5))
 expect_false(any(and3s(rr_chain != as.raw(0), rr_chain == 5.5)))
+# Order ops with non-integer RHS must fall back, not no-op.
+expect_equal(suppressMessages(and3s(rr_chain != as.raw(0), rr_chain > 5.5)),
+             (rr_chain != as.raw(0)) & (as.integer(rr_chain) > 5.5))
+expect_equal(suppressMessages(and3s(rr_chain != as.raw(0), rr_chain <= 5.5)),
+             (rr_chain != as.raw(0)) & (as.integer(rr_chain) <= 5.5))
 
 # Regression for #37: missing `break;` after OP_NI in vand2s_R{R,I,D} M==N
 # branch — silently fell through to OP_NE. Currently latent (compatible
