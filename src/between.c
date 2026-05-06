@@ -101,7 +101,17 @@ void uc_betweenidd(unsigned char * ansp,
     return;
   }
   if (y0i == y1i) {
-    FORLOOP(ansp[i] = xp[i] == y0i;)
+    switch (ORAND) {
+    case ORAND_OR:
+      FORLOOP(ansp[i] |= xp[i] == y0i;)
+      break;
+    case ORAND_AND:
+      FORLOOP(ansp[i] &= xp[i] == y0i;)
+      break;
+    case ORAND_EQ:
+      FORLOOP(ansp[i] = xp[i] == y0i;)
+      break;
+    }
     return;
   }
   switch(ORAND) {

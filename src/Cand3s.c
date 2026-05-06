@@ -416,13 +416,13 @@ static void vand2s_DI(unsigned char * ansp,
     int y1 = y[1];
     switch(o) {
     case OP_BW:
-      FORLOOP(ansp[i] = x[i] >= y0 && x[i] <= y1;)
+      FORLOOP(ansp[i] &= x[i] >= y0 && x[i] <= y1;)
       return;
     case OP_BO:
-      FORLOOP(ansp[i] = x[i] > y0 && x[i] < y1;)
+      FORLOOP(ansp[i] &= x[i] > y0 && x[i] < y1;)
       return;
     case OP_BC:
-      FORLOOP(ansp[i] = x[i] <= y0 || x[i] >= y1;)
+      FORLOOP(ansp[i] &= x[i] <= y0 || x[i] >= y1;)
       return;
     }
   }
