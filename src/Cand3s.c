@@ -832,14 +832,23 @@ static void vand2s_RD(unsigned char * ansp, const int o,
                       int nThread,
                       int * err) {
   if (M == 1) {
-    // Three short-circuit shapes for the M==1 RHS:
-    //   (a) NaN or non-integer in [0, 255]: ==/!= are constant; order ops
-    //       depend on x and need fallback (raw NaN comparisons return NA
-    //       in base R, which the 2-valued mask can't represent).
-    //   (b) Out-of-range integer: every supported predicate is constant.
-    //   (c) Integer in [0, 255]: dispatch as before; order ops set *err
-    //       and rely on fallback (this kernel only implements ==/!=).
-    if (ISNAN(y[0]) || (y[0] >= 0 && y[0] <= 255 && y[0] != (int)y[0])) {
+    if (ISNAN(y[0])) {
+      // Package convention (NA -> FALSE in mask): NaN comparisons
+      // evaluate to FALSE for every op except `!=` / `%notin%` which are
+      // TRUE. Documented divergence from base R, which propagates NA.
+      // See ?and3s "Note on NA / NaN".
+      switch(o) {
+      case OP_NI:
+      case OP_NE:
+        break;
+      default:
+        memset(ansp, 0, N);
+      }
+      return;
+    }
+    if (y[0] >= 0 && y[0] <= 255 && y[0] != (int)y[0]) {
+      // Non-integer in [0, 255]: == / != are constant; order ops depend
+      // on x (raw is integer-valued) and need fallback.
       switch(o) {
       case OP_IN:
       case OP_EQ:

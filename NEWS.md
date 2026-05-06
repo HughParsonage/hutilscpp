@@ -18,6 +18,13 @@
   `vand2s_RR` / `vand2s_RI` / `vand2s_RD`. Latent (the fall-through was
   semantically idempotent), but pinned for future refactors (#37).
 
+### Documentation
+
+- `?and3s` / `?or3s` now document the package's two-valued mask
+  convention for `NA` / `NaN`-valued comparisons (treated as `FALSE`
+  in the mask, except for `!=` / `%notin%` against `NaN` which remain
+  `TRUE`). This is a divergence from base R, which propagates `NA`.
+
 ## hutilscpp 0.10.11
 
 ### Bug fixes
