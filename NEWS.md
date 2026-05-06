@@ -1,3 +1,23 @@
+## hutilscpp 0.10.12
+
+### Bug fixes
+
+- `vand2s_II` M==2 fast path now handles `y0 == y1` for all three between
+  operators. Previously only `%between%` was handled; `%(between)%` and
+  `%]between[%` fell through to the general `y0 < y1` code, which gave
+  wrong answers due to unsigned wrap-around in `betweeniiuu(x, y0+1, y0-1)`
+  (#47).
+- `and3s(...)` now honours `type = "raw"` / `type = "which"` when the
+  C dispatcher returns NULL and execution falls back to base `&`.
+  Previously an inner `return()` short-circuited the type conversion (#40).
+- `vand2s_RI`/`vand2s_RD` no longer overwrite the running AND-chain mask
+  when `%notin%` / `!=` is called against a scalar that is out of raw
+  range (or, for `RD`, a non-integer or NaN). Always-true predicates are
+  now correctly a no-op (#38, #39).
+- Add missing `break;` after `OP_NI` in the M==N branches of
+  `vand2s_RR` / `vand2s_RI` / `vand2s_RD`. Latent (the fall-through was
+  semantically idempotent), but pinned for future refactors (#37).
+
 ## hutilscpp 0.10.11
 
 ### Bug fixes
