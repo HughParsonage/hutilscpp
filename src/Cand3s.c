@@ -694,6 +694,7 @@ static void vand2s_RR(unsigned char * ansp, const int o,
           }
         }
       })
+      break;
     case OP_NE:
       FORLOOP({ansp[i] &= x[i] != y[i];})
       break;
@@ -763,6 +764,7 @@ static void vand2s_RI(unsigned char * ansp, const int o,
           }
         }
       })
+      break;
     case OP_NE:
       FORLOOP({ansp[i] &= x[i] != y[i];})
       break;
@@ -831,6 +833,7 @@ static void vand2s_RD(unsigned char * ansp, const int o,
           }
         }
       })
+      break;
     case OP_NE:
       FORLOOP({ansp[i] &= x[i] != y[i];})
       break;
