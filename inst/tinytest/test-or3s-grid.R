@@ -140,7 +140,7 @@ g_(or3s(rx != FALSE),               rx != FALSE)
 
 # Precomputed raw mask reused as exprB (NIL yy2; unary raw-mask path).
 # Without the unary kernel route the wrapper falls back and re-evaluates
-# the first predicate — bad for non-deterministic exprA.
+# the first predicate -- bad for non-deterministic exprA.
 mask_raw_or <- or3s(rx > as.raw(100), type = "raw")
 mask_lgl_or <- hutilscpp:::raw2lgl(mask_raw_or)
 g_(or3s(rx == as.raw(5),  mask_raw_or),

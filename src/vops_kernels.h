@@ -1,6 +1,6 @@
 // Phase-3 shared dispatch kernels for `and3s` / `or3s`.
 //
-// Parameterised on VOPS_AND or VOPS_OR — the two kernels differ only by
+// Parameterised on VOPS_AND or VOPS_OR -- the two kernels differ only by
 // their combine operator (`&=` vs `|=`) and the corresponding identity /
 // annihilator. Include this header from Cand3s.c with VOPS_AND and from
 // Cor3s.c with VOPS_OR; each translation unit gets its own file-static

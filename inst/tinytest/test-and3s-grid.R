@@ -225,7 +225,7 @@ g_(and3s(mask_raw, rx == 5.5),   mask_lgl & FALSE)
 # --- Precomputed raw mask reused as exprB (NIL yy2 path; the dispatcher
 # routes RAWSXP x with NIL y to the unary raw kernel). Without this
 # path the wrapper has to fall back to base R `&`, which re-evaluates
-# exprA — a correctness hazard for non-deterministic predicates and a
+# exprA -- a correctness hazard for non-deterministic predicates and a
 # performance regression for reusable masks.
 g_(and3s(rx >  5L,  mask_raw),       (as.integer(rx) >  5L) & mask_lgl)
 g_(and3s(rx == 5L,  mask_raw),       (as.integer(rx) == 5L) & mask_lgl)
