@@ -148,6 +148,15 @@ g_(or3s(rx == as.raw(5),  mask_raw_or),
 g_(or3s(rx == as.raw(5), !mask_raw_or),
      (rx == as.raw(5)) | (mask_raw_or == as.raw(0)))
 
+# Externally-supplied raw mask with non-{0,1} truthy bytes: entry-side
+# and dispatcher-side NIL-y handlers must agree on `!m` semantics
+# (byte == 0, not byte != 1). See test-and3s-grid for the AND analogue.
+m_ext_or <- as.raw(rep_len(c(0L, 1L, 2L, 3L), n))
+all_false <- rep_len(FALSE, n)        # bare-symbol exprA so the wrapper takes the C path
+g_(or3s(m_ext_or),                  as.integer(m_ext_or) != 0)
+g_(or3s(!m_ext_or),                 as.integer(m_ext_or) == 0)
+expect_equal(or3s(!m_ext_or), or3s(all_false, !m_ext_or))
+
 # ============================================================================
 # Section 4: structural invariants
 # ============================================================================

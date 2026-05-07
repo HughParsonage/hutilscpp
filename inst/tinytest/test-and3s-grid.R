@@ -232,6 +232,17 @@ g_(and3s(rx == 5L,  mask_raw),       (as.integer(rx) == 5L) & mask_lgl)
 g_(and3s(rx == as.raw(5), !mask_raw),
      (rx == as.raw(5)) & (mask_raw == as.raw(0)))
 
+# --- Externally-supplied raw mask containing non-{0,1} truthy bytes.
+# The dispatcher's KFN(R) and the entry NIL-y handler must agree on
+# what `!m` means: byte == 0, not byte != 1. Hutilscpps own masks are
+# always 0/1 so this never bit historically; an externally-built raw
+# mask (e.g. as.raw(c(0,1,2,3))) exposes the inconsistency.
+m_ext <- as.raw(rep_len(c(0L, 1L, 2L, 3L), n))
+all_true <- rep_len(TRUE, n)        # bare-symbol exprA so the wrapper takes the C path
+g_(and3s(m_ext),                  as.integer(m_ext) != 0)
+g_(and3s(!m_ext),                 as.integer(m_ext) == 0)
+expect_equal(and3s(!m_ext), and3s(all_true, !m_ext))           # entry == disp
+
 # ============================================================================
 # Section 4: %in% / %notin%
 # The wrapper preprocesses %in% / %notin% via finp / fnotinp before

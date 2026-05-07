@@ -43,9 +43,14 @@ SEXP Cors(SEXP oo1, SEXP xx1, SEXP yy1,
     }
       break;
     case RAWSXP: {
+      // See Cand3s.c entry: OP_NE on a raw mask must use `byte == 0`
+      // (boolean falsy) so that truthy non-{0,1} bytes (e.g. an external
+      // mask containing 2) are correctly excluded; otherwise this entry
+      // disagrees with the dispatcher's KFN(R) and `or3s(!m)` differs
+      // from `or3s(FALSE-vec, !m)`.
       const unsigned char * xx1p = RAW(xx1);
       if (o1 == OP_NE) {
-        FORLOOP(ansp[i] |= xx1p[i] != 1;)
+        FORLOOP(ansp[i] |= xx1p[i] == 0;)
       } else {
         FORLOOP(ansp[i] |= xx1p[i] != 0;)
       }

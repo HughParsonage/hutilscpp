@@ -202,9 +202,14 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
     }
       break;
     case RAWSXP: {
+      // Raw mask treated as boolean: byte == 0 is FALSE, anything else
+      // is TRUE. OP_NE (i.e. `!m`) must therefore be `byte == 0`, not
+      // `byte != 1` — the latter wrongly treats truthy bytes like 2/3
+      // as falsy and disagrees with the dispatcher's KFN(R), causing
+      // `and3s(!m)` and `and3s(TRUE-vec, !m)` to differ for the same m.
       const unsigned char * xx1p = RAW(xx1);
       if (o1 == OP_NE) {
-        FORLOOP(ansp[i] &= xx1p[i] != 1;)
+        FORLOOP(ansp[i] &= xx1p[i] == 0;)
       } else {
         FORLOOP(ansp[i] &= xx1p[i] != 0;)
       }
