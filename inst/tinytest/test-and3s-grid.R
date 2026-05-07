@@ -201,6 +201,19 @@ g_(and3s(rx != as.raw(0), rx == ry),
 g_(and3s(rx != as.raw(0), rx %notin% ry),
      (rx != as.raw(0)) & !(rx %in% ry))
 
+# --- Mismatched-length and nonnumeric RHS (Phase 3 regression: the
+# raw kernels used to over-read a shorter y for ==/!= or fall through
+# to a unary kernel for logical/character y, ignoring the comparison
+# altogether). The fast path now bails to UNSUPPORTED_TYPEY so the
+# wrapper falls back to base-R recycling/coercion semantics.
+g_(and3s(rx == as.raw(c(1, 2))),    rx == as.raw(c(1, 2)))     # M=2, N=n
+g_(and3s(rx != as.raw(c(1, 2))),    rx != as.raw(c(1, 2)))
+g_(and3s(rx == c(1L, 2L, 5L)),      rx == c(1L, 2L, 5L))       # short int y
+g_(and3s(rx == c(1, 2.5)),          rx == c(1, 2.5))           # short dbl y
+g_(and3s(rx == FALSE),              rx == FALSE)               # logical y
+g_(and3s(rx == TRUE),               rx == TRUE)
+g_(and3s(rx != FALSE),              rx != FALSE)
+
 # --- Precomputed raw mask reused as exprA ---
 mask_raw <- and3s(rx != as.raw(0), type = "raw")
 mask_lgl <- hutilscpp:::raw2lgl(mask_raw)

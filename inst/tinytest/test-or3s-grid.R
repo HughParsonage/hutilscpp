@@ -122,6 +122,22 @@ g_(or3s(ix > 99L, ix %in%    c(1L, 5L, 10L)),
 g_(or3s(ix > 99L, ix %notin% c(1L, 5L, 10L)),
      (ix > 99L) | !(ix %in%   c(1L, 5L, 10L)))
 
+# Phase 3 raw paths: or3s now reaches the RR/RI/RD kernels directly
+# (pre-Phase-3 it fell through to OR3__UNSUPPORTED_TYPEX). A few
+# regression checks for the edges that bit the kernel:
+#   1. mismatched-length raw vector compare must not over-read y;
+#   2. raw vs logical/character must not silently dispatch to a
+#      unary raw kernel that ignores y.
+rx <- as.raw(rep_len(c(0L, 1L, 5L, 100L, 200L, 255L), n))
+g_(or3s(rx == as.raw(5)),           rx == as.raw(5))
+g_(or3s(rx %in% as.raw(c(5, 100))), rx %in% as.raw(c(5, 100)))
+g_(or3s(rx == as.raw(c(1, 2))),     rx == as.raw(c(1, 2)))   # M != N
+g_(or3s(rx != as.raw(c(1, 2))),     rx != as.raw(c(1, 2)))
+g_(or3s(rx == c(1L, 2L, 5L)),       rx == c(1L, 2L, 5L))     # short int y
+g_(or3s(rx == c(1, 2.5)),           rx == c(1, 2.5))         # short dbl y
+g_(or3s(rx == FALSE),               rx == FALSE)             # logical y
+g_(or3s(rx != FALSE),               rx != FALSE)
+
 # ============================================================================
 # Section 4: structural invariants
 # ============================================================================

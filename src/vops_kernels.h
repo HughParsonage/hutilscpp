@@ -413,16 +413,6 @@ static void KFN(L)(unsigned char * ansp, const int o,
   }
 }
 
-static void KFN(R)(unsigned char * ansp, const int o,
-                   const unsigned char * x, R_xlen_t N,
-                   int nThread) {
-  if (o == OP_EQ) {
-    FORLOOP({ MASK_COMBINE(i, x[i]); });
-  } else {
-    FORLOOP({ MASK_COMBINE(i, !x[i]); });    // # nocov
-  }
-}
-
 static void KFN(RR)(unsigned char * ansp, const int o,
                     const unsigned char * x, R_xlen_t N,
                     const unsigned char * y, R_xlen_t M,
@@ -439,6 +429,9 @@ static void KFN(RR)(unsigned char * ansp, const int o,
     }
     return;
   }
+  // M != 1: OP_NI / OP_IN scan y[0..M-1] per-row so any M works.
+  // OP_NE / OP_EQ are element-wise, so they require M == N; otherwise
+  // hand off to the R fallback rather than over-read y.
   switch (o) {
   case OP_NI:
     FORLOOP({
@@ -453,9 +446,11 @@ static void KFN(RR)(unsigned char * ansp, const int o,
     });
     break;
   case OP_NE:
+    if (M != N) { *err = UNSUPPORTED_TYPEY; return; }
     FORLOOP({ MASK_COMBINE(i, x[i] != y[i]); });
     break;
   case OP_EQ:
+    if (M != N) { *err = UNSUPPORTED_TYPEY; return; }
     FORLOOP({ MASK_COMBINE(i, x[i] == y[i]); });
     break;
   case OP_IN:
@@ -512,6 +507,8 @@ static void KFN(RI)(unsigned char * ansp, const int o,
     }
     return;
   }
+  // M != 1: see KFN(RR) note. OP_NE/OP_EQ require M == N; everything
+  // else either scans (OP_NI / OP_IN) or is unsupported.
   switch (o) {
   case OP_NI:
     FORLOOP({
@@ -526,9 +523,11 @@ static void KFN(RI)(unsigned char * ansp, const int o,
     });
     break;
   case OP_NE:
+    if (M != N) { *err = UNSUPPORTED_TYPEY; return; }
     FORLOOP({ MASK_COMBINE(i, x[i] != y[i]); });
     break;
   case OP_EQ:
+    if (M != N) { *err = UNSUPPORTED_TYPEY; return; }
     FORLOOP({ MASK_COMBINE(i, x[i] == y[i]); });
     break;
   case OP_IN:
@@ -603,6 +602,7 @@ static void KFN(RD)(unsigned char * ansp, const int o,
     }
     return;
   }
+  // M != 1: see KFN(RR) note. OP_NE/OP_EQ require M == N.
   switch (o) {
   case OP_NI:
     FORLOOP({
@@ -617,9 +617,11 @@ static void KFN(RD)(unsigned char * ansp, const int o,
     });
     break;
   case OP_NE:
+    if (M != N) { *err = UNSUPPORTED_TYPEY; return; }
     FORLOOP({ MASK_COMBINE(i, x[i] != y[i]); });
     break;
   case OP_EQ:
+    if (M != N) { *err = UNSUPPORTED_TYPEY; return; }
     FORLOOP({ MASK_COMBINE(i, x[i] == y[i]); });
     break;
   case OP_IN:
@@ -753,8 +755,11 @@ static void KFN(dispatch)(unsigned char * ansp, const int o,
       KFN(RD)(ansp, o, RAW(x), N, REAL(y), M, nThread, err);
       break;
     default:
-      KFN(R)(ansp, o, RAW(x), N, nThread);
-      break;
+      // raw vs logical / character / etc.: defer to the R fallback so
+      // base R coercion / equality semantics decide. The pre-Phase-3
+      // code dispatched to a unary raw kernel here, which silently
+      // ignored y and returned the truthiness of x.
+      *err = UNSUPPORTED_TYPEY;
     }
     break;
   case STRSXP:
