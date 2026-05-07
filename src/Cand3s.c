@@ -603,15 +603,13 @@ static void vand2s_LL(unsigned char * ansp, const int o,
       } else {
         if (y[0] == 1) {
           if (y[1] == 0) {
-            FORLOOP(ansp[i] = 1;)
+            // always-TRUE predicate: no-op against AND mask
             return;
           }
           FORLOOP(ansp[i] &= x[i] == 1;)
             return;
         }
-        if (y[1] == 1) {
-          FORLOOP(ansp[i] = 1;)
-        }
+        // y[1] == 1 here is also always-TRUE: no-op
         return;
       }
       break;
@@ -1100,32 +1098,29 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
   unsigned char * ansp = RAW(ans);
   int err[1] = {0};
 
+  // Phase 2 invariant: initialise the mask once to all-TRUE, then every
+  // predicate (first or later) ANDs into it. Predicate kernels never
+  // overwrite the mask.
+  memset(ansp, 1, N);
+
   if (TYPEOF(yy1) == NILSXP) {
     switch(TYPEOF(xx1)) {
     case LGLSXP:
     {
       const int * xx1p = LOGICAL(xx1);
       if (o1 == OP_NE) {
-        FORLOOP(
-          ansp[i] = xx1p[i] != 1;
-        )
+        FORLOOP(ansp[i] &= xx1p[i] != 1;)
       } else {
-        FORLOOP(
-          ansp[i] = xx1p[i] != 0;
-        )
+        FORLOOP(ansp[i] &= xx1p[i] != 0;)
       }
     }
       break;
     case RAWSXP: {
       const unsigned char * xx1p = RAW(xx1);
       if (o1 == OP_NE) {
-        FORLOOP(
-          ansp[i] = xx1p[i] != 1;
-        )
+        FORLOOP(ansp[i] &= xx1p[i] != 1;)
       } else {
-        FORLOOP(
-          ansp[i] = xx1p[i] != 0;
-        )
+        FORLOOP(ansp[i] &= xx1p[i] != 0;)
       }
     }
       break;
@@ -1136,9 +1131,6 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
     }
     // # nocov end
   } else {
-    FORLOOP({
-      ansp[i] = 1;
-    })
     vand2s(ansp, o1, xx1, yy1, nThread, err);
   }
   if (use2) {
