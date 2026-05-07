@@ -413,6 +413,20 @@ static void KFN(L)(unsigned char * ansp, const int o,
   }
 }
 
+// Unary raw mask predicate: precomputed 0/non-zero byte vector reused as
+// `and3s(..., mask_raw)` or `or3s(..., mask_raw)`. Combine via boolean
+// truthiness rather than bitwise `&=` / `|=` so a non-{0,1} byte
+// (e.g. 5) can't leak into the result mask.
+static void KFN(R)(unsigned char * ansp, const int o,
+                   const unsigned char * x, R_xlen_t N,
+                   int nThread) {
+  if (o == OP_EQ) {
+    FORLOOP({ MASK_COMBINE(i, x[i] != 0); });
+  } else {
+    FORLOOP({ MASK_COMBINE(i, x[i] == 0); });    // # nocov
+  }
+}
+
 static void KFN(RR)(unsigned char * ansp, const int o,
                     const unsigned char * x, R_xlen_t N,
                     const unsigned char * y, R_xlen_t M,
@@ -753,6 +767,11 @@ static void KFN(dispatch)(unsigned char * ansp, const int o,
       break;
     case REALSXP:
       KFN(RD)(ansp, o, RAW(x), N, REAL(y), M, nThread, err);
+      break;
+    case NILSXP:
+      // Unary raw mask: `and3s(..., mask_raw)` / `or3s(..., mask_raw)`.
+      // The wrapper sets oo to "==" for a bare symbol, so o is OP_EQ.
+      KFN(R)(ansp, o, RAW(x), N, nThread);
       break;
     default:
       // raw vs logical / character / etc.: defer to the R fallback so
