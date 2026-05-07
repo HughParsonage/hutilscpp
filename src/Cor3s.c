@@ -200,13 +200,18 @@ static void vor2s_ID(unsigned char * ansp,
         FORLOOP(ansp[i] |= x[i] == y0;)
       }
       return;
+    // For non-integer pre_y0 in (-INT_MAX, INT_MAX), reduce to integer
+    // comparison via floor(pre_y0). Must gate on the sign of the
+    // original double, not on the truncated int (the truncated value is
+    // 0 for any pre_y0 in (-1, 1), which loses the sign).
     case OP_GE:
       switch(safety) {
       case DBL_INT:
         FORLOOP(ansp[i] |= x[i] >= y0;)
         return;
       case DBL_FRA: {
-        y0 += (y0 > 0);
+        // x >= y_frac iff x > floor(y_frac) iff x >= floor(y_frac) + 1
+        y0 += (pre_y0 > 0);
         FORLOOP(ansp[i] |= x[i] >= y0;)
       }
         return;
@@ -223,7 +228,8 @@ static void vor2s_ID(unsigned char * ansp,
         FORLOOP(ansp[i] |= x[i] > y0;)
         return;
       case DBL_FRA: {
-        y0 += (y0 > 0);
+        // x > y_frac iff x > floor(y_frac) iff x >= floor(y_frac) + 1
+        y0 += (pre_y0 > 0);
         FORLOOP(ansp[i] |= x[i] >= y0;)
       }
         return;
@@ -240,7 +246,8 @@ static void vor2s_ID(unsigned char * ansp,
         FORLOOP(ansp[i] |= x[i] <= y0;)
         return;
       case DBL_FRA: {
-        y0 -= (y0 < 0);
+        // x <= y_frac iff x <= floor(y_frac)
+        y0 -= (pre_y0 < 0);
         FORLOOP(ansp[i] |= x[i] <= y0;)
       }
         return;
@@ -257,7 +264,8 @@ static void vor2s_ID(unsigned char * ansp,
         FORLOOP(ansp[i] |= x[i] < y0;)
         return;
       case DBL_FRA: {
-        y0 -= (y0 < 0);
+        // x < y_frac iff x <= floor(y_frac)
+        y0 -= (pre_y0 < 0);
         FORLOOP(ansp[i] |= x[i] <= y0;)
       }
         return;

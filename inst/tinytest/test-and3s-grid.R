@@ -74,17 +74,28 @@ g_(and3s(ix != 0L, ix >  iy),  (ix != 0L) & (ix >  iy))
 # --- INT x DBL ---
 g_(and3s(ix != 0L, ix == 5),    (ix != 0L) & (ix == 5))
 g_(and3s(ix != 0L, ix == 5.5),  (ix != 0L) & (ix == 5.5))
-g_(and3s(ix != 0L, ix >  5.5),  (ix != 0L) & (ix >  5.5))   # OP_GT works
-g_(and3s(ix != 0L, ix >  -1.5), (ix != 0L) & (ix >  -1.5))  # OP_GT works
-# TODO(#49): the following cells are pre-existing INT x DBL M==1 bugs in
-# vand2s_ID's adjustment of y0 for non-integer scalar y. OP_LT, OP_LE,
-# and OP_GE silently give wrong answers. Uncomment once #49 lands.
-#  g_(and3s(ix != 0L, ix <  5.5),  (ix != 0L) & (ix <  5.5))
-#  g_(and3s(ix != 0L, ix <  -1.5), (ix != 0L) & (ix <  -1.5))
-#  g_(and3s(ix != 0L, ix <= 5.5),  (ix != 0L) & (ix <= 5.5))
-#  g_(and3s(ix != 0L, ix <= -1.5), (ix != 0L) & (ix <= -1.5))
-#  g_(and3s(ix != 0L, ix >= 5.5),  (ix != 0L) & (ix >= 5.5))
-#  g_(and3s(ix != 0L, ix >= -1.5), (ix != 0L) & (ix >= -1.5))
+g_(and3s(ix != 0L, ix >  5.5),  (ix != 0L) & (ix >  5.5))
+g_(and3s(ix != 0L, ix >  -1.5), (ix != 0L) & (ix >  -1.5))
+# Non-integer scalar y on order ops -- the #49 fix. The C kernel reduces
+# `x op y_frac` to an integer comparison via floor(y_frac). Sweep both
+# signs of y to lock down the per-op floor adjustment.
+g_(and3s(ix != 0L, ix <  5.5),  (ix != 0L) & (ix <  5.5))
+g_(and3s(ix != 0L, ix <  -1.5), (ix != 0L) & (ix <  -1.5))
+g_(and3s(ix != 0L, ix <= 5.5),  (ix != 0L) & (ix <= 5.5))
+g_(and3s(ix != 0L, ix <= -1.5), (ix != 0L) & (ix <= -1.5))
+g_(and3s(ix != 0L, ix >= 5.5),  (ix != 0L) & (ix >= 5.5))
+g_(and3s(ix != 0L, ix >= -1.5), (ix != 0L) & (ix >= -1.5))
+# Subunit fractions (|y_frac| < 1) -- the corner where trunc-toward-zero
+# is 0 and naive sign-of-trunc gating loses the sign of pre_y0.
+ix2 <- rep_len(c(-2L, -1L, 0L, 1L, 2L), n)
+g_(and3s(ix2 != 999L, ix2 <   0.5), (ix2 != 999L) & (ix2 <   0.5))
+g_(and3s(ix2 != 999L, ix2 <  -0.5), (ix2 != 999L) & (ix2 <  -0.5))
+g_(and3s(ix2 != 999L, ix2 <=  0.5), (ix2 != 999L) & (ix2 <=  0.5))
+g_(and3s(ix2 != 999L, ix2 <= -0.5), (ix2 != 999L) & (ix2 <= -0.5))
+g_(and3s(ix2 != 999L, ix2 >   0.5), (ix2 != 999L) & (ix2 >   0.5))
+g_(and3s(ix2 != 999L, ix2 >  -0.5), (ix2 != 999L) & (ix2 >  -0.5))
+g_(and3s(ix2 != 999L, ix2 >=  0.5), (ix2 != 999L) & (ix2 >=  0.5))
+g_(and3s(ix2 != 999L, ix2 >= -0.5), (ix2 != 999L) & (ix2 >= -0.5))
 # Out-of-int-range double scalars (these go through a different branch
 # in vand2s_ID with INT_MIN/INT_MAX clamping; not affected by #49).
 g_(and3s(ix != 0L, ix <  1e10),  (ix != 0L) & (ix <  1e10))

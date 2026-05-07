@@ -369,8 +369,12 @@ static void vand2s_ID(unsigned char * ansp,
         if (pre_y0 <= -2147483647) {
           return; // always true
         }
-        y0 = (int)pre_y0;
-        y0 -= (pre_y0 < 0);  // if negative wil be truncated towards zero
+        // pre_y0 is non-integer in (-INT_MAX, INT_MAX). For integer x:
+        //   x >  y_frac  iff  x >  floor(y_frac)
+        //   x >= y_frac  iff  x >  floor(y_frac)  iff  x >= floor(y_frac) + 1
+        // floor for non-integer = trunc-toward-zero - (negative ? 1 : 0)
+        int floor_y = (int)pre_y0 - (pre_y0 < 0);
+        y0 = (o == OP_GE) ? floor_y + 1 : floor_y;
       } else {
         if (safety == 2) {
           memset(ansp, 0, N);
@@ -388,8 +392,10 @@ static void vand2s_ID(unsigned char * ansp,
         if (pre_y0 >= 2147483647) {
           return;
         }
-        y0 = (int)pre_y0;
-        y0 += (y0 < 0);
+        //   x <  y_frac  iff  x <= floor(y_frac)  iff  x < floor(y_frac) + 1
+        //   x <= y_frac  iff  x <= floor(y_frac)
+        int floor_y = (int)pre_y0 - (pre_y0 < 0);
+        y0 = (o == OP_LT) ? floor_y + 1 : floor_y;
       }
       break;
     }

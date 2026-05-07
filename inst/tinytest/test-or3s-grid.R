@@ -57,6 +57,25 @@ g_(or3s(ix > 99L, ix <  5.5),  (ix > 99L) | (ix <  5.5))
 g_(or3s(ix > 99L, ix >  5.5),  (ix > 99L) | (ix >  5.5))
 g_(or3s(ix > 99L, ix <  1e10), (ix > 99L) | (ix <  1e10))
 g_(or3s(ix > 99L, ix >  1e10), (ix > 99L) | (ix >  1e10))
+# Non-integer scalar y on order ops, both signs and the (-1,1) corner
+# (the #49 audit). The kernel reduces `x op y_frac` to integer ops via
+# floor(y_frac); the |y|<1 cells exercise the sign-loss bug where the
+# truncated value is 0.
+g_(or3s(ix > 99L, ix <= 5.5),  (ix > 99L) | (ix <= 5.5))
+g_(or3s(ix > 99L, ix >= 5.5),  (ix > 99L) | (ix >= 5.5))
+g_(or3s(ix > 99L, ix <  -1.5), (ix > 99L) | (ix <  -1.5))
+g_(or3s(ix > 99L, ix <= -1.5), (ix > 99L) | (ix <= -1.5))
+g_(or3s(ix > 99L, ix >  -1.5), (ix > 99L) | (ix >  -1.5))
+g_(or3s(ix > 99L, ix >= -1.5), (ix > 99L) | (ix >= -1.5))
+ix2 <- rep_len(c(-2L, -1L, 0L, 1L, 2L), n)
+g_(or3s(ix2 > 99L, ix2 <   0.5), (ix2 > 99L) | (ix2 <   0.5))
+g_(or3s(ix2 > 99L, ix2 <  -0.5), (ix2 > 99L) | (ix2 <  -0.5))
+g_(or3s(ix2 > 99L, ix2 <=  0.5), (ix2 > 99L) | (ix2 <=  0.5))
+g_(or3s(ix2 > 99L, ix2 <= -0.5), (ix2 > 99L) | (ix2 <= -0.5))
+g_(or3s(ix2 > 99L, ix2 >   0.5), (ix2 > 99L) | (ix2 >   0.5))
+g_(or3s(ix2 > 99L, ix2 >  -0.5), (ix2 > 99L) | (ix2 >  -0.5))
+g_(or3s(ix2 > 99L, ix2 >=  0.5), (ix2 > 99L) | (ix2 >=  0.5))
+g_(or3s(ix2 > 99L, ix2 >= -0.5), (ix2 > 99L) | (ix2 >= -0.5))
 
 # --- DBL x INT ---
 g_(or3s(dx > 99,  dx == 5L),  (dx > 99) | (dx == 5L))

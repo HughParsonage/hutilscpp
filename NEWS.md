@@ -2,6 +2,13 @@
 
 ### Bug fixes
 
+- `and3s` / `or3s` with an integer `x` and a non-integer scalar `y`
+  (e.g. `ix < 5.5`, `ix >= -1.5`) now reduce to the correct integer
+  comparison via `floor(y)`. Previously the `y0` adjustment in
+  `vand2s_ID` / `vor2s_ID` (M==1) gated on the sign of the truncated
+  int, so several `(op, sign-of-y)` combinations produced wrong masks
+  (and3s: OP_LT, OP_LE neg, OP_GE; or3s: subunit fractional `y` only).
+  Surfaced by the Phase 1 grid harness (#49).
 - `vand2s_II` M==2 fast path now handles `y0 == y1` for all three between
   operators. Previously only `%between%` was handled; `%(between)%` and
   `%]between[%` fell through to the general `y0 < y1` code, which gave
