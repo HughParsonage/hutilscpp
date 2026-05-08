@@ -128,7 +128,11 @@ between_pairs <- list(
   c( 5L, 5L),    # degenerate non-zero (#47)
   c( 1L, 10L),   # positive
   c(-5L,-1L),    # negative
-  c(10L, 5L)     # inverted
+  c(10L, 5L),    # inverted
+  c( 1L, 2L),    # adjacent: %(between)% empty, %]between[% all-true (regression)
+  c(-2L,-1L),    # adjacent negative
+  c(.Machine$integer.max - 1L, .Machine$integer.max),  # adjacent at INT_MAX
+  c(-.Machine$integer.max,    -.Machine$integer.max + 1L)  # adjacent near INT_MIN
 )
 for (ab in between_pairs) {
   a <- ab[1]; b <- ab[2]
@@ -242,6 +246,37 @@ all_true <- rep_len(TRUE, n)        # bare-symbol exprA so the wrapper takes the
 g_(and3s(m_ext),                  as.integer(m_ext) != 0)
 g_(and3s(!m_ext),                 as.integer(m_ext) == 0)
 expect_equal(and3s(!m_ext), and3s(all_true, !m_ext))           # entry == disp
+
+# --- NA_integer_ scalar against raw x. NA_INTEGER is INT_MIN, which
+# would otherwise enter the negative-scalar branch and saturate >/>=
+# to TRUE. The package's NA convention says all comparisons against
+# NA are FALSE in the mask except != / %notin% which are TRUE
+# (documented in `?and3s` "Note on NA / NaN" -- divergent from
+# na2f(base R) for !=, so reference TRUE directly here).
+g_(and3s(rx >  NA_integer_),     logical(n))            # FALSE per convention
+g_(and3s(rx >= NA_integer_),     logical(n))
+g_(and3s(rx <  NA_integer_),     logical(n))
+g_(and3s(rx == NA_integer_),     logical(n))
+g_(and3s(rx != NA_integer_),     rep_len(TRUE, n))      # TRUE per convention
+
+# --- Mismatched-length non-between RHS for non-raw kernels. The C fast
+# path can only handle M in {1, N, 2-with-between}; anything else now
+# bails to UNSUPPORTED_TYPEY and the wrapper falls back. Pre-fix the
+# kernels silently no-op'd, leaving the AND mask all-1.
+lx_short <- rep_len(c(TRUE, FALSE), n)         # local; lx in Section 7 has different shape
+g_(and3s(ix == c(2L, -1L)),             ix == c(2L, -1L))
+g_(and3s(ix == c(2.5, -1.5)),           ix == c(2.5, -1.5))
+g_(and3s(dx == c(2L, -1L)),             dx == c(2L, -1L))
+g_(and3s(dx == c(2.5, -1.5)),           dx == c(2.5, -1.5))
+g_(and3s(lx_short == c(TRUE, FALSE)),   lx_short == c(TRUE, FALSE))
+
+# --- Logical between with NA bounds: NA on a bound means open in that
+# direction (consistent with the numeric ID kernel's NaN handling).
+# data.table::between errors on logical x, so build references by hand.
+expect_equal(and3s(lx_short %between% c(FALSE, NA)),  rep_len(TRUE, n))   # [0, +Inf) covers {0,1}
+expect_equal(and3s(lx_short %between% c(TRUE,  NA)),  lx_short)            # [1, +Inf) -> truthy only
+expect_equal(and3s(lx_short %between% c(NA, FALSE)),  !lx_short)           # (-Inf, 0] -> falsy only
+expect_equal(and3s(lx_short %between% c(NA, TRUE)),   rep_len(TRUE, n))    # (-Inf, 1] covers {0,1}
 
 # ============================================================================
 # Section 4: %in% / %notin%

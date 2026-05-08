@@ -92,7 +92,11 @@ g_(or3s(dx > 99,  dx == dy),   (dx > 99) | (dx == dy))
 # ============================================================================
 
 between_pairs <- list(
-  c(-1L, 5L), c(0L, 0L), c(5L, 5L), c(1L, 10L), c(-5L, -1L), c(10L, 5L)
+  c(-1L, 5L), c(0L, 0L), c(5L, 5L), c(1L, 10L), c(-5L, -1L), c(10L, 5L),
+  c(1L, 2L),                                               # adjacent (regression)
+  c(-2L, -1L),                                             # adjacent negative
+  c(.Machine$integer.max - 1L, .Machine$integer.max),      # adjacent at INT_MAX
+  c(-.Machine$integer.max,    -.Machine$integer.max + 1L)  # adjacent near INT_MIN
 )
 for (ab in between_pairs) {
   a <- ab[1]; b <- ab[2]
@@ -156,6 +160,31 @@ all_false <- rep_len(FALSE, n)        # bare-symbol exprA so the wrapper takes t
 g_(or3s(m_ext_or),                  as.integer(m_ext_or) != 0)
 g_(or3s(!m_ext_or),                 as.integer(m_ext_or) == 0)
 expect_equal(or3s(!m_ext_or), or3s(all_false, !m_ext_or))
+
+# NA_integer_ scalar against raw x: see and3s grid for rationale. The
+# `!=` against NA returns TRUE per the package's documented NA
+# convention, divergent from na2f(base R).
+g_(or3s(rx >  NA_integer_),       logical(n))
+g_(or3s(rx >= NA_integer_),       logical(n))
+g_(or3s(rx <  NA_integer_),       logical(n))
+g_(or3s(rx == NA_integer_),       logical(n))
+g_(or3s(rx != NA_integer_),       rep_len(TRUE, n))
+
+# Mismatched-length non-between RHS: kernel must bail to fallback.
+dx_or <- as.numeric(ix)
+lx_or <- rep_len(c(TRUE, FALSE), n)
+g_(or3s(ix == c(2L, -1L)),         ix == c(2L, -1L))
+g_(or3s(ix == c(2.5, -1.5)),       ix == c(2.5, -1.5))
+g_(or3s(dx_or == c(2L, -1L)),      dx_or == c(2L, -1L))
+g_(or3s(dx_or == c(2.5, -1.5)),    dx_or == c(2.5, -1.5))
+g_(or3s(lx_or == c(TRUE, FALSE)),  lx_or == c(TRUE, FALSE))
+
+# Logical between with NA bounds: NA -> open bound, mirroring numeric.
+# data.table::between errors on logical x; hand-roll the references.
+expect_equal(or3s(lx_or %between% c(FALSE, NA)),  rep_len(TRUE, n))
+expect_equal(or3s(lx_or %between% c(TRUE,  NA)),  lx_or)
+expect_equal(or3s(lx_or %between% c(NA, FALSE)),  !lx_or)
+expect_equal(or3s(lx_or %between% c(NA, TRUE)),   rep_len(TRUE, n))
 
 # ============================================================================
 # Section 4: structural invariants

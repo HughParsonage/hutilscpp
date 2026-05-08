@@ -94,10 +94,22 @@ static void KFN(II)(unsigned char * ansp, const int o,
     }
       break;
     case OP_BO:
+      // y0 < y1 here. For adjacent integer bounds (y1 - y0 == 1) the
+      // open interval (y0, y1) contains no integers; betweeniiuu would
+      // be called with a > b and wrap into an all-true range, so
+      // short-circuit it.
+      if (((unsigned int)y1 - (unsigned int)y0) < 2u) {
+        ALWAYS_FALSE_PRED();
+      }
       // + 1u guards y0 == INT_MAX
       FORLOOP({ MASK_COMBINE(i, betweeniiuu(x[i], (unsigned int)y0 + 1u, (unsigned int)y1 - 1u)); });
       break;
     case OP_BC:
+      // Symmetric case: complement of the empty open interval is
+      // everything.
+      if (((unsigned int)y1 - (unsigned int)y0) < 2u) {
+        ALWAYS_TRUE_PRED();
+      }
       FORLOOP({ MASK_COMBINE(i, !betweeniiuu(x[i], (unsigned int)y0 + 1u, (unsigned int)y1 - 1u)); });
       break;
     }
@@ -353,14 +365,22 @@ static void KFN(LL)(unsigned char * ansp, const int o,
   }
   if (M == 2) {
     switch (o) {
-    case OP_BW:
-      // Logical x in {0,1}; [0,1] is always-true.
-      if (y[0] == 0 && y[1] == 1) {
+    case OP_BW: {
+      // Logical x in {0,1}. Treat NA bounds as open (matches the
+      // numeric ID kernel's NaN handling): NA on the lower bound means
+      // unbounded below, NA on the upper bound means unbounded above.
+      // Without this normalisation `x <= NA_LOGICAL` (== INT_MIN)
+      // is false for every logical x, so e.g. `x %between% c(F, NA)`
+      // returned all FALSE instead of all TRUE.
+      int yy0 = (y[0] == NA_LOGICAL) ? INT_MIN : y[0];
+      int yy1 = (y[1] == NA_LOGICAL) ? INT_MAX : y[1];
+      if (yy0 == 0 && yy1 == 1) {
         ALWAYS_TRUE_PRED();
       } else {
-        FORLOOP({ MASK_COMBINE(i, x[i] >= y[0] && x[i] <= y[1]); });
+        FORLOOP({ MASK_COMBINE(i, x[i] >= yy0 && x[i] <= yy1); });
         return;
       }
+    }
       // # nocov start
     case OP_WB:
       if (y[0] == 0 && y[1] == 1) {
@@ -489,6 +509,19 @@ static void KFN(RI)(unsigned char * ansp, const int o,
                     int nThread,
                     int * err) {
   if (M == 1) {
+    if (y[0] == NA_INTEGER) {
+      // NA_INTEGER == INT_MIN < 0, so it would otherwise hit the
+      // negative-scalar branch below and saturate `>` / `>=` to true,
+      // which contradicts the package's NA convention. Apply the
+      // convention directly: all comparisons against NA are FALSE in
+      // the mask, except `!=` / `%notin%` which are TRUE (mirrors the
+      // RD NaN handling).
+      switch (o) {
+      case OP_NI:
+      case OP_NE: ALWAYS_TRUE_PRED();
+      default:    ALWAYS_FALSE_PRED();
+      }
+    }
     if (y[0] < 0 || y[0] > 255) {
       // Raw x is in [0,255]; for an out-of-range scalar y every supported
       // predicate is constant.
@@ -723,10 +756,21 @@ static void KFN(dispatch)(unsigned char * ansp, const int o,
   R_xlen_t N = xlength(x);
   R_xlen_t M = xlength(y);
 
+  // The non-raw element-wise kernels handle three RHS shapes: scalar
+  // (M == 1), recycled element-wise (M == N), and the 2-element bounds
+  // forms used by between operators (M == 2 with op_xlen2(o)). Any
+  // other M silently fell through pre-fix, leaving the AND mask all-1
+  // (or the OR mask all-0) and producing wrong public results. Defer
+  // those shapes to the R fallback. Raw kernels self-validate M and
+  // are excluded.
+  const bool m_supported_nonraw =
+      M == 1 || M == N || (M == 2 && op_xlen2(o));
+
   switch (TYPEOF(x)) {
   case LGLSXP:
     switch (TYPEOF(y)) {
     case LGLSXP:
+      if (!m_supported_nonraw) { *err = UNSUPPORTED_TYPEY; break; }
       KFN(LL)(ansp, o, LOGICAL(x), N, LOGICAL(y), M, nThread);
       break;
     default:
@@ -734,6 +778,7 @@ static void KFN(dispatch)(unsigned char * ansp, const int o,
     }
     break;
   case INTSXP:
+    if (!m_supported_nonraw) { *err = UNSUPPORTED_TYPEY; break; }
     switch (TYPEOF(y)) {
     case INTSXP:
       KFN(II)(ansp, o, INTEGER(x), N, INTEGER(y), M, nThread);
@@ -746,6 +791,7 @@ static void KFN(dispatch)(unsigned char * ansp, const int o,
     }
     break;
   case REALSXP:
+    if (!m_supported_nonraw) { *err = UNSUPPORTED_TYPEY; break; }
     switch (TYPEOF(y)) {
     case INTSXP:
       KFN(DI)(ansp, o, REAL(x), N, INTEGER(y), M, nThread);
@@ -783,6 +829,8 @@ static void KFN(dispatch)(unsigned char * ansp, const int o,
     break;
   case STRSXP:
     if (TYPEOF(y) == STRSXP && (o == OP_EQ || o == OP_NE)) {
+      // KFN(SS) handles M == 1 and M == N only; other M would over-read.
+      if (M != 1 && M != N) { *err = UNSUPPORTED_TYPEY; break; }
       KFN(SS)(ansp, o, STRING_PTR_RO(x), N, STRING_PTR_RO(y), M);
     } else {
       *err = UNSUPPORTED_TYPEY;
