@@ -74,17 +74,28 @@ g_(and3s(ix != 0L, ix >  iy),  (ix != 0L) & (ix >  iy))
 # --- INT x DBL ---
 g_(and3s(ix != 0L, ix == 5),    (ix != 0L) & (ix == 5))
 g_(and3s(ix != 0L, ix == 5.5),  (ix != 0L) & (ix == 5.5))
-g_(and3s(ix != 0L, ix >  5.5),  (ix != 0L) & (ix >  5.5))   # OP_GT works
-g_(and3s(ix != 0L, ix >  -1.5), (ix != 0L) & (ix >  -1.5))  # OP_GT works
-# TODO(#49): the following cells are pre-existing INT x DBL M==1 bugs in
-# vand2s_ID's adjustment of y0 for non-integer scalar y. OP_LT, OP_LE,
-# and OP_GE silently give wrong answers. Uncomment once #49 lands.
-#  g_(and3s(ix != 0L, ix <  5.5),  (ix != 0L) & (ix <  5.5))
-#  g_(and3s(ix != 0L, ix <  -1.5), (ix != 0L) & (ix <  -1.5))
-#  g_(and3s(ix != 0L, ix <= 5.5),  (ix != 0L) & (ix <= 5.5))
-#  g_(and3s(ix != 0L, ix <= -1.5), (ix != 0L) & (ix <= -1.5))
-#  g_(and3s(ix != 0L, ix >= 5.5),  (ix != 0L) & (ix >= 5.5))
-#  g_(and3s(ix != 0L, ix >= -1.5), (ix != 0L) & (ix >= -1.5))
+g_(and3s(ix != 0L, ix >  5.5),  (ix != 0L) & (ix >  5.5))
+g_(and3s(ix != 0L, ix >  -1.5), (ix != 0L) & (ix >  -1.5))
+# Non-integer scalar y on order ops -- the #49 fix. The C kernel reduces
+# `x op y_frac` to an integer comparison via floor(y_frac). Sweep both
+# signs of y to lock down the per-op floor adjustment.
+g_(and3s(ix != 0L, ix <  5.5),  (ix != 0L) & (ix <  5.5))
+g_(and3s(ix != 0L, ix <  -1.5), (ix != 0L) & (ix <  -1.5))
+g_(and3s(ix != 0L, ix <= 5.5),  (ix != 0L) & (ix <= 5.5))
+g_(and3s(ix != 0L, ix <= -1.5), (ix != 0L) & (ix <= -1.5))
+g_(and3s(ix != 0L, ix >= 5.5),  (ix != 0L) & (ix >= 5.5))
+g_(and3s(ix != 0L, ix >= -1.5), (ix != 0L) & (ix >= -1.5))
+# Subunit fractions (|y_frac| < 1) -- the corner where trunc-toward-zero
+# is 0 and naive sign-of-trunc gating loses the sign of pre_y0.
+ix2 <- rep_len(c(-2L, -1L, 0L, 1L, 2L), n)
+g_(and3s(ix2 != 999L, ix2 <   0.5), (ix2 != 999L) & (ix2 <   0.5))
+g_(and3s(ix2 != 999L, ix2 <  -0.5), (ix2 != 999L) & (ix2 <  -0.5))
+g_(and3s(ix2 != 999L, ix2 <=  0.5), (ix2 != 999L) & (ix2 <=  0.5))
+g_(and3s(ix2 != 999L, ix2 <= -0.5), (ix2 != 999L) & (ix2 <= -0.5))
+g_(and3s(ix2 != 999L, ix2 >   0.5), (ix2 != 999L) & (ix2 >   0.5))
+g_(and3s(ix2 != 999L, ix2 >  -0.5), (ix2 != 999L) & (ix2 >  -0.5))
+g_(and3s(ix2 != 999L, ix2 >=  0.5), (ix2 != 999L) & (ix2 >=  0.5))
+g_(and3s(ix2 != 999L, ix2 >= -0.5), (ix2 != 999L) & (ix2 >= -0.5))
 # Out-of-int-range double scalars (these go through a different branch
 # in vand2s_ID with INT_MIN/INT_MAX clamping; not affected by #49).
 g_(and3s(ix != 0L, ix <  1e10),  (ix != 0L) & (ix <  1e10))
@@ -117,7 +128,11 @@ between_pairs <- list(
   c( 5L, 5L),    # degenerate non-zero (#47)
   c( 1L, 10L),   # positive
   c(-5L,-1L),    # negative
-  c(10L, 5L)     # inverted
+  c(10L, 5L),    # inverted
+  c( 1L, 2L),    # adjacent: %(between)% empty, %]between[% all-true (regression)
+  c(-2L,-1L),    # adjacent negative
+  c(.Machine$integer.max - 1L, .Machine$integer.max),  # adjacent at INT_MAX
+  c(-.Machine$integer.max,    -.Machine$integer.max + 1L)  # adjacent near INT_MIN
 )
 for (ab in between_pairs) {
   a <- ab[1]; b <- ab[2]
@@ -190,6 +205,19 @@ g_(and3s(rx != as.raw(0), rx == ry),
 g_(and3s(rx != as.raw(0), rx %notin% ry),
      (rx != as.raw(0)) & !(rx %in% ry))
 
+# --- Mismatched-length and nonnumeric RHS (Phase 3 regression: the
+# raw kernels used to over-read a shorter y for ==/!= or fall through
+# to a unary kernel for logical/character y, ignoring the comparison
+# altogether). The fast path now bails to UNSUPPORTED_TYPEY so the
+# wrapper falls back to base-R recycling/coercion semantics.
+g_(and3s(rx == as.raw(c(1, 2))),    rx == as.raw(c(1, 2)))     # M=2, N=n
+g_(and3s(rx != as.raw(c(1, 2))),    rx != as.raw(c(1, 2)))
+g_(and3s(rx == c(1L, 2L, 5L)),      rx == c(1L, 2L, 5L))       # short int y
+g_(and3s(rx == c(1, 2.5)),          rx == c(1, 2.5))           # short dbl y
+g_(and3s(rx == FALSE),              rx == FALSE)               # logical y
+g_(and3s(rx == TRUE),               rx == TRUE)
+g_(and3s(rx != FALSE),              rx != FALSE)
+
 # --- Precomputed raw mask reused as exprA ---
 mask_raw <- and3s(rx != as.raw(0), type = "raw")
 mask_lgl <- hutilscpp:::raw2lgl(mask_raw)
@@ -197,6 +225,58 @@ g_(and3s(mask_raw, rx >  5L),    mask_lgl & (as.integer(rx) >  5L))
 g_(and3s(mask_raw, rx >  256L),  mask_lgl & FALSE)
 g_(and3s(mask_raw, rx %in% 5L),  mask_lgl & (as.integer(rx) %in% 5L))
 g_(and3s(mask_raw, rx == 5.5),   mask_lgl & FALSE)
+
+# --- Precomputed raw mask reused as exprB (NIL yy2 path; the dispatcher
+# routes RAWSXP x with NIL y to the unary raw kernel). Without this
+# path the wrapper has to fall back to base R `&`, which re-evaluates
+# exprA -- a correctness hazard for non-deterministic predicates and a
+# performance regression for reusable masks.
+g_(and3s(rx >  5L,  mask_raw),       (as.integer(rx) >  5L) & mask_lgl)
+g_(and3s(rx == 5L,  mask_raw),       (as.integer(rx) == 5L) & mask_lgl)
+g_(and3s(rx == as.raw(5), !mask_raw),
+     (rx == as.raw(5)) & (mask_raw == as.raw(0)))
+
+# --- Externally-supplied raw mask containing non-{0,1} truthy bytes.
+# The dispatcher's KFN(R) and the entry NIL-y handler must agree on
+# what `!m` means: byte == 0, not byte != 1. Hutilscpps own masks are
+# always 0/1 so this never bit historically; an externally-built raw
+# mask (e.g. as.raw(c(0,1,2,3))) exposes the inconsistency.
+m_ext <- as.raw(rep_len(c(0L, 1L, 2L, 3L), n))
+all_true <- rep_len(TRUE, n)        # bare-symbol exprA so the wrapper takes the C path
+g_(and3s(m_ext),                  as.integer(m_ext) != 0)
+g_(and3s(!m_ext),                 as.integer(m_ext) == 0)
+expect_equal(and3s(!m_ext), and3s(all_true, !m_ext))           # entry == disp
+
+# --- NA_integer_ scalar against raw x. NA_INTEGER is INT_MIN, which
+# would otherwise enter the negative-scalar branch and saturate >/>=
+# to TRUE. The package's NA convention says all comparisons against
+# NA are FALSE in the mask except != / %notin% which are TRUE
+# (documented in `?and3s` "Note on NA / NaN" -- divergent from
+# na2f(base R) for !=, so reference TRUE directly here).
+g_(and3s(rx >  NA_integer_),     logical(n))            # FALSE per convention
+g_(and3s(rx >= NA_integer_),     logical(n))
+g_(and3s(rx <  NA_integer_),     logical(n))
+g_(and3s(rx == NA_integer_),     logical(n))
+g_(and3s(rx != NA_integer_),     rep_len(TRUE, n))      # TRUE per convention
+
+# --- Mismatched-length non-between RHS for non-raw kernels. The C fast
+# path can only handle M in {1, N, 2-with-between}; anything else now
+# bails to UNSUPPORTED_TYPEY and the wrapper falls back. Pre-fix the
+# kernels silently no-op'd, leaving the AND mask all-1.
+lx_short <- rep_len(c(TRUE, FALSE), n)         # local; lx in Section 7 has different shape
+g_(and3s(ix == c(2L, -1L)),             ix == c(2L, -1L))
+g_(and3s(ix == c(2.5, -1.5)),           ix == c(2.5, -1.5))
+g_(and3s(dx == c(2L, -1L)),             dx == c(2L, -1L))
+g_(and3s(dx == c(2.5, -1.5)),           dx == c(2.5, -1.5))
+g_(and3s(lx_short == c(TRUE, FALSE)),   lx_short == c(TRUE, FALSE))
+
+# --- Logical between with NA bounds: NA on a bound means open in that
+# direction (consistent with the numeric ID kernel's NaN handling).
+# data.table::between errors on logical x, so build references by hand.
+expect_equal(and3s(lx_short %between% c(FALSE, NA)),  rep_len(TRUE, n))   # [0, +Inf) covers {0,1}
+expect_equal(and3s(lx_short %between% c(TRUE,  NA)),  lx_short)            # [1, +Inf) -> truthy only
+expect_equal(and3s(lx_short %between% c(NA, FALSE)),  !lx_short)           # (-Inf, 0] -> falsy only
+expect_equal(and3s(lx_short %between% c(NA, TRUE)),   rep_len(TRUE, n))    # (-Inf, 1] covers {0,1}
 
 # ============================================================================
 # Section 4: %in% / %notin%

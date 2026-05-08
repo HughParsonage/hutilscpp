@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // empty' | { read -r f; [ -z \"$f\" ] && exit 0; [ ! -f \"$f\" ] && exit 0; case \"$f\" in *.c|*.h|*.R|*.r|*.Rd|*.md|*.Rmd|*.yaml|*.yml|*.tex) ;; *) exit 0 ;; esac; bad=$(LC_ALL=C grep -nP '[^\\x00-\\x7F]' \"$f\" 2>/dev/null); if [ -n \"$bad\" ]; then printf 'Non-ASCII bytes found in %s:\\n%s\\nReplace with ASCII (em-dash -> --, arrow -> ->, ellipsis -> ..., curly quotes -> straight, etc.) and retry.\\n' \"$f\" \"$bad\" >&2; exit 2; fi; }"
+          }
+        ]
+      }
+    ]
+  }
+}

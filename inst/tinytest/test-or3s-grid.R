@@ -57,6 +57,25 @@ g_(or3s(ix > 99L, ix <  5.5),  (ix > 99L) | (ix <  5.5))
 g_(or3s(ix > 99L, ix >  5.5),  (ix > 99L) | (ix >  5.5))
 g_(or3s(ix > 99L, ix <  1e10), (ix > 99L) | (ix <  1e10))
 g_(or3s(ix > 99L, ix >  1e10), (ix > 99L) | (ix >  1e10))
+# Non-integer scalar y on order ops, both signs and the (-1,1) corner
+# (the #49 audit). The kernel reduces `x op y_frac` to integer ops via
+# floor(y_frac); the |y|<1 cells exercise the sign-loss bug where the
+# truncated value is 0.
+g_(or3s(ix > 99L, ix <= 5.5),  (ix > 99L) | (ix <= 5.5))
+g_(or3s(ix > 99L, ix >= 5.5),  (ix > 99L) | (ix >= 5.5))
+g_(or3s(ix > 99L, ix <  -1.5), (ix > 99L) | (ix <  -1.5))
+g_(or3s(ix > 99L, ix <= -1.5), (ix > 99L) | (ix <= -1.5))
+g_(or3s(ix > 99L, ix >  -1.5), (ix > 99L) | (ix >  -1.5))
+g_(or3s(ix > 99L, ix >= -1.5), (ix > 99L) | (ix >= -1.5))
+ix2 <- rep_len(c(-2L, -1L, 0L, 1L, 2L), n)
+g_(or3s(ix2 > 99L, ix2 <   0.5), (ix2 > 99L) | (ix2 <   0.5))
+g_(or3s(ix2 > 99L, ix2 <  -0.5), (ix2 > 99L) | (ix2 <  -0.5))
+g_(or3s(ix2 > 99L, ix2 <=  0.5), (ix2 > 99L) | (ix2 <=  0.5))
+g_(or3s(ix2 > 99L, ix2 <= -0.5), (ix2 > 99L) | (ix2 <= -0.5))
+g_(or3s(ix2 > 99L, ix2 >   0.5), (ix2 > 99L) | (ix2 >   0.5))
+g_(or3s(ix2 > 99L, ix2 >  -0.5), (ix2 > 99L) | (ix2 >  -0.5))
+g_(or3s(ix2 > 99L, ix2 >=  0.5), (ix2 > 99L) | (ix2 >=  0.5))
+g_(or3s(ix2 > 99L, ix2 >= -0.5), (ix2 > 99L) | (ix2 >= -0.5))
 
 # --- DBL x INT ---
 g_(or3s(dx > 99,  dx == 5L),  (dx > 99) | (dx == 5L))
@@ -73,7 +92,11 @@ g_(or3s(dx > 99,  dx == dy),   (dx > 99) | (dx == dy))
 # ============================================================================
 
 between_pairs <- list(
-  c(-1L, 5L), c(0L, 0L), c(5L, 5L), c(1L, 10L), c(-5L, -1L), c(10L, 5L)
+  c(-1L, 5L), c(0L, 0L), c(5L, 5L), c(1L, 10L), c(-5L, -1L), c(10L, 5L),
+  c(1L, 2L),                                               # adjacent (regression)
+  c(-2L, -1L),                                             # adjacent negative
+  c(.Machine$integer.max - 1L, .Machine$integer.max),      # adjacent at INT_MAX
+  c(-.Machine$integer.max,    -.Machine$integer.max + 1L)  # adjacent near INT_MIN
 )
 for (ab in between_pairs) {
   a <- ab[1]; b <- ab[2]
@@ -102,6 +125,74 @@ g_(or3s(ix > 99L, ix %in%    c(1L, 5L, 10L)),
      (ix > 99L) | (ix %in%    c(1L, 5L, 10L)))
 g_(or3s(ix > 99L, ix %notin% c(1L, 5L, 10L)),
      (ix > 99L) | !(ix %in%   c(1L, 5L, 10L)))
+
+# Phase 3 raw paths: or3s now reaches the RR/RI/RD kernels directly
+# (pre-Phase-3 it fell through to OR3__UNSUPPORTED_TYPEX). A few
+# regression checks for the edges that bit the kernel:
+#   1. mismatched-length raw vector compare must not over-read y;
+#   2. raw vs logical/character must not silently dispatch to a
+#      unary raw kernel that ignores y.
+rx <- as.raw(rep_len(c(0L, 1L, 5L, 100L, 200L, 255L), n))
+g_(or3s(rx == as.raw(5)),           rx == as.raw(5))
+g_(or3s(rx %in% as.raw(c(5, 100))), rx %in% as.raw(c(5, 100)))
+g_(or3s(rx == as.raw(c(1, 2))),     rx == as.raw(c(1, 2)))   # M != N
+g_(or3s(rx != as.raw(c(1, 2))),     rx != as.raw(c(1, 2)))
+g_(or3s(rx == c(1L, 2L, 5L)),       rx == c(1L, 2L, 5L))     # short int y
+g_(or3s(rx == c(1, 2.5)),           rx == c(1, 2.5))         # short dbl y
+g_(or3s(rx == FALSE),               rx == FALSE)             # logical y
+g_(or3s(rx != FALSE),               rx != FALSE)
+
+# Precomputed raw mask reused as exprB (NIL yy2; unary raw-mask path).
+# Without the unary kernel route the wrapper falls back and re-evaluates
+# the first predicate -- bad for non-deterministic exprA.
+mask_raw_or <- or3s(rx > as.raw(100), type = "raw")
+mask_lgl_or <- hutilscpp:::raw2lgl(mask_raw_or)
+g_(or3s(rx == as.raw(5),  mask_raw_or),
+     (rx == as.raw(5)) | mask_lgl_or)
+g_(or3s(rx == as.raw(5), !mask_raw_or),
+     (rx == as.raw(5)) | (mask_raw_or == as.raw(0)))
+
+# Externally-supplied raw mask with non-{0,1} truthy bytes: entry-side
+# and dispatcher-side NIL-y handlers must agree on `!m` semantics
+# (byte == 0, not byte != 1). See test-and3s-grid for the AND analogue.
+m_ext_or <- as.raw(rep_len(c(0L, 1L, 2L, 3L), n))
+all_false <- rep_len(FALSE, n)        # bare-symbol exprA so the wrapper takes the C path
+g_(or3s(m_ext_or),                  as.integer(m_ext_or) != 0)
+g_(or3s(!m_ext_or),                 as.integer(m_ext_or) == 0)
+expect_equal(or3s(!m_ext_or), or3s(all_false, !m_ext_or))
+
+# NA_integer_ scalar against raw x: see and3s grid for rationale. The
+# `!=` against NA returns TRUE per the package's documented NA
+# convention, divergent from na2f(base R).
+g_(or3s(rx >  NA_integer_),       logical(n))
+g_(or3s(rx >= NA_integer_),       logical(n))
+g_(or3s(rx <  NA_integer_),       logical(n))
+g_(or3s(rx == NA_integer_),       logical(n))
+g_(or3s(rx != NA_integer_),       rep_len(TRUE, n))
+
+# Mismatched-length non-between RHS: kernel must bail to fallback.
+dx_or <- as.numeric(ix)
+lx_or <- rep_len(c(TRUE, FALSE), n)
+g_(or3s(ix == c(2L, -1L)),         ix == c(2L, -1L))
+g_(or3s(ix == c(2.5, -1.5)),       ix == c(2.5, -1.5))
+g_(or3s(dx_or == c(2L, -1L)),      dx_or == c(2L, -1L))
+g_(or3s(dx_or == c(2.5, -1.5)),    dx_or == c(2.5, -1.5))
+g_(or3s(lx_or == c(TRUE, FALSE)),  lx_or == c(TRUE, FALSE))
+
+fb_ref_or <- ix == c(2L, -1L)
+expect_equal(suppressMessages(or3s(ix == c(2L, -1L), type = "raw")),
+             hutilscpp:::lgl2raw(fb_ref_or))
+expect_equal(suppressMessages(or3s(ix == c(2L, -1L), type = "which")),
+             which(fb_ref_or))
+expect_equal(suppressMessages(sum_or3s(ix == c(2L, -1L))),
+             sum(fb_ref_or))
+
+# Logical between with NA bounds: NA -> open bound, mirroring numeric.
+# data.table::between errors on logical x; hand-roll the references.
+expect_equal(or3s(lx_or %between% c(FALSE, NA)),  rep_len(TRUE, n))
+expect_equal(or3s(lx_or %between% c(TRUE,  NA)),  lx_or)
+expect_equal(or3s(lx_or %between% c(NA, FALSE)),  !lx_or)
+expect_equal(or3s(lx_or %between% c(NA, TRUE)),   rep_len(TRUE, n))
 
 # ============================================================================
 # Section 4: structural invariants
