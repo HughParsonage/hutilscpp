@@ -258,7 +258,11 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
     message("Falling back to `|`")
     args <- list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...)
     args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
-    return(Reduce("|", args))
+    ans <- Reduce("|", args)
+    return(switch(type,
+                  raw = lgl2raw(ans, nThread = nThread),
+                  logical = ans,
+                  which = which(ans)))
   }
   # nocov end
 
@@ -322,7 +326,6 @@ do_par_in <- function(x, tbl, nThread = 1L) {
   }
   x & y & .et3(...)
 }
-
 
 
 

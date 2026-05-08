@@ -179,6 +179,14 @@ g_(or3s(dx_or == c(2L, -1L)),      dx_or == c(2L, -1L))
 g_(or3s(dx_or == c(2.5, -1.5)),    dx_or == c(2.5, -1.5))
 g_(or3s(lx_or == c(TRUE, FALSE)),  lx_or == c(TRUE, FALSE))
 
+fb_ref_or <- ix == c(2L, -1L)
+expect_equal(suppressMessages(or3s(ix == c(2L, -1L), type = "raw")),
+             hutilscpp:::lgl2raw(fb_ref_or))
+expect_equal(suppressMessages(or3s(ix == c(2L, -1L), type = "which")),
+             which(fb_ref_or))
+expect_equal(suppressMessages(sum_or3s(ix == c(2L, -1L))),
+             sum(fb_ref_or))
+
 # Logical between with NA bounds: NA -> open bound, mirroring numeric.
 # data.table::between errors on logical x; hand-roll the references.
 expect_equal(or3s(lx_or %between% c(FALSE, NA)),  rep_len(TRUE, n))
