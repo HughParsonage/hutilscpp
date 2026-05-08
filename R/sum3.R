@@ -18,14 +18,16 @@
 sum_and3s <- function(exprA, exprB, exprC, ...,
                       nThread = getOption("hutilscpp.nThread", 1L),
                       .env = parent.frame()) {
+  # Each branch must include `...` so user-supplied options
+  # (na / unsupported / recycle / ...) propagate to and3s.
   if (missing(exprB) && missing(exprC)) {
-    return(sum_raw(eval.parent(substitute(and3s(exprA, nThread = nThread, type = "raw"))), nThread = nThread))
+    return(sum_raw(eval.parent(substitute(and3s(exprA, ..., nThread = nThread, type = "raw"))), nThread = nThread))
   }
   if (missing(exprC)) {
-    return(sum_raw(eval.parent(substitute(and3s(exprA, exprB, nThread = nThread, type = "raw"))), nThread = nThread))
+    return(sum_raw(eval.parent(substitute(and3s(exprA, exprB, ..., nThread = nThread, type = "raw"))), nThread = nThread))
   }
   if (missing(exprB)) {
-    return(sum_raw(eval.parent(substitute(and3s(exprA, exprC, nThread = nThread, type = "raw"))), nThread = nThread))
+    return(sum_raw(eval.parent(substitute(and3s(exprA, exprC, ..., nThread = nThread, type = "raw"))), nThread = nThread))
   }
   sum_raw(eval.parent(substitute(and3s(exprA, exprB, exprC, ..., nThread = nThread, type = "raw"))), nThread = nThread)
 }

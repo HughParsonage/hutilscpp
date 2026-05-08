@@ -1,6 +1,6 @@
 Package: hutilscpp
 Title: Miscellaneous Functions in C++
-Version: 0.10.12
+Version: 0.11.0
 Authors@R: 
     c(person(given = "Hugh",
            family = "Parsonage",
@@ -28,7 +28,7 @@ Imports:
     magrittr,
     utils
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Suggests: 
     bench,
     parallel,

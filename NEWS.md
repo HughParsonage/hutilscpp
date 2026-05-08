@@ -1,3 +1,32 @@
+## hutilscpp 0.11.0
+
+### New features
+
+- `and3s` / `or3s` (and `sum_and3s` / `sum_or3s`) gain three new
+  arguments to make the dispatch contract explicit at the R boundary:
+  `na`, `unsupported`, `recycle` (#45).
+  - `na = "false"` (default) preserves the historical two-valued mask
+    behaviour. `na = "base"` defers to base R's `&` / `|` whenever a
+    parsed predicate value contains `NA`, so `NA` propagates instead of
+    being coerced to `FALSE`.
+  - `unsupported = "fallback"` (default) silently falls back to base
+    `Reduce("&", ...)` / `Reduce("|", ...)` when the C kernel cannot
+    handle a type/op/length combination. `unsupported = "error"` raises
+    instead -- useful in tests so silent unsupported paths fail loudly.
+  - `recycle = "base"` (default) matches base R's recycling rules
+    (mismatched-length RHS goes through the fallback). `recycle =
+    "strict"` errors before the kernel is called for any RHS length not
+    in `{1, length(LHS), 2 for between}`.
+- All three arguments default to the package's prior CRAN behaviour, so
+  no existing user code is affected.
+
+### Internal
+
+- Phase 4 of the and3s/or3s refactor (epic #36). Centralises the
+  pre-dispatch length check in `.validate_predicate_length`. The
+  `unsupported` / `recycle` machinery shares the same fallback Reduce
+  path the wrapper already uses.
+
 ## hutilscpp 0.10.12
 
 ### Bug fixes

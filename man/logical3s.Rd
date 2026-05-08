@@ -11,6 +11,9 @@ and3s(
   exprB = NULL,
   exprC = NULL,
   ...,
+  na = c("false", "base"),
+  unsupported = c("fallback", "error"),
+  recycle = c("base", "strict"),
   nThread = getOption("hutilscpp.nThread", 1L),
   .parent_nframes = 1L,
   type = c("logical", "raw", "which")
@@ -21,6 +24,9 @@ or3s(
   exprB = NULL,
   exprC = NULL,
   ...,
+  na = c("false", "base"),
+  unsupported = c("fallback", "error"),
+  recycle = c("base", "strict"),
   nThread = getOption("hutilscpp.nThread", 1L),
   .parent_nframes = 1L,
   type = c("logical", "raw", "which")
@@ -31,6 +37,40 @@ or3s(
 with \code{<op>} one of the standard binary operators.
 
 Only \code{exprA} is required, all following expressions are optional.}
+
+\item{na}{\describe{
+\item{\code{"false"} (default)}{Two-valued mask: \code{NA} comparisons
+contribute \code{FALSE} to the mask (matches the package's historical
+fast-path behaviour and the \dQuote{Note on NA / NaN} below).}
+\item{\code{"base"}}{Preserve base R three-valued semantics: if any
+parsed predicate value contains \code{NA}, defer to
+\code{Reduce("&", \dots)} / \code{Reduce("|", \dots)} so \code{NA}
+propagates as in \code{&} / \code{|}. Note: only the first two
+predicates are inspected directly. NA in \code{exprC} or further
+\code{...} arguments is detected by the recursive call but its
+result is converted via \code{lgl2raw}, which loses NA. For full
+base R semantics with three or more predicates, use base
+\code{&} / \code{|} directly.}
+}}
+
+\item{unsupported}{\describe{
+\item{\code{"fallback"} (default)}{When the C kernel cannot handle a
+type/op/length combination, silently fall back to base R
+\code{Reduce("&", \dots)} / \code{Reduce("|", \dots)}. Matches the
+package's historical behaviour.}
+\item{\code{"error"}}{Raise an error instead. Useful in tests so
+silent unsupported paths fail loudly in CI.}
+}}
+
+\item{recycle}{\describe{
+\item{\code{"base"} (default)}{Match base R's recycling rules: when a
+predicate's RHS length is not in \code{\{1, length(LHS), 2 for
+between\}}, the kernel reports an unsupported type/length, and the
+\code{unsupported} setting decides what happens next.}
+\item{\code{"strict"}}{Reject any RHS length not in
+\code{\{1, length(LHS), 2 for between\}} with an error before the
+kernel is even called.}
+}}
 
 \item{nThread}{\describe{
 \item{\code{integer(1)}}{Number of threads to use.}
