@@ -7,9 +7,13 @@ if (!at_home() && !hutilscpp:::is_covr()) {
 }
 
 x <- rep_len(c(TRUE, FALSE), 1e4)
-expect_false(any(or3s(x %between% c(TRUE, FALSE))))
-expect_false(any(or3s(x %(between)% c(FALSE, TRUE))))
-expect_false(any(or3s(x %]between[% c(FALSE, TRUE))))
+expect_false(any(or3s(x %between% c(TRUE, FALSE))))   # inverted -> empty -> all-FALSE
+expect_false(any(or3s(x %(between)% c(FALSE, TRUE)))) # (0, 1) on logical x is empty
+# (Phase 2.5) `x %]between[% c(FALSE, TRUE)` is the *complement* of (0, 1)
+# which for logical x in {0, 1} is everything: all-TRUE. The pre-Phase-2.5
+# kernel returned no-op here (legacy buggy result was all-FALSE); the
+# kernel now matches R-level `%]between[%` (which returns all-TRUE).
+expect_true(all(or3s(x %]between[% c(FALSE, TRUE))))
 expect_true(all(or3s(x %between% c(FALSE, TRUE))))
 expect_equal(or3s(x %between% c(TRUE, TRUE), type = "which"), which(x))
 expect_equal(or3s(x %between% c(FALSE, FALSE), type = "which"), which(!x))

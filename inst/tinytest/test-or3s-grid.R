@@ -194,6 +194,29 @@ expect_equal(or3s(lx_or %between% c(TRUE,  NA)),  lx_or)
 expect_equal(or3s(lx_or %between% c(NA, FALSE)),  !lx_or)
 expect_equal(or3s(lx_or %between% c(NA, TRUE)),   rep_len(TRUE, n))
 
+# Phase 2.5 LL OP_BO / OP_BC must respect NA bounds and inverted ranges
+# the way R-level `%(between)%` / `%]between[%` do (see R/between.R).
+# Pre-Phase-2.5 these were unconditionally ALWAYS_FALSE_PRED /
+# ALWAYS_TRUE_PRED, ignoring the bounds.
+expect_equal(or3s(lx_or %(between)% c(NA, NA)), rep_len(TRUE, n))
+expect_equal(or3s(lx_or %]between[% c(NA, NA)), rep_len(TRUE, n))
+expect_equal(or3s(lx_or %(between)% c(FALSE, NA)),
+             lx_or %(between)% c(FALSE, NA))
+expect_equal(or3s(lx_or %(between)% c(NA, TRUE)),
+             lx_or %(between)% c(NA, TRUE))
+expect_equal(or3s(lx_or %]between[% c(NA, FALSE)),
+             lx_or %]between[% c(NA, FALSE))
+expect_equal(or3s(lx_or %]between[% c(TRUE, NA)),
+             lx_or %]between[% c(TRUE, NA))
+expect_equal(or3s(lx_or %]between[% c(TRUE, FALSE)), rep_len(FALSE, n))
+expect_equal(or3s(lx_or %(between)% c(TRUE, FALSE)), rep_len(FALSE, n))
+
+# Phase 2.5 ID kernel: c(NA, NA) double bounds for OP_BC must be all
+# TRUE (R-level `%]between[%` returns rep(TRUE, length(x))). Pre-fix
+# this bare-returned, leaving the OR mask at 0.
+expect_equal(or3s(ix %]between[% c(NA_real_, NA_real_)),  rep_len(TRUE, n))
+expect_equal(or3s(dx_or %]between[% c(NA_real_, NA_real_)), rep_len(TRUE, n))
+
 # ============================================================================
 # Section 4: structural invariants
 # ============================================================================
