@@ -88,6 +88,22 @@ expect_equal(and3s(ix_a > 0L, ix_b == 5L, na = "base"),
 expect_equal(or3s(ix_a > 0L,  ix_b == 5L, na = "base"),
              (ix_a > 0L) | (ix_b == 5L))
 
+# Three-predicate chain with NA only in the THIRD predicate. Pre-fix
+# the recursive call requested type = "raw", which dropped NA via
+# lgl2raw before .and_raw / .or_raw combined the masks. The recursive
+# call now requests type = "logical" and combines in R, preserving NA.
+nx <- rep_len(c(1L, 2L), n)
+ny <- rep_len(c(1L, 2L), n)
+nz <- rep_len(c(1L, NA_integer_), n)
+expect_equal(and3s(nx > 0L, ny > 0L, nz > 0L, na = "base"),
+             (nx > 0L) & (ny > 0L) & (nz > 0L))
+expect_equal(or3s(nx > 99L, ny > 99L, nz > 0L, na = "base"),
+             (nx > 99L) | (ny > 99L) | (nz > 0L))
+expect_equal(sum_and3s(nx > 0L, ny > 0L, nz > 0L, na = "base"),
+             sum((nx > 0L) & (ny > 0L) & (nz > 0L)))
+expect_equal(sum_or3s(nx > 99L, ny > 99L, nz > 0L, na = "base"),
+             sum((nx > 99L) | (ny > 99L) | (nz > 0L)))
+
 # Supported expressions without NA take the kernel path even under na="base".
 expect_equal(and3s(ix > 0L,  na = "base"),    ix > 0L)
 expect_equal(or3s(ix == 5L,  na = "base"),    ix == 5L)
@@ -126,6 +142,13 @@ expect_equal(or3s(short_na,  na = "base"), short_na)
 # recycle = "strict" must error even on short inputs.
 expect_error(and3s(1:10 == c(1L, 2L), recycle = "strict"), "recycle")
 expect_error(or3s(1:10  == c(1L, 2L), recycle = "strict"), "recycle")
+# unsupported = "error" must also bypass the small-vector shortcut --
+# pre-fix the shortcut only checked na and recycle, so the kernel-side
+# error path was silently skipped for short inputs.
+expect_error(and3s(1:10 == c(1L, 2L), unsupported = "error"),
+             "unsupported type/op/length")
+expect_error(or3s(1:10  == c(1L, 2L), unsupported = "error"),
+             "unsupported type/op/length")
 
 # ============================================================================
 # sum_*3s preserves NA under na = "base"

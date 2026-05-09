@@ -25,15 +25,13 @@
 #' \item{\code{"false"} (default)}{Two-valued mask: \code{NA} comparisons
 #' contribute \code{FALSE} to the mask (matches the package's historical
 #' fast-path behaviour and the \dQuote{Note on NA / NaN} below).}
-#' \item{\code{"base"}}{Preserve base R three-valued semantics: if any
-#' parsed predicate value contains \code{NA}, defer to
-#' \code{Reduce("&", \dots)} / \code{Reduce("|", \dots)} so \code{NA}
-#' propagates as in \code{&} / \code{|}. Note: only the first two
-#' predicates are inspected directly. NA in \code{exprC} or further
-#' \code{...} arguments is detected by the recursive call but its
-#' result is converted via \code{lgl2raw}, which loses NA. For full
-#' base R semantics with three or more predicates, use base
-#' \code{&} / \code{|} directly.}
+#' \item{\code{"base"}}{Preserve base R three-valued semantics:
+#' \code{NA} propagates exactly as in \code{&} / \code{|}, including
+#' across three or more predicates (the recursive call returns
+#' \code{logical} when \code{na = "base"} so the AND / OR combination
+#' in R preserves \code{NA}).  When any parsed predicate value
+#' contains \code{NA} the wrapper defers to \code{Reduce("&", \dots)}
+#' / \code{Reduce("|", \dots)} for the first two predicates as well.}
 #' }
 #'
 #' @param unsupported \describe{
@@ -129,11 +127,12 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
 
   # Small-vector shortcut: defer to base R `&` for short inputs. Only
   # safe when every Phase-4 option is at its default -- non-defaults
-  # need the strict-validation / NA-routing logic below. With na ==
+  # (na, recycle, unsupported) need the strict-validation / NA-routing
+  # / kernel-error-translation logic in the long path. With na ==
   # "false" (default, == kernel convention) we still have to coerce
   # NA -> FALSE post-Reduce so the short-vs-long boundary doesn't
   # change observable behaviour.
-  if (na == "false" && recycle == "base" &&
+  if (na == "false" && recycle == "base" && unsupported == "fallback" &&
       !is.null(xx1) && length(xx1) <= 1e3L) {
     ans <- .et3(exprA, exprB, exprC, ...)
     if (is.logical(ans) && anyNA(ans)) ans[is.na(ans)] <- FALSE
@@ -235,6 +234,22 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
                   logical = raw2lgl(ans, nThread = nThread),
                   which = which_raw(ans)))
   }
+  if (na == "base") {
+    # Preserve base R NA semantics across exprC and further `...`
+    # predicates: ask the recursive call for type = "logical" (so NA
+    # survives) and combine in R-space with `&` (NA-preserving).
+    # `.and_raw` would otherwise force lgl2raw on the recursive result,
+    # silently dropping NA -> FALSE.
+    rest <- eval.parent(substitute(and3s(exprC, ...,
+                                         na = na, unsupported = unsupported, recycle = recycle,
+                                         nThread = nThread,
+                                         type = "logical")))
+    ans_lgl <- raw2lgl(ans, nThread = nThread) & rest
+    return(switch(type,
+                  raw = lgl2raw(ans_lgl, nThread = nThread),
+                  logical = ans_lgl,
+                  which = which(ans_lgl)))
+  }
   .and_raw(ans,
            eval.parent(substitute(and3s(exprC, ...,
                                         na = na, unsupported = unsupported, recycle = recycle,
@@ -309,7 +324,7 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
   }
 
   # Small-vector shortcut: see and3s for rationale.
-  if (na == "false" && recycle == "base" &&
+  if (na == "false" && recycle == "base" && unsupported == "fallback" &&
       !is.null(xx1) && length(xx1) <= 1e3L) {
     ans <- .or3(exprA, exprB, exprC, ...)
     if (is.logical(ans) && anyNA(ans)) ans[is.na(ans)] <- FALSE
@@ -399,6 +414,20 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
                   raw = ans,
                   logical = raw2lgl(ans, nThread = nThread),
                   which = which_raw(ans)))
+  }
+  if (na == "base") {
+    # Symmetric to and3s: combine in R-space with `|` so NA from
+    # exprC / further `...` predicates propagates instead of being
+    # dropped via lgl2raw in `.or_raw`.
+    rest <- eval.parent(substitute(or3s(exprC, ...,
+                                        na = na, unsupported = unsupported, recycle = recycle,
+                                        nThread = nThread,
+                                        type = "logical")))
+    ans_lgl <- raw2lgl(ans, nThread = nThread) | rest
+    return(switch(type,
+                  raw = lgl2raw(ans_lgl, nThread = nThread),
+                  logical = ans_lgl,
+                  which = which(ans_lgl)))
   }
   .or_raw(ans,
           eval.parent(substitute(or3s(exprC, ...,

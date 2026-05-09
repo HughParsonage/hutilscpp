@@ -42,15 +42,13 @@ Only \code{exprA} is required, all following expressions are optional.}
 \item{\code{"false"} (default)}{Two-valued mask: \code{NA} comparisons
 contribute \code{FALSE} to the mask (matches the package's historical
 fast-path behaviour and the \dQuote{Note on NA / NaN} below).}
-\item{\code{"base"}}{Preserve base R three-valued semantics: if any
-parsed predicate value contains \code{NA}, defer to
-\code{Reduce("&", \dots)} / \code{Reduce("|", \dots)} so \code{NA}
-propagates as in \code{&} / \code{|}. Note: only the first two
-predicates are inspected directly. NA in \code{exprC} or further
-\code{...} arguments is detected by the recursive call but its
-result is converted via \code{lgl2raw}, which loses NA. For full
-base R semantics with three or more predicates, use base
-\code{&} / \code{|} directly.}
+\item{\code{"base"}}{Preserve base R three-valued semantics:
+\code{NA} propagates exactly as in \code{&} / \code{|}, including
+across three or more predicates (the recursive call returns
+\code{logical} when \code{na = "base"} so the AND / OR combination
+in R preserves \code{NA}).  When any parsed predicate value
+contains \code{NA} the wrapper defers to \code{Reduce("&", \dots)}
+/ \code{Reduce("|", \dots)} for the first two predicates as well.}
 }}
 
 \item{unsupported}{\describe{
