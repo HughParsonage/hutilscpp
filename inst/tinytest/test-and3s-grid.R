@@ -156,6 +156,16 @@ for (ab in between_dbl_pairs) {
        (dx != 999)  & (dx %(between)% c(a, b)))
 }
 
+# Phase 2.5 regression guard: with INIT-mode dispatch the kernel must
+# write every position itself -- the wrapper no longer memsets first.
+# All-NA double bounds for OP_BC previously bare-returned, leaving the
+# mask uninitialised in INIT mode (and producing wrong OR results
+# pre-INIT). Reference all-TRUE per R-level `%]between[%`.
+expect_equal(and3s(ix %]between[% c(NA_real_, NA_real_)), rep_len(TRUE, n))
+expect_equal(or3s( ix %]between[% c(NA_real_, NA_real_)), rep_len(TRUE, n))
+expect_equal(and3s(dx %]between[% c(NA_real_, NA_real_)), rep_len(TRUE, n))
+expect_equal(or3s( dx %]between[% c(NA_real_, NA_real_)), rep_len(TRUE, n))
+
 # ============================================================================
 # Section 3: raw type combinations (most fragile per Phase 0 review iterations)
 # ============================================================================
@@ -277,6 +287,28 @@ expect_equal(and3s(lx_short %between% c(FALSE, NA)),  rep_len(TRUE, n))   # [0, 
 expect_equal(and3s(lx_short %between% c(TRUE,  NA)),  lx_short)            # [1, +Inf) -> truthy only
 expect_equal(and3s(lx_short %between% c(NA, FALSE)),  !lx_short)           # (-Inf, 0] -> falsy only
 expect_equal(and3s(lx_short %between% c(NA, TRUE)),   rep_len(TRUE, n))    # (-Inf, 1] covers {0,1}
+
+# Phase 2.5 LL OP_BO / OP_BC must respect NA bounds and inverted ranges
+# the way R-level `%(between)%` / `%]between[%` do (see R/between.R).
+# Mirror data.table's mode (no fallback): we hand-roll the references.
+"%(between)%" <- hutilscpp:::`%(between)%`
+"%]between[%" <- hutilscpp:::`%]between[%`
+# c(NA, NA) -> all-TRUE for both BO and BC
+expect_equal(and3s(lx_short %(between)% c(NA, NA)), rep_len(TRUE, n))
+expect_equal(and3s(lx_short %]between[% c(NA, NA)), rep_len(TRUE, n))
+# Single NA bound -> open in that direction
+expect_equal(and3s(lx_short %(between)% c(FALSE, NA)),
+             lx_short %(between)% c(FALSE, NA))     # x > 0
+expect_equal(and3s(lx_short %(between)% c(NA, TRUE)),
+             lx_short %(between)% c(NA, TRUE))      # x < 1
+expect_equal(and3s(lx_short %]between[% c(NA, FALSE)),
+             lx_short %]between[% c(NA, FALSE))     # x >= 0 -> all TRUE
+expect_equal(and3s(lx_short %]between[% c(TRUE, NA)),
+             lx_short %]between[% c(TRUE, NA))      # x <= 1 -> all TRUE
+# Inverted bounds -> R-level returns rep(FALSE) for BC; BO returns
+# x > a && x < b which is empty for b < a anyway.
+expect_equal(and3s(lx_short %]between[% c(TRUE, FALSE)), rep_len(FALSE, n))
+expect_equal(and3s(lx_short %(between)% c(TRUE, FALSE)), rep_len(FALSE, n))
 
 # ============================================================================
 # Section 4: %in% / %notin%

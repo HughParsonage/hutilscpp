@@ -1,23 +1,27 @@
 // Phase-3 shared dispatch kernels for `and3s` / `or3s`.
 //
-// Parameterised on VOPS_AND or VOPS_OR -- the two kernels differ only by
-// their combine operator (`&=` vs `|=`) and the corresponding identity /
-// annihilator. Include this header from Cand3s.c with VOPS_AND and from
-// Cor3s.c with VOPS_OR; each translation unit gets its own file-static
-// copy of the kernels (vand2s_* or vor2s_*).
+// Parameterised on one of three macros, controlling how the predicate
+// result combines with the running mask:
 //
-// Macros defined here:
-//   KFN(name)           -> vand2s_<name> or vor2s_<name>
-//   MASK_COMBINE(i, e)  -> ansp[i] &= (e)  | ansp[i] |= (e)
-//   ALWAYS_TRUE_PRED()  -> AND: return; OR: memset 1 + return
-//   ALWAYS_FALSE_PRED() -> AND: memset 0 + return; OR: return
-//   UNRESOLVED(i)       -> mask still mutable (1 for AND, 0 for OR)
-//   ANNIHILATOR_VAL     -> 0 (AND) | 1 (OR)
-//   UNSUPPORTED_TYPEX/Y -> AND3_*  | OR3__*
-//   ORAND_TAG           -> ORAND_AND | ORAND_OR (passed to uc_betweenidd)
+//   VOPS_AND   ansp[i] &= (e)    accumulate AND with prior mask
+//   VOPS_OR    ansp[i] |= (e)    accumulate OR  with prior mask
+//   VOPS_INIT  ansp[i]  = (e)    direct write -- no prior mask read
+//
+// `VOPS_INIT` (Phase 2.5) lets the entry function skip the initial
+// `memset(ansp, 1/0, N)` for the FIRST predicate by handing the kernel
+// a "no prior state, write directly" mode. This recovers the pre-
+// Phase-2 memory-traffic profile (one `write` per first predicate)
+// without giving up Phase 2's mask-init-once invariant for predicates
+// 2+: those still go through `&=` / `|=`. The same .c file includes
+// this header twice -- once for AND/OR, once for INIT -- so every
+// translation unit ends up with both `vand2s_*` (or `vor2s_*`) and
+// `vinit2s_*` static kernels.
+//
+// All macros defined here are `#undef`ed at the end of the file so
+// the multi-include pattern works.
 
-#if !defined(VOPS_AND) && !defined(VOPS_OR)
-#error "vops_kernels.h requires VOPS_AND or VOPS_OR to be defined"
+#if !defined(VOPS_AND) && !defined(VOPS_OR) && !defined(VOPS_INIT)
+#error "vops_kernels.h requires VOPS_AND, VOPS_OR, or VOPS_INIT"
 #endif
 
 #ifdef VOPS_AND
@@ -30,7 +34,9 @@
 #define UNSUPPORTED_TYPEX AND3_UNSUPPORTED_TYPEX
 #define UNSUPPORTED_TYPEY AND3_UNSUPPORTED_TYPEY
 #define ORAND_TAG ORAND_AND
-#else
+#endif
+
+#ifdef VOPS_OR
 #define KFN_(name) vor2s_##name
 #define MASK_COMBINE(i, expr) (ansp[(i)] |= (expr))
 #define ALWAYS_TRUE_PRED() do { memset(ansp, 1, N); return; } while (0)
@@ -40,6 +46,26 @@
 #define UNSUPPORTED_TYPEX OR3__UNSUPPORTED_TYPEX
 #define UNSUPPORTED_TYPEY OR3__UNSUPPORTED_TYPEY
 #define ORAND_TAG ORAND_OR
+#endif
+
+#ifdef VOPS_INIT
+// INIT mode: no prior mask state. The kernel writes directly. The
+// "always-{true,false} predicate" early returns memset to that value
+// because there is no identity to default to. UNRESOLVED is always
+// TRUE because every row is fresh -- this disables the OP_NI / OP_IN
+// short-circuits that combine mode uses; the kernel still produces
+// the right answer, just without skipping pre-resolved rows. The
+// shared err-codes piggyback on the AND constants since INIT only
+// runs as the first predicate of an AND or OR call.
+#define KFN_(name) vinit2s_##name
+#define MASK_COMBINE(i, expr) (ansp[(i)] = (unsigned char)(expr))
+#define ALWAYS_TRUE_PRED() do { memset(ansp, 1, N); return; } while (0)
+#define ALWAYS_FALSE_PRED() do { memset(ansp, 0, N); return; } while (0)
+#define UNRESOLVED(i) 1
+#define ANNIHILATOR_VAL 0
+#define UNSUPPORTED_TYPEX AND3_UNSUPPORTED_TYPEX
+#define UNSUPPORTED_TYPEY AND3_UNSUPPORTED_TYPEY
+#define ORAND_TAG ORAND_EQ
 #endif
 
 #define KFN(name) KFN_(name)
@@ -149,8 +175,12 @@ static void KFN(ID)(unsigned char * ansp, const int o,
 
     if (o == OP_BC) {
       if (y0_NAN && y1_NAN) {
-        // Unusual x %between% c(NA, NA): no constraint either way.
-        return; // # nocov
+        // R-level `%]between[%` returns rep(TRUE, length(x)) for c(NA, NA).
+        // Pre-Phase-2.5 this returned silently, relying on the entry's
+        // memset(1, N) for AND -- correct for AND by accident, wrong for
+        // OR (mask stayed at 0), and uninitialised in INIT mode. Always
+        // write the mask explicitly here.
+        ALWAYS_TRUE_PRED();
       }
       if (y0_NAN) {
         FORLOOP({ MASK_COMBINE(i, x[i] >= y[1]); });
@@ -309,15 +339,34 @@ static void KFN(DD)(unsigned char * ansp, const int o,
                     const double * y, R_xlen_t M,
                     int nThread) {
   if (M == 2 && op_xlen2(o)) {
+    // Mirror the ID kernel's NaN-bound handling. NaN comparisons in C
+    // are all false, so a naive `x op NaN` FORLOOP would silently give
+    // wrong answers (e.g. all-FALSE for `x %]between[% c(NA, NA)` where
+    // R-level returns all-TRUE). Treat NaN as an open bound.
+    bool y0_NAN = ISNAN(y[0]);
+    bool y1_NAN = ISNAN(y[1]);
+    if (o == OP_BC) {
+      if (y0_NAN && y1_NAN) ALWAYS_TRUE_PRED();
+      if (y0_NAN) {
+        FORLOOP({ MASK_COMBINE(i, x[i] >= y[1]); });
+        return;
+      }
+      if (y1_NAN) {
+        FORLOOP({ MASK_COMBINE(i, x[i] <= y[0]); });
+        return;
+      }
+    }
+    double pre_y0 = y0_NAN ? R_NegInf : y[0];
+    double pre_y1 = y1_NAN ? R_PosInf : y[1];
     switch (o) {
     case OP_BW:
-      FORLOOP({ MASK_COMBINE(i, (x[i] >= y[0]) && (x[i] <= y[1])); });
+      FORLOOP({ MASK_COMBINE(i, (x[i] >= pre_y0) && (x[i] <= pre_y1)); });
       return;
     case OP_BO:
-      FORLOOP({ MASK_COMBINE(i, (x[i] > y[0]) && (x[i] < y[1])); });
+      FORLOOP({ MASK_COMBINE(i, (x[i] > pre_y0) && (x[i] < pre_y1)); });
       return;
     case OP_BC:
-      FORLOOP({ MASK_COMBINE(i, (x[i] <= y[0]) || (x[i] >= y[1])); });
+      FORLOOP({ MASK_COMBINE(i, (x[i] <= pre_y0) || (x[i] >= pre_y1)); });
       return;
     }
   }
@@ -400,14 +449,56 @@ static void KFN(LL)(unsigned char * ansp, const int o,
         }
         return;
       }
-    case OP_BO:
-    case OP_BC:
-      // Legacy: pre-Phase-3 kernels for logical x in {0,1} returned
-      // unconditionally for these ops, regardless of orientation. The
-      // call doesn't reach C in mainstream paths (BO between open and
-      // BC complement on logical are unusual), but a few coverage tests
-      // exercise it; the no-op preserves the historical contract.
+    case OP_BO: {
+      // Mirror R-level `%(between)%`:
+      //   c(NA, NA) -> rep(TRUE, length(x))
+      //   c(NA, b)  -> x < b
+      //   c(a, NA)  -> x > a
+      //   else      -> x > a && x < b   (empty if b <= a, but the
+      //                                  per-element compare gives that
+      //                                  result automatically)
+      const bool y0_NA = (y[0] == NA_LOGICAL);
+      const bool y1_NA = (y[1] == NA_LOGICAL);
+      if (y0_NA && y1_NA) ALWAYS_TRUE_PRED();
+      if (y0_NA) {
+        const int yy1 = y[1];
+        FORLOOP({ MASK_COMBINE(i, x[i] < yy1); });
+        return;
+      }
+      if (y1_NA) {
+        const int yy0 = y[0];
+        FORLOOP({ MASK_COMBINE(i, x[i] > yy0); });
+        return;
+      }
+      const int yy0 = y[0], yy1 = y[1];
+      FORLOOP({ MASK_COMBINE(i, x[i] > yy0 && x[i] < yy1); });
       return;
+    }
+    case OP_BC: {
+      // Mirror R-level `%]between[%`:
+      //   c(NA, NA) -> rep(TRUE, length(x))
+      //   c(NA, b)  -> x >= b
+      //   c(a, NA)  -> x <= a
+      //   b < a     -> rep(FALSE, length(x))
+      //   else      -> x <= a || x >= b
+      const bool y0_NA = (y[0] == NA_LOGICAL);
+      const bool y1_NA = (y[1] == NA_LOGICAL);
+      if (y0_NA && y1_NA) ALWAYS_TRUE_PRED();
+      if (y0_NA) {
+        const int yy1 = y[1];
+        FORLOOP({ MASK_COMBINE(i, x[i] >= yy1); });
+        return;
+      }
+      if (y1_NA) {
+        const int yy0 = y[0];
+        FORLOOP({ MASK_COMBINE(i, x[i] <= yy0); });
+        return;
+      }
+      const int yy0 = y[0], yy1 = y[1];
+      if (yy1 < yy0) ALWAYS_FALSE_PRED();
+      FORLOOP({ MASK_COMBINE(i, x[i] <= yy0 || x[i] >= yy1); });
+      return;
+    }
     }
     // # nocov end
   }
@@ -840,3 +931,19 @@ static void KFN(dispatch)(unsigned char * ansp, const int o,
     *err = UNSUPPORTED_TYPEX;
   }
 }
+
+// Allow the file to be re-included with a different VOPS_* tag.
+#undef KFN
+#undef KFN_
+#undef MASK_COMBINE
+#undef ALWAYS_TRUE_PRED
+#undef ALWAYS_FALSE_PRED
+#undef UNRESOLVED
+#undef ANNIHILATOR_VAL
+#undef UNSUPPORTED_TYPEX
+#undef UNSUPPORTED_TYPEY
+#undef ORAND_TAG
+#undef FORLOOP_combine_op
+#undef VOPS_AND
+#undef VOPS_OR
+#undef VOPS_INIT
