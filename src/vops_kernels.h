@@ -175,8 +175,12 @@ static void KFN(ID)(unsigned char * ansp, const int o,
 
     if (o == OP_BC) {
       if (y0_NAN && y1_NAN) {
-        // Unusual x %between% c(NA, NA): no constraint either way.
-        return; // # nocov
+        // R-level `%]between[%` returns rep(TRUE, length(x)) for c(NA, NA).
+        // Pre-Phase-2.5 this returned silently, relying on the entry's
+        // memset(1, N) for AND -- correct for AND by accident, wrong for
+        // OR (mask stayed at 0), and uninitialised in INIT mode. Always
+        // write the mask explicitly here.
+        ALWAYS_TRUE_PRED();
       }
       if (y0_NAN) {
         FORLOOP({ MASK_COMBINE(i, x[i] >= y[1]); });
@@ -335,15 +339,34 @@ static void KFN(DD)(unsigned char * ansp, const int o,
                     const double * y, R_xlen_t M,
                     int nThread) {
   if (M == 2 && op_xlen2(o)) {
+    // Mirror the ID kernel's NaN-bound handling. NaN comparisons in C
+    // are all false, so a naive `x op NaN` FORLOOP would silently give
+    // wrong answers (e.g. all-FALSE for `x %]between[% c(NA, NA)` where
+    // R-level returns all-TRUE). Treat NaN as an open bound.
+    bool y0_NAN = ISNAN(y[0]);
+    bool y1_NAN = ISNAN(y[1]);
+    if (o == OP_BC) {
+      if (y0_NAN && y1_NAN) ALWAYS_TRUE_PRED();
+      if (y0_NAN) {
+        FORLOOP({ MASK_COMBINE(i, x[i] >= y[1]); });
+        return;
+      }
+      if (y1_NAN) {
+        FORLOOP({ MASK_COMBINE(i, x[i] <= y[0]); });
+        return;
+      }
+    }
+    double pre_y0 = y0_NAN ? R_NegInf : y[0];
+    double pre_y1 = y1_NAN ? R_PosInf : y[1];
     switch (o) {
     case OP_BW:
-      FORLOOP({ MASK_COMBINE(i, (x[i] >= y[0]) && (x[i] <= y[1])); });
+      FORLOOP({ MASK_COMBINE(i, (x[i] >= pre_y0) && (x[i] <= pre_y1)); });
       return;
     case OP_BO:
-      FORLOOP({ MASK_COMBINE(i, (x[i] > y[0]) && (x[i] < y[1])); });
+      FORLOOP({ MASK_COMBINE(i, (x[i] > pre_y0) && (x[i] < pre_y1)); });
       return;
     case OP_BC:
-      FORLOOP({ MASK_COMBINE(i, (x[i] <= y[0]) || (x[i] >= y[1])); });
+      FORLOOP({ MASK_COMBINE(i, (x[i] <= pre_y0) || (x[i] >= pre_y1)); });
       return;
     }
   }
@@ -426,20 +449,56 @@ static void KFN(LL)(unsigned char * ansp, const int o,
         }
         return;
       }
-    case OP_BO:
-      // x in (a, b) is empty for logical x in {0, 1} -> always-false.
-      // Pre-Phase-2.5 the kernel returned silently here, which left the
-      // mask at whatever the entry had memset it to (1 for AND, 0 for
-      // OR). For AND that gave the wrong answer (all-TRUE instead of
-      // all-FALSE); for OR it accidentally gave the right answer. INIT
-      // mode requires every position to be written, so route through
-      // ALWAYS_FALSE_PRED -- math-correct and works in all three modes.
-      ALWAYS_FALSE_PRED();
-    case OP_BC:
-      // (x <= a) || (x >= b) is always-true for logical x in [0, 1].
-      // Symmetric to OP_BO: AND is no-op (correct), OR was wrongly a
-      // no-op (now memset to 1 -- math-correct).
-      ALWAYS_TRUE_PRED();
+    case OP_BO: {
+      // Mirror R-level `%(between)%`:
+      //   c(NA, NA) -> rep(TRUE, length(x))
+      //   c(NA, b)  -> x < b
+      //   c(a, NA)  -> x > a
+      //   else      -> x > a && x < b   (empty if b <= a, but the
+      //                                  per-element compare gives that
+      //                                  result automatically)
+      const bool y0_NA = (y[0] == NA_LOGICAL);
+      const bool y1_NA = (y[1] == NA_LOGICAL);
+      if (y0_NA && y1_NA) ALWAYS_TRUE_PRED();
+      if (y0_NA) {
+        const int yy1 = y[1];
+        FORLOOP({ MASK_COMBINE(i, x[i] < yy1); });
+        return;
+      }
+      if (y1_NA) {
+        const int yy0 = y[0];
+        FORLOOP({ MASK_COMBINE(i, x[i] > yy0); });
+        return;
+      }
+      const int yy0 = y[0], yy1 = y[1];
+      FORLOOP({ MASK_COMBINE(i, x[i] > yy0 && x[i] < yy1); });
+      return;
+    }
+    case OP_BC: {
+      // Mirror R-level `%]between[%`:
+      //   c(NA, NA) -> rep(TRUE, length(x))
+      //   c(NA, b)  -> x >= b
+      //   c(a, NA)  -> x <= a
+      //   b < a     -> rep(FALSE, length(x))
+      //   else      -> x <= a || x >= b
+      const bool y0_NA = (y[0] == NA_LOGICAL);
+      const bool y1_NA = (y[1] == NA_LOGICAL);
+      if (y0_NA && y1_NA) ALWAYS_TRUE_PRED();
+      if (y0_NA) {
+        const int yy1 = y[1];
+        FORLOOP({ MASK_COMBINE(i, x[i] >= yy1); });
+        return;
+      }
+      if (y1_NA) {
+        const int yy0 = y[0];
+        FORLOOP({ MASK_COMBINE(i, x[i] <= yy0); });
+        return;
+      }
+      const int yy0 = y[0], yy1 = y[1];
+      if (yy1 < yy0) ALWAYS_FALSE_PRED();
+      FORLOOP({ MASK_COMBINE(i, x[i] <= yy0 || x[i] >= yy1); });
+      return;
+    }
     }
     // # nocov end
   }
