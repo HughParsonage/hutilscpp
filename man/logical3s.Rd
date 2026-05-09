@@ -109,3 +109,31 @@ usually the desired behaviour; to obtain base-R semantics, evaluate
 the predicates separately and combine with \code{&} / \code{|}.
 }
 
+\section{Performance}{
+
+
+The wrapper carries a fixed R-level cost per call (substitute,
+\code{eval.parent}, option validation, \code{\dots}-forwarding) on
+the order of \emph{tens of microseconds} for \code{and3s} /
+\code{or3s} and roughly twice that for \code{sum_and3s} /
+\code{sum_or3s}. The C kernel only runs when \code{length(LHS) > 1000};
+shorter inputs take a base-R shortcut where the wrapper cost
+dominates.
+
+Rule of thumb: \code{and3s} pays for itself when the per-call work
+it saves exceeds the wrapper overhead. In practice that means
+single calls on vectors of \emph{at least a few thousand elements}
+for \code{and3s} (more for \code{sum_and3s}). On a single 1e9-row
+vector the kernel path is comfortably faster than base \code{&};
+on a vector of 100 it is several times slower.
+
+This makes the family a poor fit for the \code{j=} expression of a
+\code{data.table} \code{by=} / \code{keyby=} call when the grouping
+has high cardinality and small groups: every group calls the
+wrapper afresh, and on groups of a few rows you can spend
+minutes paying R-level overhead that base \code{sum(. & .)} would
+do in a couple of seconds. Use \code{and3s} / \code{or3s} for
+single bulk calls; for grouped reductions on small groups, prefer
+base R inside \code{j=}.
+}
+

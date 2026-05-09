@@ -125,6 +125,25 @@ expect_error(and3s(ix_na == c(2L, -1L), na = "base", recycle = "strict"),
 expect_error(or3s(ix_na  == c(2L, -1L), na = "base", recycle = "strict"),
              "recycle")
 
+# The same NA-base fallback must not bypass explicit error modes for
+# unsupported first/second predicates, or for exprC / further predicates.
+expect_error(and3s(ix == c(2L, NA_integer_), na = "base", unsupported = "error"),
+             "unsupported type/op/length")
+expect_error(or3s(ix == c(2L, NA_integer_), na = "base", unsupported = "error"),
+             "unsupported type/op/length")
+expect_error(and3s(ix_na > 0L, ix > 0L, ix == c(2L, -1L),
+                   na = "base", recycle = "strict"),
+             "recycle")
+expect_error(or3s(ix_na > 0L, ix > 0L, ix == c(2L, -1L),
+                  na = "base", recycle = "strict"),
+             "recycle")
+expect_error(and3s(ix_na > 0L, ix > 0L, ix == c(2L, -1L),
+                   na = "base", unsupported = "error"),
+             "unsupported type/op/length")
+expect_error(or3s(ix_na > 0L, ix > 0L, ix == c(2L, -1L),
+                  na = "base", unsupported = "error"),
+             "unsupported type/op/length")
+
 # ============================================================================
 # Small-vector shortcut respects the new options
 # ============================================================================

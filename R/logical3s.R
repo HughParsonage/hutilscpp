@@ -72,6 +72,32 @@
 #' usually the desired behaviour; to obtain base-R semantics, evaluate
 #' the predicates separately and combine with \code{&} / \code{|}.
 #'
+#' @section Performance:
+#'
+#' The wrapper carries a fixed R-level cost per call (substitute,
+#' \code{eval.parent}, option validation, \code{\dots}-forwarding) on
+#' the order of \emph{tens of microseconds} for \code{and3s} /
+#' \code{or3s} and roughly twice that for \code{sum_and3s} /
+#' \code{sum_or3s}. The C kernel only runs when \code{length(LHS) > 1000};
+#' shorter inputs take a base-R shortcut where the wrapper cost
+#' dominates.
+#'
+#' Rule of thumb: \code{and3s} pays for itself when the per-call work
+#' it saves exceeds the wrapper overhead. In practice that means
+#' single calls on vectors of \emph{at least a few thousand elements}
+#' for \code{and3s} (more for \code{sum_and3s}). On a single 1e9-row
+#' vector the kernel path is comfortably faster than base \code{&};
+#' on a vector of 100 it is several times slower.
+#'
+#' This makes the family a poor fit for the \code{j=} expression of a
+#' \code{data.table} \code{by=} / \code{keyby=} call when the grouping
+#' has high cardinality and small groups: every group calls the
+#' wrapper afresh, and on groups of a few rows you can spend
+#' minutes paying R-level overhead that base \code{sum(. & .)} would
+#' do in a couple of seconds. Use \code{and3s} / \code{or3s} for
+#' single bulk calls; for grouped reductions on small groups, prefer
+#' base R inside \code{j=}.
+#'
 NULL
 
 #' @rdname logical3s
@@ -184,16 +210,33 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
   # Phase 4: na = "base" semantics. The kernel uses a two-valued mask
   # (NA -> FALSE), divergent from base R `&`. If the user opts into base
   # semantics and any parsed predicate value contains NA, defer to
-  # `Reduce("&", ...)`. Only the first two predicates are inspected
-  # directly; NA in exprC / further `...` predicates is detected by the
-  # recursive call, but its result is converted via lgl2raw which loses
-  # NA. Users who need full base semantics for 3+ predicates should use
-  # base `&` directly.
+  # `Reduce("&", ...)`, but first honour explicit error modes so the
+  # fallback cannot mask unsupported or strictly invalid predicates.
   if (na == "base" &&
       (anyNA(xx1) ||
        (!is.null(yy1) && anyNA(yy1)) ||
        (!is.null(xx2) && anyNA(xx2)) ||
        (!is.null(yy2) && anyNA(yy2)))) {
+    if (unsupported == "error") {
+      probe <-
+        .Call("Cands",
+              oo1, xx1, yy1,
+              oo2, xx2, yy2,
+              nThread,
+              PACKAGE = "hutilscpp")
+      if (is.null(probe)) {
+        .stop_unsupported_logical3s("and3s", "&")
+      }
+    }
+    if ((unsupported == "error" || recycle == "strict") &&
+        (!(missing(exprC) || is.null(substitute(exprC))) || !missing(..1))) {
+      suppressMessages(eval.parent(substitute(and3s(exprC, ...,
+                                                     na = "false",
+                                                     unsupported = unsupported,
+                                                     recycle = recycle,
+                                                     nThread = nThread,
+                                                     type = "raw"))))
+    }
     args <- list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...)
     args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
     ans <- Reduce("&", args)
@@ -213,10 +256,7 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
 
   if (is.null(ans)) {
     if (unsupported == "error") {
-      stop("`and3s()` received an unsupported type/op/length combination ",
-           "and `unsupported = \"error\"` was set. Re-run with the default ",
-           "(`unsupported = \"fallback\"`) to use base R `&` instead.",
-           call. = FALSE)
+      .stop_unsupported_logical3s("and3s", "&")
     }
     message("Falling back to `&`")
     args <- list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...)
@@ -377,6 +417,26 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
        (!is.null(yy1) && anyNA(yy1)) ||
        (!is.null(xx2) && anyNA(xx2)) ||
        (!is.null(yy2) && anyNA(yy2)))) {
+    if (unsupported == "error") {
+      probe <-
+        .Call("Cors",
+              oo1, xx1, yy1,
+              oo2, xx2, yy2,
+              nThread,
+              PACKAGE = "hutilscpp")
+      if (is.null(probe)) {
+        .stop_unsupported_logical3s("or3s", "|")
+      }
+    }
+    if ((unsupported == "error" || recycle == "strict") &&
+        (!(missing(exprC) || is.null(substitute(exprC))) || !missing(..1))) {
+      suppressMessages(eval.parent(substitute(or3s(exprC, ...,
+                                                   na = "false",
+                                                   unsupported = unsupported,
+                                                   recycle = recycle,
+                                                   nThread = nThread,
+                                                   type = "raw"))))
+    }
     args <- list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...)
     args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
     ans <- Reduce("|", args)
@@ -394,10 +454,7 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
           PACKAGE = "hutilscpp")
   if (is.null(ans)) {
     if (unsupported == "error") {
-      stop("`or3s()` received an unsupported type/op/length combination ",
-           "and `unsupported = \"error\"` was set. Re-run with the default ",
-           "(`unsupported = \"fallback\"`) to use base R `|` instead.",
-           call. = FALSE)
+      .stop_unsupported_logical3s("or3s", "|")
     }
     message("Falling back to `|`")
     args <- list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...)
@@ -461,6 +518,13 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
     call. = FALSE)
 }
 
+.stop_unsupported_logical3s <- function(fname, op) {
+  stop("`", fname, "()` received an unsupported type/op/length combination ",
+       "and `unsupported = \"error\"` was set. Re-run with the default ",
+       "(`unsupported = \"fallback\"`) to use base R `", op, "` instead.",
+       call. = FALSE)
+}
+
 do_par_in <- function(x, tbl, nThread = 1L) {
   nThread <- check_omp(nThread)
   if (is.integer(x) && is.integer(tbl)) {
@@ -502,8 +566,6 @@ do_par_in <- function(x, tbl, nThread = 1L) {
   }
   x & y & .et3(...)
 }
-
-
 
 
 
