@@ -113,15 +113,6 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
     oo1 <- "=="
     xx1 <- exprA
   }
-  if (!is.null(xx1) && length(xx1) <= 1e3L) {
-    # Don't bother (or still NULL)
-    ans <- .et3(exprA, exprB, exprC, ...)
-    return(switch(type,
-                  raw = lgl2raw(ans, nThread = nThread),
-                  logical = ans,
-                  which = which(ans)))
-  }
-
   if (!missing(exprB) && !is.null(sexprB <- substitute(exprB))) {
     if (length(sexprB) == 3L) {
       oo2 <- as.character(sexprB[[1L]])
@@ -135,6 +126,23 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
       xx2 <- exprB
     }
   }
+
+  # Small-vector shortcut: defer to base R `&` for short inputs. Only
+  # safe when every Phase-4 option is at its default -- non-defaults
+  # need the strict-validation / NA-routing logic below. With na ==
+  # "false" (default, == kernel convention) we still have to coerce
+  # NA -> FALSE post-Reduce so the short-vs-long boundary doesn't
+  # change observable behaviour.
+  if (na == "false" && recycle == "base" &&
+      !is.null(xx1) && length(xx1) <= 1e3L) {
+    ans <- .et3(exprA, exprB, exprC, ...)
+    if (is.logical(ans) && anyNA(ans)) ans[is.na(ans)] <- FALSE
+    return(switch(type,
+                  raw = lgl2raw(ans, nThread = nThread),
+                  logical = ans,
+                  which = which(ans)))
+  }
+
   if (!is.raw(xx1)) {
     switch(oo1,
            "%in%" = {
@@ -162,6 +170,18 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
            })
   }
 
+  # Strict recycle validation runs BEFORE the NA-base fallback so that
+  # combining `recycle = "strict"` with `na = "base"` doesn't let an
+  # NA-containing predicate with mismatched RHS sneak past the strict
+  # check. (The whole point of `strict` is "fail loudly on bad shapes".)
+  if (recycle == "strict") {
+    N <- length(xx1)
+    .validate_predicate_length(oo1, xx1, yy1, N, "and3s")
+    if (!is.null(oo2)) {
+      .validate_predicate_length(oo2, xx2, yy2, N, "and3s")
+    }
+  }
+
   # Phase 4: na = "base" semantics. The kernel uses a two-valued mask
   # (NA -> FALSE), divergent from base R `&`. If the user opts into base
   # semantics and any parsed predicate value contains NA, defer to
@@ -182,14 +202,6 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
                   raw = lgl2raw(ans),
                   logical = ans,
                   which = which(ans)))
-  }
-
-  if (recycle == "strict") {
-    N <- length(xx1)
-    .validate_predicate_length(oo1, xx1, yy1, N, "and3s")
-    if (!is.null(oo2)) {
-      .validate_predicate_length(oo2, xx2, yy2, N, "and3s")
-    }
   }
 
   ans <-
@@ -282,15 +294,6 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
     oo1 <- "=="
     xx1 <- exprA
   }
-  if (!is.null(xx1) && length(xx1) <= 1e3L) {
-    # Don't bother (or still NULL)
-    ans <- .or3(exprA, exprB, exprC, ...)
-    return(switch(type,
-                  raw = lgl2raw(ans),
-                  logical = ans,
-                  which = which(ans)))
-  }
-
   if (!missing(exprB) && !is.null(sexprB <- substitute(exprB))) {
     if (length(sexprB) == 3L) {
       oo2 <- as.character(sexprB[[1L]])
@@ -303,6 +306,17 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
       oo2 <- "=="
       xx2 <- exprB
     }
+  }
+
+  # Small-vector shortcut: see and3s for rationale.
+  if (na == "false" && recycle == "base" &&
+      !is.null(xx1) && length(xx1) <= 1e3L) {
+    ans <- .or3(exprA, exprB, exprC, ...)
+    if (is.logical(ans) && anyNA(ans)) ans[is.na(ans)] <- FALSE
+    return(switch(type,
+                  raw = lgl2raw(ans),
+                  logical = ans,
+                  which = which(ans)))
   }
 
   switch(oo1,
@@ -331,6 +345,17 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
            })
   }
 
+  # Strict-recycle validation runs BEFORE the NA-base fallback so that
+  # combining `recycle = "strict"` with `na = "base"` doesn't let an
+  # NA-containing predicate with mismatched RHS bypass the strict check.
+  if (recycle == "strict") {
+    N <- length(xx1)
+    .validate_predicate_length(oo1, xx1, yy1, N, "or3s")
+    if (!is.null(oo2)) {
+      .validate_predicate_length(oo2, xx2, yy2, N, "or3s")
+    }
+  }
+
   # Phase 4: see and3s for rationale.
   if (na == "base" &&
       (anyNA(xx1) ||
@@ -344,14 +369,6 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
                   raw = lgl2raw(ans, nThread = nThread),
                   logical = ans,
                   which = which(ans)))
-  }
-
-  if (recycle == "strict") {
-    N <- length(xx1)
-    .validate_predicate_length(oo1, xx1, yy1, N, "or3s")
-    if (!is.null(oo2)) {
-      .validate_predicate_length(oo2, xx2, yy2, N, "or3s")
-    }
   }
 
   ans <-

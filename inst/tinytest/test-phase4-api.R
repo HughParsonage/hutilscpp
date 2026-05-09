@@ -100,4 +100,47 @@ expect_error(and3s(ix == c(2L, -1L), unsupported = "error", recycle = "strict"),
 expect_equal(and3s(ix > 0L, na = "base", recycle = "strict", unsupported = "error"),
              ix > 0L)    # all three options + supported expr -> kernel path
 
+# `recycle = "strict"` must fire even when `na = "base"` would
+# otherwise route NA-containing predicates to the base R fallback.
+# Pre-fix, the NA-base branch returned via Reduce() before the strict
+# check ran, so invalid lengths bypassed strict mode.
+expect_error(and3s(ix_na == c(2L, -1L), na = "base", recycle = "strict"),
+             "recycle")
+expect_error(or3s(ix_na  == c(2L, -1L), na = "base", recycle = "strict"),
+             "recycle")
+
+# ============================================================================
+# Small-vector shortcut respects the new options
+# ============================================================================
+# Inputs of length <= 1000 go through .et3() / .or3() (small-vector
+# fast path). Pre-fix this path bypassed na/recycle/unsupported, so
+# behaviour was input-size-dependent.
+short_na <- c(TRUE, NA, FALSE, NA)
+# na = "false" (default) must coerce NA -> FALSE just like the kernel
+# path does for long inputs.
+expect_equal(and3s(short_na, na = "false"), c(TRUE, FALSE, FALSE, FALSE))
+expect_equal(or3s(short_na,  na = "false"), c(TRUE, FALSE, FALSE, FALSE))
+# na = "base" preserves NA on short inputs too.
+expect_equal(and3s(short_na, na = "base"), short_na)
+expect_equal(or3s(short_na,  na = "base"), short_na)
+# recycle = "strict" must error even on short inputs.
+expect_error(and3s(1:10 == c(1L, 2L), recycle = "strict"), "recycle")
+expect_error(or3s(1:10  == c(1L, 2L), recycle = "strict"), "recycle")
+
+# ============================================================================
+# sum_*3s preserves NA under na = "base"
+# ============================================================================
+# Default (na = "false") drops NA -> 0 in the raw mask, so the sum
+# matches `sum(., na.rm = TRUE)`.
+expect_equal(sum_and3s(ix_na > 0L),                 sum(ix_na > 0L, na.rm = TRUE))
+expect_equal(sum_or3s( ix_na > 0L),                 sum(ix_na > 0L, na.rm = TRUE))
+# na = "base" must propagate NA into the sum -- mirrors `sum(. & .)`.
+expect_equal(sum_and3s(ix_na > 0L, na = "base"),    sum(ix_na > 0L))
+expect_equal(sum_or3s( ix_na > 0L, na = "base"),    sum(ix_na > 0L))
+# Two-predicate AND / OR also propagates.
+expect_equal(sum_and3s(ix_na > 0L, ix_b == 5L, na = "base"),
+             sum((ix_na > 0L) & (ix_b == 5L)))
+expect_equal(sum_or3s( ix_na > 0L, ix_b == 5L, na = "base"),
+             sum((ix_na > 0L) | (ix_b == 5L)))
+
 }  # end requireNamespace
