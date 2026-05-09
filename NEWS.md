@@ -1,6 +1,30 @@
 ## hutilscpp 0.10.12
 
+### Performance
+
+- The Phase 2 (#43) "every kernel uses `&=` / `|=`, mask init once"
+  invariant added a wrapper-side `memset(ansp, 1/0, N)` plus a
+  read-modify-write on the first predicate, which regressed multi-
+  threaded `and3s` / `or3s` on long inputs (~+15-20% at N >= 1e8,
+  nThread >= 4, where the package becomes memory-bandwidth bound).
+  The first predicate is now dispatched in a new INIT mode: the
+  kernel writes the predicate result directly without reading the
+  mask, and the wrapper skips the memset entirely. Predicates 2+
+  still go through the `&=` / `|=` invariant, so the position-
+  asymmetry footgun Phase 2 retired stays retired.
+
+  Benchmarked at N=1e9 against CRAN 0.10.10: `and3s(x > 5, x < 100)`
+  is -3% (nT=1) and -8.5% (nT=4); `and3s(x > 5)` is -4% / -12%; every
+  call shape tested is at-or-faster-than CRAN at both thread counts.
+
 ### Bug fixes
+
+- `or3s(x %]between[% c(F, T))` for logical `x` now returns all-TRUE
+  rather than all-FALSE. Pre-fix the kernel returned silently for the
+  legacy LL OP_BC path, leaving the OR mask at its initial all-zero
+  state -- contradicting the R-level `%]between[%` (which returns the
+  complement of the open interval, all-TRUE for logical x in {0, 1}).
+  Same path now memsets to 1, matching the R-level semantics.
 
 - `and3s` / `or3s` with an integer `x` and a non-integer scalar `y`
   (e.g. `ix < 5.5`, `ix >= -1.5`) now reduce to the correct integer

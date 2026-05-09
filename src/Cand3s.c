@@ -165,6 +165,9 @@ SEXP C_or_raw(SEXP x, SEXP y, SEXP nthreads) {
 #define VOPS_AND
 #include "vops_kernels.h"
 
+#define VOPS_INIT
+#include "vops_kernels.h"
+
 SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
            SEXP oo2, SEXP xx2, SEXP yy2,
            SEXP nthreads) {
@@ -184,10 +187,13 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
   unsigned char * ansp = RAW(ans);
   int err[1] = {0};
 
-  // Phase 2 invariant: initialise the mask once to all-TRUE, then every
-  // predicate (first or later) ANDs into it. Predicate kernels never
-  // overwrite the mask.
-  memset(ansp, 1, N);
+  // Phase 2.5: the first predicate is dispatched in INIT mode -- a
+  // direct write -- so we don't pay for the previous unconditional
+  // memset(ansp, 1, N) plus a kernel-side `&=` (read+modify+write).
+  // The second predicate then uses the existing AND combine kernel.
+  // The Phase 2 invariant survives: every COMBINE-mode kernel still
+  // does `&=` against an established mask. The first-predicate INIT
+  // path never reads the mask, so there's no asymmetry footgun.
 
   if (TYPEOF(yy1) == NILSXP) {
     switch(TYPEOF(xx1)) {
@@ -195,9 +201,9 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
     {
       const int * xx1p = LOGICAL(xx1);
       if (o1 == OP_NE) {
-        FORLOOP(ansp[i] &= xx1p[i] != 1;)
+        FORLOOP(ansp[i] = xx1p[i] != 1;)
       } else {
-        FORLOOP(ansp[i] &= xx1p[i] != 0;)
+        FORLOOP(ansp[i] = xx1p[i] != 0;)
       }
     }
       break;
@@ -209,9 +215,9 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
       // `and3s(!m)` and `and3s(TRUE-vec, !m)` to differ for the same m.
       const unsigned char * xx1p = RAW(xx1);
       if (o1 == OP_NE) {
-        FORLOOP(ansp[i] &= xx1p[i] == 0;)
+        FORLOOP(ansp[i] = xx1p[i] == 0;)
       } else {
-        FORLOOP(ansp[i] &= xx1p[i] != 0;)
+        FORLOOP(ansp[i] = xx1p[i] != 0;)
       }
     }
       break;
@@ -222,7 +228,7 @@ SEXP Cands(SEXP oo1, SEXP xx1, SEXP yy1,
     }
     // # nocov end
   } else {
-    vand2s_dispatch(ansp, o1, xx1, yy1, nThread, err);
+    vinit2s_dispatch(ansp, o1, xx1, yy1, nThread, err);
   }
   if (use2) {
     vand2s_dispatch(ansp, o2, xx2, yy2, nThread, err);

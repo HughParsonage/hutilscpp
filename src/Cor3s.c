@@ -1,10 +1,14 @@
 #include "hutilscpp.h"
 
 // Phase 3 (#44): the predicate kernels live in src/vops_kernels.h, which is
-// included once with VOPS_AND (Cand3s.c -> vand2s_*) and once with VOPS_OR
-// (this file -> vor2s_*). This file keeps the or3s entry point.
+// included once with VOPS_OR (this file -> vor2s_*), once with VOPS_AND
+// (Cand3s.c -> vand2s_*), and once with VOPS_INIT in each .c file (the
+// first-predicate direct-write fast path -- see Phase 2.5).
 
 #define VOPS_OR
+#include "vops_kernels.h"
+
+#define VOPS_INIT
 #include "vops_kernels.h"
 
 SEXP Cors(SEXP oo1, SEXP xx1, SEXP yy1,
@@ -26,19 +30,18 @@ SEXP Cors(SEXP oo1, SEXP xx1, SEXP yy1,
   unsigned char * ansp = RAW(ans);
   int err[1] = {0};
 
-  // Phase 2 invariant: initialise the mask once to all-FALSE, then every
-  // predicate (first or later) ORs into it. Predicate kernels never
-  // overwrite the mask.
-  memset(ansp, 0, N);
+  // Phase 2.5: see Cand3s.c -- the first predicate writes directly via
+  // INIT-mode dispatch (or via the inline NIL handler below), the
+  // second predicate combines with `|=`. No unconditional memset.
 
   if (yy1 == R_NilValue) {
     switch (TYPEOF(xx1)) {
     case LGLSXP: {
       const int * xx1p = LOGICAL(xx1);
       if (o1 == OP_NE) {
-        FORLOOP(ansp[i] |= xx1p[i] != 1;)
+        FORLOOP(ansp[i] = xx1p[i] != 1;)
       } else {
-        FORLOOP(ansp[i] |= xx1p[i] != 0;)
+        FORLOOP(ansp[i] = xx1p[i] != 0;)
       }
     }
       break;
@@ -50,19 +53,23 @@ SEXP Cors(SEXP oo1, SEXP xx1, SEXP yy1,
       // from `or3s(FALSE-vec, !m)`.
       const unsigned char * xx1p = RAW(xx1);
       if (o1 == OP_NE) {
-        FORLOOP(ansp[i] |= xx1p[i] == 0;)
+        FORLOOP(ansp[i] = xx1p[i] == 0;)
       } else {
-        FORLOOP(ansp[i] |= xx1p[i] != 0;)
+        FORLOOP(ansp[i] = xx1p[i] != 0;)
       }
     }
       break;
       // # nocov start
     default:
+      // No first-predicate state established; safest to mark unsupported
+      // and let the wrapper fall back rather than leave the mask
+      // uninitialised.
+      memset(ansp, 0, N);
       err[0] = OR3__UNSUPPORTED_TYPEX;
       // # nocov end
     }
   } else {
-    vor2s_dispatch(ansp, o1, xx1, yy1, nThread, err);
+    vinit2s_dispatch(ansp, o1, xx1, yy1, nThread, err);
   }
   if (use2) {
     vor2s_dispatch(ansp, o2, xx2, yy2, nThread, err);
