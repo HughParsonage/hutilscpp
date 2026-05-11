@@ -1,9 +1,9 @@
 # Phase 1 invariant grid harness for `and3s`. Issue #42.
 #
 # Sweeps the (x_type, y_type, op, M_shape, position) dispatch matrix in
-# vand2s, comparing `and3s` output to a base-R reference. The reference
-# applies NA -> FALSE to logical results to match the documented
-# two-valued mask convention (?and3s "Note on NA / NaN").
+# vand2s, comparing `and3s` output to a base-R reference. Most cells
+# avoid missing values; the NaN / NA scalar cells below pin the
+# historical `na = "C"` kernel behaviour explicitly.
 #
 # Cells with `NA` in a unary logical input are deliberately omitted: the
 # package's unary init treats NA as TRUE rather than FALSE, which is a
@@ -16,7 +16,7 @@
 #   Section 3: raw type combinations (the most fragile family per Phase 0)
 #   Section 4: %in% / %notin%
 #   Section 5: structural invariants (permutation, position, path, type)
-#   Section 6: documented NaN -> FALSE convention
+#   Section 6: historical na = "C" NaN / NA scalar behaviour
 #   Section 7: logical and string types
 
 if (requireNamespace("hutilscpp", quietly = TRUE) &&
@@ -259,9 +259,8 @@ expect_equal(and3s(!m_ext), and3s(all_true, !m_ext))           # entry == disp
 
 # --- NA_integer_ scalar against raw x. NA_INTEGER is INT_MIN, which
 # would otherwise enter the negative-scalar branch and saturate >/>=
-# to TRUE. The package's NA convention says all comparisons against
-# NA are FALSE in the mask except != / %notin% which are TRUE
-# (documented in `?and3s` "Note on NA / NaN" -- divergent from
+# to TRUE. The historical `na = "C"` raw-scalar branch keeps comparisons
+# against NA false except != / %notin%, which are TRUE (divergent from
 # na2f(base R) for !=, so reference TRUE directly here).
 g_(and3s(rx >  NA_integer_),     logical(n))            # FALSE per convention
 g_(and3s(rx >= NA_integer_),     logical(n))
@@ -353,9 +352,9 @@ expect_equal(out_l, hutilscpp:::raw2lgl(out_r))
 expect_equal(out_w, which(out_l))
 
 # ============================================================================
-# Section 6: documented NaN -> FALSE convention
-# ?and3s "Note on NA / NaN" -- NaN comparisons evaluate to FALSE in the
-# mask, except != / %notin% against NaN which remain TRUE.
+# Section 6: historical na = "C" NaN scalar behaviour
+# NaN comparisons in these scalar branches evaluate to FALSE except
+# != / %notin% against NaN, which remain TRUE.
 # ============================================================================
 
 g_(and3s(ix != 999L, ix == NaN),  logical(n))           # always FALSE

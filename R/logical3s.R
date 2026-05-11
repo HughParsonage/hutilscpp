@@ -22,9 +22,15 @@
 #' interpreted as logical.
 #'
 #' @param na \describe{
-#' \item{\code{"false"} (default)}{Two-valued mask: \code{NA} comparisons
-#' contribute \code{FALSE} to the mask (matches the package's historical
-#' fast-path behaviour and the \dQuote{Note on NA / NaN} below).}
+#' \item{\code{"C"} (default)}{Historical high-performance behaviour:
+#' missing values are interpreted by the C kernels without extra R-level
+#' NA handling. This preserves the package's CRAN behaviour, including
+#' C-level treatment of \code{NA_INTEGER}, \code{NA_LOGICAL}, and
+#' \code{NaN}.}
+#' \item{\code{"false"}}{Two-valued mask: when a parsed predicate value
+#' contains \code{NA} or \code{NaN}, the wrapper evaluates the affected
+#' expression chain with base R and coerces resulting \code{NA} values
+#' to \code{FALSE}.}
 #' \item{\code{"base"}}{Preserve base R three-valued semantics:
 #' \code{NA} propagates exactly as in \code{&} / \code{|}, including
 #' across three or more predicates (the recursive call returns
@@ -62,15 +68,14 @@
 #'
 #' @section Note on NA / NaN:
 #'
-#' The fast path uses a two-valued mask, so an \code{NA}-valued comparison
-#' is treated as \code{FALSE} in the mask rather than propagated. The most
-#' common case is a \code{NaN} numeric scalar against a \code{raw} vector:
-#' under base R, \code{as.raw(5) > NaN} is \code{NA}; under \code{and3s}
-#' / \code{or3s} on long inputs, the corresponding mask entry is
-#' \code{FALSE} (always-true predicates such as \code{!=} / \code{\%notin\%}
-#' against \code{NaN} remain \code{TRUE}). For filter-mask use this is
-#' usually the desired behaviour; to obtain base-R semantics, evaluate
-#' the predicates separately and combine with \code{&} / \code{|}.
+#' The default \code{na = "C"} path preserves the historical kernel
+#' semantics. This is intentionally low-level: for example, a bare
+#' logical \code{NA} is passed to C as \code{NA_LOGICAL} and is truthy
+#' in the unary-mask path, while comparisons against \code{NaN} follow
+#' the relevant C comparison or special-case kernel branch. Use
+#' \code{na = "false"} for an explicit two-valued filter mask where
+#' missing predicate results are \code{FALSE}, or \code{na = "base"} to
+#' propagate \code{NA} like base R.
 #'
 #' @section Performance:
 #'
@@ -104,7 +109,7 @@ NULL
 #' @export
 and3s <- function(exprA, exprB = NULL, exprC = NULL,
                   ...,
-                  na          = c("false", "base"),
+                  na          = c("C", "false", "base"),
                   unsupported = c("fallback", "error"),
                   recycle     = c("base", "strict"),
                   nThread = getOption("hutilscpp.nThread", 1L),
@@ -151,17 +156,15 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
     }
   }
 
-  # Small-vector shortcut: defer to base R `&` for short inputs. Only
-  # safe when every Phase-4 option is at its default -- non-defaults
-  # (na, recycle, unsupported) need the strict-validation / NA-routing
-  # / kernel-error-translation logic in the long path. With na ==
-  # "false" (default, == kernel convention) we still have to coerce
-  # NA -> FALSE post-Reduce so the short-vs-long boundary doesn't
-  # change observable behaviour.
-  if (na == "false" && recycle == "base" && unsupported == "fallback" &&
+  # Small-vector shortcut: defer to base R `&` for short inputs when no
+  # explicit validation mode is requested. `na = "C"` keeps historical
+  # CRAN behaviour; `na = "false"` coerces the base result to a
+  # two-valued mask.
+  if (na %in% c("C", "false") &&
+      recycle == "base" && unsupported == "fallback" &&
       !is.null(xx1) && length(xx1) <= 1e3L) {
     ans <- .et3(exprA, exprB, exprC, ...)
-    if (is.logical(ans) && anyNA(ans)) ans[is.na(ans)] <- FALSE
+    if (na == "false") ans <- .na_false_logical3s(ans)
     return(switch(type,
                   raw = lgl2raw(ans, nThread = nThread),
                   logical = ans,
@@ -207,16 +210,12 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
     }
   }
 
-  # Phase 4: na = "base" semantics. The kernel uses a two-valued mask
-  # (NA -> FALSE), divergent from base R `&`. If the user opts into base
-  # semantics and any parsed predicate value contains NA, defer to
-  # `Reduce("&", ...)`, but first honour explicit error modes so the
-  # fallback cannot mask unsupported or strictly invalid predicates.
-  if (na == "base" &&
-      (anyNA(xx1) ||
-       (!is.null(yy1) && anyNA(yy1)) ||
-       (!is.null(xx2) && anyNA(xx2)) ||
-       (!is.null(yy2) && anyNA(yy2)))) {
+  # `na = "false"` / `"base"` need R-level missing-value semantics when
+  # parsed predicate inputs contain NA / NaN. Validate explicit error
+  # modes before the fallback so missing values cannot mask unsupported
+  # or strictly invalid predicates.
+  if (na %in% c("false", "base") &&
+      .predicate_has_na_logical3s(xx1, yy1, xx2, yy2)) {
     if (unsupported == "error") {
       probe <-
         .Call("Cands",
@@ -240,8 +239,9 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
     args <- list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...)
     args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
     ans <- Reduce("&", args)
+    if (na == "false") ans <- .na_false_logical3s(ans)
     return(switch(type,
-                  raw = lgl2raw(ans),
+                  raw = lgl2raw(ans, nThread = nThread),
                   logical = ans,
                   which = which(ans)))
   }
@@ -306,7 +306,7 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
 #' @export
 or3s <- function(exprA, exprB = NULL, exprC = NULL,
                   ...,
-                  na          = c("false", "base"),
+                  na          = c("C", "false", "base"),
                   unsupported = c("fallback", "error"),
                   recycle     = c("base", "strict"),
                   nThread = getOption("hutilscpp.nThread", 1L),
@@ -364,12 +364,13 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
   }
 
   # Small-vector shortcut: see and3s for rationale.
-  if (na == "false" && recycle == "base" && unsupported == "fallback" &&
+  if (na %in% c("C", "false") &&
+      recycle == "base" && unsupported == "fallback" &&
       !is.null(xx1) && length(xx1) <= 1e3L) {
     ans <- .or3(exprA, exprB, exprC, ...)
-    if (is.logical(ans) && anyNA(ans)) ans[is.na(ans)] <- FALSE
+    if (na == "false") ans <- .na_false_logical3s(ans)
     return(switch(type,
-                  raw = lgl2raw(ans),
+                  raw = lgl2raw(ans, nThread = nThread),
                   logical = ans,
                   which = which(ans)))
   }
@@ -412,11 +413,8 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
   }
 
   # Phase 4: see and3s for rationale.
-  if (na == "base" &&
-      (anyNA(xx1) ||
-       (!is.null(yy1) && anyNA(yy1)) ||
-       (!is.null(xx2) && anyNA(xx2)) ||
-       (!is.null(yy2) && anyNA(yy2)))) {
+  if (na %in% c("false", "base") &&
+      .predicate_has_na_logical3s(xx1, yy1, xx2, yy2)) {
     if (unsupported == "error") {
       probe <-
         .Call("Cors",
@@ -440,6 +438,7 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
     args <- list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...)
     args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
     ans <- Reduce("|", args)
+    if (na == "false") ans <- .na_false_logical3s(ans)
     return(switch(type,
                   raw = lgl2raw(ans, nThread = nThread),
                   logical = ans,
@@ -525,6 +524,18 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
        call. = FALSE)
 }
 
+.predicate_has_na_logical3s <- function(xx1, yy1, xx2, yy2) {
+  anyNA(xx1) ||
+    (!is.null(yy1) && anyNA(yy1)) ||
+    (!is.null(xx2) && anyNA(xx2)) ||
+    (!is.null(yy2) && anyNA(yy2))
+}
+
+.na_false_logical3s <- function(x) {
+  if (is.logical(x) && anyNA(x)) x[is.na(x)] <- FALSE
+  x
+}
+
 do_par_in <- function(x, tbl, nThread = 1L) {
   nThread <- check_omp(nThread)
   if (is.integer(x) && is.integer(tbl)) {
@@ -566,6 +577,5 @@ do_par_in <- function(x, tbl, nThread = 1L) {
   }
   x & y & .et3(...)
 }
-
 
 

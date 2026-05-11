@@ -1,8 +1,9 @@
 # Phase 1 invariant grid harness for `or3s`. Issue #42.
 #
 # Sweeps the (x_type, y_type, op, M_shape, position) dispatch matrix
-# in vor2s, comparing `or3s` output to a base-R reference. Reference
-# applies NA -> FALSE for the mask convention.
+# in vor2s, comparing `or3s` output to a base-R reference. Most cells
+# avoid missing values; the NaN / NA scalar cells below pin the
+# historical `na = "C"` kernel behaviour explicitly.
 #
 # Cor3s.c is narrower than Cand3s.c: it implements only the numeric
 # type pairs (II / ID / DI / DD), plus LL / L / SS. Raw type pairs
@@ -244,7 +245,7 @@ expect_equal(out_l, hutilscpp:::raw2lgl(out_r))
 expect_equal(out_w, which(out_l))
 
 # ============================================================================
-# Section 5: documented NaN -> FALSE convention
+# Section 5: historical na = "C" NaN scalar behaviour
 # (Symmetric to and3s. NaN comparisons -> FALSE; != / %notin% -> TRUE.)
 # ============================================================================
 

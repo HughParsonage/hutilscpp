@@ -383,10 +383,10 @@ expect_equal(suppressMessages(and3s(mask_raw, rr_chain > 5L)),
 expect_equal(suppressMessages(and3s(mask_raw, rr_chain > 5.5)),
              hutilscpp:::raw2lgl(mask_raw) & (as.integer(rr_chain) > 5.5))
 
-# Documented divergence from base R (see ?and3s "Note on NA / NaN"):
-# NaN comparisons evaluate to FALSE in the mask (TRUE for `!=`/`%notin%`),
-# rather than propagating NA. Pin this so future changes don't regress
-# the on-CRAN convention.
+# Historical `na = "C"` divergence from base R:
+# NaN comparisons evaluate to FALSE in these raw-scalar branches
+# (TRUE for `!=`/`%notin%`), rather than propagating NA. Pin this so
+# future changes don't regress the on-CRAN convention.
 expect_equal(and3s(rr_chain != as.raw(0), rr_chain > NaN),
              logical(nb))
 expect_equal(and3s(rr_chain != as.raw(0), rr_chain == NaN),
@@ -435,5 +435,4 @@ expect_false(any(and3s(rr %notin% 0L)))
 expect_false(any(and3s(rr %notin% 0)))
 rr <- as.raw(bb)
 expect_true(all(and3s(rr == rr)))
-
 

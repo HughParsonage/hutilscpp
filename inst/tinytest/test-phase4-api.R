@@ -14,10 +14,10 @@ ix_na  <- rep_len(c(0L, 1L, NA_integer_, 5L), n)
 dx     <- as.numeric(ix)
 
 # ============================================================================
-# Defaults must match CRAN behaviour exactly
+# Defaults must match CRAN behaviour exactly (`na = "C"`).
 # ============================================================================
-expect_equal(and3s(ix > 0L), and3s(ix > 0L, na = "false", unsupported = "fallback", recycle = "base"))
-expect_equal(or3s(ix > 99L), or3s(ix > 99L, na = "false", unsupported = "fallback", recycle = "base"))
+expect_equal(and3s(ix > 0L), and3s(ix > 0L, na = "C", unsupported = "fallback", recycle = "base"))
+expect_equal(or3s(ix > 99L), or3s(ix > 99L, na = "C", unsupported = "fallback", recycle = "base"))
 
 # ============================================================================
 # unsupported = "error"
@@ -69,7 +69,9 @@ expect_error(and3s(ix %between% c(1L, 2L, 3L), recycle = "strict"),
 # ============================================================================
 # na = "base"
 # ============================================================================
-# Default ("false"): NA -> FALSE in mask. Same as CRAN.
+# Default ("C"): historical C-level semantics. For this integer
+# comparison, NA_INTEGER is interpreted as INT_MIN and the predicate is
+# false at missing positions.
 got_def <- and3s(ix_na > 0L)
 expect_false(anyNA(got_def))
 expect_equal(sum(got_def), sum(ix_na > 0L, na.rm = TRUE))
@@ -151,8 +153,10 @@ expect_error(or3s(ix_na > 0L, ix > 0L, ix == c(2L, -1L),
 # fast path). Pre-fix this path bypassed na/recycle/unsupported, so
 # behaviour was input-size-dependent.
 short_na <- c(TRUE, NA, FALSE, NA)
-# na = "false" (default) must coerce NA -> FALSE just like the kernel
-# path does for long inputs.
+# Default na = "C" preserves the historical small-vector shortcut.
+expect_equal(and3s(short_na), short_na)
+expect_equal(or3s(short_na),  short_na)
+# na = "false" must coerce NA -> FALSE.
 expect_equal(and3s(short_na, na = "false"), c(TRUE, FALSE, FALSE, FALSE))
 expect_equal(or3s(short_na,  na = "false"), c(TRUE, FALSE, FALSE, FALSE))
 # na = "base" preserves NA on short inputs too.
@@ -170,12 +174,41 @@ expect_error(or3s(1:10  == c(1L, 2L), unsupported = "error"),
              "unsupported type/op/length")
 
 # ============================================================================
+# na = "false" audits: missing predicate results become FALSE, even
+# where the C-level default treats the missing value as TRUE/truthy.
+long_na <- rep_len(c(TRUE, NA, FALSE, NA), n)
+expect_equal(and3s(long_na), rep_len(c(TRUE, TRUE, FALSE, TRUE), n))
+expect_equal(or3s(long_na),  rep_len(c(TRUE, TRUE, FALSE, TRUE), n))
+expect_equal(and3s(long_na, na = "false"), rep_len(c(TRUE, FALSE, FALSE, FALSE), n))
+expect_equal(or3s(long_na,  na = "false"), rep_len(c(TRUE, FALSE, FALSE, FALSE), n))
+expect_equal(and3s(ix != NA_integer_, na = "false"), rep_len(FALSE, n))
+expect_equal(or3s(ix != NA_integer_,  na = "false"), rep_len(FALSE, n))
+rx <- as.raw(rep_len(c(0L, 1L, 5L, 255L), n))
+expect_equal(and3s(rx != NaN, na = "false"), rep_len(FALSE, n))
+expect_equal(or3s(rx != NaN,  na = "false"), rep_len(FALSE, n))
+expect_error(and3s(ix_na > 0L, ix > 0L, ix == c(2L, -1L),
+                   na = "false", recycle = "strict"),
+             "recycle")
+expect_error(or3s(ix_na > 0L, ix > 0L, ix == c(2L, -1L),
+                  na = "false", recycle = "strict"),
+             "recycle")
+expect_error(and3s(ix_na > 0L, ix > 0L, ix == c(2L, -1L),
+                   na = "false", unsupported = "error"),
+             "unsupported type/op/length")
+expect_error(or3s(ix_na > 0L, ix > 0L, ix == c(2L, -1L),
+                  na = "false", unsupported = "error"),
+             "unsupported type/op/length")
+
+# ============================================================================
 # sum_*3s preserves NA under na = "base"
 # ============================================================================
-# Default (na = "false") drops NA -> 0 in the raw mask, so the sum
-# matches `sum(., na.rm = TRUE)`.
+# Default (na = "C") uses the C-level raw mask; for this integer
+# comparison it matches `sum(., na.rm = TRUE)`.
 expect_equal(sum_and3s(ix_na > 0L),                 sum(ix_na > 0L, na.rm = TRUE))
 expect_equal(sum_or3s( ix_na > 0L),                 sum(ix_na > 0L, na.rm = TRUE))
+# na = "false" explicitly drops missing predicate results.
+expect_equal(sum_and3s(long_na, na = "false"),      sum(long_na, na.rm = TRUE))
+expect_equal(sum_or3s( long_na, na = "false"),      sum(long_na, na.rm = TRUE))
 # na = "base" must propagate NA into the sum -- mirrors `sum(. & .)`.
 expect_equal(sum_and3s(ix_na > 0L, na = "base"),    sum(ix_na > 0L))
 expect_equal(sum_or3s( ix_na > 0L, na = "base"),    sum(ix_na > 0L))

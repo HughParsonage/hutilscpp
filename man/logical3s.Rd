@@ -11,7 +11,7 @@ and3s(
   exprB = NULL,
   exprC = NULL,
   ...,
-  na = c("false", "base"),
+  na = c("C", "false", "base"),
   unsupported = c("fallback", "error"),
   recycle = c("base", "strict"),
   nThread = getOption("hutilscpp.nThread", 1L),
@@ -24,7 +24,7 @@ or3s(
   exprB = NULL,
   exprC = NULL,
   ...,
-  na = c("false", "base"),
+  na = c("C", "false", "base"),
   unsupported = c("fallback", "error"),
   recycle = c("base", "strict"),
   nThread = getOption("hutilscpp.nThread", 1L),
@@ -39,9 +39,15 @@ with \code{<op>} one of the standard binary operators.
 Only \code{exprA} is required, all following expressions are optional.}
 
 \item{na}{\describe{
-\item{\code{"false"} (default)}{Two-valued mask: \code{NA} comparisons
-contribute \code{FALSE} to the mask (matches the package's historical
-fast-path behaviour and the \dQuote{Note on NA / NaN} below).}
+\item{\code{"C"} (default)}{Historical high-performance behaviour:
+missing values are interpreted by the C kernels without extra R-level
+NA handling. This preserves the package's CRAN behaviour, including
+C-level treatment of \code{NA_INTEGER}, \code{NA_LOGICAL}, and
+\code{NaN}.}
+\item{\code{"false"}}{Two-valued mask: when a parsed predicate value
+contains \code{NA} or \code{NaN}, the wrapper evaluates the affected
+expression chain with base R and coerces resulting \code{NA} values
+to \code{FALSE}.}
 \item{\code{"base"}}{Preserve base R three-valued semantics:
 \code{NA} propagates exactly as in \code{&} / \code{|}, including
 across three or more predicates (the recursive call returns
@@ -98,15 +104,14 @@ and in particular when they are of the form \code{lhs <op> rhs} for binary
 \section{Note on NA / NaN}{
 
 
-The fast path uses a two-valued mask, so an \code{NA}-valued comparison
-is treated as \code{FALSE} in the mask rather than propagated. The most
-common case is a \code{NaN} numeric scalar against a \code{raw} vector:
-under base R, \code{as.raw(5) > NaN} is \code{NA}; under \code{and3s}
-/ \code{or3s} on long inputs, the corresponding mask entry is
-\code{FALSE} (always-true predicates such as \code{!=} / \code{\%notin\%}
-against \code{NaN} remain \code{TRUE}). For filter-mask use this is
-usually the desired behaviour; to obtain base-R semantics, evaluate
-the predicates separately and combine with \code{&} / \code{|}.
+The default \code{na = "C"} path preserves the historical kernel
+semantics. This is intentionally low-level: for example, a bare
+logical \code{NA} is passed to C as \code{NA_LOGICAL} and is truthy
+in the unary-mask path, while comparisons against \code{NaN} follow
+the relevant C comparison or special-case kernel branch. Use
+\code{na = "false"} for an explicit two-valued filter mask where
+missing predicate results are \code{FALSE}, or \code{na = "base"} to
+propagate \code{NA} like base R.
 }
 
 \section{Performance}{

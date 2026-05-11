@@ -5,10 +5,14 @@
 - `and3s` / `or3s` (and `sum_and3s` / `sum_or3s`) gain three new
   arguments to make the dispatch contract explicit at the R boundary:
   `na`, `unsupported`, `recycle` (#45).
-  - `na = "false"` (default) preserves the historical two-valued mask
-    behaviour. `na = "base"` defers to base R's `&` / `|` whenever a
-    parsed predicate value contains `NA`, so `NA` propagates instead of
-    being coerced to `FALSE`.
+  - `na = "C"` (default) preserves the historical C-level mask
+    behaviour, where missing values are interpreted by the C kernels
+    without extra R-level NA handling. `na = "false"` is now the
+    explicit two-valued filter-mask mode: when parsed predicate inputs
+    contain `NA` / `NaN`, the wrapper evaluates the expression chain
+    with base R and coerces missing predicate results to `FALSE`.
+    `na = "base"` defers to base R's `&` / `|` whenever a parsed
+    predicate value contains `NA`, so `NA` propagates.
   - `unsupported = "fallback"` (default) silently falls back to base
     `Reduce("&", ...)` / `Reduce("|", ...)` when the C kernel cannot
     handle a type/op/length combination. `unsupported = "error"` raises
@@ -418,5 +422,4 @@ bench__mark(do_pmaxC_int(x, 0L), do_pmax0_radix_sorted_int(x))
 ```
 
 <sup>Created on 2019-08-10 by the [reprex package](https://reprex.tidyverse.org) (v0.3.0)</sup>
-
 

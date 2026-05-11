@@ -10,7 +10,7 @@ sum_and3s(
   exprB,
   exprC,
   ...,
-  na = c("false", "base"),
+  na = c("C", "false", "base"),
   nThread = getOption("hutilscpp.nThread", 1L),
   .env = parent.frame()
 )
@@ -20,7 +20,7 @@ sum_or3s(
   exprB,
   exprC,
   ...,
-  na = c("false", "base"),
+  na = c("C", "false", "base"),
   .env = parent.frame(),
   nThread = getOption("hutilscpp.nThread", 1L)
 )
@@ -29,10 +29,12 @@ sum_or3s(
 \item{exprA, exprB, exprC, ...}{Expressions of the form \code{x <op> y}.
 with \code{<op>} one of the standard binary operators.}
 
-\item{na}{See \code{\link{and3s}}. Default \code{"false"}: NA in the
-mask is coerced to FALSE before summing. \code{"base"}: NA propagates
-to the sum, matching \code{sum(exprA & exprB & ...)} (returns NA when
-any predicate value is NA).}
+\item{na}{See \code{\link{and3s}}. Default \code{"C"} preserves the
+package's historical C-level mask semantics. \code{"false"} coerces
+missing predicate results to \code{FALSE} before summing.
+\code{"base"} propagates \code{NA} to the sum, matching
+\code{sum(exprA & exprB & ...)} (returns \code{NA} when any predicate
+value is \code{NA}).}
 
 \item{nThread}{\describe{
 \item{\code{integer(1)}}{Number of threads to use.}
