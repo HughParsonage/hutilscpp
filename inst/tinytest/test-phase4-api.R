@@ -187,6 +187,30 @@ expect_equal(sum_or3s(short_lgl),  sum(short_lgl, na.rm = TRUE))
 # na = "false" must coerce NA -> FALSE.
 expect_equal(and3s(short_na, na = "false"), c(TRUE, FALSE, FALSE, FALSE))
 expect_equal(or3s(short_na,  na = "false"), c(TRUE, FALSE, FALSE, FALSE))
+short_and_false_ref <- hutilscpp:::.na_false_logical3s(short_and_ref)
+short_or_false_ref <- hutilscpp:::.na_false_logical3s(short_or_ref)
+expect_equal(and3s(short_ix > 0L, short_lgl, short_rx != as.raw(0), na = "false"),
+             short_and_false_ref)
+expect_equal(or3s(short_ix < 0L, short_lgl, short_rx == as.raw(5), na = "false"),
+             short_or_false_ref)
+expect_equal(and3s(short_ix > 0L, short_lgl, short_rx != as.raw(0),
+                   na = "false", type = "raw"),
+             hutilscpp:::lgl2raw(short_and_false_ref))
+expect_equal(or3s(short_ix < 0L, short_lgl, short_rx == as.raw(5),
+                  na = "false", type = "raw"),
+             hutilscpp:::lgl2raw(short_or_false_ref))
+expect_equal(and3s(short_ix > 0L, short_lgl, short_rx != as.raw(0),
+                   na = "false", type = "which"),
+             which(short_and_false_ref))
+expect_equal(or3s(short_ix < 0L, short_lgl, short_rx == as.raw(5),
+                  na = "false", type = "which"),
+             which(short_or_false_ref))
+expect_equal(and3s(short_rx != NaN, na = "false"),
+             hutilscpp:::.na_false_logical3s(short_rx != NaN))
+expect_equal(or3s(short_rx != NaN, na = "false"),
+             hutilscpp:::.na_false_logical3s(short_rx != NaN))
+expect_equal(sum_and3s(short_lgl, na = "false"), sum(short_lgl, na.rm = TRUE))
+expect_equal(sum_or3s(short_lgl,  na = "false"), sum(short_lgl, na.rm = TRUE))
 # na = "base" preserves NA on short inputs too.
 expect_equal(and3s(short_na, na = "base"), short_na)
 expect_equal(or3s(short_na,  na = "base"), short_na)
