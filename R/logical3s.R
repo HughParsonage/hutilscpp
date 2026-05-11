@@ -534,7 +534,7 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
 }
 
 .na_false_logical3s <- function(x) {
-  if (is.logical(x) && anyNA(x)) x[is.na(x)] <- FALSE
+  if (is.logical(x) && anyNA(x)) return(fcoalesce(x, FALSE))
   x
 }
 
@@ -579,4 +579,3 @@ do_par_in <- function(x, tbl, nThread = 1L) {
   }
   x & y & .et3(...)
 }
-
