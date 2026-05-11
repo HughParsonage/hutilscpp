@@ -24,6 +24,16 @@
 - All three arguments default to the package's prior CRAN behaviour, so
   no existing user code is affected.
 
+### Bug fixes
+
+- Hardened `and3s` / `or3s` dispatch for issue #55 residuals: unsupported
+  operators now fall back or error instead of silently no-oping, second-slot
+  `%in%` / `%notin%` predicates are preprocessed before C dispatch, logical
+  LHS comparisons with non-logical RHS fall back to base-compatible
+  semantics, inverted `%]between[%` double paths return the documented empty
+  mask, and `na = "base"` now rejects `type = "raw"` because raw masks cannot
+  represent `NA`.
+
 ### Internal
 
 - Phase 4 of the and3s/or3s refactor (epic #36). Centralises the
@@ -422,4 +432,3 @@ bench__mark(do_pmaxC_int(x, 0L), do_pmax0_radix_sorted_int(x))
 ```
 
 <sup>Created on 2019-08-10 by the [reprex package](https://reprex.tidyverse.org) (v0.3.0)</sup>
-

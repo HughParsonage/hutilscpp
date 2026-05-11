@@ -87,7 +87,8 @@ kernel is even called.}
 \item{type}{The type of the result. \code{which} corresponds to the
 indices of \code{TRUE} in the result. Type \code{raw} is available
 for a memory-constrained result, though the result will not be
-interpreted as logical.}
+interpreted as logical. Because raw masks cannot represent missing
+values, \code{type = "raw"} is not allowed with \code{na = "base"}.}
 }
 \value{
 \code{and3s} and \code{or3s} return \code{exprA & exprB & exprC} and

@@ -26,6 +26,9 @@ SEXP Cors(SEXP oo1, SEXP xx1, SEXP yy1,
   int nThread = as_nThread(nthreads);
   const int o1 = sex2op(oo1);
   const int o2 = sex2op(oo2);
+  if (o1 == 0 || (use2 && o2 == 0)) {
+    return R_NilValue;
+  }
   SEXP ans = PROTECT(allocVector(RAWSXP, N));
   unsigned char * ansp = RAW(ans);
   int err[1] = {0};
@@ -76,7 +79,6 @@ SEXP Cors(SEXP oo1, SEXP xx1, SEXP yy1,
   }
   UNPROTECT(1);
   if (err[0]) {
-    REprintf("Unsupported type\n");
     return R_NilValue;
   }
   return ans;

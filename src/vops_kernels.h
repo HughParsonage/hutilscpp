@@ -70,6 +70,31 @@
 
 #define KFN(name) KFN_(name)
 
+#ifndef HUTILSCPP_VOPS_HELPERS
+#define HUTILSCPP_VOPS_HELPERS
+static inline bool vops_op_is_compare(const int o) {
+  return o == OP_NE || o == OP_EQ ||
+    o == OP_GE || o == OP_LE || o == OP_GT || o == OP_LT;
+}
+
+static inline bool vops_op_is_between(const int o) {
+  return o == OP_BW || o == OP_BO || o == OP_BC;
+}
+
+static inline bool vops_op_is_unary_mask(const int o) {
+  return o == OP_EQ || o == OP_NE;
+}
+
+static inline bool vops_nonraw_supported(const int o,
+                                         const R_xlen_t M,
+                                         const R_xlen_t N) {
+  if (M == 2 && vops_op_is_between(o)) {
+    return true;
+  }
+  return (M == 1 || M == N) && vops_op_is_compare(o);
+}
+#endif
+
 #define FORLOOP_combine_op(op, rhs)                                 \
   FORLOOP({ MASK_COMBINE(i, x[i] op (rhs)); })
 
@@ -298,6 +323,9 @@ static void KFN(DI)(unsigned char * ansp, const int o,
   if (M == 2 && op_xlen2(o)) {
     int y0 = y[0];
     int y1 = y[1];
+    if (y0 > y1) {
+      ALWAYS_FALSE_PRED();
+    }
     switch (o) {
     case OP_BW:
       FORLOOP({ MASK_COMBINE(i, x[i] >= y0 && x[i] <= y1); });
@@ -358,6 +386,9 @@ static void KFN(DD)(unsigned char * ansp, const int o,
     }
     double pre_y0 = y0_NAN ? R_NegInf : y[0];
     double pre_y1 = y1_NAN ? R_PosInf : y[1];
+    if (pre_y0 > pre_y1) {
+      ALWAYS_FALSE_PRED();
+    }
     switch (o) {
     case OP_BW:
       FORLOOP({ MASK_COMBINE(i, (x[i] >= pre_y0) && (x[i] <= pre_y1)); });
@@ -847,15 +878,11 @@ static void KFN(dispatch)(unsigned char * ansp, const int o,
   R_xlen_t N = xlength(x);
   R_xlen_t M = xlength(y);
 
-  // The non-raw element-wise kernels handle three RHS shapes: scalar
-  // (M == 1), recycled element-wise (M == N), and the 2-element bounds
-  // forms used by between operators (M == 2 with op_xlen2(o)). Any
-  // other M silently fell through pre-fix, leaving the AND mask all-1
-  // (or the OR mask all-0) and producing wrong public results. Defer
-  // those shapes to the R fallback. Raw kernels self-validate M and
-  // are excluded.
-  const bool m_supported_nonraw =
-      M == 1 || M == N || (M == 2 && op_xlen2(o));
+  // The non-raw element-wise kernels handle comparison ops with scalar
+  // or recycled RHS and the public 2-element between-family operators.
+  // Any other op/shape must defer to the R fallback; otherwise a switch
+  // with no matching case can silently leave the mask unchanged.
+  const bool m_supported_nonraw = vops_nonraw_supported(o, M, N);
 
   switch (TYPEOF(x)) {
   case LGLSXP:
@@ -864,8 +891,12 @@ static void KFN(dispatch)(unsigned char * ansp, const int o,
       if (!m_supported_nonraw) { *err = UNSUPPORTED_TYPEY; break; }
       KFN(LL)(ansp, o, LOGICAL(x), N, LOGICAL(y), M, nThread);
       break;
-    default:
+    case NILSXP:
+      if (!vops_op_is_unary_mask(o)) { *err = UNSUPPORTED_TYPEY; break; }
       KFN(L)(ansp, o, LOGICAL(x), N, nThread);
+      break;
+    default:
+      *err = UNSUPPORTED_TYPEY;
     }
     break;
   case INTSXP:
@@ -908,6 +939,7 @@ static void KFN(dispatch)(unsigned char * ansp, const int o,
     case NILSXP:
       // Unary raw mask: `and3s(..., mask_raw)` / `or3s(..., mask_raw)`.
       // The wrapper sets oo to "==" for a bare symbol, so o is OP_EQ.
+      if (!vops_op_is_unary_mask(o)) { *err = UNSUPPORTED_TYPEY; break; }
       KFN(R)(ansp, o, RAW(x), N, nThread);
       break;
     default:

@@ -19,7 +19,8 @@
 #' @param type The type of the result. \code{which} corresponds to the
 #' indices of \code{TRUE} in the result. Type \code{raw} is available
 #' for a memory-constrained result, though the result will not be
-#' interpreted as logical.
+#' interpreted as logical. Because raw masks cannot represent missing
+#' values, \code{type = "raw"} is not allowed with \code{na = "base"}.
 #'
 #' @param na \describe{
 #' \item{\code{"C"} (default)}{Historical high-performance behaviour:
@@ -127,6 +128,10 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
            logical = "logical",
            which = "which",
            "raw")
+  if (na == "base" && type == "raw") {
+    stop("`type = \"raw\"` cannot represent `NA` when `na = \"base\"`.",
+         call. = FALSE)
+  }
 
   oo1 <- xx1 <- yy1 <-
     oo2 <- xx2 <- yy2 <- NULL
@@ -258,7 +263,6 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
     if (unsupported == "error") {
       .stop_unsupported_logical3s("and3s", "&")
     }
-    message("Falling back to `&`")
     args <- list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...)
     args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
     ans <- Reduce("&", args)
@@ -291,12 +295,12 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
                   logical = ans_lgl,
                   which = which(ans_lgl)))
   }
-  .and_raw(ans,
-           eval.parent(substitute(and3s(exprC, ...,
-                                        na = na, unsupported = unsupported, recycle = recycle,
-                                        nThread = nThread,
-                                        type = "raw"))),
-           nThread = nThread)
+  ans <- .and_raw(ans,
+                  eval.parent(substitute(and3s(exprC, ...,
+                                               na = na, unsupported = unsupported, recycle = recycle,
+                                               nThread = nThread,
+                                               type = "raw"))),
+                  nThread = nThread)
   return(switch(type,
                 raw = ans,
                 logical = raw2lgl(ans, nThread = nThread),
@@ -322,6 +326,10 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
            logical = "logical",
            which = "which",
            "raw")
+  if (na == "base" && type == "raw") {
+    stop("`type = \"raw\"` cannot represent `NA` when `na = \"base\"`.",
+         call. = FALSE)
+  }
   if (missing(exprB) && !missing(exprC)) {
     if (missing(..1)) {
       return(eval.parent(substitute(or3s(exprA, exprC,
@@ -456,7 +464,6 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
     if (unsupported == "error") {
       .stop_unsupported_logical3s("or3s", "|")
     }
-    message("Falling back to `|`")
     args <- list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...)
     args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
     ans <- Reduce("|", args)
@@ -487,12 +494,12 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
                   logical = ans_lgl,
                   which = which(ans_lgl)))
   }
-  .or_raw(ans,
-          eval.parent(substitute(or3s(exprC, ...,
-                                      na = na, unsupported = unsupported, recycle = recycle,
-                                      nThread = nThread,
-                                      type = "raw"))),
-          nThread = nThread)
+  ans <- .or_raw(ans,
+                 eval.parent(substitute(or3s(exprC, ...,
+                                             na = na, unsupported = unsupported, recycle = recycle,
+                                             nThread = nThread,
+                                             type = "raw"))),
+                 nThread = nThread)
   return(switch(type,
                 raw = ans,
                 logical = raw2lgl(ans, nThread = nThread),

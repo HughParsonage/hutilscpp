@@ -147,6 +147,61 @@ expect_error(or3s(ix_na > 0L, ix > 0L, ix == c(2L, -1L),
              "unsupported type/op/length")
 
 # ============================================================================
+# Issue #55 residual dispatch hardening
+# ============================================================================
+# Unsupported top-level operators must fallback or error, never no-op.
+a <- ix > 0L
+b <- ix < 5L
+c <- ix != 3L
+expect_silent(expect_equal(and3s(a, b & c), a & (b & c)))
+expect_silent(expect_equal(or3s(a, b & c),  a | (b & c)))
+expect_equal(and3s(ix > 0L & ix < 5L), (ix > 0L) & (ix < 5L))
+expect_equal(or3s(ix > 0L & ix < 5L),  (ix > 0L) & (ix < 5L))
+expect_error(and3s(a, b & c, unsupported = "error"),
+             "unsupported type/op/length")
+expect_error(or3s(a, b & c, unsupported = "error"),
+             "unsupported type/op/length")
+
+# Logical LHS with non-logical RHS falls back to base-compatible
+# coercion instead of being treated as a unary logical mask.
+lb <- rep_len(c(TRUE, FALSE), n)
+expect_equal(and3s(lb == 0L), lb == 0L)
+expect_equal(and3s(lb != 0L), lb != 0L)
+expect_equal(and3s(lb >  0L), lb >  0L)
+expect_equal(or3s(lb == 0L),  lb == 0L)
+expect_equal(or3s(lb != 0L),  lb != 0L)
+expect_equal(or3s(lb >  0L),  lb >  0L)
+expect_error(and3s(lb == 0L, unsupported = "error"),
+             "unsupported type/op/length")
+expect_error(or3s(lb == 0L, unsupported = "error"),
+             "unsupported type/op/length")
+
+# Second-predicate membership with a table length equal to N is
+# preprocessed before C dispatch.
+tbl_n <- rep_len(c(1L, 3L, 5L, 7L), n)
+expect_equal(and3s(a, ix %in% tbl_n),    a & (ix %in% tbl_n))
+expect_equal(and3s(a, ix %notin% tbl_n), a & !(ix %in% tbl_n))
+expect_equal(or3s(!a, ix %in% tbl_n),    (!a) | (ix %in% tbl_n))
+expect_equal(or3s(!a, ix %notin% tbl_n), (!a) | !(ix %in% tbl_n))
+expect_equal(and3s(a, ix %in% tbl_n, unsupported = "error"),
+             a & (ix %in% tbl_n))
+expect_equal(or3s(!a, ix %notin% tbl_n, unsupported = "error"),
+             (!a) | !(ix %in% tbl_n))
+
+# Inverted complement-between bounds are false for double LHS paths too.
+dx2 <- as.double(rep_len(1:20, n))
+expect_false(any(and3s(dx2 %]between[% c(10L, 5L))))
+expect_false(any(and3s(dx2 %]between[% c(10,  5))))
+expect_false(any(or3s( dx2 %]between[% c(10L, 5L))))
+expect_false(any(or3s( dx2 %]between[% c(10,  5))))
+
+# A raw mask cannot represent base-R NA propagation.
+expect_error(and3s(ix_na > 0L, na = "base", type = "raw"),
+             "raw.*NA|NA.*raw")
+expect_error(or3s(ix_na > 0L, na = "base", type = "raw"),
+             "raw.*NA|NA.*raw")
+
+# ============================================================================
 # Small-vector shortcut respects the new options
 # ============================================================================
 # Inputs of length <= 1000 go through .et3() / .or3() (small-vector
@@ -233,8 +288,28 @@ expect_equal(and3s(long_na), rep_len(c(TRUE, TRUE, FALSE, TRUE), n))
 expect_equal(or3s(long_na),  rep_len(c(TRUE, TRUE, FALSE, TRUE), n))
 expect_equal(and3s(long_na, na = "false"), rep_len(c(TRUE, FALSE, FALSE, FALSE), n))
 expect_equal(or3s(long_na,  na = "false"), rep_len(c(TRUE, FALSE, FALSE, FALSE), n))
+expect_equal(and3s(!long_na, na = "false"), rep_len(c(FALSE, FALSE, TRUE, FALSE), n))
+expect_equal(or3s(!long_na,  na = "false"), rep_len(c(FALSE, FALSE, TRUE, FALSE), n))
 expect_equal(and3s(ix != NA_integer_, na = "false"), rep_len(FALSE, n))
 expect_equal(or3s(ix != NA_integer_,  na = "false"), rep_len(FALSE, n))
+ix_miss <- rep_len(c(NA_integer_, -1L, 0L, 1L, 5L), n)
+dx_miss <- rep_len(c(NA_real_, NaN, -1, 0, 1), n)
+sx_miss <- rep_len(c("a", "b", NA_character_), n)
+ix_lt_ref <- hutilscpp:::.na_false_logical3s(ix_miss < 5L)
+ix_ne_ref <- hutilscpp:::.na_false_logical3s(ix_miss != 1L)
+dx_lt_ref <- hutilscpp:::.na_false_logical3s(dx_miss < 5)
+dx_ne_ref <- hutilscpp:::.na_false_logical3s(dx_miss != 1)
+sx_ne_ref <- hutilscpp:::.na_false_logical3s(sx_miss != "z")
+expect_equal(and3s(ix_miss < 5L, na = "false"), ix_lt_ref)
+expect_equal(or3s( ix_miss < 5L, na = "false"), ix_lt_ref)
+expect_equal(and3s(ix_miss != 1L, na = "false"), ix_ne_ref)
+expect_equal(or3s( ix_miss != 1L, na = "false"), ix_ne_ref)
+expect_equal(and3s(dx_miss < 5, na = "false"), dx_lt_ref)
+expect_equal(or3s( dx_miss < 5, na = "false"), dx_lt_ref)
+expect_equal(and3s(dx_miss != 1, na = "false"), dx_ne_ref)
+expect_equal(or3s( dx_miss != 1, na = "false"), dx_ne_ref)
+expect_equal(and3s(sx_miss != "z", na = "false"), sx_ne_ref)
+expect_equal(or3s( sx_miss != "z", na = "false"), sx_ne_ref)
 rx <- as.raw(rep_len(c(0L, 1L, 5L, 255L), n))
 expect_equal(and3s(rx != NaN, na = "false"), rep_len(FALSE, n))
 expect_equal(or3s(rx != NaN,  na = "false"), rep_len(FALSE, n))
