@@ -156,6 +156,34 @@ short_na <- c(TRUE, NA, FALSE, NA)
 # Default na = "C" preserves the historical small-vector shortcut.
 expect_equal(and3s(short_na), short_na)
 expect_equal(or3s(short_na),  short_na)
+
+# Pin CRAN short-path behaviour for default arguments at n < 1000:
+# the old wrapper returned the base-R `.et3()` / `.or3()` result for
+# short vectors, including NA propagation in logical output and the
+# usual lgl2raw / which conversion for non-logical result types.
+short_n <- 999L
+short_ix <- rep_len(c(1L, NA_integer_, 2L, -1L), short_n)
+short_lgl <- rep_len(c(TRUE, NA, FALSE, TRUE), short_n)
+short_rx <- as.raw(rep_len(c(0L, 1L, 5L), short_n))
+short_and_ref <- (short_ix > 0L) & short_lgl & (short_rx != as.raw(0))
+short_or_ref <- (short_ix < 0L) | short_lgl | (short_rx == as.raw(5))
+expect_equal(and3s(short_ix > 0L, short_lgl, short_rx != as.raw(0)),
+             short_and_ref)
+expect_equal(or3s(short_ix < 0L, short_lgl, short_rx == as.raw(5)),
+             short_or_ref)
+expect_equal(and3s(short_ix > 0L, short_lgl, short_rx != as.raw(0), type = "raw"),
+             hutilscpp:::lgl2raw(short_and_ref))
+expect_equal(or3s(short_ix < 0L, short_lgl, short_rx == as.raw(5), type = "raw"),
+             hutilscpp:::lgl2raw(short_or_ref))
+expect_equal(and3s(short_ix > 0L, short_lgl, short_rx != as.raw(0), type = "which"),
+             which(short_and_ref))
+expect_equal(or3s(short_ix < 0L, short_lgl, short_rx == as.raw(5), type = "which"),
+             which(short_or_ref))
+expect_equal(and3s(short_rx != NaN), short_rx != NaN)
+expect_equal(or3s(short_rx != NaN),  short_rx != NaN)
+expect_equal(sum_and3s(short_lgl), sum(short_lgl, na.rm = TRUE))
+expect_equal(sum_or3s(short_lgl),  sum(short_lgl, na.rm = TRUE))
+
 # na = "false" must coerce NA -> FALSE.
 expect_equal(and3s(short_na, na = "false"), c(TRUE, FALSE, FALSE, FALSE))
 expect_equal(or3s(short_na,  na = "false"), c(TRUE, FALSE, FALSE, FALSE))
