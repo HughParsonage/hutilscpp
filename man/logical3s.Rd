@@ -11,6 +11,9 @@ and3s(
   exprB = NULL,
   exprC = NULL,
   ...,
+  na = c("false", "base"),
+  unsupported = c("fallback", "error"),
+  recycle = c("base", "strict"),
   nThread = getOption("hutilscpp.nThread", 1L),
   .parent_nframes = 1L,
   type = c("logical", "raw", "which")
@@ -21,6 +24,9 @@ or3s(
   exprB = NULL,
   exprC = NULL,
   ...,
+  na = c("false", "base"),
+  unsupported = c("fallback", "error"),
+  recycle = c("base", "strict"),
   nThread = getOption("hutilscpp.nThread", 1L),
   .parent_nframes = 1L,
   type = c("logical", "raw", "which")
@@ -31,6 +37,38 @@ or3s(
 with \code{<op>} one of the standard binary operators.
 
 Only \code{exprA} is required, all following expressions are optional.}
+
+\item{na}{\describe{
+\item{\code{"false"} (default)}{Two-valued mask: \code{NA} comparisons
+contribute \code{FALSE} to the mask (matches the package's historical
+fast-path behaviour and the \dQuote{Note on NA / NaN} below).}
+\item{\code{"base"}}{Preserve base R three-valued semantics:
+\code{NA} propagates exactly as in \code{&} / \code{|}, including
+across three or more predicates (the recursive call returns
+\code{logical} when \code{na = "base"} so the AND / OR combination
+in R preserves \code{NA}).  When any parsed predicate value
+contains \code{NA} the wrapper defers to \code{Reduce("&", \dots)}
+/ \code{Reduce("|", \dots)} for the first two predicates as well.}
+}}
+
+\item{unsupported}{\describe{
+\item{\code{"fallback"} (default)}{When the C kernel cannot handle a
+type/op/length combination, silently fall back to base R
+\code{Reduce("&", \dots)} / \code{Reduce("|", \dots)}. Matches the
+package's historical behaviour.}
+\item{\code{"error"}}{Raise an error instead. Useful in tests so
+silent unsupported paths fail loudly in CI.}
+}}
+
+\item{recycle}{\describe{
+\item{\code{"base"} (default)}{Match base R's recycling rules: when a
+predicate's RHS length is not in \code{\{1, length(LHS), 2 for
+between\}}, the kernel reports an unsupported type/length, and the
+\code{unsupported} setting decides what happens next.}
+\item{\code{"strict"}}{Reject any RHS length not in
+\code{\{1, length(LHS), 2 for between\}} with an error before the
+kernel is even called.}
+}}
 
 \item{nThread}{\describe{
 \item{\code{integer(1)}}{Number of threads to use.}
@@ -69,5 +107,33 @@ under base R, \code{as.raw(5) > NaN} is \code{NA}; under \code{and3s}
 against \code{NaN} remain \code{TRUE}). For filter-mask use this is
 usually the desired behaviour; to obtain base-R semantics, evaluate
 the predicates separately and combine with \code{&} / \code{|}.
+}
+
+\section{Performance}{
+
+
+The wrapper carries a fixed R-level cost per call (substitute,
+\code{eval.parent}, option validation, \code{\dots}-forwarding) on
+the order of \emph{tens of microseconds} for \code{and3s} /
+\code{or3s} and roughly twice that for \code{sum_and3s} /
+\code{sum_or3s}. The C kernel only runs when \code{length(LHS) > 1000};
+shorter inputs take a base-R shortcut where the wrapper cost
+dominates.
+
+Rule of thumb: \code{and3s} pays for itself when the per-call work
+it saves exceeds the wrapper overhead. In practice that means
+single calls on vectors of \emph{at least a few thousand elements}
+for \code{and3s} (more for \code{sum_and3s}). On a single 1e9-row
+vector the kernel path is comfortably faster than base \code{&};
+on a vector of 100 it is several times slower.
+
+This makes the family a poor fit for the \code{j=} expression of a
+\code{data.table} \code{by=} / \code{keyby=} call when the grouping
+has high cardinality and small groups: every group calls the
+wrapper afresh, and on groups of a few rows you can spend
+minutes paying R-level overhead that base \code{sum(. & .)} would
+do in a couple of seconds. Use \code{and3s} / \code{or3s} for
+single bulk calls; for grouped reductions on small groups, prefer
+base R inside \code{j=}.
 }
 

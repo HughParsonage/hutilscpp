@@ -10,6 +10,7 @@ sum_and3s(
   exprB,
   exprC,
   ...,
+  na = c("false", "base"),
   nThread = getOption("hutilscpp.nThread", 1L),
   .env = parent.frame()
 )
@@ -19,6 +20,7 @@ sum_or3s(
   exprB,
   exprC,
   ...,
+  na = c("false", "base"),
   .env = parent.frame(),
   nThread = getOption("hutilscpp.nThread", 1L)
 )
@@ -26,6 +28,11 @@ sum_or3s(
 \arguments{
 \item{exprA, exprB, exprC, ...}{Expressions of the form \code{x <op> y}.
 with \code{<op>} one of the standard binary operators.}
+
+\item{na}{See \code{\link{and3s}}. Default \code{"false"}: NA in the
+mask is coerced to FALSE before summing. \code{"base"}: NA propagates
+to the sum, matching \code{sum(exprA & exprB & ...)} (returns NA when
+any predicate value is NA).}
 
 \item{nThread}{\describe{
 \item{\code{integer(1)}}{Number of threads to use.}
