@@ -262,8 +262,9 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
     args <- list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...)
     args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
     ans <- Reduce("&", args)
+    if (na == "false") ans <- .na_false_logical3s(ans)
     return(switch(type,
-                  raw = lgl2raw(ans),
+                  raw = lgl2raw(ans, nThread = nThread),
                   logical = ans,
                   which = which(ans)))
   }
@@ -459,6 +460,7 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
     args <- list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...)
     args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
     ans <- Reduce("|", args)
+    if (na == "false") ans <- .na_false_logical3s(ans)
     return(switch(type,
                   raw = lgl2raw(ans, nThread = nThread),
                   logical = ans,
@@ -577,5 +579,4 @@ do_par_in <- function(x, tbl, nThread = 1L) {
   }
   x & y & .et3(...)
 }
-
 

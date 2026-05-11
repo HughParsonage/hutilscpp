@@ -198,6 +198,10 @@ expect_error(and3s(ix_na > 0L, ix > 0L, ix == c(2L, -1L),
 expect_error(or3s(ix_na > 0L, ix > 0L, ix == c(2L, -1L),
                   na = "false", unsupported = "error"),
              "unsupported type/op/length")
+expect_equal(suppressMessages(and3s(ix == c(2L, -1L), ix_na > 0L, na = "false")),
+             hutilscpp:::.na_false_logical3s((ix == c(2L, -1L)) & (ix_na > 0L)))
+expect_equal(suppressMessages(or3s(ix == c(2L, -1L), ix_na > 0L, na = "false")),
+             hutilscpp:::.na_false_logical3s((ix == c(2L, -1L)) | (ix_na > 0L)))
 
 # ============================================================================
 # sum_*3s preserves NA under na = "base"
