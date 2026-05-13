@@ -30939,6 +30939,12 @@ local({
   expect_equal(or3s(x < 0L, 1L < x), (x < 0L) | (1L < x))
   expect_error(or3s(x < 0L, FALSE, unsupported = "error"))
   expect_error(or3s(x < 0L, FALSE, recycle = "strict"))
+  # Strict / unsupported = "error" must raise even when inputs contain
+  # NA (length check precedes NA fallback).
+  xna <- c(NA_integer_, seq_len(n - 1L))
+  expect_error(or3s(xna < 0L, FALSE, recycle = "strict", na = "false"))
+  expect_error(or3s(xna < 0L, FALSE, recycle = "strict", na = "base"))
+  expect_error(or3s(xna < 0L, FALSE, unsupported = "error", na = "false"))
   expect_equal(or3s(x < 0L, FALSE, x > 1000L),
                (x < 0L) | FALSE | (x > 1000L))
 })

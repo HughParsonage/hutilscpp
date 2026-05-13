@@ -221,12 +221,30 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
   # combining `recycle = "strict"` with `na = "base"` doesn't let an
   # NA-containing predicate with mismatched RHS sneak past the strict
   # check. (The whole point of `strict` is "fail loudly on bad shapes".)
+  N <- length(xx1)
   if (recycle == "strict") {
-    N <- length(xx1)
     .validate_predicate_length(oo1, xx1, yy1, N, "and3s")
     if (!is.null(oo2)) {
       .validate_predicate_length(oo2, xx2, yy2, N, "and3s")
     }
+  }
+
+  # #56: the C kernel errors when length(xx2) != length(xx1) (over-read
+  # safety). Detect length mismatches here so default
+  # `unsupported = "fallback"` honours the documented base-recycling
+  # contract instead of crashing. The shape covers scalar masks
+  # (`and3s(x > 0L, TRUE)`), short recyclable masks
+  # (`and3s(x > 0L, c(TRUE, FALSE))`), and binary predicates whose LHS
+  # is scalar (`and3s(x > 0L, 1L < x)` parses xx2 to length 1). Runs
+  # BEFORE the NA-base fallback so strict / unsupported = "error"
+  # still raise on bad shapes when inputs happen to contain NA.
+  if (!is.null(oo2) && length(xx2) != N) {
+    if (unsupported == "error" || recycle == "strict") {
+      .stop_unsupported_logical3s("and3s", "&")
+    }
+    return(.fallback_logical3s("&",
+                               list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...),
+                               na = na, type = type, nThread = nThread))
   }
 
   # `na = "false"` / `"base"` need R-level missing-value semantics when
@@ -254,23 +272,6 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
                                                      recycle = recycle,
                                                      nThread = nThread,
                                                      type = "raw"))))
-    }
-    return(.fallback_logical3s("&",
-                               list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...),
-                               na = na, type = type, nThread = nThread))
-  }
-
-  # #56: the C kernel errors when length(xx2) != length(xx1) (over-read
-  # safety). Detect length mismatches here so default
-  # `unsupported = "fallback"` honours the documented base-recycling
-  # contract instead of crashing. The shape covers scalar masks
-  # (`and3s(x > 0L, TRUE)`), short recyclable masks
-  # (`and3s(x > 0L, c(TRUE, FALSE))`), and binary predicates whose LHS
-  # is scalar (`and3s(x > 0L, 1L < x)` parses xx2 to length 1).
-  N <- length(xx1)
-  if (!is.null(oo2) && length(xx2) != N) {
-    if (unsupported == "error" || recycle == "strict") {
-      .stop_unsupported_logical3s("and3s", "&")
     }
     return(.fallback_logical3s("&",
                                list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...),
@@ -434,12 +435,24 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
   # Strict-recycle validation runs BEFORE the NA-base fallback so that
   # combining `recycle = "strict"` with `na = "base"` doesn't let an
   # NA-containing predicate with mismatched RHS bypass the strict check.
+  N <- length(xx1)
   if (recycle == "strict") {
-    N <- length(xx1)
     .validate_predicate_length(oo1, xx1, yy1, N, "or3s")
     if (!is.null(oo2)) {
       .validate_predicate_length(oo2, xx2, yy2, N, "or3s")
     }
+  }
+
+  # #56: see and3s for rationale. Runs BEFORE the NA-base fallback so
+  # strict / unsupported = "error" still raise on bad shapes when
+  # inputs happen to contain NA.
+  if (!is.null(oo2) && length(xx2) != N) {
+    if (unsupported == "error" || recycle == "strict") {
+      .stop_unsupported_logical3s("or3s", "|")
+    }
+    return(.fallback_logical3s("|",
+                               list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...),
+                               na = na, type = type, nThread = nThread))
   }
 
   # Phase 4: see and3s for rationale.
@@ -464,17 +477,6 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
                                                    recycle = recycle,
                                                    nThread = nThread,
                                                    type = "raw"))))
-    }
-    return(.fallback_logical3s("|",
-                               list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...),
-                               na = na, type = type, nThread = nThread))
-  }
-
-  # #56: see and3s for rationale.
-  N <- length(xx1)
-  if (!is.null(oo2) && length(xx2) != N) {
-    if (unsupported == "error" || recycle == "strict") {
-      .stop_unsupported_logical3s("or3s", "|")
     }
     return(.fallback_logical3s("|",
                                list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...),

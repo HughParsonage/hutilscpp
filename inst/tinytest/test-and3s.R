@@ -487,6 +487,13 @@ local({
   expect_error(and3s(x > 0L, TRUE, unsupported = "error"))
   expect_error(and3s(x > 0L, TRUE, recycle = "strict"))
   expect_error(and3s(x > 0L, c(TRUE, FALSE), recycle = "strict"))
+  # Strict / unsupported = "error" must raise even when inputs contain
+  # NA: the length check runs before the NA fallback so a bad shape
+  # cannot hide behind missing values.
+  xna <- c(NA_integer_, seq_len(n - 1L))
+  expect_error(and3s(xna > 0L, TRUE, recycle = "strict", na = "false"))
+  expect_error(and3s(xna > 0L, TRUE, recycle = "strict", na = "base"))
+  expect_error(and3s(xna > 0L, TRUE, unsupported = "error", na = "false"))
   # exprC chaining must also work when exprB triggers the fallback.
   expect_equal(and3s(x > 0L, TRUE, x < 1000L),
                (x > 0L) & TRUE & (x < 1000L))
