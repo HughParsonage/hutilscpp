@@ -2,6 +2,8 @@
 
 ### New features
 
+- `mean_isna(x)` returns the proportion of `NA` in an atomic vector,
+  equivalent to `mean(is.na(x))`. Thin wrapper over `sum_isna`.
 - `and3s` / `or3s` (and `sum_and3s` / `sum_or3s`) gain three new
   arguments to make the dispatch contract explicit at the R boundary:
   `na`, `unsupported`, `recycle` (#45).
@@ -26,6 +28,9 @@
 
 ### Bug fixes
 
+- `sum_isna()` now counts every missing value in ALTREP vectors instead of
+  treating `anyNA(x)` as a count. This also fixes `mean_isna()` for ALTREP
+  inputs with multiple missing values, such as deferred strings.
 - Hardened `and3s` / `or3s` dispatch for issue #55 residuals: unsupported
   operators now fall back or error instead of silently no-oping, second-slot
   `%in%` / `%notin%` predicates are preprocessed before C dispatch, logical

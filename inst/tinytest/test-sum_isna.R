@@ -93,10 +93,14 @@ expect_equal(sum_isna(1:10, do_anyNA = TRUE, nThread = 1L), 0L)
 expect_equal(sum_isna(1:5), 0L)
 expect_equal(sum_isna(1:5, do_anyNA = FALSE), 0L)
 
+x_altrep_chr <- as.character(rep(NA_integer_, 10))
+if (hutilscpp:::is_altrep(x_altrep_chr)) {
+  expect_equal(sum_isna(x_altrep_chr), sum(is.na(x_altrep_chr)))
+  expect_equal(sum_isna(x_altrep_chr, do_anyNA = FALSE), sum(is.na(x_altrep_chr)))
+}
+
 
 # test_that("sum_isna(raw)", {
 expect_equal(sum_isna(raw(5)), 0)
 expect_equal(sum_isna(raw(5), do_anyNA = FALSE), 0)
-
-
 

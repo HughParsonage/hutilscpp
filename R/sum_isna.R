@@ -31,12 +31,7 @@ sum_isna <- function(x, do_anyNA = TRUE, nThread = getOption("hutilscpp.nThread"
   if (do_anyNA && nThread == 1L && !anyNA(x)) {
     return(0L)
   }
-  if (is_altrep(x)) {
-    return(as.integer(anyNA(x)))
-  }
-
   .Call("Csum_isna", x, nThread, PACKAGE = packageName)
 }
-
 
 
