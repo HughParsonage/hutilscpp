@@ -38,6 +38,25 @@
   semantics, inverted `%]between[%` double paths return the documented empty
   mask, and `na = "base"` now rejects `type = "raw"` because raw masks cannot
   represent `NA`.
+- `and3s` / `or3s`: a second predicate whose evaluated LHS length differs
+  from the first predicate (e.g. `and3s(x > 0L, TRUE)`,
+  `or3s(x < 0L, c(FALSE, TRUE))`, `and3s(x > 0L, 1L < x)`) no longer
+  hits the C entry guard and errors under default
+  `unsupported = "fallback"`; it now routes through base R as the
+  recycling contract documents. `unsupported = "error"` and
+  `recycle = "strict"` still raise (#56).
+- `and3s(<raw> %in% <table>, recycle = "strict")` no longer rejects the
+  membership-table length: `%in%` / `%notin%` use a table, not a recycled
+  RHS, so they are now exempt from `.validate_predicate_length`. This
+  closes the asymmetry with `or3s` (#56).
+- Integer `NA_integer_` bounds in `%(between)%` / `%]between[%` /
+  `%between%` are now treated as open bounds in the integer-LHS and
+  double-LHS-with-integer-bounds kernels, matching the existing
+  double-bound behaviour and the R-level operators in `R/between.R`
+  (#56).
+- `?and3s` value section qualified: equivalence to base `&` / `|` holds
+  exactly under `na = "base"`; `na = "C"` (default) and `na = "false"`
+  may diverge from base R when inputs contain missing values (#56).
 
 ### Internal
 
