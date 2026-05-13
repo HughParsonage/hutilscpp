@@ -30927,6 +30927,22 @@ expect_false(any(or3s(rr %notin% rr)))
 expect_false(any(or3s(rr %notin% 0L)))
 expect_false(any(or3s(rr %notin% 0)))
 
+# Regression for #56: second-predicate length mismatch must fall back
+# via base R rather than C-error.
+local({
+  n <- 1500L
+  x <- seq_len(n)
+  expect_equal(or3s(x < 0L, FALSE), (x < 0L) | FALSE)
+  expect_equal(or3s(x < 0L, TRUE),  (x < 0L) | TRUE)
+  expect_equal(or3s(x < 0L, c(FALSE, TRUE)),
+               (x < 0L) | c(FALSE, TRUE))
+  expect_equal(or3s(x < 0L, 1L < x), (x < 0L) | (1L < x))
+  expect_error(or3s(x < 0L, FALSE, unsupported = "error"))
+  expect_error(or3s(x < 0L, FALSE, recycle = "strict"))
+  expect_equal(or3s(x < 0L, FALSE, x > 1000L),
+               (x < 0L) | FALSE | (x > 1000L))
+})
+
 # Regression for #56: integer NA bounds in between-family kernels.
 local({
   n <- 1500L

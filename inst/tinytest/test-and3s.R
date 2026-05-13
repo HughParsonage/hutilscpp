@@ -470,6 +470,28 @@ local({
                ix >= 0L)
 })
 
+# Regression for #56: second-predicate length mismatch must fall back
+# via base R rather than C-error. Pre-fix, n > 1000 (so the small-vec
+# shortcut does not fire) plus xx2 length != N hit a hard error in the
+# C entry guard. Default `unsupported = "fallback"` now routes through
+# `.fallback_logical3s` (Reduce + na/type handling); strict and
+# `unsupported = "error"` raise as documented.
+local({
+  n <- 1500L
+  x <- seq_len(n)
+  expect_equal(and3s(x > 0L, TRUE),  (x > 0L) & TRUE)
+  expect_equal(and3s(x > 0L, FALSE), (x > 0L) & FALSE)
+  expect_equal(and3s(x > 0L, c(TRUE, FALSE)),
+               (x > 0L) & c(TRUE, FALSE))
+  expect_equal(and3s(x > 0L, 1L < x), (x > 0L) & (1L < x))
+  expect_error(and3s(x > 0L, TRUE, unsupported = "error"))
+  expect_error(and3s(x > 0L, TRUE, recycle = "strict"))
+  expect_error(and3s(x > 0L, c(TRUE, FALSE), recycle = "strict"))
+  # exprC chaining must also work when exprB triggers the fallback.
+  expect_equal(and3s(x > 0L, TRUE, x < 1000L),
+               (x > 0L) & TRUE & (x < 1000L))
+})
+
 # Regression for #56: raw %in% / %notin% under recycle = "strict".
 # Raw membership is intentionally left unpreprocessed (to preserve the
 # #39 fix: `fmatchp` would coerce a non-integer double table to raw and

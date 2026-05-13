@@ -246,14 +246,26 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
                                                      nThread = nThread,
                                                      type = "raw"))))
     }
-    args <- list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...)
-    args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
-    ans <- Reduce("&", args)
-    if (na == "false") ans <- .na_false_logical3s(ans)
-    return(switch(type,
-                  raw = lgl2raw(ans, nThread = nThread),
-                  logical = ans,
-                  which = which(ans)))
+    return(.fallback_logical3s("&",
+                               list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...),
+                               na = na, type = type, nThread = nThread))
+  }
+
+  # #56: the C kernel errors when length(xx2) != length(xx1) (over-read
+  # safety). Detect length mismatches here so default
+  # `unsupported = "fallback"` honours the documented base-recycling
+  # contract instead of crashing. The shape covers scalar masks
+  # (`and3s(x > 0L, TRUE)`), short recyclable masks
+  # (`and3s(x > 0L, c(TRUE, FALSE))`), and binary predicates whose LHS
+  # is scalar (`and3s(x > 0L, 1L < x)` parses xx2 to length 1).
+  N <- length(xx1)
+  if (!is.null(oo2) && length(xx2) != N) {
+    if (unsupported == "error" || recycle == "strict") {
+      .stop_unsupported_logical3s("and3s", "&")
+    }
+    return(.fallback_logical3s("&",
+                               list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...),
+                               na = na, type = type, nThread = nThread))
   }
 
   ans <-
@@ -268,14 +280,9 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
     if (unsupported == "error") {
       .stop_unsupported_logical3s("and3s", "&")
     }
-    args <- list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...)
-    args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
-    ans <- Reduce("&", args)
-    if (na == "false") ans <- .na_false_logical3s(ans)
-    return(switch(type,
-                  raw = lgl2raw(ans, nThread = nThread),
-                  logical = ans,
-                  which = which(ans)))
+    return(.fallback_logical3s("&",
+                               list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...),
+                               na = na, type = type, nThread = nThread))
   }
 
   if ((missing(exprC) || is.null(substitute(exprC))) && missing(..1)) {
@@ -449,14 +456,20 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
                                                    nThread = nThread,
                                                    type = "raw"))))
     }
-    args <- list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...)
-    args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
-    ans <- Reduce("|", args)
-    if (na == "false") ans <- .na_false_logical3s(ans)
-    return(switch(type,
-                  raw = lgl2raw(ans, nThread = nThread),
-                  logical = ans,
-                  which = which(ans)))
+    return(.fallback_logical3s("|",
+                               list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...),
+                               na = na, type = type, nThread = nThread))
+  }
+
+  # #56: see and3s for rationale.
+  N <- length(xx1)
+  if (!is.null(oo2) && length(xx2) != N) {
+    if (unsupported == "error" || recycle == "strict") {
+      .stop_unsupported_logical3s("or3s", "|")
+    }
+    return(.fallback_logical3s("|",
+                               list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...),
+                               na = na, type = type, nThread = nThread))
   }
 
   ans <-
@@ -469,14 +482,9 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
     if (unsupported == "error") {
       .stop_unsupported_logical3s("or3s", "|")
     }
-    args <- list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...)
-    args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
-    ans <- Reduce("|", args)
-    if (na == "false") ans <- .na_false_logical3s(ans)
-    return(switch(type,
-                  raw = lgl2raw(ans, nThread = nThread),
-                  logical = ans,
-                  which = which(ans)))
+    return(.fallback_logical3s("|",
+                               list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...),
+                               na = na, type = type, nThread = nThread))
   }
 
   if (missing(exprC) && missing(..1)) {
@@ -542,6 +550,23 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
        "and `unsupported = \"error\"` was set. Re-run with the default ",
        "(`unsupported = \"fallback\"`) to use base R `", op, "` instead.",
        call. = FALSE)
+}
+
+# Shared fallback for the three "C kernel cannot help" paths in
+# and3s / or3s: (1) parsed inputs contain NA under na = "false"/"base",
+# (2) the kernel returned NULL for an unsupported type/op/length, and
+# (3) length(xx2) != length(xx1) so the kernel would over-read.
+# `combine` is "&" or "|"; `args` is the materialised predicate list
+# (with identity values substituted for missing predicates), in the
+# same shape the existing fallback blocks built.
+.fallback_logical3s <- function(combine, args, na, type, nThread) {
+  args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
+  ans <- Reduce(combine, args)
+  if (na == "false") ans <- .na_false_logical3s(ans)
+  switch(type,
+         raw     = lgl2raw(ans, nThread = nThread),
+         logical = ans,
+         which   = which(ans))
 }
 
 .predicate_has_na_logical3s <- function(xx1, yy1, xx2, yy2) {
