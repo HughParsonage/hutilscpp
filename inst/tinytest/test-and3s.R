@@ -470,3 +470,23 @@ local({
                ix >= 0L)
 })
 
+# Regression for #56: raw %in% / %notin% under recycle = "strict".
+# Raw membership is intentionally left unpreprocessed (to preserve the
+# #39 fix: `fmatchp` would coerce a non-integer double table to raw and
+# silently change semantics). Strict validation must therefore exempt
+# %in% / %notin%, which use a membership table rather than a recycled
+# RHS, so length(yy) doesn't fit the {1, N, 2-for-between} rule.
+local({
+  n <- 1500L
+  rx <- as.raw(rep_len(c(1L, 2L, 3L), n))
+  expect_equal(and3s(rx %in% as.raw(c(1L, 3L)), recycle = "strict"),
+               rx %in% as.raw(c(1L, 3L)))
+  expect_equal(and3s(rx %notin% as.raw(c(1L, 3L)), recycle = "strict"),
+               !(rx %in% as.raw(c(1L, 3L))))
+  # Also pin the non-raw case explicitly so future preprocessing
+  # refactors keep strict + %in% working.
+  ix <- rep_len(1:3, n)
+  expect_equal(and3s(ix %in% c(1L, 3L), recycle = "strict"),
+               ix %in% c(1L, 3L))
+})
+

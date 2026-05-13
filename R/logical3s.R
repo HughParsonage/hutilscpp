@@ -176,6 +176,11 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
                   which = which(ans)))
   }
 
+  # Raw `xx` is intentionally left unpreprocessed: `fmatchp` coerces the
+  # membership table to raw, which truncates non-integer doubles (e.g.
+  # `as.raw(5)` for 5.5), silently changing the semantics. Leaving the
+  # kernel to dispatch RR / RI / RD with OP_IN / OP_NI preserves the
+  # fix for #39 and matches base R's `raw %in% c(5.5)` (all FALSE).
   if (!is.raw(xx1)) {
     switch(oo1,
            "%in%" = {
@@ -514,6 +519,12 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
 # after %in% / %notin% preprocessing (those convert yy to NULL).
 .validate_predicate_length <- function(oo, xx, yy, n, fname) {
   if (is.null(yy)) return(invisible())
+  # `%in%` / `%notin%` use a membership table, not a recycled RHS, so
+  # the {1, N, 2-for-between} length rule does not apply. Preprocessing
+  # normally drops `yy` to NULL before we get here, but exempt the ops
+  # explicitly so a future code path that skips preprocessing cannot
+  # silently re-introduce the asymmetry fixed in #56.
+  if (oo == "%in%" || oo == "%notin%") return(invisible())
   m <- length(yy)
   if (m == 1L || m == n) return(invisible())
   is_between <- oo %in% c("%between%", "%(between)%", "%]between[%")
