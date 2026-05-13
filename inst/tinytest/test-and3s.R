@@ -436,3 +436,37 @@ expect_false(any(and3s(rr %notin% 0)))
 rr <- as.raw(bb)
 expect_true(all(and3s(rr == rr)))
 
+# Regression for #56: integer NA bounds in between-family kernels.
+# Before the fix the II / DI kernels read NA_INTEGER (= INT_MIN) as a
+# raw integer bound, so c(a, NA) collapsed to ALWAYS_FALSE_PRED and
+# c(NA, NA) silently returned the wrong mask for OR / INIT modes. The
+# kernels now mirror R/between.R: NA is an open bound, c(NA, NA) is
+# all TRUE.
+local({
+  n <- 1500L
+  ix <- rep_len(-2:2, n)
+  dx <- as.double(ix)
+  expect_equal(and3s(ix %(between)% c(0L, NA_integer_)),
+               ix %(between)% c(0L, NA_integer_))
+  expect_equal(and3s(ix %(between)% c(NA_integer_, 0L)),
+               ix %(between)% c(NA_integer_, 0L))
+  expect_equal(and3s(ix %]between[% c(0L, NA_integer_)),
+               ix %]between[% c(0L, NA_integer_))
+  expect_equal(and3s(ix %]between[% c(NA_integer_, 0L)),
+               ix %]between[% c(NA_integer_, 0L))
+  expect_equal(and3s(dx %(between)% c(0L, NA_integer_)),
+               dx %(between)% c(0L, NA_integer_))
+  expect_equal(and3s(dx %]between[% c(0L, NA_integer_)),
+               dx %]between[% c(0L, NA_integer_))
+  expect_equal(and3s(ix %(between)% c(NA_integer_, NA_integer_)),
+               rep(TRUE, n))
+  expect_equal(and3s(dx %]between[% c(NA_integer_, NA_integer_)),
+               rep(TRUE, n))
+  # %between% (closed) follows the same NA-as-open convention as the
+  # existing ID / DD kernels.
+  expect_equal(and3s(ix %between% c(NA_integer_, 0L)),
+               ix <= 0L)
+  expect_equal(and3s(ix %between% c(0L, NA_integer_)),
+               ix >= 0L)
+})
+

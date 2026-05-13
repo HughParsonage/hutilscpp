@@ -30927,5 +30927,22 @@ expect_false(any(or3s(rr %notin% rr)))
 expect_false(any(or3s(rr %notin% 0L)))
 expect_false(any(or3s(rr %notin% 0)))
 
+# Regression for #56: integer NA bounds in between-family kernels.
+local({
+  n <- 1500L
+  ix <- rep_len(-2:2, n)
+  dx <- as.double(ix)
+  expect_equal(or3s(ix %(between)% c(0L, NA_integer_)),
+               ix %(between)% c(0L, NA_integer_))
+  expect_equal(or3s(ix %]between[% c(0L, NA_integer_)),
+               ix %]between[% c(0L, NA_integer_))
+  expect_equal(or3s(dx %(between)% c(0L, NA_integer_)),
+               dx %(between)% c(0L, NA_integer_))
+  expect_equal(or3s(dx %]between[% c(0L, NA_integer_)),
+               dx %]between[% c(0L, NA_integer_))
+  expect_equal(or3s(ix %(between)% c(NA_integer_, NA_integer_)),
+               rep(TRUE, n))
+})
+
 
 
