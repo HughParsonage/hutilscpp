@@ -62,10 +62,19 @@
 #'
 #' @return
 #'
-#' \code{and3s} and \code{or3s} return \code{exprA & exprB & exprC} and
-#' \code{exprA | exprB | exprC} respectively. If any expression is missing
-#' it is considered \code{TRUE} for \code{and3s} and \code{FALSE} for \code{or3s};
-#' in other words only the results of the other expressions count towards the result.
+#' \code{and3s} and \code{or3s} combine \code{exprA}, \code{exprB},
+#' \code{exprC}, \dots\ with logical AND and OR respectively. Missing
+#' expressions are treated as the corresponding identity (\code{TRUE}
+#' for \code{and3s}, \code{FALSE} for \code{or3s}), so they do not
+#' affect the result.
+#'
+#' With \code{na = "base"} the result is exactly \code{exprA & exprB & \dots}
+#' / \code{exprA | exprB | \dots} as base R would compute it, including
+#' \code{NA} propagation. With \code{na = "false"} any \code{NA} in
+#' that base-R result is coerced to \code{FALSE}. With the default
+#' \code{na = "C"} the result follows the C kernel's two-valued mask
+#' semantics described below, which can diverge from base R when
+#' inputs contain \code{NA} or \code{NaN}.
 #'
 #' @section Note on NA / NaN:
 #'
