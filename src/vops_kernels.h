@@ -103,6 +103,37 @@ static void KFN(II)(unsigned char * ansp, const int o,
                     const int * y, R_xlen_t M,
                     int nThread) {
   if (M == 2 && op_xlen2(o)) {
+    const bool y0_NA = y[0] == NA_INTEGER;
+    const bool y1_NA = y[1] == NA_INTEGER;
+    if (y0_NA || y1_NA) {
+      // Mirror R/between.R: NA bound is an open bound. (NA, NA) -> all
+      // TRUE, (NA, b) -> upper-half, (a, NA) -> lower-half. x-NA stays
+      // FALSE here to match the kernel's na = "C" convention.
+      if (y0_NA && y1_NA) ALWAYS_TRUE_PRED();
+      switch (o) {
+      case OP_BW:
+        if (y0_NA) {
+          FORLOOP({ int xi = x[i]; MASK_COMBINE(i, xi != NA_INTEGER && xi <= y[1]); });
+          return;
+        }
+        FORLOOP({ int xi = x[i]; MASK_COMBINE(i, xi != NA_INTEGER && xi >= y[0]); });
+        return;
+      case OP_BO:
+        if (y0_NA) {
+          FORLOOP({ int xi = x[i]; MASK_COMBINE(i, xi != NA_INTEGER && xi <  y[1]); });
+          return;
+        }
+        FORLOOP({ int xi = x[i]; MASK_COMBINE(i, xi != NA_INTEGER && xi >  y[0]); });
+        return;
+      case OP_BC:
+        if (y0_NA) {
+          FORLOOP({ int xi = x[i]; MASK_COMBINE(i, xi != NA_INTEGER && xi >= y[1]); });
+          return;
+        }
+        FORLOOP({ int xi = x[i]; MASK_COMBINE(i, xi != NA_INTEGER && xi <= y[0]); });
+        return;
+      }
+    }
     int y0 = y[0];
     int y1 = y[1];
     if (y0 > y1) {
@@ -321,6 +352,28 @@ static void KFN(DI)(unsigned char * ansp, const int o,
                     const int * y, R_xlen_t M,
                     int nThread) {
   if (M == 2 && op_xlen2(o)) {
+    const bool y0_NA = y[0] == NA_INTEGER;
+    const bool y1_NA = y[1] == NA_INTEGER;
+    if (y0_NA || y1_NA) {
+      // Open-bound semantics for NA bounds, matching R/between.R and the
+      // ID / DD kernels. x is double so NaN comparisons are already
+      // FALSE under IEEE 754 -- no separate x-NA guard needed.
+      if (y0_NA && y1_NA) ALWAYS_TRUE_PRED();
+      switch (o) {
+      case OP_BW:
+        if (y0_NA) { FORLOOP({ MASK_COMBINE(i, x[i] <= y[1]); }); return; }
+        FORLOOP({ MASK_COMBINE(i, x[i] >= y[0]); });
+        return;
+      case OP_BO:
+        if (y0_NA) { FORLOOP({ MASK_COMBINE(i, x[i] <  y[1]); }); return; }
+        FORLOOP({ MASK_COMBINE(i, x[i] >  y[0]); });
+        return;
+      case OP_BC:
+        if (y0_NA) { FORLOOP({ MASK_COMBINE(i, x[i] >= y[1]); }); return; }
+        FORLOOP({ MASK_COMBINE(i, x[i] <= y[0]); });
+        return;
+      }
+    }
     int y0 = y[0];
     int y1 = y[1];
     if (y0 > y1) {

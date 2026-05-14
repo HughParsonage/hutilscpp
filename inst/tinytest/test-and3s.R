@@ -436,3 +436,86 @@ expect_false(any(and3s(rr %notin% 0)))
 rr <- as.raw(bb)
 expect_true(all(and3s(rr == rr)))
 
+# Regression for #56: integer NA bounds in between-family kernels.
+# Before the fix the II / DI kernels read NA_INTEGER (= INT_MIN) as a
+# raw integer bound, so c(a, NA) collapsed to ALWAYS_FALSE_PRED and
+# c(NA, NA) silently returned the wrong mask for OR / INIT modes. The
+# kernels now mirror R/between.R: NA is an open bound, c(NA, NA) is
+# all TRUE.
+local({
+  n <- 1500L
+  ix <- rep_len(-2:2, n)
+  dx <- as.double(ix)
+  expect_equal(and3s(ix %(between)% c(0L, NA_integer_)),
+               ix %(between)% c(0L, NA_integer_))
+  expect_equal(and3s(ix %(between)% c(NA_integer_, 0L)),
+               ix %(between)% c(NA_integer_, 0L))
+  expect_equal(and3s(ix %]between[% c(0L, NA_integer_)),
+               ix %]between[% c(0L, NA_integer_))
+  expect_equal(and3s(ix %]between[% c(NA_integer_, 0L)),
+               ix %]between[% c(NA_integer_, 0L))
+  expect_equal(and3s(dx %(between)% c(0L, NA_integer_)),
+               dx %(between)% c(0L, NA_integer_))
+  expect_equal(and3s(dx %]between[% c(0L, NA_integer_)),
+               dx %]between[% c(0L, NA_integer_))
+  expect_equal(and3s(ix %(between)% c(NA_integer_, NA_integer_)),
+               rep(TRUE, n))
+  expect_equal(and3s(dx %]between[% c(NA_integer_, NA_integer_)),
+               rep(TRUE, n))
+  # %between% (closed) follows the same NA-as-open convention as the
+  # existing ID / DD kernels.
+  expect_equal(and3s(ix %between% c(NA_integer_, 0L)),
+               ix <= 0L)
+  expect_equal(and3s(ix %between% c(0L, NA_integer_)),
+               ix >= 0L)
+})
+
+# Regression for #56: second-predicate length mismatch must fall back
+# via base R rather than C-error. Pre-fix, n > 1000 (so the small-vec
+# shortcut does not fire) plus xx2 length != N hit a hard error in the
+# C entry guard. Default `unsupported = "fallback"` now routes through
+# `.fallback_logical3s` (Reduce + na/type handling); strict and
+# `unsupported = "error"` raise as documented.
+local({
+  n <- 1500L
+  x <- seq_len(n)
+  expect_equal(and3s(x > 0L, TRUE),  (x > 0L) & TRUE)
+  expect_equal(and3s(x > 0L, FALSE), (x > 0L) & FALSE)
+  expect_equal(and3s(x > 0L, c(TRUE, FALSE)),
+               (x > 0L) & c(TRUE, FALSE))
+  expect_equal(and3s(x > 0L, 1L < x), (x > 0L) & (1L < x))
+  expect_error(and3s(x > 0L, TRUE, unsupported = "error"))
+  expect_error(and3s(x > 0L, TRUE, recycle = "strict"))
+  expect_error(and3s(x > 0L, c(TRUE, FALSE), recycle = "strict"))
+  # Strict / unsupported = "error" must raise even when inputs contain
+  # NA: the length check runs before the NA fallback so a bad shape
+  # cannot hide behind missing values.
+  xna <- c(NA_integer_, seq_len(n - 1L))
+  expect_error(and3s(xna > 0L, TRUE, recycle = "strict", na = "false"))
+  expect_error(and3s(xna > 0L, TRUE, recycle = "strict", na = "base"))
+  expect_error(and3s(xna > 0L, TRUE, unsupported = "error", na = "false"))
+  # exprC chaining must also work when exprB triggers the fallback.
+  expect_equal(and3s(x > 0L, TRUE, x < 1000L),
+               (x > 0L) & TRUE & (x < 1000L))
+})
+
+# Regression for #56: raw %in% / %notin% under recycle = "strict".
+# Raw membership is intentionally left unpreprocessed (to preserve the
+# #39 fix: `fmatchp` would coerce a non-integer double table to raw and
+# silently change semantics). Strict validation must therefore exempt
+# %in% / %notin%, which use a membership table rather than a recycled
+# RHS, so length(yy) doesn't fit the {1, N, 2-for-between} rule.
+local({
+  n <- 1500L
+  rx <- as.raw(rep_len(c(1L, 2L, 3L), n))
+  expect_equal(and3s(rx %in% as.raw(c(1L, 3L)), recycle = "strict"),
+               rx %in% as.raw(c(1L, 3L)))
+  expect_equal(and3s(rx %notin% as.raw(c(1L, 3L)), recycle = "strict"),
+               !(rx %in% as.raw(c(1L, 3L))))
+  # Also pin the non-raw case explicitly so future preprocessing
+  # refactors keep strict + %in% working.
+  ix <- rep_len(1:3, n)
+  expect_equal(and3s(ix %in% c(1L, 3L), recycle = "strict"),
+               ix %in% c(1L, 3L))
+})
+

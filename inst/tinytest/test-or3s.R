@@ -237,7 +237,7 @@ expect_equal(or3s(xi %(between)% c(11L, 110L),
              `|`(xi %(between)% c(11L, 110L),
                  yi %]between[% c(14L, 16L)))
 expect_equal(or3s(xd %(between)% c(11.1, 110),
-                  yd %]between[% c(14, 6)),
+                  yd %]between[% c(14, 16)),
              `|`(xd %(between)% c(11.1, 110),
                  yd %]between[% c(14, 16)))
 
@@ -30926,6 +30926,45 @@ expect_true(all(or3s(rr %in% 0)))
 expect_false(any(or3s(rr %notin% rr)))
 expect_false(any(or3s(rr %notin% 0L)))
 expect_false(any(or3s(rr %notin% 0)))
+
+# Regression for #56: second-predicate length mismatch must fall back
+# via base R rather than C-error.
+local({
+  n <- 1500L
+  x <- seq_len(n)
+  expect_equal(or3s(x < 0L, FALSE), (x < 0L) | FALSE)
+  expect_equal(or3s(x < 0L, TRUE),  (x < 0L) | TRUE)
+  expect_equal(or3s(x < 0L, c(FALSE, TRUE)),
+               (x < 0L) | c(FALSE, TRUE))
+  expect_equal(or3s(x < 0L, 1L < x), (x < 0L) | (1L < x))
+  expect_error(or3s(x < 0L, FALSE, unsupported = "error"))
+  expect_error(or3s(x < 0L, FALSE, recycle = "strict"))
+  # Strict / unsupported = "error" must raise even when inputs contain
+  # NA (length check precedes NA fallback).
+  xna <- c(NA_integer_, seq_len(n - 1L))
+  expect_error(or3s(xna < 0L, FALSE, recycle = "strict", na = "false"))
+  expect_error(or3s(xna < 0L, FALSE, recycle = "strict", na = "base"))
+  expect_error(or3s(xna < 0L, FALSE, unsupported = "error", na = "false"))
+  expect_equal(or3s(x < 0L, FALSE, x > 1000L),
+               (x < 0L) | FALSE | (x > 1000L))
+})
+
+# Regression for #56: integer NA bounds in between-family kernels.
+local({
+  n <- 1500L
+  ix <- rep_len(-2:2, n)
+  dx <- as.double(ix)
+  expect_equal(or3s(ix %(between)% c(0L, NA_integer_)),
+               ix %(between)% c(0L, NA_integer_))
+  expect_equal(or3s(ix %]between[% c(0L, NA_integer_)),
+               ix %]between[% c(0L, NA_integer_))
+  expect_equal(or3s(dx %(between)% c(0L, NA_integer_)),
+               dx %(between)% c(0L, NA_integer_))
+  expect_equal(or3s(dx %]between[% c(0L, NA_integer_)),
+               dx %]between[% c(0L, NA_integer_))
+  expect_equal(or3s(ix %(between)% c(NA_integer_, NA_integer_)),
+               rep(TRUE, n))
+})
 
 
 
