@@ -28,6 +28,10 @@
 
 ### Bug fixes
 
+- `and3s()` / `or3s()` reuse evaluated operands on fallback, including
+  scalar recycling and NA validation, so operand side effects run once.
+  `or3s()` also preserves fractional raw-membership tables instead of
+  truncating them to raw values.
 - Fixed native memory errors for empty `and3s()` / `or3s()` index results,
   empty `whichs()` / `which3()` inputs, and scalar integer comparisons in
   `whichs()`. `which3()` also validates nonempty input lengths.

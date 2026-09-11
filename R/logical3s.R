@@ -131,6 +131,7 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
   recycle     <- match.arg(recycle)
 
   sexprA <- substitute(exprA)
+  predicate_env <- parent.frame(.parent_nframes)
   type <-
     switch(type[[1L]],
            raw = "raw",
@@ -170,6 +171,13 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
     }
   }
 
+  # Preserve the operands before membership preprocessing rewrites them.
+  # Rebuild only the outer call on fallback, so operand side effects run once.
+  cachedA <- .cache_predicate_logical3s(sexprA, xx1, yy1)
+  cachedB <- if (is.null(oo2)) quote(NULL) else {
+    .cache_predicate_logical3s(sexprB, xx2, yy2)
+  }
+
   # Small-vector shortcut: defer to base R `&` for short inputs when no
   # explicit validation mode is requested. `na = "C"` keeps historical
   # CRAN behaviour; `na = "false"` coerces the base result to a
@@ -177,7 +185,7 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
   if (na %in% c("C", "false") &&
       recycle == "base" && unsupported == "fallback" &&
       !is.null(xx1) && length(xx1) <= 1e3L) {
-    ans <- .et3(exprA, exprB, exprC, ...)
+    ans <- .et3(eval(cachedA, predicate_env), eval(cachedB, predicate_env), exprC, ...)
     if (na == "false") ans <- .na_false_logical3s(ans)
     return(switch(type,
                   raw = lgl2raw(ans, nThread = nThread),
@@ -243,7 +251,9 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
       .stop_unsupported_logical3s("and3s", "&")
     }
     return(.fallback_logical3s("&",
-                               list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...),
+                               list(eval(cachedA, predicate_env),
+                                    eval(cachedB, predicate_env) %||% TRUE,
+                                    exprC %||% TRUE, ...),
                                na = na, type = type, nThread = nThread))
   }
 
@@ -266,15 +276,21 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
     }
     if ((unsupported == "error" || recycle == "strict") &&
         (!(missing(exprC) || is.null(substitute(exprC))) || !missing(..1))) {
-      suppressMessages(eval.parent(substitute(and3s(exprC, ...,
-                                                     na = "false",
+      rest <- suppressMessages(eval.parent(substitute(and3s(exprC, ...,
+                                                     na = "base",
                                                      unsupported = unsupported,
                                                      recycle = recycle,
                                                      nThread = nThread,
-                                                     type = "raw"))))
+                                                     type = "logical"))))
+      return(.fallback_logical3s("&",
+                                 list(eval(cachedA, predicate_env),
+                                      eval(cachedB, predicate_env) %||% TRUE, rest),
+                                 na = na, type = type, nThread = nThread))
     }
     return(.fallback_logical3s("&",
-                               list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...),
+                               list(eval(cachedA, predicate_env),
+                                    eval(cachedB, predicate_env) %||% TRUE,
+                                    exprC %||% TRUE, ...),
                                na = na, type = type, nThread = nThread))
   }
 
@@ -291,7 +307,9 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
       .stop_unsupported_logical3s("and3s", "&")
     }
     return(.fallback_logical3s("&",
-                               list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...),
+                               list(eval(cachedA, predicate_env),
+                                    eval(cachedB, predicate_env) %||% TRUE,
+                                    exprC %||% TRUE, ...),
                                na = na, type = type, nThread = nThread))
   }
 
@@ -364,6 +382,7 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
     }
   }
   sexprA <- substitute(exprA)
+  predicate_env <- parent.frame(.parent_nframes)
 
 
   oo1 <- xx1 <- yy1 <-
@@ -394,11 +413,18 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
     }
   }
 
+  # Preserve the operands before membership preprocessing rewrites them.
+  # Rebuild only the outer call on fallback, so operand side effects run once.
+  cachedA <- .cache_predicate_logical3s(sexprA, xx1, yy1)
+  cachedB <- if (is.null(oo2)) quote(NULL) else {
+    .cache_predicate_logical3s(sexprB, xx2, yy2)
+  }
+
   # Small-vector shortcut: see and3s for rationale.
   if (na %in% c("C", "false") &&
       recycle == "base" && unsupported == "fallback" &&
       !is.null(xx1) && length(xx1) <= 1e3L) {
-    ans <- .or3(exprA, exprB, exprC, ...)
+    ans <- .or3(eval(cachedA, predicate_env), eval(cachedB, predicate_env), exprC, ...)
     if (na == "false") ans <- .na_false_logical3s(ans)
     return(switch(type,
                   raw = lgl2raw(ans, nThread = nThread),
@@ -406,19 +432,21 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
                   which = which(ans)))
   }
 
-  switch(oo1,
-         "%in%" = {
-           xx1 <- finp(xx1, yy1, nThread = nThread)
-           yy1 <- NULL
-           oo1 <- "=="
-         },
-         "%notin%" = {
-           xx1 <- fnotinp(xx1, yy1, nThread = nThread)
-           yy1 <- NULL
-           oo1 <- "=="
-         })
+  if (!is.raw(xx1)) {
+    switch(oo1,
+           "%in%" = {
+             xx1 <- finp(xx1, yy1, nThread = nThread)
+             yy1 <- NULL
+             oo1 <- "=="
+           },
+           "%notin%" = {
+             xx1 <- fnotinp(xx1, yy1, nThread = nThread)
+             yy1 <- NULL
+             oo1 <- "=="
+           })
+  }
 
-  if (is.character(oo2)) {
+  if (is.character(oo2) && !is.raw(xx2)) {
     switch(oo2,
            "%in%" = {
              xx2 <- finp(xx2, yy2, nThread = nThread)
@@ -451,7 +479,9 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
       .stop_unsupported_logical3s("or3s", "|")
     }
     return(.fallback_logical3s("|",
-                               list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...),
+                               list(eval(cachedA, predicate_env),
+                                    eval(cachedB, predicate_env) %||% FALSE,
+                                    exprC %||% FALSE, ...),
                                na = na, type = type, nThread = nThread))
   }
 
@@ -471,15 +501,21 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
     }
     if ((unsupported == "error" || recycle == "strict") &&
         (!(missing(exprC) || is.null(substitute(exprC))) || !missing(..1))) {
-      suppressMessages(eval.parent(substitute(or3s(exprC, ...,
-                                                   na = "false",
+      rest <- suppressMessages(eval.parent(substitute(or3s(exprC, ...,
+                                                   na = "base",
                                                    unsupported = unsupported,
                                                    recycle = recycle,
                                                    nThread = nThread,
-                                                   type = "raw"))))
+                                                   type = "logical"))))
+      return(.fallback_logical3s("|",
+                                 list(eval(cachedA, predicate_env),
+                                      eval(cachedB, predicate_env) %||% FALSE, rest),
+                                 na = na, type = type, nThread = nThread))
     }
     return(.fallback_logical3s("|",
-                               list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...),
+                               list(eval(cachedA, predicate_env),
+                                    eval(cachedB, predicate_env) %||% FALSE,
+                                    exprC %||% FALSE, ...),
                                na = na, type = type, nThread = nThread))
   }
 
@@ -494,7 +530,9 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
       .stop_unsupported_logical3s("or3s", "|")
     }
     return(.fallback_logical3s("|",
-                               list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...),
+                               list(eval(cachedA, predicate_env),
+                                    eval(cachedB, predicate_env) %||% FALSE,
+                                    exprC %||% FALSE, ...),
                                na = na, type = type, nThread = nThread))
   }
 
@@ -561,6 +599,17 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
        "and `unsupported = \"error\"` was set. Re-run with the default ",
        "(`unsupported = \"fallback\"`) to use base R `", op, "` instead.",
        call. = FALSE)
+}
+
+.cache_predicate_logical3s <- function(expr, xx, yy) {
+  if (is.call(expr) && length(expr) %in% c(2L, 3L)) {
+    expr[[2L]] <- substitute(quote(value), list(value = xx))
+    if (length(expr) == 3L) {
+      expr[[3L]] <- substitute(quote(value), list(value = yy))
+    }
+    return(expr)
+  }
+  substitute(quote(value), list(value = xx))
 }
 
 # Shared fallback for the three "C kernel cannot help" paths in
