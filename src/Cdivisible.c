@@ -11,6 +11,9 @@ SEXP Cdivisible(SEXP xx, SEXP dd, SEXP nthreads) {
   }
   const int * xp = INTEGER(xx);
   const unsigned int d = asInteger(dd);
+  if (d == 0) {
+    error("`d` must not be zero.");
+  }
   SEXP ans = PROTECT(allocVector(LGLSXP, N));
   int * restrict ansp = LOGICAL(ans);
 #if defined _OPENMP && _OPENMP >= 201511
