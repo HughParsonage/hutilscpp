@@ -237,7 +237,7 @@ expect_equal(or3s(xi %(between)% c(11L, 110L),
              `|`(xi %(between)% c(11L, 110L),
                  yi %]between[% c(14L, 16L)))
 expect_equal(or3s(xd %(between)% c(11.1, 110),
-                  yd %]between[% c(14, 6)),
+                  yd %]between[% c(14, 16)),
              `|`(xd %(between)% c(11.1, 110),
                  yd %]between[% c(14, 16)))
 

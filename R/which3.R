@@ -1,5 +1,6 @@
 #' which of three vectors are the elements (all, any) true?
-#' @param x,y,z Logical vectors. Either the same length or length-1
+#' @param x,y,z Logical vectors. Either the same length or length-1.
+#' If any input has length zero, the result is \code{integer(0)}.
 #' @param And Boolean. If \code{TRUE}, only indices where all of x, y, z
 #' are TRUE are returned; if \code{FALSE}, any index where x, y, z
 #' are TRUE are returned.

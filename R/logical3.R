@@ -21,7 +21,7 @@ and3 <- function(x, y, z = NULL, nas_absent = FALSE) {
   lz <- length(.z)
 
   if (lx == ly && ly == lz && isTRUE(nas_absent)) {
-    return(do_and3(x, y, z))
+    return(do_and3(x, y, .z))
   }
 
 
@@ -97,6 +97,7 @@ and3 <- function(x, y, z = NULL, nas_absent = FALSE) {
     if (lz == 1L) {
       return(x)
     }
+    return(do_and3(x, .z, TRUE))
   }
   do_and3(x, y, .z)
 }

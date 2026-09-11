@@ -270,10 +270,9 @@ SEXP C_which_raw(SEXP X, SEXP nthreads) {
     SEXP ans = PROTECT(allocVector(INTSXP, o));
     int * restrict ansp = INTEGER(ans);
     int j = 0;
-    for (R_xlen_t i = 0; i < N; ++i) {
+    for (R_xlen_t i = 0; i < N && j < o; ++i) {
       ansp[j] = i + 1;
       j += (bool)xp[i];
-      if (j >= o) break;
     }
     UNPROTECT(1);
     return ans;
@@ -282,7 +281,7 @@ SEXP C_which_raw(SEXP X, SEXP nthreads) {
   SEXP ans = PROTECT(allocVector(REALSXP, o));
   double * restrict ansp = REAL(ans);
   R_xlen_t j = 0;
-  for (R_xlen_t i = 0; i < N; ++i) {
+  for (R_xlen_t i = 0; i < N && j < o; ++i) {
     ansp[j] = i + 1;
     j += (bool)xp[i];
   }

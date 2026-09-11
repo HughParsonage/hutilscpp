@@ -42,6 +42,8 @@
 #'   in \code{addresses_lat,addresses_lon} nearest to \code{lat, lon}.}
 #' \item{\code{dist}}{the distance, in kilometres, between the two points.}
 #' }
+#' If no eligible candidate is found, \code{pos} is \code{NA} and
+#' \code{dist} is \code{Inf}.
 #'
 #' @examples
 #' lat2 <- runif(5, -38, -37.8)
@@ -97,6 +99,7 @@ match_nrst_haversine <- function(lat,
   max_lon <- max(lon)
   verify_cartR <- FALSE
   if (is.null(cartesian_R)) {
+    cartesian_R <- -1
     if (min_lat > -63 && max_lat < 63) {
       # Within 63 degrees of latitude, the cartesian distance
       # is at least 50 times the distance in km.

@@ -87,3 +87,37 @@ expect_equal(character2integer(c("5.0", "4.0", "5.5"), allow.double = TRUE,
 expect_error(character2integer(c("5", "55", "55.005"), allow.double = FALSE),
              "FALSE")
 expect_true(is.double(character2integer(c("5", "55", "55.005"), allow.double = TRUE)))
+
+# Promotion preserves actual missing strings for every marker configuration.
+for (markers in list(NULL, character(), "missing", c("missing", "NA"))) {
+  expect_identical(character2integer(c(NA_character_, "1.5"),
+                                    na.strings = markers, allow.double = TRUE),
+                   c(NA_real_, 1.5))
+}
+
+# Marker sets work before integer conversion and before deciding to promote.
+for (allow_double in list(FALSE, TRUE, NA)) {
+  expect_identical(character2integer(c("1", "missing", "NA", NA_character_),
+                                    na.strings = c("missing", "NA"),
+                                    allow.double = allow_double),
+                   c(1L, NA_integer_, NA_integer_, NA_integer_))
+  expect_identical(character2integer(c("1", "1.5", "3,000,000,000"),
+                                    na.strings = c("1.5", "3,000,000,000"),
+                                    allow.double = allow_double),
+                   c(1L, NA_integer_, NA_integer_))
+  expect_identical(character2integer(character(), na.strings = character(),
+                                    allow.double = allow_double), integer())
+}
+expect_identical(character2integer(c("1", "2"), na.strings = character()), 1:2)
+expect_identical(character2integer(c("1.5", "missing", NA_character_),
+                                  na.strings = c("missing", "NA"),
+                                  allow.double = TRUE),
+                 c(1.5, NA_real_, NA_real_))
+
+# Values outside the integer range remain missing when promotion is disabled.
+for (markers in list(NULL, "missing", c("missing", "NA"))) {
+  expect_identical(character2integer(c("2147483648", "-2147483649",
+                                      "18446744073709551616"),
+                                    na.strings = markers, allow.double = NA),
+                   rep(NA_integer_, 3))
+}

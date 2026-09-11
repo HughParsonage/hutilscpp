@@ -481,7 +481,7 @@ SEXP Cpmax(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
 #pragma omp parallel for num_threads(nThread)
 #endif
       for (R_xlen_t i = 0; i < N; ++i) {
-        ansp[i] = xp[i] == NA_INTEGER ? NA_INTEGER : maxii(xp[i], a);
+        ansp[i] = (xp[i] == NA_INTEGER || a == NA_INTEGER) ? NA_INTEGER : maxii(xp[i], a);
       }
     } else {
 #if defined _OPENMP && _OPENMP >= 201511
@@ -603,7 +603,7 @@ SEXP Cpmax(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
 #pragma omp parallel for num_threads(nThread)
 #endif
       for (R_xlen_t i = 0; i < N; ++i) {
-        ansp[i] = maxid(xp[i], yp[i]);
+        ansp[i] = (xp[i] == NA_INTEGER || ISNAN(yp[i])) ? NA_REAL : maxid(xp[i], yp[i]);
       }
     } else {
 #if defined _OPENMP && _OPENMP >= 201511
@@ -653,7 +653,7 @@ SEXP Cpmax(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
 #pragma omp parallel for num_threads(nThread)
 #endif
       for (R_xlen_t i = 0; i < N; ++i) {
-        ansp[i] = ISNAN(xp[i]) ? NA_REAL : maxdd(xp[i], a);
+        ansp[i] = (ISNAN(xp[i]) || ISNAN(a)) ? NA_REAL : maxdd(xp[i], a);
       }
     } else {
 #if defined _OPENMP && _OPENMP >= 201511
@@ -747,7 +747,7 @@ SEXP Cpmin(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
 #pragma omp parallel for num_threads(nThread)
 #endif
       for (R_xlen_t i = 0; i < N; ++i) {
-        ansp[i] = minid(xp[i], ad);
+        ansp[i] = (keep_nas && xp[i] == NA_INTEGER) ? NA_REAL : minid(xp[i], ad);
       }
       UNPROTECT(1);
       return ans;
@@ -815,7 +815,7 @@ SEXP Cpmin(SEXP x, SEXP y, SEXP keepNas, SEXP nthreads) {
 #pragma omp parallel for num_threads(nThread)
 #endif
     for (R_xlen_t i = 0; i < N; ++i) {
-      ansp[i] = minid(yp[i], xp[i]);
+      ansp[i] = (keep_nas && (yp[i] == NA_INTEGER || ISNAN(xp[i]))) ? NA_REAL : minid(yp[i], xp[i]);
     }
     UNPROTECT(1);
     return ans;
@@ -894,7 +894,7 @@ SEXP CpmaxC_in_place(SEXP x, SEXP a, SEXP keepNas, SEXP nthreads) {
     int * xp = INTEGER(x);
     int aa = asInteger(a);
     for (R_xlen_t i = 0; i < N; ++i) {
-      if (xp[i] <= aa) {
+      if ((!keep_nas || xp[i] != NA_INTEGER) && xp[i] <= aa) {
         xp[i] = aa;
       }
     }
@@ -915,7 +915,7 @@ SEXP CpmaxC_in_place(SEXP x, SEXP a, SEXP keepNas, SEXP nthreads) {
     // # nocov end
     int aa = (int)(ad);
     for (R_xlen_t i = 0; i < N; ++i) {
-      if (xp[i] <= aa) {
+      if ((!keep_nas || xp[i] != NA_INTEGER) && xp[i] <= aa) {
         xp[i] = aa;
       }
     }
@@ -947,6 +947,21 @@ SEXP CpminC_in_place(SEXP x, SEXP a, SEXP keepNas, SEXP nthreads) {
       TYPEOF(a) == INTSXP) {
     int * xp = INTEGER(x);
     int aa = asInteger(a);
+    for (R_xlen_t i = 0; i < N; ++i) {
+      if (xp[i] >= aa) {
+        xp[i] = aa;
+      }
+    }
+  }
+  if (TYPEOF(x) == INTSXP &&
+      TYPEOF(a) == REALSXP) {
+    double ad = asReal(a);
+    if (dbl_is_int(ad) != 1) {
+      // A fractional or out-of-range bound requires a new double vector.
+      return Cpmin(x, a, keepNas, nthreads);
+    }
+    int * xp = INTEGER(x);
+    const int aa = (int)ad;
     for (R_xlen_t i = 0; i < N; ++i) {
       if (xp[i] >= aa) {
         xp[i] = aa;

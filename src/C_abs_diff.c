@@ -143,6 +143,7 @@ SEXP C_abs_diff(SEXP x, SEXP y, SEXP nthreads, SEXP Option) {
   const int * yp = INTEGER(y);
 
   // Determine whether doubles (64-bit int) are required
+  const bool scalar_y = xlength(y) == 1;
   bool needs64 = true;
   // If opt == 2 then we always use double so no need
   // ... to determine need
@@ -161,7 +162,7 @@ SEXP C_abs_diff(SEXP x, SEXP y, SEXP nthreads, SEXP Option) {
 #pragma omp parallel for num_threads(nThread)
 #endif
     for (R_xlen_t i = 0; i < N; ++i) {
-      ansp[i] = single_abs_diff(xp[i], yp[i]);
+      ansp[i] = single_abs_diff(xp[i], yp[scalar_y ? 0 : i]);
     }
     UNPROTECT(1);
     return ans;
@@ -173,7 +174,7 @@ SEXP C_abs_diff(SEXP x, SEXP y, SEXP nthreads, SEXP Option) {
 #pragma omp parallel for num_threads(nThread)
 #endif
   for (R_xlen_t i = 0; i < N; ++i) {
-    ansp[i] = single_abs_diff(xp[i], yp[i]);
+    ansp[i] = single_abs_diff(xp[i], yp[scalar_y ? 0 : i]);
   }
   UNPROTECT(1);
   return ans;
@@ -248,7 +249,7 @@ static R_xlen_t wdi(const double * x, R_xlen_t N, const int * y, R_xlen_t M) {
 }
 
 static R_xlen_t wdd(const double * x, R_xlen_t N, const double * y, R_xlen_t M, int nThread) {
-  R_xlen_t o = 0;
+  R_xlen_t o = 1;
   double r =  dsingle_abs_diff(x[0], y[0]);
   if (N == M) {
 #if _OPENMP
@@ -288,6 +289,12 @@ static R_xlen_t wdd(const double * x, R_xlen_t N, const double * y, R_xlen_t M, 
 }
 
 SEXP C_which_abs_diff(SEXP x, SEXP y, SEXP nthreads) {
+  if (xlength(x) == 0 || xlength(y) == 0) {
+    return allocVector(INTSXP, 0);
+  }
+  if (xlength(x) != xlength(y) && xlength(x) != 1 && xlength(y) != 1) {
+    return R_NilValue;
+  }
   int nThread = as_nThread(nthreads);
   switch(TYPEOF(x)) {
   case INTSXP:

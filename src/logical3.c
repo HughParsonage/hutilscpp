@@ -102,12 +102,28 @@ SEXP Cna_and(SEXP xx) {
   return ans;
 }
 
+static R_xlen_t which3_length(SEXP x, SEXP y, SEXP z) {
+  R_xlen_t nx = xlength(x), ny = xlength(y), nz = xlength(z);
+  if (nx == 0 || ny == 0 || nz == 0) {
+    return 0;
+  }
+  R_xlen_t n = nx > ny ? nx : ny;
+  if (nz > n) {
+    n = nz;
+  }
+  if ((nx != 1 && nx != n) || (ny != 1 && ny != n) ||
+      (nz != 1 && nz != n)) {
+    error("`x`, `y`, and `z` must have length 1 or the same length.");
+  }
+  return n;
+}
+
 SEXP Cwhich3(SEXP xx, SEXP yy, SEXP zz,
              SEXP AAnd,
              SEXP AanyNAx,
              SEXP AanyNAy,
              SEXP AanyNAz) {
-  R_xlen_t n = (xlength(xx) > 1) ? xlength(xx) : ((xlength(yy) > 1) ? xlength(yy) : xlength(zz));
+  R_xlen_t n = which3_length(xx, yy, zz);
   if (n >= INT_MAX) {
     // # not suitable for integer
     return R_NilValue; // # nocov
@@ -168,7 +184,7 @@ SEXP Cwhich3(SEXP xx, SEXP yy, SEXP zz,
 
 SEXP Cwhich3_mem(SEXP xx, SEXP yy, SEXP zz, SEXP AAnd) {
   const bool And = asLogical(AAnd);
-  R_xlen_t n = (xlength(xx) > 1) ? xlength(xx) : ((xlength(yy) > 1) ? xlength(yy) : xlength(zz));
+  R_xlen_t n = which3_length(xx, yy, zz);
   const bool nx = xlength(xx) == n;
   const bool ny = xlength(yy) == n;
   const bool nz = xlength(zz) == n;

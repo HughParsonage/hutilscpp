@@ -14,9 +14,6 @@ SEXP fmatchp_lgl(SEXP x, SEXP table, SEXP nthreads, SEXP Fin) {
   const bool fin = asLogical(Fin);
   int tbl[3] = {0};
   int M = length(table);
-  if (M == 0) {
-    return LogicalN(N);
-  }
   if (!isLogical(table)) {
     error("`table` was type '%s' but must be logical.", type2char(TYPEOF(table))); // # nocov
   }
@@ -35,7 +32,7 @@ SEXP fmatchp_lgl(SEXP x, SEXP table, SEXP nthreads, SEXP Fin) {
   if (fin) {
     SEXP ans = PROTECT(allocVector(LGLSXP, N));
     int * ansp = LOGICAL(ans);
-    if (tbl[0] && tbl[1]) {
+    if (tbl[0] && tbl[1] && tbl[2]) {
       FORLOOP(ansp[i] = 1;)
     } else {
       FORLOOP({

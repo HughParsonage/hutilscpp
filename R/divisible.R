@@ -1,7 +1,7 @@
 #' Divisibility
 #'
 #' @param x An integer vector
-#' @param d \code{integer(1)}. The divisor.
+#' @param d \code{integer(1)}. The divisor. Zero is an error.
 #' @param nThread The number of threads to use.
 #'
 #' @return Logical vector: \code{TRUE} where \code{x} is divisible by \code{d}.
