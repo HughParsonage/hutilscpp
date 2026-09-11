@@ -32,6 +32,26 @@ expect_identical(whichs(1L == integer()), integer(0))
 expect_identical(whichs(integer() == integer()), integer(0))
 expect_identical(whichs(integer() < 1L), integer(0))
 
+# Empty comparisons must use the operands already evaluated by whichs().
+local({
+  for (op in c("!=", "==", ">=", "<=", ">", "<")) {
+    for (empty_side in 1:2) {
+      calls <- c(0L, 0L)
+      lhs <- function() {
+        calls[1L] <<- calls[1L] + 1L
+        if (empty_side == 1L && calls[1L] == 1L) integer() else 1L
+      }
+      rhs <- function() {
+        calls[2L] <<- calls[2L] + 1L
+        if (empty_side == 2L && calls[2L] == 1L) integer() else 1L
+      }
+      expr <- call("whichs", call(op, quote(lhs()), quote(rhs())))
+      expect_identical(eval(expr), integer(0))
+      expect_identical(calls, c(1L, 1L))
+    }
+  }
+})
+
 # Exercise every empty-input position in the NA and non-NA kernels.
 for (and in c(TRUE, FALSE)) {
   for (other in list(TRUE, NA, c(TRUE, FALSE), c(TRUE, NA))) {
