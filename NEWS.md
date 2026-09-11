@@ -31,6 +31,8 @@
 
 ### Bug fixes
 
+- Namespace-qualified `and3s()`, `or3s()`, `sum_and3s()`, and `sum_or3s()`
+  work without attaching the package, including recursive predicates (#58).
 - `and3s()` / `or3s()` reuse evaluated operands on fallback, including
   scalar recycling and NA validation, so operand side effects run once.
   `or3s()` also preserves fractional raw-membership tables instead of

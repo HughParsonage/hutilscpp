@@ -276,7 +276,7 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
     }
     if ((unsupported == "error" || recycle == "strict") &&
         (!(missing(exprC) || is.null(substitute(exprC))) || !missing(..1))) {
-      rest <- suppressMessages(eval.parent(substitute(and3s(exprC, ...,
+      rest <- suppressMessages(eval.parent(substitute(hutilscpp::and3s(exprC, ...,
                                                      na = "base",
                                                      unsupported = unsupported,
                                                      recycle = recycle,
@@ -325,7 +325,9 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
     # survives) and combine in R-space with `&` (NA-preserving).
     # `.and_raw` would otherwise force lgl2raw on the recursive result,
     # silently dropping NA -> FALSE.
-    rest <- eval.parent(substitute(and3s(exprC, ...,
+    # Resolve recursive functions in the namespace while evaluating the
+    # forwarded expressions in the caller, even without library(hutilscpp).
+    rest <- eval.parent(substitute(hutilscpp::and3s(exprC, ...,
                                          na = na, unsupported = unsupported, recycle = recycle,
                                          nThread = nThread,
                                          type = "logical")))
@@ -336,7 +338,7 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
                   which = which(ans_lgl)))
   }
   ans <- .and_raw(ans,
-                  eval.parent(substitute(and3s(exprC, ...,
+                  eval.parent(substitute(hutilscpp::and3s(exprC, ...,
                                                na = na, unsupported = unsupported, recycle = recycle,
                                                nThread = nThread,
                                                type = "raw"))),
@@ -372,11 +374,11 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
   }
   if (missing(exprB) && !missing(exprC)) {
     if (missing(..1)) {
-      return(eval.parent(substitute(or3s(exprA, exprC,
+      return(eval.parent(substitute(hutilscpp::or3s(exprA, exprC,
                                          na = na, unsupported = unsupported, recycle = recycle,
                                          nThread = nThread, type = type))))
     } else {
-      return(eval.parent(substitute(or3s(exprA, exprC, ...,
+      return(eval.parent(substitute(hutilscpp::or3s(exprA, exprC, ...,
                                          na = na, unsupported = unsupported, recycle = recycle,
                                          nThread = nThread, type = type)))) # nocov
     }
@@ -501,7 +503,7 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
     }
     if ((unsupported == "error" || recycle == "strict") &&
         (!(missing(exprC) || is.null(substitute(exprC))) || !missing(..1))) {
-      rest <- suppressMessages(eval.parent(substitute(or3s(exprC, ...,
+      rest <- suppressMessages(eval.parent(substitute(hutilscpp::or3s(exprC, ...,
                                                    na = "base",
                                                    unsupported = unsupported,
                                                    recycle = recycle,
@@ -546,7 +548,7 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
     # Symmetric to and3s: combine in R-space with `|` so NA from
     # exprC / further `...` predicates propagates instead of being
     # dropped via lgl2raw in `.or_raw`.
-    rest <- eval.parent(substitute(or3s(exprC, ...,
+    rest <- eval.parent(substitute(hutilscpp::or3s(exprC, ...,
                                         na = na, unsupported = unsupported, recycle = recycle,
                                         nThread = nThread,
                                         type = "logical")))
@@ -557,7 +559,7 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
                   which = which(ans_lgl)))
   }
   ans <- .or_raw(ans,
-                 eval.parent(substitute(or3s(exprC, ...,
+                 eval.parent(substitute(hutilscpp::or3s(exprC, ...,
                                              na = na, unsupported = unsupported, recycle = recycle,
                                              nThread = nThread,
                                              type = "raw"))),
