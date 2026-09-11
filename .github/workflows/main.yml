@@ -8,7 +8,7 @@ jobs:
       TT_AT_HOME: "TRUE"
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@master
+        uses: actions/checkout@v4
       - name: Install Package Dependencies
         run: |-
           Rscript -e "install.packages(c('rcmdcheck', 'remotes', 'covr'), repos = 'https://cran.rstudio.com')"
@@ -22,29 +22,35 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: r-lib/actions/setup-r@v2
+      with:
+        use-public-rspm: true
     - uses: r-lib/actions/setup-r-dependencies@v2
       with:
         extra-packages: any::rcmdcheck
         needs: check
     - uses: r-lib/actions/check-r-package@v2
-    container: rocker/verse:latest
   test-r-sanitizers:
     name: ASAN-UBSAN
     timeout-minutes: 60
     runs-on: ubuntu-latest
     container:
-      image: rhub/rocker-gcc-san
+      image: ghcr.io/r-hub/containers/gcc-asan:latest
+    env:
+      UBSAN_OPTIONS: print_stacktrace=1:halt_on_error=1
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v1
-        with:
-          fetch-depth: 5
-          submodules: true
+        uses: actions/checkout@v4
       - name: Install packages
         shell: bash
         run: |
-          Rdevel -q -e "ip <- function(x) install.packages(x[!sapply(x, requireNamespace, quietly = TRUE)], quiet = TRUE, repos = 'https://cran.r-project.org'); ip(c('tinytest', 'data.table', 'glue', 'hutils', 'magrittr'))"
-          Rdevel CMD build .
-          Rdevel CMD INSTALL --install-tests hutilscpp*.tar.gz
-          Rdevel -q -e "hutilscpp:::unsafe_int(2147483648)"
-          Rdevel -q -e "tinytest::run_test_file(file = 'inst/tinytest/test-valgrind.R')"
+          R -q -e 'pak::pkg_install(c("deps::.", "tinytest"), dependencies = NA)'
+          R CMD build .
+          R CMD INSTALL --install-tests hutilscpp*.tar.gz
+      - name: Run native safety and stress tests
+        shell: Rscript {0}
+        run: |
+          for (file in c("test-native-safety.R", "test-valgrind.R")) {
+            results <- tinytest::run_test_file(file.path("inst", "tinytest", file), at_home = TRUE)
+            print(results)
+            stopifnot(all(as.logical(results)))
+          }
