@@ -31,28 +31,30 @@ sum_and3s <- function(exprA, exprB, exprC, ...,
   # The default fast path stays on raw + sum_raw. Each branch must
   # include `...` so user-supplied options (unsupported / recycle / ...)
   # also propagate to and3s.
+  # Qualify the forwarded function: eval.parent preserves the caller's
+  # operands, but the caller need not have attached hutilscpp.
   if (na == "base") {
     if (missing(exprB) && missing(exprC)) {
-      return(sum(eval.parent(substitute(and3s(exprA, ..., na = na, nThread = nThread, type = "logical")))))
+      return(sum(eval.parent(substitute(hutilscpp::and3s(exprA, ..., na = na, nThread = nThread, type = "logical")))))
     }
     if (missing(exprC)) {
-      return(sum(eval.parent(substitute(and3s(exprA, exprB, ..., na = na, nThread = nThread, type = "logical")))))
+      return(sum(eval.parent(substitute(hutilscpp::and3s(exprA, exprB, ..., na = na, nThread = nThread, type = "logical")))))
     }
     if (missing(exprB)) {
-      return(sum(eval.parent(substitute(and3s(exprA, exprC, ..., na = na, nThread = nThread, type = "logical")))))
+      return(sum(eval.parent(substitute(hutilscpp::and3s(exprA, exprC, ..., na = na, nThread = nThread, type = "logical")))))
     }
-    return(sum(eval.parent(substitute(and3s(exprA, exprB, exprC, ..., na = na, nThread = nThread, type = "logical")))))
+    return(sum(eval.parent(substitute(hutilscpp::and3s(exprA, exprB, exprC, ..., na = na, nThread = nThread, type = "logical")))))
   }
   if (missing(exprB) && missing(exprC)) {
-    return(sum_raw(eval.parent(substitute(and3s(exprA, ..., na = na, nThread = nThread, type = "raw"))), nThread = nThread))
+    return(sum_raw(eval.parent(substitute(hutilscpp::and3s(exprA, ..., na = na, nThread = nThread, type = "raw"))), nThread = nThread))
   }
   if (missing(exprC)) {
-    return(sum_raw(eval.parent(substitute(and3s(exprA, exprB, ..., na = na, nThread = nThread, type = "raw"))), nThread = nThread))
+    return(sum_raw(eval.parent(substitute(hutilscpp::and3s(exprA, exprB, ..., na = na, nThread = nThread, type = "raw"))), nThread = nThread))
   }
   if (missing(exprB)) {
-    return(sum_raw(eval.parent(substitute(and3s(exprA, exprC, ..., na = na, nThread = nThread, type = "raw"))), nThread = nThread))
+    return(sum_raw(eval.parent(substitute(hutilscpp::and3s(exprA, exprC, ..., na = na, nThread = nThread, type = "raw"))), nThread = nThread))
   }
-  sum_raw(eval.parent(substitute(and3s(exprA, exprB, exprC, ..., na = na, nThread = nThread, type = "raw"))), nThread = nThread)
+  sum_raw(eval.parent(substitute(hutilscpp::and3s(exprA, exprB, exprC, ..., na = na, nThread = nThread, type = "raw"))), nThread = nThread)
 }
 
 #' @rdname sum_and3s
@@ -65,7 +67,7 @@ sum_or3s <- function(exprA, exprB, exprC, ...,
   na <- match.arg(na)
   # See sum_and3s comment.
   if (na == "base") {
-    return(sum(eval.parent(substitute(or3s(exprA, exprB, exprC, ..., na = na, nThread = nThread, type = "logical")))))
+    return(sum(eval.parent(substitute(hutilscpp::or3s(exprA, exprB, exprC, ..., na = na, nThread = nThread, type = "logical")))))
   }
-  sum_raw(eval.parent(substitute(or3s(exprA, exprB, exprC, ..., na = na, nThread = nThread, type = "raw"))), nThread = nThread)
+  sum_raw(eval.parent(substitute(hutilscpp::or3s(exprA, exprB, exprC, ..., na = na, nThread = nThread, type = "raw"))), nThread = nThread)
 }
