@@ -28,6 +28,12 @@
 
 ### Bug fixes
 
+- Fixed native memory errors for empty `and3s()` / `or3s()` index results,
+  empty `whichs()` / `which3()` inputs, and scalar integer comparisons in
+  `whichs()`. `which3()` also validates nonempty input lengths.
+- `abs_diff()` now safely recycles a scalar integer second argument in both
+  integer and double output paths.
+- `divisible()` rejects zero divisors with an R error instead of terminating R.
 - `sum_isna()` now counts every missing value in ALTREP vectors instead of
   treating `anyNA(x)` as a count. This also fixes `mean_isna()` for ALTREP
   inputs with multiple missing values, such as deferred strings.

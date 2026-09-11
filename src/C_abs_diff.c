@@ -143,6 +143,7 @@ SEXP C_abs_diff(SEXP x, SEXP y, SEXP nthreads, SEXP Option) {
   const int * yp = INTEGER(y);
 
   // Determine whether doubles (64-bit int) are required
+  const bool scalar_y = xlength(y) == 1;
   bool needs64 = true;
   // If opt == 2 then we always use double so no need
   // ... to determine need
@@ -161,7 +162,7 @@ SEXP C_abs_diff(SEXP x, SEXP y, SEXP nthreads, SEXP Option) {
 #pragma omp parallel for num_threads(nThread)
 #endif
     for (R_xlen_t i = 0; i < N; ++i) {
-      ansp[i] = single_abs_diff(xp[i], yp[i]);
+      ansp[i] = single_abs_diff(xp[i], yp[scalar_y ? 0 : i]);
     }
     UNPROTECT(1);
     return ans;
@@ -173,7 +174,7 @@ SEXP C_abs_diff(SEXP x, SEXP y, SEXP nthreads, SEXP Option) {
 #pragma omp parallel for num_threads(nThread)
 #endif
   for (R_xlen_t i = 0; i < N; ++i) {
-    ansp[i] = single_abs_diff(xp[i], yp[i]);
+    ansp[i] = single_abs_diff(xp[i], yp[scalar_y ? 0 : i]);
   }
   UNPROTECT(1);
   return ans;
