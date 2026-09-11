@@ -15,7 +15,7 @@ divisible16(x, nThread = getOption("hutilscpp.nThread", 1L))
 \arguments{
 \item{x}{An integer vector}
 
-\item{d}{\code{integer(1)}. The divisor.}
+\item{d}{\code{integer(1)}. The divisor. Zero is an error.}
 
 \item{nThread}{The number of threads to use.}
 }

@@ -1,5 +1,7 @@
 # DO NOT CHANGE the "init" and "install" sections below
 
+image: Visual Studio 2022
+
 # Download script file from GitHub
 init:
   ps: |
@@ -14,6 +16,16 @@ cache:
   - C:\RLibrary
 
 # Adapt as necessary starting from here
+
+before_build:
+  - ps: |
+      # The legacy bootstrap installs Rtools40, which cannot build current R packages.
+      $ErrorActionPreference = "Stop"
+      Invoke-WebRequest https://github.com/r-hub/rtools45/releases/download/latest/rtools45.exe -OutFile "$env:TEMP\rtools45.exe"
+      $installer = Start-Process -FilePath "$env:TEMP\rtools45.exe" -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART' -Wait -PassThru
+      if ($installer.ExitCode -ne 0) { throw "Rtools45 installation failed: $($installer.ExitCode)" }
+      $env:PATH = "C:\rtools45\usr\bin;C:\rtools45\x86_64-w64-mingw32.static.posix\bin;" + $env:PATH
+      gcc --version
 
 build_script:
   - travis-tool.sh install_deps

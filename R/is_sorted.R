@@ -21,7 +21,9 @@ is_sorted <- function(x, asc = NA) {
               length(asc) == 1L)
     ans <- .Call("Cis_sorted", x, asc, PACKAGE = packageName)
     if (is.null(ans)) {
-      return(!is.unsorted(x)) # nocov
+      if (isTRUE(asc)) return(!is.unsorted(x))
+      if (isFALSE(asc)) return(!is.unsorted(rev(x)))
+      return(!is.unsorted(x) || !is.unsorted(rev(x)))
     }
     ans
   }

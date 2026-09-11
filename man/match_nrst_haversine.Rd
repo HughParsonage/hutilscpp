@@ -61,6 +61,8 @@ both the same length as \code{lat}, giving for point \code{lat,lon}:
 in \code{addresses_lat,addresses_lon} nearest to \code{lat, lon}.}
 \item{\code{dist}}{the distance, in kilometres, between the two points.}
 }
+If no eligible candidate is found, \code{pos} is \code{NA} and
+\code{dist} is \code{Inf}.
 }
 \description{
 When geocoding coordinates to known addresses, an efficient way to

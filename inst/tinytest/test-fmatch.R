@@ -90,7 +90,7 @@ expect_equal(finp(x, TRUE), x %in% TRUE)
 expect_equal(finp(x, FALSE), x %in% FALSE)
 expect_equal(finp(x, NA), x %in% NA)
 
-expect_equal(finp(x, c(TRUE, FALSE)), rep(TRUE, length(x)))
+expect_equal(finp(x, c(TRUE, FALSE)), x %in% c(TRUE, FALSE))
 expect_equal(finp(x, c(TRUE, NA)), x %in% c(TRUE, NA))
 expect_equal(finp(x, c(FALSE, NA)), x %in% c(FALSE, NA))
 

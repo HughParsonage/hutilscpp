@@ -10,15 +10,21 @@ SEXP Cdivisible(SEXP xx, SEXP dd, SEXP nthreads) {
     error("Internal error(Cdivisible): xx not INTSXP."); // # nocov
   }
   const int * xp = INTEGER(xx);
-  const unsigned int d = asInteger(dd);
+  if (xlength(dd) != 1) {
+    error("`d` must have length one.");
+  }
+  const int d = asInteger(dd);
+  if (d == 0) {
+    error("`d` must not be zero.");
+  }
   SEXP ans = PROTECT(allocVector(LGLSXP, N));
   int * restrict ansp = LOGICAL(ans);
 #if defined _OPENMP && _OPENMP >= 201511
 #pragma omp parallel for num_threads(nThread)
 #endif
   for (R_xlen_t i = 0; i < N; ++i) {
-    unsigned int xi = xp[i];
-    ansp[i] = !(xi % d);
+    const int xi = xp[i];
+    ansp[i] = xi == NA_INTEGER || d == NA_INTEGER ? NA_LOGICAL : !(xi % d);
   }
   UNPROTECT(1);
   return ans;

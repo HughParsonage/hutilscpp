@@ -26,6 +26,10 @@ SEXP Cwhich_16(SEXP opp, SEXP x, SEXP y, SEXP nthreads) {
   }
   R_xlen_t xn = xlength(x);
   R_xlen_t yn = xlength(y);
+  if (xn == 0 || yn == 0) {
+    // The R wrapper has already evaluated both comparison operands.
+    return allocVector(INTSXP, 0);
+  }
   if (xlength(x) >= INT_MAX || xlength(y) >= INT_MAX) {
     return R_NilValue; // # nocov
   }
@@ -44,7 +48,7 @@ SEXP Cwhich_16(SEXP opp, SEXP x, SEXP y, SEXP nthreads) {
   SEXP out = PROTECT(allocVector(INTSXP, n)); // intermediate output
   int * restrict outp = INTEGER(out);
 
-  if (TYPEOF(x) == INTSXP &&
+  if (TYPEOF(x) == INTSXP && yn1 &&
       y0 != NA_INTEGER) {
     op_performed = true;
     const int * xp = INTEGER(x);
@@ -56,7 +60,7 @@ SEXP Cwhich_16(SEXP opp, SEXP x, SEXP y, SEXP nthreads) {
     }
   }
 
-  if (TYPEOF(x) == INTSXP &&
+  else if (TYPEOF(x) == INTSXP &&
       TYPEOF(y) == INTSXP &&
       xlength(y) == n) {
     op_performed = true;
