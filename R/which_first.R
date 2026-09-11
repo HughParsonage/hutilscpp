@@ -200,7 +200,10 @@ which_first <- function(expr,
         if (identical(as.logical(lhs_eval),
                       as.logical(rhs_eval))) {
           if (operator == "==" || operator == "<=" || operator == ">=" || operator == "%in%") {
-            return(1L)
+            if (!anyNA(lhs_eval)) {
+              return(if (reverse) length(lhs_eval) else 1L)
+            }
+            return(.which_first(!is.na(lhs_eval), verbose = verbose, reverse = reverse))
           } else {
             return(0L)
           }

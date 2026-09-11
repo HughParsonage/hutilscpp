@@ -119,6 +119,9 @@ static int64_t char2int0(const char * x, int nn) {
       }
     }
   }
+  if (o > INT_MAX) {
+    return NA_INTEGER;
+  }
   return x_negative ? -o : o;
 }
 
@@ -140,9 +143,9 @@ static int char2int1(const char * x, int n) {
     o *= m10;
     unsigned int v10 = UCHAR2INT[c_rel_0];
     o += v10;
-  }
-  if (o > INT_MAX) {
-    return NA_INTEGER; // # nocov
+    if (o > INT_MAX) {
+      return NA_INTEGER;
+    }
   }
   return x_negative ? -o : o;
 }
@@ -155,6 +158,21 @@ static bool is_NA0(const char * x, const char * na_string, int n) {
     }
   }
   return true;
+}
+
+static bool is_na_string(SEXP x, SEXP na_strings) {
+  if (x == NA_STRING) {
+    return true;
+  }
+  const char * xp = CHAR(x);
+  int n = length(x);
+  for (R_xlen_t j = 0; j < xlength(na_strings); ++j) {
+    SEXP marker = STRING_ELT(na_strings, j);
+    if (length(marker) == n && is_NA0(xp, CHAR(marker), n)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 static bool charNeedsDbl(const char * x, int n) {
@@ -191,11 +209,11 @@ static bool charNeedsDbl(const char * x, int n) {
   return false;
 }
 
-static R_xlen_t needsDouble(SEXP x) {
+static R_xlen_t needsDouble(SEXP x, SEXP na_strings) {
   R_xlen_t N = xlength(x);
   const SEXP * xp = STRING_PTR_RO(x);
   for (R_xlen_t i = 0; i < N; ++i) {
-    if (xp[i] == NA_STRING) {
+    if (is_na_string(xp[i], na_strings)) {
       continue;
     }
     const char * xi = CHAR(xp[i]);
@@ -225,28 +243,18 @@ static SEXP str2int0_NullNaStrings(SEXP x) {
   return ans;
 }
 
-static SEXP str2int0_1NaStrings(SEXP x, const char * na_string, int na_len, const int allow_dbl) {
+static SEXP str2int0_NaStrings(SEXP x, SEXP na_strings) {
   R_xlen_t N = xlength(x);
   SEXP ans = PROTECT(allocVector(INTSXP, N));
   int * restrict ansp = INTEGER(ans);
   const SEXP * xp = STRING_PTR_RO(x);
 
   for (R_xlen_t i = 0; i < N; ++i) {
-    if (xp[i] == NA_STRING) {
+    if (is_na_string(xp[i], na_strings)) {
       ansp[i] = NA_INTEGER;
       continue;
     }
-    int n = length(xp[i]);
-    const char * xi = CHAR(xp[i]);
-    if (n == na_len && is_NA0(xi, na_string, na_len)) {
-      ansp[i] = NA_INTEGER;
-      continue;
-    }
-
-    int anspi = char2int0(xi, n);
-
-    ansp[i] = anspi;
-
+    ansp[i] = char2int0(CHAR(xp[i]), length(xp[i]));
   }
   UNPROTECT(1);
   return ans;
@@ -284,50 +292,12 @@ SEXP character2double(SEXP x, SEXP NaStrings, int option) {
   double * restrict ansp = REAL(ans);
   const SEXP * xp = STRING_PTR_RO(x);
 
-  switch(TYPEOF(NaStrings)) {
-  case NILSXP: {
-    for (R_xlen_t i = 0; i < N; ++i) {
-    const char * xi = CHAR(xp[i]);
-    int n = length(xp[i]);
-    ansp[i] = char2dblO(xi, n, option);
-  }
-  }
-    break;
-  case STRSXP: {
-    if (xlength(NaStrings) == 1) {
-    const char * na_string = CHAR(STRING_ELT(NaStrings, 0));
-    int na_stringn = length(STRING_ELT(NaStrings, 0));
-    for (R_xlen_t i = 0; i < N; ++i) {
-      const char * xi = CHAR(xp[i]);
-      int n = length(xp[i]);
-      if (n == na_stringn && is_NA0(xi, na_string, n)) {
-        ansp[i] = NA_REAL;
-        continue;
-      }
-      ansp[i] = char2dblO(xi, n, option);
+  for (R_xlen_t i = 0; i < N; ++i) {
+    if (is_na_string(xp[i], NaStrings)) {
+      ansp[i] = NA_REAL;
+      continue;
     }
-
-  } else {
-    for (R_xlen_t i = 0; i < N; ++i) {
-      const char * xi = CHAR(xp[i]);
-      int n = length(xp[i]);
-      bool i_is_na = false;
-      for (R_xlen_t j = 0; j < xlength(NaStrings); ++j) {
-        if (length(STRING_ELT(NaStrings, j)) == n && is_NA0(xi, CHAR(STRING_ELT(NaStrings, j)), n)) {
-          i_is_na = true;
-          break;
-        }
-      }
-      if (i_is_na) {
-        ansp[i] = NA_REAL;
-        continue;
-      }
-      ansp[i] = char2dblO(xi, n, option);
-    }
-  }
-  break;
-
-  }
+    ansp[i] = char2dblO(CHAR(xp[i]), length(xp[i]), option);
   }
   UNPROTECT(1);
   return ans;
@@ -343,7 +313,7 @@ SEXP C_character2integer(SEXP x, SEXP NaStrings, SEXP AllowDbl, SEXP Option) {
   if (NaStrings != R_NilValue && !isString(NaStrings)) {
     error("NaStrings was type '%s' but must be character (or NULL)", type2char(TYPEOF(NaStrings)));
   }
-  R_xlen_t needsDoublex = needsDouble(x);
+  R_xlen_t needsDoublex = needsDouble(x, NaStrings);
   if (needsDoublex) {
     if (allow_dbl == 0) {
       error("`allow_double = FALSE` but double is required at position %lld.", (long long)needsDoublex);
@@ -354,17 +324,11 @@ SEXP C_character2integer(SEXP x, SEXP NaStrings, SEXP AllowDbl, SEXP Option) {
   }
 
 
-  if (option == 0 && NaStrings == R_NilValue) {
+  if (option == 0 && xlength(NaStrings) == 0) {
     return str2int0_NullNaStrings(x);
   }
 
-  if (length(NaStrings) == 1) {
-    const char * na_string = CHAR(STRING_ELT(NaStrings, 0));
-    int na_len = length(STRING_ELT(NaStrings, 0));
-    return str2int0_1NaStrings(x, na_string, na_len, allow_dbl);
-  }
-
-  return R_NilValue; // # nocov
+  return str2int0_NaStrings(x, NaStrings);
 }
 
 static int width_dbl(double x, int d) {
@@ -435,7 +399,7 @@ static SEXP dbl2string(double x, int d, const char bigmark) {
   int log10_ax = log10(x);
   uint64_t ten = pow(10, log10_ax);
   int n_commas = log10_ax / 3;
-  int j_comma = (log10_ax % 3) + 1;
+  int j_comma = j + (log10_ax % 3) + 1;
 
   while (ten >= 1) {
     int dd = (x64 / ten) % 10;
@@ -500,6 +464,10 @@ SEXP C_comma(SEXP x, SEXP Digits, SEXP BigMark) {
 
   for (R_xlen_t i = 0; i < N; ++i) {
     int xpi = xp[i];
+    if (xpi == NA_INTEGER) {
+      SET_STRING_ELT(ans, i, mkChar("NA"));
+      continue;
+    }
     bool negative = xpi < 0;
     int axpi = negative ? -xpi : xpi;
     if (negative) {

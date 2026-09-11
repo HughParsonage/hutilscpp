@@ -14,5 +14,17 @@ expect_equal(Comma(9843.123453, digits = 5L, big.mark = "'"), "9'843.12345")
 # test 1234.1 != '1234.0
 expect_equal(Comma(1234.1, digits = 1L, big.mark = "/"), "1/234.1")
 
+# A leading minus sign must not shift the thousands separators.
+x <- -c(1, 12, 123, 1234, 12345, 123456, 1234567, 12345678, 123456789)
+for (big_mark in c(",", " ", "'", "_", "~", '"', "/")) {
+  expect_identical(Comma(x, big.mark = big_mark),
+                   prettyNum(x, big.mark = big_mark, scientific = FALSE))
+  expect_identical(Comma(x - 0.25, digits = 2L, big.mark = big_mark),
+                   paste0(prettyNum(x, big.mark = big_mark, scientific = FALSE), ".25"))
+}
+expect_identical(Comma(c(NA_integer_, -.Machine$integer.max, 0L)),
+                 c("NA", "-2,147,483,647", "0"))
+expect_identical(Comma(NA_integer_), Comma(NA_real_))
+
 
 
