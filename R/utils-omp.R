@@ -6,6 +6,9 @@ check_omp <- function(nThread) {
   if (res <- isnt_number(nThread, int.only = TRUE)) {
     stop(attr(res, "ErrorMessage"))
   }
+  if (nThread != as.integer(nThread)) {
+    stop("`nThread = ", nThread, "` was not a whole number.")
+  }
   if (nThread <= 0) {
     stop("`nThread = ", nThread, "` but must be a positive whole number.")
   }

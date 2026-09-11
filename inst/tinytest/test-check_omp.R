@@ -3,6 +3,8 @@ check_omp <- hutilscpp:::check_omp
 expect_error(check_omp(NA), "logical")
 expect_error(check_omp(NA_integer_), "nThread")
 expect_error(check_omp(5.5), "whole number")
+expect_error(check_omp(1 + 1e-9), "whole number")
+expect_error(check_omp(2 + 1e-9), "whole number")
 expect_error(check_omp(0L), "positive whole number")
 expect_error(check_omp(-1L), "positive whole number")
 expect_equal(check_omp(1), 1)
