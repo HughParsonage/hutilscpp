@@ -27,7 +27,8 @@ SEXP Cwhich_16(SEXP opp, SEXP x, SEXP y, SEXP nthreads) {
   R_xlen_t xn = xlength(x);
   R_xlen_t yn = xlength(y);
   if (xn == 0 || yn == 0) {
-    return R_NilValue; // Let the R wrapper evaluate the empty comparison.
+    // The R wrapper has already evaluated both comparison operands.
+    return allocVector(INTSXP, 0);
   }
   if (xlength(x) >= INT_MAX || xlength(y) >= INT_MAX) {
     return R_NilValue; // # nocov
