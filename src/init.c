@@ -43,6 +43,9 @@ extern SEXP Cands(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP CAnyCharMatch(SEXP, SEXP, SEXP);
 extern SEXP CanyOutside(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP CBetween(SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP Cbminmax(SEXP, SEXP);
+extern SEXP Cbminmax_has_avx512(void);
+extern SEXP Cbminmax_portable(SEXP);
 extern SEXP Ccoalesce0(SEXP, SEXP);
 extern SEXP Ccount_logical(SEXP, SEXP);
 extern SEXP Ccumsum_reset(SEXP, SEXP);
@@ -155,6 +158,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"CAnyCharMatch",                 (DL_FUNC) &CAnyCharMatch,                  3},
     {"CanyOutside",                   (DL_FUNC) &CanyOutside,                    5},
     {"CBetween",                      (DL_FUNC) &CBetween,                       5},
+    {"Cbminmax",                      (DL_FUNC) &Cbminmax,                       2},
+    {"Cbminmax_has_avx512",           (DL_FUNC) &Cbminmax_has_avx512,            0},
+    {"Cbminmax_portable",             (DL_FUNC) &Cbminmax_portable,              1},
     {"Ccoalesce0",                    (DL_FUNC) &Ccoalesce0,                     2},
     {"Ccount_logical",                (DL_FUNC) &Ccount_logical,                 2},
     {"Ccumsum_reset",                 (DL_FUNC) &Ccumsum_reset,                  2},

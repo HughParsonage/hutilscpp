@@ -2,6 +2,9 @@
 
 ### New features
 
+- `bminmax()` returns exact power-of-two bounds for positive finite numeric
+  vectors, including subnormal values. It selects AVX-512F at runtime on
+  supported CPUs and adapts OpenMP thread counts to the input size (#59).
 - `mean_isna(x)` returns the proportion of `NA` in an atomic vector,
   equivalent to `mean(is.na(x))`. Thin wrapper over `sum_isna`.
 - `and3s` / `or3s` (and `sum_and3s` / `sum_or3s`) gain three new

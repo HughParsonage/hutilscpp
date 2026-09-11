@@ -50,7 +50,7 @@ jobs:
         shell: Rscript {0}
         run: |
           files <- c("test-native-safety.R", "test-valgrind.R",
-                     "test_character2integer.R", "test_Comma.R",
+                     "test_character2integer.R", "test_Comma.R", "test-bminmax.R",
                      list.files("inst/tinytest", pattern = "^test-review-.*[.]R$"))
           for (file in files) {
             results <- tinytest::run_test_file(file.path("inst", "tinytest", file), at_home = TRUE)
