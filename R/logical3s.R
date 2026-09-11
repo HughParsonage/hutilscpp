@@ -62,10 +62,19 @@
 #'
 #' @return
 #'
-#' \code{and3s} and \code{or3s} return \code{exprA & exprB & exprC} and
-#' \code{exprA | exprB | exprC} respectively. If any expression is missing
-#' it is considered \code{TRUE} for \code{and3s} and \code{FALSE} for \code{or3s};
-#' in other words only the results of the other expressions count towards the result.
+#' \code{and3s} and \code{or3s} combine \code{exprA}, \code{exprB},
+#' \code{exprC}, \dots\ with logical AND and OR respectively. Missing
+#' expressions are treated as the corresponding identity (\code{TRUE}
+#' for \code{and3s}, \code{FALSE} for \code{or3s}), so they do not
+#' affect the result.
+#'
+#' With \code{na = "base"} the result is exactly \code{exprA & exprB & \dots}
+#' / \code{exprA | exprB | \dots} as base R would compute it, including
+#' \code{NA} propagation. With \code{na = "false"} any \code{NA} in
+#' that base-R result is coerced to \code{FALSE}. With the default
+#' \code{na = "C"} the result follows the C kernel's two-valued mask
+#' semantics described below, which can diverge from base R when
+#' inputs contain \code{NA} or \code{NaN}.
 #'
 #' @section Note on NA / NaN:
 #'
@@ -122,6 +131,7 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
   recycle     <- match.arg(recycle)
 
   sexprA <- substitute(exprA)
+  predicate_env <- parent.frame(.parent_nframes)
   type <-
     switch(type[[1L]],
            raw = "raw",
@@ -161,6 +171,13 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
     }
   }
 
+  # Preserve the operands before membership preprocessing rewrites them.
+  # Rebuild only the outer call on fallback, so operand side effects run once.
+  cachedA <- .cache_predicate_logical3s(sexprA, xx1, yy1)
+  cachedB <- if (is.null(oo2)) quote(NULL) else {
+    .cache_predicate_logical3s(sexprB, xx2, yy2)
+  }
+
   # Small-vector shortcut: defer to base R `&` for short inputs when no
   # explicit validation mode is requested. `na = "C"` keeps historical
   # CRAN behaviour; `na = "false"` coerces the base result to a
@@ -168,7 +185,7 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
   if (na %in% c("C", "false") &&
       recycle == "base" && unsupported == "fallback" &&
       !is.null(xx1) && length(xx1) <= 1e3L) {
-    ans <- .et3(exprA, exprB, exprC, ...)
+    ans <- .et3(eval(cachedA, predicate_env), eval(cachedB, predicate_env), exprC, ...)
     if (na == "false") ans <- .na_false_logical3s(ans)
     return(switch(type,
                   raw = lgl2raw(ans, nThread = nThread),
@@ -176,6 +193,11 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
                   which = which(ans)))
   }
 
+  # Raw `xx` is intentionally left unpreprocessed: `fmatchp` coerces the
+  # membership table to raw, which truncates non-integer doubles (e.g.
+  # `as.raw(5)` for 5.5), silently changing the semantics. Leaving the
+  # kernel to dispatch RR / RI / RD with OP_IN / OP_NI preserves the
+  # fix for #39 and matches base R's `raw %in% c(5.5)` (all FALSE).
   if (!is.raw(xx1)) {
     switch(oo1,
            "%in%" = {
@@ -207,12 +229,32 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
   # combining `recycle = "strict"` with `na = "base"` doesn't let an
   # NA-containing predicate with mismatched RHS sneak past the strict
   # check. (The whole point of `strict` is "fail loudly on bad shapes".)
+  N <- length(xx1)
   if (recycle == "strict") {
-    N <- length(xx1)
     .validate_predicate_length(oo1, xx1, yy1, N, "and3s")
     if (!is.null(oo2)) {
       .validate_predicate_length(oo2, xx2, yy2, N, "and3s")
     }
+  }
+
+  # #56: the C kernel errors when length(xx2) != length(xx1) (over-read
+  # safety). Detect length mismatches here so default
+  # `unsupported = "fallback"` honours the documented base-recycling
+  # contract instead of crashing. The shape covers scalar masks
+  # (`and3s(x > 0L, TRUE)`), short recyclable masks
+  # (`and3s(x > 0L, c(TRUE, FALSE))`), and binary predicates whose LHS
+  # is scalar (`and3s(x > 0L, 1L < x)` parses xx2 to length 1). Runs
+  # BEFORE the NA-base fallback so strict / unsupported = "error"
+  # still raise on bad shapes when inputs happen to contain NA.
+  if (!is.null(oo2) && length(xx2) != N) {
+    if (unsupported == "error" || recycle == "strict") {
+      .stop_unsupported_logical3s("and3s", "&")
+    }
+    return(.fallback_logical3s("&",
+                               list(eval(cachedA, predicate_env),
+                                    eval(cachedB, predicate_env) %||% TRUE,
+                                    exprC %||% TRUE, ...),
+                               na = na, type = type, nThread = nThread))
   }
 
   # `na = "false"` / `"base"` need R-level missing-value semantics when
@@ -234,21 +276,22 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
     }
     if ((unsupported == "error" || recycle == "strict") &&
         (!(missing(exprC) || is.null(substitute(exprC))) || !missing(..1))) {
-      suppressMessages(eval.parent(substitute(and3s(exprC, ...,
-                                                     na = "false",
+      rest <- suppressMessages(eval.parent(substitute(and3s(exprC, ...,
+                                                     na = "base",
                                                      unsupported = unsupported,
                                                      recycle = recycle,
                                                      nThread = nThread,
-                                                     type = "raw"))))
+                                                     type = "logical"))))
+      return(.fallback_logical3s("&",
+                                 list(eval(cachedA, predicate_env),
+                                      eval(cachedB, predicate_env) %||% TRUE, rest),
+                                 na = na, type = type, nThread = nThread))
     }
-    args <- list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...)
-    args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
-    ans <- Reduce("&", args)
-    if (na == "false") ans <- .na_false_logical3s(ans)
-    return(switch(type,
-                  raw = lgl2raw(ans, nThread = nThread),
-                  logical = ans,
-                  which = which(ans)))
+    return(.fallback_logical3s("&",
+                               list(eval(cachedA, predicate_env),
+                                    eval(cachedB, predicate_env) %||% TRUE,
+                                    exprC %||% TRUE, ...),
+                               na = na, type = type, nThread = nThread))
   }
 
   ans <-
@@ -263,14 +306,11 @@ and3s <- function(exprA, exprB = NULL, exprC = NULL,
     if (unsupported == "error") {
       .stop_unsupported_logical3s("and3s", "&")
     }
-    args <- list(exprA, exprB %||% TRUE, exprC %||% TRUE, ...)
-    args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
-    ans <- Reduce("&", args)
-    if (na == "false") ans <- .na_false_logical3s(ans)
-    return(switch(type,
-                  raw = lgl2raw(ans, nThread = nThread),
-                  logical = ans,
-                  which = which(ans)))
+    return(.fallback_logical3s("&",
+                               list(eval(cachedA, predicate_env),
+                                    eval(cachedB, predicate_env) %||% TRUE,
+                                    exprC %||% TRUE, ...),
+                               na = na, type = type, nThread = nThread))
   }
 
   if ((missing(exprC) || is.null(substitute(exprC))) && missing(..1)) {
@@ -342,6 +382,7 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
     }
   }
   sexprA <- substitute(exprA)
+  predicate_env <- parent.frame(.parent_nframes)
 
 
   oo1 <- xx1 <- yy1 <-
@@ -372,11 +413,18 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
     }
   }
 
+  # Preserve the operands before membership preprocessing rewrites them.
+  # Rebuild only the outer call on fallback, so operand side effects run once.
+  cachedA <- .cache_predicate_logical3s(sexprA, xx1, yy1)
+  cachedB <- if (is.null(oo2)) quote(NULL) else {
+    .cache_predicate_logical3s(sexprB, xx2, yy2)
+  }
+
   # Small-vector shortcut: see and3s for rationale.
   if (na %in% c("C", "false") &&
       recycle == "base" && unsupported == "fallback" &&
       !is.null(xx1) && length(xx1) <= 1e3L) {
-    ans <- .or3(exprA, exprB, exprC, ...)
+    ans <- .or3(eval(cachedA, predicate_env), eval(cachedB, predicate_env), exprC, ...)
     if (na == "false") ans <- .na_false_logical3s(ans)
     return(switch(type,
                   raw = lgl2raw(ans, nThread = nThread),
@@ -384,19 +432,21 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
                   which = which(ans)))
   }
 
-  switch(oo1,
-         "%in%" = {
-           xx1 <- finp(xx1, yy1, nThread = nThread)
-           yy1 <- NULL
-           oo1 <- "=="
-         },
-         "%notin%" = {
-           xx1 <- fnotinp(xx1, yy1, nThread = nThread)
-           yy1 <- NULL
-           oo1 <- "=="
-         })
+  if (!is.raw(xx1)) {
+    switch(oo1,
+           "%in%" = {
+             xx1 <- finp(xx1, yy1, nThread = nThread)
+             yy1 <- NULL
+             oo1 <- "=="
+           },
+           "%notin%" = {
+             xx1 <- fnotinp(xx1, yy1, nThread = nThread)
+             yy1 <- NULL
+             oo1 <- "=="
+           })
+  }
 
-  if (is.character(oo2)) {
+  if (is.character(oo2) && !is.raw(xx2)) {
     switch(oo2,
            "%in%" = {
              xx2 <- finp(xx2, yy2, nThread = nThread)
@@ -413,12 +463,26 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
   # Strict-recycle validation runs BEFORE the NA-base fallback so that
   # combining `recycle = "strict"` with `na = "base"` doesn't let an
   # NA-containing predicate with mismatched RHS bypass the strict check.
+  N <- length(xx1)
   if (recycle == "strict") {
-    N <- length(xx1)
     .validate_predicate_length(oo1, xx1, yy1, N, "or3s")
     if (!is.null(oo2)) {
       .validate_predicate_length(oo2, xx2, yy2, N, "or3s")
     }
+  }
+
+  # #56: see and3s for rationale. Runs BEFORE the NA-base fallback so
+  # strict / unsupported = "error" still raise on bad shapes when
+  # inputs happen to contain NA.
+  if (!is.null(oo2) && length(xx2) != N) {
+    if (unsupported == "error" || recycle == "strict") {
+      .stop_unsupported_logical3s("or3s", "|")
+    }
+    return(.fallback_logical3s("|",
+                               list(eval(cachedA, predicate_env),
+                                    eval(cachedB, predicate_env) %||% FALSE,
+                                    exprC %||% FALSE, ...),
+                               na = na, type = type, nThread = nThread))
   }
 
   # Phase 4: see and3s for rationale.
@@ -437,21 +501,22 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
     }
     if ((unsupported == "error" || recycle == "strict") &&
         (!(missing(exprC) || is.null(substitute(exprC))) || !missing(..1))) {
-      suppressMessages(eval.parent(substitute(or3s(exprC, ...,
-                                                   na = "false",
+      rest <- suppressMessages(eval.parent(substitute(or3s(exprC, ...,
+                                                   na = "base",
                                                    unsupported = unsupported,
                                                    recycle = recycle,
                                                    nThread = nThread,
-                                                   type = "raw"))))
+                                                   type = "logical"))))
+      return(.fallback_logical3s("|",
+                                 list(eval(cachedA, predicate_env),
+                                      eval(cachedB, predicate_env) %||% FALSE, rest),
+                                 na = na, type = type, nThread = nThread))
     }
-    args <- list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...)
-    args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
-    ans <- Reduce("|", args)
-    if (na == "false") ans <- .na_false_logical3s(ans)
-    return(switch(type,
-                  raw = lgl2raw(ans, nThread = nThread),
-                  logical = ans,
-                  which = which(ans)))
+    return(.fallback_logical3s("|",
+                               list(eval(cachedA, predicate_env),
+                                    eval(cachedB, predicate_env) %||% FALSE,
+                                    exprC %||% FALSE, ...),
+                               na = na, type = type, nThread = nThread))
   }
 
   ans <-
@@ -464,14 +529,11 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
     if (unsupported == "error") {
       .stop_unsupported_logical3s("or3s", "|")
     }
-    args <- list(exprA, exprB %||% FALSE, exprC %||% FALSE, ...)
-    args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
-    ans <- Reduce("|", args)
-    if (na == "false") ans <- .na_false_logical3s(ans)
-    return(switch(type,
-                  raw = lgl2raw(ans, nThread = nThread),
-                  logical = ans,
-                  which = which(ans)))
+    return(.fallback_logical3s("|",
+                               list(eval(cachedA, predicate_env),
+                                    eval(cachedB, predicate_env) %||% FALSE,
+                                    exprC %||% FALSE, ...),
+                               na = na, type = type, nThread = nThread))
   }
 
   if (missing(exprC) && missing(..1)) {
@@ -514,6 +576,12 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
 # after %in% / %notin% preprocessing (those convert yy to NULL).
 .validate_predicate_length <- function(oo, xx, yy, n, fname) {
   if (is.null(yy)) return(invisible())
+  # `%in%` / `%notin%` use a membership table, not a recycled RHS, so
+  # the {1, N, 2-for-between} length rule does not apply. Preprocessing
+  # normally drops `yy` to NULL before we get here, but exempt the ops
+  # explicitly so a future code path that skips preprocessing cannot
+  # silently re-introduce the asymmetry fixed in #56.
+  if (oo == "%in%" || oo == "%notin%") return(invisible())
   m <- length(yy)
   if (m == 1L || m == n) return(invisible())
   is_between <- oo %in% c("%between%", "%(between)%", "%]between[%")
@@ -531,6 +599,34 @@ or3s <- function(exprA, exprB = NULL, exprC = NULL,
        "and `unsupported = \"error\"` was set. Re-run with the default ",
        "(`unsupported = \"fallback\"`) to use base R `", op, "` instead.",
        call. = FALSE)
+}
+
+.cache_predicate_logical3s <- function(expr, xx, yy) {
+  if (is.call(expr) && length(expr) %in% c(2L, 3L)) {
+    expr[[2L]] <- substitute(quote(value), list(value = xx))
+    if (length(expr) == 3L) {
+      expr[[3L]] <- substitute(quote(value), list(value = yy))
+    }
+    return(expr)
+  }
+  substitute(quote(value), list(value = xx))
+}
+
+# Shared fallback for the three "C kernel cannot help" paths in
+# and3s / or3s: (1) parsed inputs contain NA under na = "false"/"base",
+# (2) the kernel returned NULL for an unsupported type/op/length, and
+# (3) length(xx2) != length(xx1) so the kernel would over-read.
+# `combine` is "&" or "|"; `args` is the materialised predicate list
+# (with identity values substituted for missing predicates), in the
+# same shape the existing fallback blocks built.
+.fallback_logical3s <- function(combine, args, na, type, nThread) {
+  args <- lapply(args, function(a) if (is.raw(a)) raw2lgl(a, nThread = nThread) else a)
+  ans <- Reduce(combine, args)
+  if (na == "false") ans <- .na_false_logical3s(ans)
+  switch(type,
+         raw     = lgl2raw(ans, nThread = nThread),
+         logical = ans,
+         which   = which(ans))
 }
 
 .predicate_has_na_logical3s <- function(xx1, yy1, xx2, yy2) {
