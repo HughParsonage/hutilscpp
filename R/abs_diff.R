@@ -24,7 +24,14 @@ abs_diff <- function(x, y, nThread = getOption("hutilscpp.nThread", 1L), option 
     y <- as_integer_if_safe(y)
   }
   if (option == 3L) {
-    return(.Call("C_which_abs_diff", x, y, nThread, PACKAGE = "hutilscpp"))
+    if (anyNA(x) || anyNA(y)) {
+      return(which.max(abs(x - y)))
+    }
+    ans <- .Call("C_which_abs_diff", x, y, nThread, PACKAGE = "hutilscpp")
+    if (is.null(ans)) {
+      return(which.max(abs(x - y)))
+    }
+    return(ans)
   }
   ans <- .Call("C_abs_diff", x, y, nThread, option, PACKAGE = "hutilscpp")
   # nocov start

@@ -34,6 +34,22 @@
 - `abs_diff()` now safely recycles a scalar integer second argument in both
   integer and double output paths.
 - `divisible()` rejects zero divisors with an R error instead of terminating R.
+- Matching preserves logical missing values and `nomatch` / `whichFirst`
+  behavior. Sequence membership no longer accepts fractional queries or treats
+  descending integer sequences as ascending ranges.
+- Character conversion preserves missing strings when promoting to double and
+  supports multiple missing-value markers. `Comma()` formats negative doubles
+  and missing integers correctly.
+- Mixed numeric min/max and in-place maximum honor `keep_nas`; `pminC()` returns
+  its computed result without repeating the native call.
+- Nearest-neighbour matching honors self-exclusion during verification, uses
+  each candidate's coordinates in fallback searches, and supports default
+  matching at high latitudes. Unmatched queries return `NA` / `Inf`.
+- Signed divisibility handles negative operands and missing values. Maximum
+  absolute-difference positions return the first index when it is the maximum,
+  and handle empty inputs safely.
+- Fixed scalar recycling in `and3()`, reverse scanning of identical logical
+  comparisons in `which_first()`, and descending character `is_sorted()`.
 - `sum_isna()` now counts every missing value in ALTREP vectors instead of
   treating `anyNA(x)` as a count. This also fixes `mean_isna()` for ALTREP
   inputs with multiple missing values, such as deferred strings.

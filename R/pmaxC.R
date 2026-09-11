@@ -174,7 +174,7 @@ pminC <- function(x, a,
   if (x_was_integer && is.double(o) && msg_dbl_ok) {
     message("Output is double")
   }
-  .Call("Cpmin", x, a, keep_nas, nThread, PACKAGE = packageName)
+  return(o)
 }
 
 #' @rdname pmaxC

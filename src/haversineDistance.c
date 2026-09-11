@@ -528,11 +528,9 @@ SEXP C_match_min_Haversine(SEXP Lat1,
   double * out2 = REAL(Out2);
   ++n_protect;
 
-  // half-equatorial circumference: used as an 'infinity' for
-  // min_dist while also available to check we have actually
-  // achieved a minimum distance. (Should be 1 and around 20,000.)
-  double BIGDIST = haversine_distance(0, 0, 0, 179.99, true);
-  double BIGDISTKM = haversine_distance(0, 0, 0, 179.99, false);
+  // Infinity also permits candidates at the antipode.
+  const double BIGDIST = R_PosInf;
+  const double BIGDISTKM = R_PosInf;
 
   bool do_verify_cartR = verify_cartR;
   bool do_check_cartR = cartR > 0;
@@ -557,7 +555,7 @@ SEXP C_match_min_Haversine(SEXP Lat1,
     double max_loni = loni + cartR;
     double min_loni = loni - cartR;
 
-    k = 0;
+    k = -1;
     for (int j = 0; j < N2; ++j) {
       if (excl_self && j == i) {
         continue ;
@@ -607,7 +605,31 @@ SEXP C_match_min_Haversine(SEXP Lat1,
       }
     }
 
-    if (do_verify_box) {
+    if (do_verify_cartR && k < 0) {
+      // We have failed to identify a small distance
+      // Likely reason: too ambitious cartR
+      do_check_cartR = false; // set from here onwards -- if it happens once, likely to happen again
+
+      for (int j = 0; j < N2; ++j) {
+        if (excl_self && j == i) {
+          continue;
+        }
+        latj = lat2[j];
+        lonj = lon2[j];
+        double cur_dist_km = 0;
+        cur_dist_km = haversine_distance(lati, loni, latj, lonj, false);
+        if (cur_dist_km < min_dist_km) {
+          k = 0;
+          k += j;
+          min_dist_km = cur_dist_km;
+          if (min_dist_km < dist0_km) {
+            break;
+          }
+        }
+      }
+    }
+
+    if (do_verify_box && k >= 0) {
       // The half-length of the square to check within
       double box_r = do_euclid_dist(loni, lon2[k], lati, lat2[k], false);
       double cur_dist_km_new = 0;
@@ -618,6 +640,9 @@ SEXP C_match_min_Haversine(SEXP Lat1,
       double box_max_lon = loni + box_r;
       double box_min_lon = loni - box_r;
       for (int j = 0; j < N2; ++j) {
+        if (excl_self && j == i) {
+          continue;
+        }
         double lat2j = lat2[j], lon2j = lon2[j];
         if (lat2j > box_min_lat &&
             lat2j < box_max_lat &&
@@ -633,25 +658,11 @@ SEXP C_match_min_Haversine(SEXP Lat1,
       }
     }
 
-    if (do_verify_cartR && min_dist_km == BIGDISTKM) {
-      // We have failed to identify a small distance
-      // Likely reason: too ambitious cartR
-      do_check_cartR = false; // set from here onwards -- if it happens once, likely to happen again
-
-      for (int j = 0; j < N2; ++j) {
-        double cur_dist_km = 0;
-        cur_dist_km = haversine_distance(lati, loni, latj, lonj, false);
-        if (cur_dist_km < min_dist_km) {
-          k = 0;
-          k += j;
-          min_dist_km = cur_dist_km;
-          if (min_dist_km < dist0_km) {
-            break;
-          }
-        }
-      }
+    if (k < 0) {
+      out[i] = NA_INTEGER;
+      out2[i] = R_PosInf;
+      continue;
     }
-
     if (use_tbl) {
       if (k >= N3) {
         // # nocov start

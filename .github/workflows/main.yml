@@ -49,7 +49,10 @@ jobs:
       - name: Run native safety and stress tests
         shell: Rscript {0}
         run: |
-          for (file in c("test-native-safety.R", "test-valgrind.R")) {
+          files <- c("test-native-safety.R", "test-valgrind.R",
+                     "test_character2integer.R", "test_Comma.R",
+                     list.files("inst/tinytest", pattern = "^test-review-.*[.]R$"))
+          for (file in files) {
             results <- tinytest::run_test_file(file.path("inst", "tinytest", file), at_home = TRUE)
             print(results)
             stopifnot(all(as.logical(results)))

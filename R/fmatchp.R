@@ -31,12 +31,17 @@ fmatchp <- function(x, table, nomatch = NA_integer_,
                     .raw = 0L) {
   nThread <- check_omp(nThread)
   if (is.logical(x)) {
-    ans <- .Call("fmatchp_lgl", x, as.logical(table), nThread, fin, PACKAGE = "hutilscpp")
+    if (!is.logical(table) || whichFirst != 0L) {
+      return(match_last_resort(x, table, nomatch, nThread, fin, whichFirst))
+    }
+    ans <- .Call("fmatchp_lgl", x, table, nThread, fin, PACKAGE = "hutilscpp")
     if (is.null(ans)) {
       return(match_last_resort(x, table, nomatch, nThread, fin, whichFirst)) # nocov
     }
     if (is.na(nomatch) && is.integer(ans)) {
       .Call("Cuncoalesce0", ans, PACKAGE = "hutilscpp")
+    } else if (is.integer(ans) && nomatch != 0L) {
+      ans[ans == 0L] <- as.integer(nomatch)
     }
     return(ans)
   }
@@ -63,7 +68,8 @@ finp <- function(x, table, nThread = getOption("hutilscpp.nThread", 1L),
     # avoid constants
     table <- copy(table)
   }
-  if (is_seq(table)) {
+  if (is.integer(x) && !is.object(x) &&
+      is.integer(table) && !is.object(table) && is_seq(table)) {
     ans <- .Call("Cors",
                  "%between%", x, table[c(1L, length(table))],
                  NULL, NULL, NULL,
@@ -114,10 +120,10 @@ match_last_resort <- function(x, table, nomatch = NA_integer_,
     return(x %in% table)
   }
   if (whichFirst) {
-    if (whichFirst == 1L) {
+    if (whichFirst > 0L) {
       return(first_which(x %in% table))
     }
-    if (whichFirst == -1L) {
+    if (whichFirst < 0L) {
       return(last_which(x %in% table))
     }
   }
