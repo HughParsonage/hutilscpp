@@ -530,7 +530,7 @@ static void ribp_error(ribp_ctx * ctx, const char * msg) {
 }
 
 SEXP Crow_id_by_pattern(SEXP DT, SEXP Kinds, SEXP NaIs, SEXP MaxPatterns, SEXP nthreads) {
-  if (TYPEOF(DT) != VECSXP) {
+  if (!isNewList(DT)) {
     error("Internal error(Crow_id_by_pattern): DT is not a list."); // # nocov
   }
   R_xlen_t ncol_x = xlength(DT);
@@ -538,7 +538,7 @@ SEXP Crow_id_by_pattern(SEXP DT, SEXP Kinds, SEXP NaIs, SEXP MaxPatterns, SEXP n
     error("Internal error(Crow_id_by_pattern): unsupported number of columns."); // # nocov
   }
   int ncol = (int) ncol_x;
-  if (TYPEOF(Kinds) != INTSXP || xlength(Kinds) != ncol_x) {
+  if (!isInteger(Kinds) || xlength(Kinds) != ncol_x) {
     error("Internal error(Crow_id_by_pattern): kinds malformed."); // # nocov
   }
   const int na_is = asInteger2(NaIs) != 0;
@@ -570,35 +570,38 @@ SEXP Crow_id_by_pattern(SEXP DT, SEXP Kinds, SEXP NaIs, SEXP MaxPatterns, SEXP n
       if (xlength(xj) != N) {
         ribp_error(&ctx, "Internal error(Crow_id_by_pattern): columns have unequal lengths."); // # nocov
       }
-      int type = TYPEOF(xj);
       const void * p = NULL;
       switch (kind) {
       case RIBP_KIND_ONE_INT:
-        if (type == INTSXP) {
+        if (isInteger(xj)) {
           p = INTEGER(xj);
-        } else if (type == LGLSXP) {
+        } else if (isLogical(xj)) {
           p = LOGICAL(xj);
         }
         break;
       case RIBP_KIND_FACTOR:
+        if (isFactor(xj)) {
+          p = INTEGER(xj);
+        }
+        break;
       case RIBP_KIND_MAG_INT:
-        if (type == INTSXP) {
+        if (isInteger(xj)) {
           p = INTEGER(xj);
         }
         break;
       case RIBP_KIND_ONE_DBL:
       case RIBP_KIND_MAG_DBL:
-        if (type == REALSXP) {
+        if (isReal(xj)) {
           p = REAL(xj);
         }
         break;
       case RIBP_KIND_ONE_RAW:
-        if (type == RAWSXP) {
+        if (isRaw(xj)) {
           p = RAW(xj);
         }
         break;
       case RIBP_KIND_CHAR:
-        if (type == STRSXP) {
+        if (isString(xj)) {
           p = STRING_PTR_RO(xj);
         }
         break;

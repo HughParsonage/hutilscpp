@@ -51,6 +51,10 @@
 #' pattern-by-pattern, so distinct patterns could in principle collide. The
 #' probability is below `1e-20` for any table that fits in memory.
 #'
+#' Every column must be an atomic vector with one element per row. Matrix
+#' columns (for example from `I(matrix(...))`) and nested data.frame columns
+#' are rejected rather than silently misaligned.
+#'
 #' Columns that are ALTREP (for example `1:n`) are expanded before hashing.
 #'
 #' @examples
@@ -92,31 +96,46 @@ row_id_by_pattern <- function(DT,
   if (N == 0L) {
     return(integer(0))
   }
-  kinds <- vapply(DT, ribp_kind, 0L, magnitude = magnitude, USE.NAMES = FALSE)
+  kinds <- vapply(DT, ribp_kind, 0L, N = N, magnitude = magnitude, USE.NAMES = FALSE)
   if (anyNA(kinds)) {
     bad <- names(DT)[is.na(kinds)]
-    stop("`DT` has column(s) with unsupported types: ",
+    stop("`DT` has column(s) with unsupported types or shapes: ",
          toString(paste0("`", bad, "`")), ". ",
-         "Only integer, double, logical, raw, factor, and character columns are supported.")
+         "Only integer, double, logical, raw, factor, and character vector columns ",
+         "with one element per row are supported.")
   }
   .Call(Crow_id_by_pattern, DT, kinds, na_is, max_patterns, nThread)
 }
 
 # Column kind codes understood by Crow_id_by_pattern:
 #   0 int/logical 0/1, 1 double 0/1, 2 raw, 3 factor, 4 character,
-#   5 int magnitude, 6 double magnitude. NA for unsupported columns.
-ribp_kind <- function(x, magnitude) {
+#   5 int magnitude, 6 double magnitude. NA for unsupported columns, which
+#   includes anything with a dim attribute (matrix or data.frame columns) or
+#   whose length is not the number of rows.
+ribp_kind <- function(x, N, magnitude) {
+  if (!is.null(dim(x)) || length(x) != N) {
+    return(NA_integer_)
+  }
   if (is.factor(x)) {
     return(3L)
   }
   if (inherits(x, c("integer64", "nanotime"))) {
     return(NA_integer_)
   }
-  switch(typeof(x),
-         logical = 0L,
-         integer = if (magnitude) 5L else 0L,
-         double = if (magnitude) 6L else 1L,
-         raw = 2L,
-         character = 4L,
-         NA_integer_)
+  if (is.logical(x)) {
+    return(0L)
+  }
+  if (is.integer(x)) {
+    return(if (magnitude) 5L else 0L)
+  }
+  if (is.double(x)) {
+    return(if (magnitude) 6L else 1L)
+  }
+  if (is.raw(x)) {
+    return(2L)
+  }
+  if (is.character(x)) {
+    return(4L)
+  }
+  NA_integer_
 }

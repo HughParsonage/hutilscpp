@@ -71,6 +71,10 @@ Rows are compared through a 128-bit hash of their patterns rather than
 pattern-by-pattern, so distinct patterns could in principle collide. The
 probability is below \code{1e-20} for any table that fits in memory.
 
+Every column must be an atomic vector with one element per row. Matrix
+columns (for example from \code{I(matrix(...))}) and nested data.frame columns
+are rejected rather than silently misaligned.
+
 Columns that are ALTREP (for example \code{1:n}) are expanded before hashing.
 }
 \examples{
