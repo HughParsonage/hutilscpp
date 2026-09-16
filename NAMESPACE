@@ -47,6 +47,7 @@ export(pminV)
 export(poleInaccessibility2)
 export(poleInaccessibility3)
 export(range_rcpp)
+export(row_id_by_pattern)
 export(squish)
 export(sum_and3s)
 export(sum_isna)
@@ -64,13 +65,19 @@ export(which_true_onwards)
 export(whichs)
 export(xor2)
 import(data.table)
-importFrom(hutils,"%<->%")
-importFrom(hutils,AND)
-importFrom(hutils,NOR)
-importFrom(hutils,XOR)
-importFrom(magrittr,and)
-importFrom(magrittr,or)
-importFrom(utils,hasName)
-importFrom(utils,head)
-importFrom(utils,ls.str)
+importFrom(hutils,
+  "%<->%",
+  AND,
+  NOR,
+  XOR
+)
+importFrom(magrittr,
+  and,
+  or
+)
+importFrom(utils,
+  hasName,
+  head,
+  ls.str
+)
 useDynLib(hutilscpp, .registration=TRUE)

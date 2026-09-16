@@ -2,6 +2,13 @@
 
 ### New features
 
+- `row_id_by_pattern(DT)` assigns every row of a data.frame an integer id
+  by the pattern of its cells (zero/nonzero for numeric, logical, and raw
+  columns; distinct values for factor and character columns), ranked by
+  frequency. `na_is` controls how `NA` is read in numeric columns,
+  `magnitude = TRUE` groups numeric columns by sign and binary order of
+  magnitude instead of zero/nonzero, and `max_patterns` keeps only the most
+  frequent patterns. Multithreaded via `nThread`.
 - `bminmax()` returns exact power-of-two bounds for positive finite numeric
   vectors, including subnormal values. It selects AVX-512F at runtime on
   supported CPUs and adapts OpenMP thread counts to the input size (#59).
