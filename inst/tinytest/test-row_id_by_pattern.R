@@ -74,6 +74,59 @@ expect_identical(row_id_by_pattern(data.frame()), integer(0))
 expect_identical(row_id_by_pattern(data.table(x = 1:10)), rep(1L, 10L))
 expect_identical(row_id_by_pattern(data.table(x = 0:9)), c(2L, rep(1L, 9L)))
 
+# Column selection: incl_cols / excl_cols ---------------------------------------
+
+DTc <- data.table(a = c(0, 1, 2, 0), b = c("x", "y", "y", "x"), c = c(1L, 1L, 0L, 0L))
+expect_identical(row_id_by_pattern(DTc), ref_row_id(DTc))
+expect_identical(row_id_by_pattern(DTc, incl_cols = "a"), row_id_by_pattern(DTc[, "a"]))
+expect_identical(row_id_by_pattern(DTc, incl_cols = 1L), row_id_by_pattern(DTc[, "a"]))
+expect_identical(row_id_by_pattern(DTc, incl_cols = 1), row_id_by_pattern(DTc[, "a"]))
+expect_identical(row_id_by_pattern(DTc, incl_cols = c("a", "c")), row_id_by_pattern(DTc[, c("a", "c")]))
+expect_identical(row_id_by_pattern(DTc, incl_cols = c(3L, 1L)), row_id_by_pattern(DTc[, c("a", "c")]))
+expect_identical(row_id_by_pattern(DTc, excl_cols = "b"), row_id_by_pattern(DTc[, c("a", "c")]))
+expect_identical(row_id_by_pattern(DTc, excl_cols = 2L), row_id_by_pattern(DTc[, c("a", "c")]))
+expect_identical(row_id_by_pattern(DTc, excl_cols = c("a", "b")), row_id_by_pattern(DTc[, "c"]))
+# excl_cols has priority over incl_cols
+expect_identical(row_id_by_pattern(DTc, incl_cols = c("a", "b"), excl_cols = "b"), row_id_by_pattern(DTc[, "a"]))
+expect_identical(row_id_by_pattern(DTc, incl_cols = 1:2, excl_cols = 2L), row_id_by_pattern(DTc[, "a"]))
+# Duplicates and factors in the selector are tolerated
+expect_identical(row_id_by_pattern(DTc, incl_cols = c("a", "a")), row_id_by_pattern(DTc[, "a"]))
+expect_identical(row_id_by_pattern(DTc, incl_cols = factor("a")), row_id_by_pattern(DTc[, "a"]))
+# Nothing left: every row shares the pattern
+expect_identical(row_id_by_pattern(DTc, incl_cols = "a", excl_cols = "a"), rep(1L, 4L))
+expect_identical(row_id_by_pattern(DTc, excl_cols = names(DTc)), rep(1L, 4L))
+expect_identical(row_id_by_pattern(DTc, incl_cols = NULL), rep(1L, 4L))
+expect_identical(row_id_by_pattern(DTc, incl_cols = integer(0)), rep(1L, 4L))
+expect_identical(row_id_by_pattern(DTc[0L], incl_cols = "a"), integer(0))
+# Excluded unsupported columns are not inspected
+DTu <- data.table(x = c(0L, 1L), y = list(1, 2), z = 1:2 + 0i)
+expect_identical(row_id_by_pattern(DTu, incl_cols = "x"), c(1L, 2L))
+expect_identical(row_id_by_pattern(DTu, excl_cols = c("y", "z")), c(1L, 2L))
+expect_error(row_id_by_pattern(DTu, excl_cols = "y"), "`z`")
+# Other arguments still apply to the selected columns
+DTs <- data.table(a = c(1, 2, 4, NA), b = c("p", "q", "r", "s"))
+expect_identical(row_id_by_pattern(DTs, incl_cols = "a", magnitude = TRUE), c(1L, 2L, 3L, 4L))
+expect_identical(row_id_by_pattern(DTs, incl_cols = "a", magnitude = TRUE, na_is = 0L), c(1L, 2L, 3L, 4L))
+expect_identical(row_id_by_pattern(DTs, incl_cols = "a"), c(1L, 1L, 1L, 2L))
+expect_identical(row_id_by_pattern(DTs, incl_cols = "a", max_patterns = 1L), c(1L, 1L, 1L, NA))
+# Selection does not copy or modify DT
+DTaddr <- data.table(a = c(0, 1), b = c(1L, 0L))
+before <- address(DTaddr[["a"]])
+invisible(row_id_by_pattern(DTaddr, incl_cols = "a"))
+expect_identical(address(DTaddr[["a"]]), before)
+expect_identical(DTaddr, data.table(a = c(0, 1), b = c(1L, 0L)))
+# Bad selectors
+expect_error(row_id_by_pattern(DTc, incl_cols = "zz"), "`zz`")
+expect_error(row_id_by_pattern(DTc, excl_cols = c("a", "zz")), "`zz`")
+expect_error(row_id_by_pattern(DTc, incl_cols = 4L), "incl_cols")
+expect_error(row_id_by_pattern(DTc, excl_cols = 0L), "excl_cols")
+expect_error(row_id_by_pattern(DTc, incl_cols = -1L), "incl_cols")
+expect_error(row_id_by_pattern(DTc, incl_cols = 1.5), "incl_cols")
+expect_error(row_id_by_pattern(DTc, incl_cols = NA_integer_), "incl_cols")
+expect_error(row_id_by_pattern(DTc, incl_cols = NA_character_), "incl_cols")
+expect_error(row_id_by_pattern(DTc, incl_cols = TRUE), "incl_cols")
+expect_error(row_id_by_pattern(DTc, excl_cols = list("a")), "excl_cols")
+
 # NA handling -----------------------------------------------------------------
 
 DTna <- data.table(i = c(NA, 0L, 1L), d = c(NaN, NA, 0), l = c(NA, TRUE, FALSE))

@@ -6,6 +6,8 @@
 \usage{
 row_id_by_pattern(
   DT,
+  incl_cols = seq_along(DT),
+  excl_cols = NULL,
   na_is = 0L,
   magnitude = FALSE,
   max_patterns = .Machine$integer.max,
@@ -14,6 +16,15 @@ row_id_by_pattern(
 }
 \arguments{
 \item{DT}{A \code{data.frame} (typically a \code{data.table}). It is not modified.}
+
+\item{incl_cols, excl_cols}{Which columns of \code{DT} contribute to the pattern.
+Each is either a vector of column positions or a character vector of
+column names. The columns used are those in \code{incl_cols} that are not in
+\code{excl_cols}, so \code{excl_cols} has priority. By default every column is
+used (\code{incl_cols = seq_along(DT)}, \code{excl_cols = NULL}). Column selection
+reads the existing columns in place; it does not copy them or build a
+new table, so it is cheap on large tables. If no column remains, every
+row shares the pattern and the result is all \code{1L}.}
 
 \item{na_is}{\code{0L} or \code{1L}. The pattern value assigned to \code{NA} and \code{NaN} in
 integer, logical, and double columns.}
@@ -81,6 +92,8 @@ Columns that are ALTREP (for example \code{1:n}) are expanded before hashing.
 DT <- data.frame(a = c(0, 1, 2, 0), b = c("x", "y", "y", "x"))
 row_id_by_pattern(DT)
 row_id_by_pattern(DT, max_patterns = 1L)
+row_id_by_pattern(DT, incl_cols = "a")
+row_id_by_pattern(DT, excl_cols = 1L)
 row_id_by_pattern(data.frame(x = c(1, 2, 3, 4, -1, 0)), magnitude = TRUE)
 
 }

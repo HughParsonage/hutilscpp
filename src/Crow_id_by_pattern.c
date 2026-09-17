@@ -529,17 +529,30 @@ static void ribp_error(ribp_ctx * ctx, const char * msg) {
   error("%s", msg);
 }
 
-SEXP Crow_id_by_pattern(SEXP DT, SEXP Kinds, SEXP NaIs, SEXP MaxPatterns, SEXP nthreads) {
+// Cols: 0-based positions into DT of the columns to hash (one per Kinds
+// element). Columns not listed are never touched, so callers can select
+// columns without building a new list.
+SEXP Crow_id_by_pattern(SEXP DT, SEXP Cols, SEXP Kinds, SEXP NaIs, SEXP MaxPatterns, SEXP nthreads) {
   if (!isNewList(DT)) {
     error("Internal error(Crow_id_by_pattern): DT is not a list."); // # nocov
   }
-  R_xlen_t ncol_x = xlength(DT);
+  R_xlen_t ncol_dt = xlength(DT);
+  if (!isInteger(Cols)) {
+    error("Internal error(Crow_id_by_pattern): cols malformed."); // # nocov
+  }
+  R_xlen_t ncol_x = xlength(Cols);
   if (ncol_x == 0 || ncol_x > INT_MAX) {
     error("Internal error(Crow_id_by_pattern): unsupported number of columns."); // # nocov
   }
   int ncol = (int) ncol_x;
   if (!isInteger(Kinds) || xlength(Kinds) != ncol_x) {
     error("Internal error(Crow_id_by_pattern): kinds malformed."); // # nocov
+  }
+  const int * cols_idx = INTEGER(Cols);
+  for (int j = 0; j < ncol; ++j) {
+    if (cols_idx[j] < 0 || cols_idx[j] >= ncol_dt) {
+      error("Internal error(Crow_id_by_pattern): column index out of range."); // # nocov
+    }
   }
   const int na_is = asInteger2(NaIs) != 0;
   double max_patterns_d = asReal(MaxPatterns);
@@ -550,7 +563,7 @@ SEXP Crow_id_by_pattern(SEXP DT, SEXP Kinds, SEXP NaIs, SEXP MaxPatterns, SEXP n
   int requested = as_nThread(nthreads);
 
   const int * kinds = INTEGER(Kinds);
-  R_xlen_t N = xlength(VECTOR_ELT(DT, 0));
+  R_xlen_t N = xlength(VECTOR_ELT(DT, cols_idx[0]));
 
   ribp_ctx ctx;
   ribp_ctx_init(&ctx);
@@ -562,7 +575,7 @@ SEXP Crow_id_by_pattern(SEXP DT, SEXP Kinds, SEXP NaIs, SEXP MaxPatterns, SEXP n
   {
     int nb = 0;
     for (int j = 0; j < ncol; ++j) {
-      SEXP xj = VECTOR_ELT(DT, j);
+      SEXP xj = VECTOR_ELT(DT, cols_idx[j]);
       int kind = kinds[j];
       if (kind < 0 || kind >= RIBP_N_KINDS) {
         ribp_error(&ctx, "Internal error(Crow_id_by_pattern): unknown kind."); // # nocov
