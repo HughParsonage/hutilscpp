@@ -11,7 +11,8 @@
   frequent patterns. `incl_cols` and `excl_cols` (positions or names)
   select which columns contribute, with `excl_cols` taking priority; the
   selected columns are read in place without copying. Multithreaded via
-  `nThread`.
+  `nThread`. `set_row_id_by_pattern(DT, col = "row_pattern")` adds the ids
+  to a data.table by reference, erroring if `col` already exists.
 - `bminmax()` returns exact power-of-two bounds for positive finite numeric
   vectors, including subnormal values. It selects AVX-512F at runtime on
   supported CPUs and adapts OpenMP thread counts to the input size (#59).

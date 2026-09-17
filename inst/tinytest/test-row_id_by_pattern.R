@@ -127,6 +127,42 @@ expect_error(row_id_by_pattern(DTc, incl_cols = NA_character_), "incl_cols")
 expect_error(row_id_by_pattern(DTc, incl_cols = TRUE), "incl_cols")
 expect_error(row_id_by_pattern(DTc, excl_cols = list("a")), "excl_cols")
 
+# set_row_id_by_pattern ---------------------------------------------------------
+
+DTset <- data.table(a = c(0, 1, 2, 0), b = c("x", "y", "y", "x"))
+res <- set_row_id_by_pattern(DTset)
+expect_identical(res, DTset)
+expect_true(identical(address(res), address(DTset)))
+expect_identical(names(DTset), c("a", "b", "row_pattern"))
+expect_identical(DTset[["row_pattern"]], c(1L, 2L, 2L, 1L))
+# Errors immediately if the column exists, without touching DT
+expect_error(set_row_id_by_pattern(DTset), "row_pattern")
+expect_identical(names(DTset), c("a", "b", "row_pattern"))
+expect_error(set_row_id_by_pattern(DTset, col = "a"), "`a`")
+# Custom name and pass-through of the other arguments
+set_row_id_by_pattern(DTset, col = "p1", incl_cols = "a", max_patterns = 1L)
+expect_identical(DTset[["p1"]], c(1L, NA, NA, 1L))
+set_row_id_by_pattern(DTset, col = "p2", excl_cols = c("row_pattern", "p1"))
+expect_identical(DTset[["p2"]], DTset[["row_pattern"]])
+set_row_id_by_pattern(DTset, col = "p3", incl_cols = 1L, magnitude = TRUE)
+expect_identical(DTset[["p3"]], row_id_by_pattern(DTset, incl_cols = "a", magnitude = TRUE))
+# Zero rows
+DT0 <- data.table(a = integer(0))
+set_row_id_by_pattern(DT0)
+expect_identical(DT0[["row_pattern"]], integer(0))
+# Zero columns selected
+DTz <- data.table(a = 1:3)
+set_row_id_by_pattern(DTz, excl_cols = "a")
+expect_identical(DTz[["row_pattern"]], rep(1L, 3L))
+# Invisible return
+expect_true(withVisible(set_row_id_by_pattern(data.table(a = 1L)))$visible == FALSE)
+# Bad inputs
+expect_error(set_row_id_by_pattern(data.frame(a = 1L)), "data.table")
+expect_error(set_row_id_by_pattern(data.table(a = 1L), col = 1L), "col")
+expect_error(set_row_id_by_pattern(data.table(a = 1L), col = c("x", "y")), "col")
+expect_error(set_row_id_by_pattern(data.table(a = 1L), col = NA_character_), "col")
+expect_error(set_row_id_by_pattern(data.table(a = 1L), col = ""), "col")
+
 # NA handling -----------------------------------------------------------------
 
 DTna <- data.table(i = c(NA, 0L, 1L), d = c(NaN, NA, 0), l = c(NA, TRUE, FALSE))

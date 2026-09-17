@@ -26,10 +26,17 @@
 #'   are `NA_integer_`. The default (`.Machine$integer.max`) is the largest
 #'   number of ids an integer vector can hold.
 #' @param nThread Number of threads to use.
+#' @param col For `set_row_id_by_pattern`, the name of the column to add to
+#'   `DT`. It is an error if `DT` already has a column with this name.
 #'
-#' @return An integer vector with one element per row of `DT`. Ids are dense
-#'   (`1L` to the number of retained patterns), ordered by decreasing
-#'   frequency, with ties broken by first appearance in `DT`.
+#' @return `row_id_by_pattern` returns an integer vector with one element per
+#'   row of `DT`. Ids are dense (`1L` to the number of retained patterns),
+#'   ordered by decreasing frequency, with ties broken by first appearance in
+#'   `DT`.
+#'
+#'   `set_row_id_by_pattern` adds that vector to `DT` by reference as a new
+#'   column named `col` (via [data.table::set()]) and returns `DT` invisibly.
+#'   `DT` must be a `data.table`.
 #'
 #' @details
 #' The pattern of a cell depends on the column type:
@@ -72,6 +79,11 @@
 #' row_id_by_pattern(DT, incl_cols = "a")
 #' row_id_by_pattern(DT, excl_cols = 1L)
 #' row_id_by_pattern(data.frame(x = c(1, 2, 3, 4, -1, 0)), magnitude = TRUE)
+#'
+#' library(data.table)
+#' DT <- as.data.table(DT)
+#' set_row_id_by_pattern(DT)
+#' DT
 #'
 #' @export
 row_id_by_pattern <- function(DT,
@@ -121,6 +133,39 @@ row_id_by_pattern <- function(DT,
          "with one element per row are supported.")
   }
   .Call(Crow_id_by_pattern, DT, cols - 1L, kinds, na_is, max_patterns, nThread)
+}
+
+#' @rdname row_id_by_pattern
+#' @export
+set_row_id_by_pattern <- function(DT,
+                                  col = "row_pattern",
+                                  incl_cols = seq_along(DT),
+                                  excl_cols = NULL,
+                                  na_is = 0L,
+                                  magnitude = FALSE,
+                                  max_patterns = .Machine$integer.max,
+                                  nThread = getOption("hutilscpp.nThread", 1L)) {
+  if (!is.data.table(DT)) {
+    stop("`DT` was a ", class(DT)[1L], ", but must be a data.table.")
+  }
+  if (!is.character(col) || length(col) != 1L || is.na(col) || !nzchar(col)) {
+    stop("`col` must be a single, non-missing, non-empty string.")
+  }
+  if (col %in% names(DT)) {
+    stop("`DT` already has a column named `", col, "`.")
+  }
+  # Evaluate incl_cols now: its default depends on DT, which is about to gain
+  # a column.
+  incl_cols <- incl_cols
+  ids <- row_id_by_pattern(DT,
+                           incl_cols = incl_cols,
+                           excl_cols = excl_cols,
+                           na_is = na_is,
+                           magnitude = magnitude,
+                           max_patterns = max_patterns,
+                           nThread = nThread)
+  set(DT, j = col, value = ids)
+  invisible(DT)
 }
 
 # Resolve a column selector (positions or names) to unique 1-based positions
