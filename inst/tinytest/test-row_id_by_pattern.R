@@ -74,6 +74,95 @@ expect_identical(row_id_by_pattern(data.frame()), integer(0))
 expect_identical(row_id_by_pattern(data.table(x = 1:10)), rep(1L, 10L))
 expect_identical(row_id_by_pattern(data.table(x = 0:9)), c(2L, rep(1L, 9L)))
 
+# Column selection: incl_cols / excl_cols ---------------------------------------
+
+DTc <- data.table(a = c(0, 1, 2, 0), b = c("x", "y", "y", "x"), c = c(1L, 1L, 0L, 0L))
+expect_identical(row_id_by_pattern(DTc), ref_row_id(DTc))
+expect_identical(row_id_by_pattern(DTc, incl_cols = "a"), row_id_by_pattern(DTc[, "a"]))
+expect_identical(row_id_by_pattern(DTc, incl_cols = 1L), row_id_by_pattern(DTc[, "a"]))
+expect_identical(row_id_by_pattern(DTc, incl_cols = 1), row_id_by_pattern(DTc[, "a"]))
+expect_identical(row_id_by_pattern(DTc, incl_cols = c("a", "c")), row_id_by_pattern(DTc[, c("a", "c")]))
+expect_identical(row_id_by_pattern(DTc, incl_cols = c(3L, 1L)), row_id_by_pattern(DTc[, c("a", "c")]))
+expect_identical(row_id_by_pattern(DTc, excl_cols = "b"), row_id_by_pattern(DTc[, c("a", "c")]))
+expect_identical(row_id_by_pattern(DTc, excl_cols = 2L), row_id_by_pattern(DTc[, c("a", "c")]))
+expect_identical(row_id_by_pattern(DTc, excl_cols = c("a", "b")), row_id_by_pattern(DTc[, "c"]))
+# excl_cols has priority over incl_cols
+expect_identical(row_id_by_pattern(DTc, incl_cols = c("a", "b"), excl_cols = "b"), row_id_by_pattern(DTc[, "a"]))
+expect_identical(row_id_by_pattern(DTc, incl_cols = 1:2, excl_cols = 2L), row_id_by_pattern(DTc[, "a"]))
+# Duplicates and factors in the selector are tolerated
+expect_identical(row_id_by_pattern(DTc, incl_cols = c("a", "a")), row_id_by_pattern(DTc[, "a"]))
+expect_identical(row_id_by_pattern(DTc, incl_cols = factor("a")), row_id_by_pattern(DTc[, "a"]))
+# Nothing left: every row shares the pattern
+expect_identical(row_id_by_pattern(DTc, incl_cols = "a", excl_cols = "a"), rep(1L, 4L))
+expect_identical(row_id_by_pattern(DTc, excl_cols = names(DTc)), rep(1L, 4L))
+expect_identical(row_id_by_pattern(DTc, incl_cols = NULL), rep(1L, 4L))
+expect_identical(row_id_by_pattern(DTc, incl_cols = integer(0)), rep(1L, 4L))
+expect_identical(row_id_by_pattern(DTc[0L], incl_cols = "a"), integer(0))
+# Excluded unsupported columns are not inspected
+DTu <- data.table(x = c(0L, 1L), y = list(1, 2), z = 1:2 + 0i)
+expect_identical(row_id_by_pattern(DTu, incl_cols = "x"), c(1L, 2L))
+expect_identical(row_id_by_pattern(DTu, excl_cols = c("y", "z")), c(1L, 2L))
+expect_error(row_id_by_pattern(DTu, excl_cols = "y"), "`z`")
+# Other arguments still apply to the selected columns
+DTs <- data.table(a = c(1, 2, 4, NA), b = c("p", "q", "r", "s"))
+expect_identical(row_id_by_pattern(DTs, incl_cols = "a", magnitude = TRUE), c(1L, 2L, 3L, 4L))
+expect_identical(row_id_by_pattern(DTs, incl_cols = "a", magnitude = TRUE, na_is = 0L), c(1L, 2L, 3L, 4L))
+expect_identical(row_id_by_pattern(DTs, incl_cols = "a"), c(1L, 1L, 1L, 2L))
+expect_identical(row_id_by_pattern(DTs, incl_cols = "a", max_patterns = 1L), c(1L, 1L, 1L, NA))
+# Selection does not copy or modify DT
+DTaddr <- data.table(a = c(0, 1), b = c(1L, 0L))
+before <- address(DTaddr[["a"]])
+invisible(row_id_by_pattern(DTaddr, incl_cols = "a"))
+expect_identical(address(DTaddr[["a"]]), before)
+expect_identical(DTaddr, data.table(a = c(0, 1), b = c(1L, 0L)))
+# Bad selectors
+expect_error(row_id_by_pattern(DTc, incl_cols = "zz"), "`zz`")
+expect_error(row_id_by_pattern(DTc, excl_cols = c("a", "zz")), "`zz`")
+expect_error(row_id_by_pattern(DTc, incl_cols = 4L), "incl_cols")
+expect_error(row_id_by_pattern(DTc, excl_cols = 0L), "excl_cols")
+expect_error(row_id_by_pattern(DTc, incl_cols = -1L), "incl_cols")
+expect_error(row_id_by_pattern(DTc, incl_cols = 1.5), "incl_cols")
+expect_error(row_id_by_pattern(DTc, incl_cols = NA_integer_), "incl_cols")
+expect_error(row_id_by_pattern(DTc, incl_cols = NA_character_), "incl_cols")
+expect_error(row_id_by_pattern(DTc, incl_cols = TRUE), "incl_cols")
+expect_error(row_id_by_pattern(DTc, excl_cols = list("a")), "excl_cols")
+
+# set_row_id_by_pattern ---------------------------------------------------------
+
+DTset <- data.table(a = c(0, 1, 2, 0), b = c("x", "y", "y", "x"))
+res <- set_row_id_by_pattern(DTset)
+expect_identical(res, DTset)
+expect_true(identical(address(res), address(DTset)))
+expect_identical(names(DTset), c("a", "b", "row_pattern"))
+expect_identical(DTset[["row_pattern"]], c(1L, 2L, 2L, 1L))
+# Errors immediately if the column exists, without touching DT
+expect_error(set_row_id_by_pattern(DTset), "row_pattern")
+expect_identical(names(DTset), c("a", "b", "row_pattern"))
+expect_error(set_row_id_by_pattern(DTset, col = "a"), "`a`")
+# Custom name and pass-through of the other arguments
+set_row_id_by_pattern(DTset, col = "p1", incl_cols = "a", max_patterns = 1L)
+expect_identical(DTset[["p1"]], c(1L, NA, NA, 1L))
+set_row_id_by_pattern(DTset, col = "p2", excl_cols = c("row_pattern", "p1"))
+expect_identical(DTset[["p2"]], DTset[["row_pattern"]])
+set_row_id_by_pattern(DTset, col = "p3", incl_cols = 1L, magnitude = TRUE)
+expect_identical(DTset[["p3"]], row_id_by_pattern(DTset, incl_cols = "a", magnitude = TRUE))
+# Zero rows
+DT0 <- data.table(a = integer(0))
+set_row_id_by_pattern(DT0)
+expect_identical(DT0[["row_pattern"]], integer(0))
+# Zero columns selected
+DTz <- data.table(a = 1:3)
+set_row_id_by_pattern(DTz, excl_cols = "a")
+expect_identical(DTz[["row_pattern"]], rep(1L, 3L))
+# Invisible return
+expect_true(withVisible(set_row_id_by_pattern(data.table(a = 1L)))$visible == FALSE)
+# Bad inputs
+expect_error(set_row_id_by_pattern(data.frame(a = 1L)), "data.table")
+expect_error(set_row_id_by_pattern(data.table(a = 1L), col = 1L), "col")
+expect_error(set_row_id_by_pattern(data.table(a = 1L), col = c("x", "y")), "col")
+expect_error(set_row_id_by_pattern(data.table(a = 1L), col = NA_character_), "col")
+expect_error(set_row_id_by_pattern(data.table(a = 1L), col = ""), "col")
+
 # NA handling -----------------------------------------------------------------
 
 DTna <- data.table(i = c(NA, 0L, 1L), d = c(NaN, NA, 0), l = c(NA, TRUE, FALSE))

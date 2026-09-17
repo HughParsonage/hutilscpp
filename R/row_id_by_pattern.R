@@ -7,6 +7,14 @@
 #' pattern.
 #'
 #' @param DT A `data.frame` (typically a `data.table`). It is not modified.
+#' @param incl_cols,excl_cols Which columns of `DT` contribute to the pattern.
+#'   Each is either a vector of column positions or a character vector of
+#'   column names. The columns used are those in `incl_cols` that are not in
+#'   `excl_cols`, so `excl_cols` has priority. By default every column is
+#'   used (`incl_cols = seq_along(DT)`, `excl_cols = NULL`). Column selection
+#'   reads the existing columns in place; it does not copy them or build a
+#'   new table, so it is cheap on large tables. If no column remains, every
+#'   row shares the pattern and the result is all `1L`.
 #' @param na_is `0L` or `1L`. The pattern value assigned to `NA` and `NaN` in
 #'   integer, logical, and double columns.
 #' @param magnitude `TRUE` or `FALSE`. If `FALSE` (the default), integer and
@@ -18,10 +26,17 @@
 #'   are `NA_integer_`. The default (`.Machine$integer.max`) is the largest
 #'   number of ids an integer vector can hold.
 #' @param nThread Number of threads to use.
+#' @param col For `set_row_id_by_pattern`, the name of the column to add to
+#'   `DT`. It is an error if `DT` already has a column with this name.
 #'
-#' @return An integer vector with one element per row of `DT`. Ids are dense
-#'   (`1L` to the number of retained patterns), ordered by decreasing
-#'   frequency, with ties broken by first appearance in `DT`.
+#' @return `row_id_by_pattern` returns an integer vector with one element per
+#'   row of `DT`. Ids are dense (`1L` to the number of retained patterns),
+#'   ordered by decreasing frequency, with ties broken by first appearance in
+#'   `DT`.
+#'
+#'   `set_row_id_by_pattern` adds that vector to `DT` by reference as a new
+#'   column named `col` (via [data.table::set()]) and returns `DT` invisibly.
+#'   `DT` must be a `data.table`.
 #'
 #' @details
 #' The pattern of a cell depends on the column type:
@@ -61,10 +76,19 @@
 #' DT <- data.frame(a = c(0, 1, 2, 0), b = c("x", "y", "y", "x"))
 #' row_id_by_pattern(DT)
 #' row_id_by_pattern(DT, max_patterns = 1L)
+#' row_id_by_pattern(DT, incl_cols = "a")
+#' row_id_by_pattern(DT, excl_cols = 1L)
 #' row_id_by_pattern(data.frame(x = c(1, 2, 3, 4, -1, 0)), magnitude = TRUE)
+#'
+#' library(data.table)
+#' DT <- as.data.table(DT)
+#' set_row_id_by_pattern(DT)
+#' DT
 #'
 #' @export
 row_id_by_pattern <- function(DT,
+                              incl_cols = seq_along(DT),
+                              excl_cols = NULL,
                               na_is = 0L,
                               magnitude = FALSE,
                               max_patterns = .Machine$integer.max,
@@ -90,21 +114,97 @@ row_id_by_pattern <- function(DT,
   nThread <- check_omp(nThread)
 
   N <- nrow(DT)
-  if (length(DT) == 0L) {
+  cols <- ribp_resolve_cols(incl_cols, "incl_cols", DT)
+  if (!is.null(excl_cols)) {
+    cols <- setdiff(cols, ribp_resolve_cols(excl_cols, "excl_cols", DT))
+  }
+  if (length(cols) == 0L) {
     return(rep(1L, N))
   }
   if (N == 0L) {
     return(integer(0))
   }
-  kinds <- vapply(DT, ribp_kind, 0L, N = N, magnitude = magnitude, USE.NAMES = FALSE)
+  kinds <- vapply(cols, function(j) ribp_kind(.subset2(DT, j), N = N, magnitude = magnitude), 0L)
   if (anyNA(kinds)) {
-    bad <- names(DT)[is.na(kinds)]
+    bad <- names(DT)[cols[is.na(kinds)]]
     stop("`DT` has column(s) with unsupported types or shapes: ",
          toString(paste0("`", bad, "`")), ". ",
          "Only integer, double, logical, raw, factor, and character vector columns ",
          "with one element per row are supported.")
   }
-  .Call(Crow_id_by_pattern, DT, kinds, na_is, max_patterns, nThread)
+  .Call(Crow_id_by_pattern, DT, cols - 1L, kinds, na_is, max_patterns, nThread)
+}
+
+#' @rdname row_id_by_pattern
+#' @export
+set_row_id_by_pattern <- function(DT,
+                                  col = "row_pattern",
+                                  incl_cols = seq_along(DT),
+                                  excl_cols = NULL,
+                                  na_is = 0L,
+                                  magnitude = FALSE,
+                                  max_patterns = .Machine$integer.max,
+                                  nThread = getOption("hutilscpp.nThread", 1L)) {
+  if (!is.data.table(DT)) {
+    stop("`DT` was a ", class(DT)[1L], ", but must be a data.table.")
+  }
+  if (!is.character(col) || length(col) != 1L || is.na(col) || !nzchar(col)) {
+    stop("`col` must be a single, non-missing, non-empty string.")
+  }
+  if (col %in% names(DT)) {
+    stop("`DT` already has a column named `", col, "`.")
+  }
+  # Evaluate incl_cols now: its default depends on DT, which is about to gain
+  # a column.
+  incl_cols <- incl_cols
+  ids <- row_id_by_pattern(DT,
+                           incl_cols = incl_cols,
+                           excl_cols = excl_cols,
+                           na_is = na_is,
+                           magnitude = magnitude,
+                           max_patterns = max_patterns,
+                           nThread = nThread)
+  set(DT, j = col, value = ids)
+  invisible(DT)
+}
+
+# Resolve a column selector (positions or names) to unique 1-based positions
+# in DT, in the order given. Only the selector is touched; DT's columns are
+# not copied.
+ribp_resolve_cols <- function(x, arg, DT) {
+  if (is.null(x)) {
+    return(integer(0))
+  }
+  if (is.factor(x)) {
+    x <- as.character(x)
+  }
+  if (is.character(x)) {
+    if (anyNA(x)) {
+      stop("`", arg, "` contains NA.")
+    }
+    pos <- match(x, names(DT))
+    if (anyNA(pos)) {
+      stop("`", arg, "` contains column name(s) not in `names(DT)`: ",
+           toString(paste0("`", x[is.na(pos)], "`")), ".")
+    }
+    return(unique(pos))
+  }
+  if (!is.numeric(x)) {
+    stop("`", arg, "` was a ", class(x)[1L],
+         ", but must be a vector of column positions or column names.")
+  }
+  if (anyNA(x)) {
+    stop("`", arg, "` contains NA.")
+  }
+  if (any(x != floor(x))) {
+    stop("`", arg, "` contains non-integer column position(s): ",
+         toString(x[x != floor(x)]), ".")
+  }
+  if (any(x < 1 | x > length(DT))) {
+    stop("`", arg, "` contains column position(s) outside 1..", length(DT), ": ",
+         toString(x[x < 1 | x > length(DT)]), ".")
+  }
+  unique(as.integer(x))
 }
 
 # Column kind codes understood by Crow_id_by_pattern:

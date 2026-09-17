@@ -91,7 +91,7 @@ extern SEXP Crange(SEXP);
 extern SEXP Craw2lgl(SEXP, SEXP);
 extern SEXP CSquish(SEXP, SEXP);
 extern SEXP CStringEqual(SEXP, SEXP);
-extern SEXP Crow_id_by_pattern(SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP Crow_id_by_pattern(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP Csum_isna(SEXP, SEXP);
 extern SEXP Csum_raw(SEXP, SEXP);
 extern SEXP Csummary3(SEXP, SEXP, SEXP, SEXP, SEXP);
@@ -207,7 +207,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"Craw2lgl",                      (DL_FUNC) &Craw2lgl,                       2},
     {"CSquish",                       (DL_FUNC) &CSquish,                        2},
     {"CStringEqual",                  (DL_FUNC) &CStringEqual,                   2},
-    {"Crow_id_by_pattern",            (DL_FUNC) &Crow_id_by_pattern,             5},
+    {"Crow_id_by_pattern",            (DL_FUNC) &Crow_id_by_pattern,             6},
     {"Csum_isna",                     (DL_FUNC) &Csum_isna,                      2},
     {"Csum_raw",                      (DL_FUNC) &Csum_raw,                       2},
     {"Csummary3",                     (DL_FUNC) &Csummary3,                      5},
