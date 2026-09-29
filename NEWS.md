@@ -12,7 +12,9 @@
   select which columns contribute, with `excl_cols` taking priority; the
   selected columns are read in place without copying. Multithreaded via
   `nThread`. `set_row_id_by_pattern(DT, col = "row_pattern")` adds the ids
-  to a data.table by reference, erroring if `col` already exists.
+  to a data.table by reference, erroring if `col` already exists. With
+  `keep_cols = TRUE` the ids carry an attribute `"cols"`: the named positions
+  of the columns used, so the selection can be recovered.
 - `bminmax()` returns exact power-of-two bounds for positive finite numeric
   vectors, including subnormal values. It selects AVX-512F at runtime on
   supported CPUs and adapts OpenMP thread counts to the input size (#59).

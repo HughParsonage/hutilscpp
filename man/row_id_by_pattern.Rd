@@ -12,6 +12,7 @@ row_id_by_pattern(
   na_is = 0L,
   magnitude = FALSE,
   max_patterns = .Machine$integer.max,
+  keep_cols = FALSE,
   nThread = getOption("hutilscpp.nThread", 1L)
 )
 
@@ -23,6 +24,7 @@ set_row_id_by_pattern(
   na_is = 0L,
   magnitude = FALSE,
   max_patterns = .Machine$integer.max,
+  keep_cols = FALSE,
   nThread = getOption("hutilscpp.nThread", 1L)
 )
 }
@@ -51,6 +53,10 @@ frequent patterns receive an id; rows belonging to any other pattern
 are \code{NA_integer_}. The default (\code{.Machine$integer.max}) is the largest
 number of ids an integer vector can hold.}
 
+\item{keep_cols}{\code{TRUE} or \code{FALSE}. If \code{TRUE}, the result carries an
+attribute \code{"cols"} recording the columns of \code{DT} that contributed to the
+pattern, after \code{incl_cols} and \code{excl_cols} are resolved. See Value.}
+
 \item{nThread}{Number of threads to use.}
 
 \item{col}{For \code{set_row_id_by_pattern}, the name of the column to add to
@@ -61,6 +67,12 @@ number of ids an integer vector can hold.}
 row of \code{DT}. Ids are dense (\code{1L} to the number of retained patterns),
 ordered by decreasing frequency, with ties broken by first appearance in
 \code{DT}.
+
+If \code{keep_cols = TRUE}, the vector has an attribute \code{"cols"}: an integer
+vector of the positions in \code{DT} of the columns used, in the order they
+were hashed, named by the corresponding column names. It is
+\code{integer(0)} (with empty names) when no column was used. Retrieve it with
+\code{attr(ids, "cols")}; \code{names(attr(ids, "cols"))} gives the column names.
 
 \code{set_row_id_by_pattern} adds that vector to \code{DT} by reference as a new
 column named \code{col} (via \code{\link[data.table:set]{data.table::set()}}) and returns \code{DT} invisibly.
@@ -114,6 +126,7 @@ row_id_by_pattern(DT)
 row_id_by_pattern(DT, max_patterns = 1L)
 row_id_by_pattern(DT, incl_cols = "a")
 row_id_by_pattern(DT, excl_cols = 1L)
+attr(row_id_by_pattern(DT, excl_cols = "a", keep_cols = TRUE), "cols")
 row_id_by_pattern(data.frame(x = c(1, 2, 3, 4, -1, 0)), magnitude = TRUE)
 
 library(data.table)

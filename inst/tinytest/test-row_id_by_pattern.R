@@ -127,6 +127,39 @@ expect_error(row_id_by_pattern(DTc, incl_cols = NA_character_), "incl_cols")
 expect_error(row_id_by_pattern(DTc, incl_cols = TRUE), "incl_cols")
 expect_error(row_id_by_pattern(DTc, excl_cols = list("a")), "excl_cols")
 
+# keep_cols: recover the columns used -------------------------------------------
+
+DTk <- data.table(a = c(0, 1, 2, 0), b = c("x", "y", "y", "x"), c = c(1L, 1L, 0L, 0L))
+ids <- row_id_by_pattern(DTk)
+expect_null(attributes(ids))
+idk <- row_id_by_pattern(DTk, keep_cols = TRUE)
+expect_identical(attr(idk, "cols"), c(a = 1L, b = 2L, c = 3L))
+expect_identical(as.vector(idk), ids)
+expect_identical(names(attributes(idk)), "cols")
+# After incl_cols / excl_cols, in the order hashed
+expect_identical(attr(row_id_by_pattern(DTk, incl_cols = c("c", "a"), keep_cols = TRUE), "cols"),
+                 c(c = 3L, a = 1L))
+expect_identical(attr(row_id_by_pattern(DTk, excl_cols = 2L, keep_cols = TRUE), "cols"),
+                 c(a = 1L, c = 3L))
+expect_identical(attr(row_id_by_pattern(DTk, incl_cols = c(2, 2, 1), keep_cols = TRUE), "cols"),
+                 c(b = 2L, a = 1L))
+# The recovered columns reproduce the ids
+cols_k <- attr(row_id_by_pattern(DTk, incl_cols = c("a", "c"), excl_cols = "c", keep_cols = TRUE), "cols")
+expect_identical(row_id_by_pattern(DTk, incl_cols = cols_k), row_id_by_pattern(DTk, incl_cols = "a"))
+expect_identical(row_id_by_pattern(DTk, incl_cols = names(cols_k)), row_id_by_pattern(DTk, incl_cols = "a"))
+# No columns used / no rows
+id_none <- row_id_by_pattern(DTk, excl_cols = names(DTk), keep_cols = TRUE)
+expect_identical(as.vector(id_none), rep(1L, 4L))
+expect_identical(attr(id_none, "cols"), setNames(integer(0), character(0)))
+expect_identical(attr(row_id_by_pattern(DTk[0L], keep_cols = TRUE), "cols"), c(a = 1L, b = 2L, c = 3L))
+expect_identical(as.vector(row_id_by_pattern(DTk[0L], keep_cols = TRUE)), integer(0))
+# data.frame input and max_patterns
+idk_df <- row_id_by_pattern(as.data.frame(DTk), incl_cols = "b", max_patterns = 1L, keep_cols = TRUE)
+expect_identical(attr(idk_df, "cols"), c(b = 2L))
+expect_identical(as.vector(idk_df), c(1L, NA, NA, 1L))
+expect_error(row_id_by_pattern(DTk, keep_cols = NA), "keep_cols")
+expect_error(row_id_by_pattern(DTk, keep_cols = 1L), "keep_cols")
+
 # set_row_id_by_pattern ---------------------------------------------------------
 
 DTset <- data.table(a = c(0, 1, 2, 0), b = c("x", "y", "y", "x"))
@@ -154,6 +187,12 @@ expect_identical(DT0[["row_pattern"]], integer(0))
 DTz <- data.table(a = 1:3)
 set_row_id_by_pattern(DTz, excl_cols = "a")
 expect_identical(DTz[["row_pattern"]], rep(1L, 3L))
+# keep_cols passes through to the new column's attribute
+DTkc <- data.table(a = c(0, 1), b = c("x", "x"))
+set_row_id_by_pattern(DTkc, excl_cols = "b", keep_cols = TRUE)
+expect_identical(attr(DTkc[["row_pattern"]], "cols"), c(a = 1L))
+set_row_id_by_pattern(DTkc, col = "p")
+expect_null(attributes(DTkc[["p"]]))
 # Invisible return
 expect_true(withVisible(set_row_id_by_pattern(data.table(a = 1L)))$visible == FALSE)
 # Bad inputs
