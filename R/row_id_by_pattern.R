@@ -25,6 +25,9 @@
 #'   frequent patterns receive an id; rows belonging to any other pattern
 #'   are `NA_integer_`. The default (`.Machine$integer.max`) is the largest
 #'   number of ids an integer vector can hold.
+#' @param keep_cols `TRUE` or `FALSE`. If `TRUE`, the result carries an
+#'   attribute `"cols"` recording the columns of `DT` that contributed to the
+#'   pattern, after `incl_cols` and `excl_cols` are resolved. See Value.
 #' @param nThread Number of threads to use.
 #' @param col For `set_row_id_by_pattern`, the name of the column to add to
 #'   `DT`. It is an error if `DT` already has a column with this name.
@@ -33,6 +36,12 @@
 #'   row of `DT`. Ids are dense (`1L` to the number of retained patterns),
 #'   ordered by decreasing frequency, with ties broken by first appearance in
 #'   `DT`.
+#'
+#'   If `keep_cols = TRUE`, the vector has an attribute `"cols"`: an integer
+#'   vector of the positions in `DT` of the columns used, in the order they
+#'   were hashed, named by the corresponding column names. It is
+#'   `integer(0)` (with empty names) when no column was used. Retrieve it with
+#'   `attr(ids, "cols")`; `names(attr(ids, "cols"))` gives the column names.
 #'
 #'   `set_row_id_by_pattern` adds that vector to `DT` by reference as a new
 #'   column named `col` (via [data.table::set()]) and returns `DT` invisibly.
@@ -78,6 +87,7 @@
 #' row_id_by_pattern(DT, max_patterns = 1L)
 #' row_id_by_pattern(DT, incl_cols = "a")
 #' row_id_by_pattern(DT, excl_cols = 1L)
+#' attr(row_id_by_pattern(DT, excl_cols = "a", keep_cols = TRUE), "cols")
 #' row_id_by_pattern(data.frame(x = c(1, 2, 3, 4, -1, 0)), magnitude = TRUE)
 #'
 #' library(data.table)
@@ -92,11 +102,13 @@ row_id_by_pattern <- function(DT,
                               na_is = 0L,
                               magnitude = FALSE,
                               max_patterns = .Machine$integer.max,
+                              keep_cols = FALSE,
                               nThread = getOption("hutilscpp.nThread", 1L)) {
   if (!is.data.frame(DT)) {
     stop("`DT` was a ", class(DT)[1L], ", but must be a data.frame.")
   }
   check_TF(magnitude)
+  check_TF(keep_cols)
   if (res <- isnt_number(na_is, int.only = TRUE)) {
     stop(attr(res, "ErrorMessage"))
   }
@@ -119,11 +131,20 @@ row_id_by_pattern <- function(DT,
     cols <- setdiff(cols, ribp_resolve_cols(excl_cols, "excl_cols", DT))
   }
   if (length(cols) == 0L) {
-    return(rep(1L, N))
+    ans <- rep(1L, N)
+  } else if (N == 0L) {
+    ans <- integer(0)
+  } else {
+    ans <- ribp_call(DT, cols, N, na_is, magnitude, max_patterns, nThread)
   }
-  if (N == 0L) {
-    return(integer(0))
+  if (keep_cols) {
+    names(cols) <- names(DT)[cols]
+    attr(ans, "cols") <- cols
   }
+  ans
+}
+
+ribp_call <- function(DT, cols, N, na_is, magnitude, max_patterns, nThread) {
   kinds <- vapply(cols, function(j) ribp_kind(.subset2(DT, j), N = N, magnitude = magnitude), 0L)
   if (anyNA(kinds)) {
     bad <- names(DT)[cols[is.na(kinds)]]
@@ -144,6 +165,7 @@ set_row_id_by_pattern <- function(DT,
                                   na_is = 0L,
                                   magnitude = FALSE,
                                   max_patterns = .Machine$integer.max,
+                                  keep_cols = FALSE,
                                   nThread = getOption("hutilscpp.nThread", 1L)) {
   if (!is.data.table(DT)) {
     stop("`DT` was a ", class(DT)[1L], ", but must be a data.table.")
@@ -163,6 +185,7 @@ set_row_id_by_pattern <- function(DT,
                            na_is = na_is,
                            magnitude = magnitude,
                            max_patterns = max_patterns,
+                           keep_cols = keep_cols,
                            nThread = nThread)
   set(DT, j = col, value = ids)
   invisible(DT)
